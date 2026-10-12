@@ -604,6 +604,122 @@ def test_hide_bone_spheres():
     settings.show_bone_spheres = False
 
 
+def _count_imported_gltf_actions(path):
+    before = {action.name for action in bpy.data.actions}
+    before_objects = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=path)
+    imported = [obj for obj in bpy.data.objects if obj not in before_objects and obj.type == "ARMATURE"]
+    new_actions = [action for action in bpy.data.actions if action.name not in before and not action.is_empty]
+    nla = 0
+    if imported and imported[0].animation_data:
+        nla = len(imported[0].animation_data.nla_tracks)
+        if imported[0].animation_data.action and imported[0].animation_data.action not in new_actions:
+            new_actions.append(imported[0].animation_data.action)
+    return len(new_actions), nla, imported
+
+
+def test_gltf_animation_scope():
+    print("--- gltf animation scope ---")
+    humanoid_retarget.register()
+    prop = bpy.ops.hr.export_result.get_rna_type().properties["export_all_actions"]
+    check(prop.default is True, "full animation export is the default")
+    roles = _role_names("Exp")
+    arm = build_biped("ExportRig", roles)
+    bpy.context.view_layer.objects.active = arm
+    bone = arm.pose.bones[roles["upperarm_l"]]
+    bone.rotation_mode = "XYZ"
+    bone.rotation_euler = (0.0, 0.0, 0.0)
+    bone.keyframe_insert("rotation_euler", frame=1)
+    bone.rotation_euler = (0.4, 0.0, 0.0)
+    bone.keyframe_insert("rotation_euler", frame=4)
+    action_a = arm.animation_data.action
+    action_a.name = "ClipCurrent"
+    action_b = bpy.data.actions.new("ClipOther")
+    action_b.use_fake_user = True
+    try:
+        slot_b = action_b.slots.new(id_type="OBJECT", name=arm.name)
+    except TypeError:
+        slot_b = action_b.slots.new("OBJECT", arm.name)
+    arm.animation_data.action = action_b
+    if arm.animation_data.action_suitable_slots:
+        arm.animation_data.action_slot = arm.animation_data.action_suitable_slots[0]
+    bone.rotation_euler = (0.0, 0.0, 0.0)
+    bone.keyframe_insert("rotation_euler", frame=1)
+    bone.rotation_euler = (1.2, 0.0, 0.0)
+    bone.keyframe_insert("rotation_euler", frame=9)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    arm.animation_data.action = action_a
+    if arm.animation_data.action_suitable_slots:
+        arm.animation_data.action_slot = arm.animation_data.action_suitable_slots[0]
+    track = arm.animation_data.nla_tracks.new()
+    track.name = action_b.name
+    strip = track.strips.new(action_b.name, 1, action_b)
+    try:
+        strip.action_slot = slot_b
+    except Exception as exc:
+        print("slot assign", exc)
+    arm.animation_data.use_nla = False
+    all_path = os.path.join(OUT, "all_anims.glb")
+    current_path = os.path.join(OUT, "current_anim.glb")
+    export_armature(arm, all_path, export_all_actions=True)
+    export_armature(arm, current_path, export_all_actions=False)
+    all_actions, all_nla, _all_arms = _count_imported_gltf_actions(all_path)
+    current_actions, current_nla, _current_arms = _count_imported_gltf_actions(current_path)
+    print("GLTF SCOPE", all_actions, all_nla, current_actions, current_nla)
+    check(all_actions >= 2, "full export keeps every clip")
+    check(current_actions == 1, "unchecked export keeps only the current clip")
+    check(current_actions < all_actions, "current export is smaller than the full export")
+
+
+
+def test_stand_layout():
+    from humanoid_retarget.pipeline import apply_stand_layout, stand_positions
+
+    humanoid_retarget.register()
+    settings = bpy.context.scene.hr_settings
+    check(settings.stand_layout == "SIDE", "default stand is left source and right target")
+
+    left, right = stand_positions("SIDE", 1.0, 0.2, 1.2, 0.3, gap=0.25)
+    check(left[0] < 0 < right[0] and left[1] == 0.0 and right[1] == 0.0, "side places source on the left")
+    check(stand_positions("OVERLAP", 1.0, 1.0, 1.0, 1.0) == ((0.0, 0.0), (0.0, 0.0)), "overlap shares the origin")
+    stayed, beside = stand_positions("SOURCE_ORIGIN", 1.0, 0.2, 1.2, 0.3, gap=0.25)
+    check(stayed == (0.0, 0.0) and beside[0] > 1.0, "source can stay at the origin")
+    beside, stayed = stand_positions("TARGET_ORIGIN", 1.0, 0.2, 1.2, 0.3, gap=0.25)
+    check(stayed == (0.0, 0.0) and beside[0] < 0, "target can stay at the origin")
+    front, back = stand_positions("DEPTH", 1.0, 0.4, 1.2, 0.5, gap=0.25)
+    check(front[1] < 0 < back[1] and front[0] == 0.0 and back[0] == 0.0, "depth places source in front")
+    swapped_source, swapped_target = stand_positions("SWAP", 1.0, 0.2, 1.2, 0.3, gap=0.25)
+    check(swapped_source[0] > 0 > swapped_target[0], "swap puts the target on the left")
+
+    names = junk_names()
+    source = build_biped("StandSource", names)
+    target = build_biped("StandTarget", names)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    loose_mesh = bpy.data.meshes.new("StandLoose")
+    loose = bpy.data.objects.new("StandLoose", loose_mesh)
+    source_collection = bpy.data.collections.new("HR_Source")
+    bpy.context.scene.collection.children.link(source_collection)
+    for owner in list(source.users_collection):
+        owner.objects.unlink(source)
+    source_collection.objects.link(source)
+    source_collection.objects.link(loose)
+    bystander = bpy.data.objects.new("StandBystander", bpy.data.meshes.new("StandBystander"))
+    bpy.context.scene.collection.objects.link(bystander)
+
+    apply_stand_layout(source, target, "SIDE")
+    check(source.location.x < 0 < target.location.x, "armatures stand on opposite sides of the origin")
+    check(abs(loose.location.x - source.location.x) < 1e-6, "imported mesh follows the source")
+    check(abs(bystander.location.x) < 1e-6, "an unrelated object stays put")
+    apply_stand_layout(source, target, "OVERLAP")
+    check(abs(source.location.x) < 1e-6 and abs(target.location.x) < 1e-6, "overlap clears the side offset")
+    check(abs(source.location.y) < 1e-6 and abs(target.location.y) < 1e-6, "overlap clears the depth offset")
+    settings.source = source
+    settings.target = target
+    settings.stand_layout = "DEPTH"
+    check(source.location.y < 0 < target.location.y, "the selector moves existing rigs")
+    print("STAND", round(source.location.x, 3), round(target.location.x, 3))
+
+
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     _source, _target = test_geometry_and_bake()
@@ -612,6 +728,8 @@ def main():
     test_mapping_root_reference_and_ik()
     test_source_clip_picker()
     test_hide_bone_spheres()
+    test_gltf_animation_scope()
+    test_stand_layout()
     print("RETARGET_TEST_OK")
 
 

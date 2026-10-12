@@ -196,6 +196,95 @@ def set_bone_sphere_display(armature, show: bool) -> None:
             pass
 
 
+def stand_positions(mode, source_half_x, source_half_y, target_half_x, target_half_y, gap=0.35):
+    """Ground locations for the source and the retarget target.
+
+    X is left/right in the front view: negative is the viewer's left.
+    Y is depth: negative is in front of the origin.
+    """
+    side_source = source_half_x + gap
+    side_target = target_half_x + gap
+    depth_source = source_half_y + gap
+    depth_target = target_half_y + gap
+    separated = source_half_x + target_half_x + gap
+    layouts = {
+        "SIDE": ((-side_source, 0.0), (side_target, 0.0)),
+        "SWAP": ((side_source, 0.0), (-side_target, 0.0)),
+        "OVERLAP": ((0.0, 0.0), (0.0, 0.0)),
+        "SOURCE_ORIGIN": ((0.0, 0.0), (separated, 0.0)),
+        "TARGET_ORIGIN": ((-separated, 0.0), (0.0, 0.0)),
+        "DEPTH": ((0.0, -depth_source), (0.0, depth_target)),
+    }
+    try:
+        return layouts[mode]
+    except KeyError as exc:
+        raise PipelineError("未知的站位: " + str(mode)) from exc
+
+
+def _half_extents(arm_obj):
+    from mathutils import Vector
+
+    rotation = arm_obj.matrix_world.to_3x3()
+    xs = []
+    ys = []
+
+    def add(point):
+        xs.append(point.x)
+        ys.append(point.y)
+
+    for bone in arm_obj.data.bones:
+        add(rotation @ bone.head_local)
+        add(rotation @ bone.tail_local)
+    for obj in bpy.data.objects:
+        if obj.parent != arm_obj or obj.type != "MESH":
+            continue
+        for corner in obj.bound_box:
+            add(rotation @ (obj.matrix_local @ Vector(corner)))
+    if not xs:
+        return 0.75, 0.75
+    return max(max(abs(value) for value in xs), 0.25), max(max(abs(value) for value in ys), 0.25)
+
+
+def _place_group(arm_obj, other, x, y):
+    arm_obj.location.x = x
+    arm_obj.location.y = y
+    scene_collection = bpy.context.scene.collection
+    for collection in arm_obj.users_collection:
+        if collection == scene_collection:
+            continue
+        if other is not None and other.name in collection.objects:
+            continue
+        for obj in collection.objects:
+            if obj == arm_obj or obj.parent is not None:
+                continue
+            if obj.type not in {"MESH", "EMPTY", "ARMATURE"}:
+                continue
+            obj.location.x = x
+            obj.location.y = y
+
+
+def apply_stand_layout(source, target, mode):
+    if source is not None and getattr(source, "type", None) != "ARMATURE":
+        source = None
+    if target is not None and getattr(target, "type", None) != "ARMATURE":
+        target = None
+    if source is None and target is None:
+        return
+    source_half = _half_extents(source) if source is not None else (0.75, 0.75)
+    target_half = _half_extents(target) if target is not None else (0.75, 0.75)
+    (source_x, source_y), (target_x, target_y) = stand_positions(
+        mode,
+        source_half[0],
+        source_half[1],
+        target_half[0],
+        target_half[1],
+    )
+    if source is not None:
+        _place_group(source, target, source_x, source_y)
+    if target is not None:
+        _place_group(target, source, target_x, target_y)
+
+
 def load_source(path, automatic_bone_orientation=False):
     objects, actions = import_model(path, automatic_bone_orientation=automatic_bone_orientation)
     armature = pick_armature(objects)
@@ -324,7 +413,7 @@ def _export_fbx_with_rest_bind(path):
             arm_obj.data.pose_position = pose_position
 
 
-def export_armature(arm_obj, path):
+def export_armature(arm_obj, path, export_all_actions=True):
     if arm_obj is None or arm_obj.type != "ARMATURE":
         raise PipelineError("还没有可导出的目标骨架。")
     ext = os.path.splitext(path)[1].lower()
@@ -338,6 +427,11 @@ def export_armature(arm_obj, path):
         _export_fbx_with_rest_bind(path)
     else:
         export_format = "GLB" if ext == ".glb" else "GLTF_SEPARATE"
+        if not export_all_actions:
+            anim = arm_obj.animation_data
+            if anim is None or anim.action is None:
+                raise PipelineError("当前没有可导出的动画。")
+        animation_mode = "ACTIONS" if export_all_actions else "ACTIVE_ACTIONS"
         try:
             _call_op(
                 bpy.ops.export_scene.gltf,
@@ -345,7 +439,7 @@ def export_armature(arm_obj, path):
                 use_selection=True,
                 export_format=export_format,
                 export_animations=True,
-                export_animation_mode="ACTIONS",
+                export_animation_mode=animation_mode,
                 export_nla_strips=False,
                 export_anim_single_armature=False,
                 export_rest_position_armature=True,
@@ -358,5 +452,6 @@ def export_armature(arm_obj, path):
                 use_selection=True,
                 export_format=export_format,
                 export_animations=True,
+                export_animation_mode=animation_mode,
             )
     return path

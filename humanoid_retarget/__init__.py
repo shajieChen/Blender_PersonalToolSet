@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Humanoid Retarget",
     "author": "Blender Plugin",
-    "version": (1, 3, 0),
+    "version": (1, 5, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 重定向",
     "description": "导入带动画的模型，自动绑定或映射到另一个人形，再导出",
@@ -17,6 +17,7 @@ from bpy.types import Operator, Panel, PropertyGroup, UIList
 from .mapping import PresetError, build_pairs, load_preset, merge_preset, save_preset
 from .pipeline import (
     PipelineError,
+    apply_stand_layout,
     export_armature,
     load_source,
     load_target_and_retarget,
@@ -65,6 +66,26 @@ def _on_source_changed(self, context):
     else:
         _preview_selected_action(self, context, jump=True)
     set_bone_sphere_display(self.source, self.show_bone_spheres)
+    _apply_current_stand(self)
+
+
+def _current_stand(settings):
+    try:
+        return settings.stand_layout
+    except AttributeError:
+        return "SIDE"
+
+
+def _apply_current_stand(settings):
+    apply_stand_layout(settings.source, settings.target, _current_stand(settings))
+
+
+def _on_target_changed(self, _context):
+    _apply_current_stand(self)
+
+
+def _on_stand_layout(self, _context):
+    _apply_current_stand(self)
 
 
 def _on_show_spheres(self, _context):
@@ -152,7 +173,21 @@ class HRSettings(PropertyGroup):
         items=_source_action_items,
         update=_on_source_action_changed,
     )
-    target: PointerProperty(name="目标角色", type=bpy.types.Object, poll=_armature_poll)
+    target: PointerProperty(name="目标角色", type=bpy.types.Object, poll=_armature_poll, update=_on_target_changed)
+    stand_layout: EnumProperty(
+        name="站位",
+        description="来源和目标在场景里的站位。默认来源在原点左侧，目标在右侧",
+        items=(
+            ("SIDE", "原点左右", "来源站在原点左侧，目标站在右侧"),
+            ("SWAP", "左右对调", "目标站在左侧，来源站在右侧"),
+            ("OVERLAP", "重叠原点", "两边都站在原点，用来对照骨骼是否重合"),
+            ("SOURCE_ORIGIN", "来源在原点", "动画来源留在原点，目标站到右侧"),
+            ("TARGET_ORIGIN", "目标在原点", "重定向目标留在原点，来源站到左侧"),
+            ("DEPTH", "原点前后", "来源站在原点前方，目标站在后方"),
+        ),
+        default="SIDE",
+        update=_on_stand_layout,
+    )
     status: StringProperty(name="状态", default="先导入带动画的模型，再导入要接收动作的角色。")
     mappings: CollectionProperty(type=HRMapItem)
     mapping_index: IntProperty(default=0)
@@ -356,8 +391,43 @@ class HR_OT_export(Operator):
     bl_description = "把目标角色和已经烘焙好的动画导出"
     bl_options = {"REGISTER"}
 
+    export_all_actions: BoolProperty(
+        name="全量动画",
+        description="导出全部动画。取消勾选则只导出当前动画",
+        default=True,
+    )
+
+    def invoke(self, context, event):
+        settings = context.scene.hr_settings
+        if settings.target is None:
+            self.report({"ERROR"}, "还没有重定向结果")
+            return {"CANCELLED"}
+        self.export_all_actions = True
+        if settings.export_format == "FBX":
+            return bpy.ops.hr.export_result_file("INVOKE_DEFAULT", export_all_actions=True)
+        return context.window_manager.invoke_props_dialog(self, title="导出 glTF 动画")
+
+    def draw(self, context):
+        column = self.layout.column()
+        column.prop(self, "export_all_actions")
+        if self.export_all_actions:
+            column.label(text="将导出全部动画")
+        else:
+            column.label(text="将只导出当前动画")
+
+    def execute(self, context):
+        return bpy.ops.hr.export_result_file("INVOKE_DEFAULT", export_all_actions=self.export_all_actions)
+
+
+class HR_OT_export_file(Operator):
+    bl_idname = "hr.export_result_file"
+    bl_label = "选择导出文件"
+    bl_description = "选择 glTF 或 FBX 的保存位置"
+    bl_options = {"REGISTER"}
+
     filepath: StringProperty(subtype="FILE_PATH")
     filter_glob: StringProperty(default="*.glb;*.gltf;*.fbx", options={"HIDDEN"})
+    export_all_actions: BoolProperty(name="全量动画", default=True, options={"HIDDEN"})
 
     def invoke(self, context, event):
         settings = context.scene.hr_settings
@@ -376,13 +446,15 @@ class HR_OT_export(Operator):
             path = bpy.path.ensure_ext(path, ".fbx")
         if settings.export_format == "GLB" and not path.lower().endswith((".glb", ".gltf")):
             path = bpy.path.ensure_ext(path, ".glb")
+        export_all = True if settings.export_format == "FBX" else self.export_all_actions
         try:
-            export_armature(settings.target, path)
+            export_armature(settings.target, path, export_all_actions=export_all)
         except PipelineError as exc:
             self.report({"ERROR"}, str(exc))
             _set_status(context, str(exc))
             return {"CANCELLED"}
-        text = "已导出: " + path
+        scope = "全量动画" if export_all else "当前动画"
+        text = f"已导出{scope}: {path}"
         _set_status(context, settings.status + "\n" + text)
         self.report({"INFO"}, text)
         return {"FINISHED"}
@@ -495,6 +567,7 @@ class HR_PT_panel(Panel):
     def draw(self, context):
         layout = self.layout
         settings = context.scene.hr_settings
+        layout.prop(settings, "stand_layout", text="站位")
 
         source_box = layout.box()
         source_box.label(text="1. 动画来源")
@@ -563,8 +636,19 @@ CLASSES = (
     HR_OT_load_preset,
     HR_OT_capture_reference,
     HR_OT_export,
+    HR_OT_export_file,
     HR_PT_panel,
 )
+
+
+def _apply_saved_stand(_dummy=None):
+    scene = getattr(bpy.context, "scene", None)
+    if scene is None or not hasattr(scene, "hr_settings"):
+        return
+    settings = scene.hr_settings
+    if settings.source is None and settings.target is None:
+        return
+    apply_stand_layout(settings.source, settings.target, settings.stand_layout)
 
 
 def _apply_saved_sphere_setting(_dummy=None):
@@ -586,12 +670,17 @@ def register():
         bpy.types.Scene.hr_settings = PointerProperty(type=HRSettings)
     if _apply_saved_sphere_setting not in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.append(_apply_saved_sphere_setting)
+    if _apply_saved_stand not in bpy.app.handlers.load_post:
+        bpy.app.handlers.load_post.append(_apply_saved_stand)
     _apply_saved_sphere_setting()
+    _apply_saved_stand()
 
 
 def unregister():
     if _apply_saved_sphere_setting in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.remove(_apply_saved_sphere_setting)
+    if _apply_saved_stand in bpy.app.handlers.load_post:
+        bpy.app.handlers.load_post.remove(_apply_saved_stand)
     if hasattr(bpy.types.Scene, "hr_settings"):
         del bpy.types.Scene.hr_settings
     for cls in reversed(CLASSES):
