@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Humanoid Retarget",
     "author": "Blender Plugin",
-    "version": (1, 5, 0),
+    "version": (1, 6, 1),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 重定向",
     "description": "导入带动画的模型，自动绑定或映射到另一个人形，再导出",
@@ -19,13 +19,37 @@ from .pipeline import (
     PipelineError,
     apply_stand_layout,
     export_armature,
+    initial_filepath,
     load_source,
     load_target_and_retarget,
     retarget_existing,
     retarget_selected_meshes,
+    set_armature_bones_visible,
     set_bone_sphere_display,
 )
 from .retarget import RetargetError, RetargetOptions, capture_reference, collect_actions, preview_action
+
+
+
+def _recall_filepath(context, attr):
+    stored = ""
+    addon = bpy.context.preferences.addons.get(__package__)
+    if addon is not None:
+        stored = getattr(addon.preferences, attr, "") or ""
+    if not stored:
+        stored = getattr(context.scene.hr_settings, attr, "") or ""
+    return initial_filepath(stored)
+
+
+def _remember_filepath(context, attr, path):
+    if not path:
+        return
+    settings = context.scene.hr_settings
+    if hasattr(settings, attr):
+        setattr(settings, attr, path)
+    addon = bpy.context.preferences.addons.get(__package__)
+    if addon is not None and hasattr(addon.preferences, attr):
+        setattr(addon.preferences, attr, path)
 
 
 def _armature_poll(_settings, obj):
@@ -66,6 +90,7 @@ def _on_source_changed(self, context):
     else:
         _preview_selected_action(self, context, jump=True)
     set_bone_sphere_display(self.source, self.show_bone_spheres)
+    set_armature_bones_visible(self.source, bool(getattr(self, "show_bones", False)))
     _apply_current_stand(self)
 
 
@@ -81,6 +106,7 @@ def _apply_current_stand(settings):
 
 
 def _on_target_changed(self, _context):
+    set_armature_bones_visible(self.target, bool(getattr(self, "show_bones", False)))
     _apply_current_stand(self)
 
 
@@ -90,6 +116,12 @@ def _on_stand_layout(self, _context):
 
 def _on_show_spheres(self, _context):
     set_bone_sphere_display(self.source, self.show_bone_spheres)
+
+
+def _on_show_bones(self, _context):
+    visible = bool(getattr(self, "show_bones", False))
+    set_armature_bones_visible(self.source, visible)
+    set_armature_bones_visible(self.target, visible)
 
 
 def _on_source_action_changed(self, context):
@@ -224,6 +256,14 @@ class HRSettings(PropertyGroup):
         description="Mixamo 下载的 FBX 建议打开。游戏提取的骨架如果已经朝向正确，保持关闭",
         default=False,
     )
+    last_source_path: StringProperty(name="上次动画来源", subtype="FILE_PATH")
+    last_target_path: StringProperty(name="上次目标模型", subtype="FILE_PATH")
+    show_bones: BoolProperty(
+        name="显示骨骼",
+        description="显示导入模型的骨骼。关闭后只保留网格，避免骨骼挡住角色",
+        default=False,
+        update=_on_show_bones,
+    )
     show_bone_spheres: BoolProperty(
         name="显示骨骼球体",
         description="显示导入骨架上的球体骨形和碰撞球。导入后默认关闭",
@@ -248,6 +288,9 @@ class HR_OT_import_source(Operator):
 
     def invoke(self, context, event):
         self.automatic_bone_orientation = context.scene.hr_settings.automatic_bone_orientation
+        remembered = _recall_filepath(context, "last_source_path")
+        if remembered:
+            self.filepath = remembered
         context.window_manager.fileselect_add(self)
         return {"RUNNING_MODAL"}
 
@@ -262,10 +305,13 @@ class HR_OT_import_source(Operator):
             _set_status(context, str(exc))
             return {"CANCELLED"}
         settings = context.scene.hr_settings
+        _remember_filepath(context, "last_source_path", self.filepath)
         settings.source = armature
         settings.automatic_bone_orientation = self.automatic_bone_orientation
         settings.show_bone_spheres = False
+        settings.show_bones = False
         set_bone_sphere_display(armature, False)
+        set_armature_bones_visible(armature, False)
         actions = collect_actions(armature)
         if actions and settings.source_action not in {action.name for action in actions}:
             settings.source_action = actions[0].name
@@ -319,6 +365,9 @@ class HR_OT_import_target(Operator):
         if context.scene.hr_settings.source is None:
             self.report({"ERROR"}, "请先导入含动画的模型")
             return {"CANCELLED"}
+        remembered = _recall_filepath(context, "last_target_path")
+        if remembered:
+            self.filepath = remembered
         context.window_manager.fileselect_add(self)
         return {"RUNNING_MODAL"}
 
@@ -331,7 +380,10 @@ class HR_OT_import_target(Operator):
             self.report({"ERROR"}, str(exc))
             _set_status(context, str(exc))
             return {"CANCELLED"}
+        _remember_filepath(context, "last_target_path", self.filepath)
         settings.target = armature
+        settings.show_bones = False
+        set_armature_bones_visible(armature, False)
         if options.resolved_pairs:
             _fill_mapping(settings, options.resolved_pairs)
         _set_status(context, summary)
@@ -378,6 +430,8 @@ class HR_OT_retarget_selected_mesh(Operator):
             _set_status(context, str(exc))
             return {"CANCELLED"}
         settings.target = armature
+        settings.show_bones = False
+        set_armature_bones_visible(armature, False)
         if options.resolved_pairs:
             _fill_mapping(settings, options.resolved_pairs)
         _set_status(context, summary)
@@ -613,16 +667,29 @@ class HR_PT_panel(Panel):
         export_box.prop(settings, "export_format", text="")
         export_box.operator("hr.export_result", icon="EXPORT")
 
-        settings_box = layout.box()
-        settings_box.label(text="Settings")
-        settings_box.prop(settings, "show_bone_spheres")
-
         note = layout.box()
         for line in settings.status.splitlines():
             note.label(text=line[:80])
 
+        settings_box = layout.box()
+        settings_box.label(text="Settings")
+        settings_box.prop(settings, "show_bones")
+        settings_box.prop(settings, "show_bone_spheres")
+
+
+
+class HR_AddonPreferences(bpy.types.AddonPreferences):
+    bl_idname = __package__
+
+    last_source_path: StringProperty(name="上次动画来源", subtype="FILE_PATH")
+    last_target_path: StringProperty(name="上次目标模型", subtype="FILE_PATH")
+
+    def draw(self, _context):
+        return
+
 
 CLASSES = (
+    HR_AddonPreferences,
     HRMapItem,
     HR_UL_mappings,
     HRSettings,
@@ -658,6 +725,8 @@ def _apply_saved_sphere_setting(_dummy=None):
     settings = scene.hr_settings
     if settings.source is not None:
         set_bone_sphere_display(settings.source, settings.show_bone_spheres)
+    set_armature_bones_visible(settings.source, bool(settings.show_bones))
+    set_armature_bones_visible(settings.target, bool(settings.show_bones))
 
 
 def register():

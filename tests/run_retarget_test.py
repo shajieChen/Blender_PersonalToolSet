@@ -14,7 +14,7 @@ if ROOT not in sys.path:
 
 import humanoid_retarget
 from humanoid_retarget.classify import classify_armature
-from humanoid_retarget.pipeline import export_armature, load_source, load_target_and_retarget, set_bone_sphere_display
+from humanoid_retarget.pipeline import export_armature, load_source, load_target_and_retarget, initial_filepath, set_armature_bones_visible, set_bone_sphere_display
 from humanoid_retarget.mapping import load_preset, merge_preset, save_preset
 from humanoid_retarget.retarget import RetargetOptions, bake_retarget, capture_reference
 
@@ -604,6 +604,68 @@ def test_hide_bone_spheres():
     settings.show_bone_spheres = False
 
 
+
+
+def test_import_buttons_remember_paths():
+    print("--- import paths ---")
+    import tempfile
+    from pathlib import Path
+
+    check(initial_filepath("") == "", "an empty path opens the default browser")
+    missing = os.path.join(tempfile.gettempdir(), "hr-missing-folder", "hero.fbx")
+    check(initial_filepath(missing) == "", "a deleted folder is not reused")
+    folder = tempfile.mkdtemp(prefix="hr-path-")
+    source = os.path.join(folder, "hero.fbx")
+    target = os.path.join(folder, "body.glb")
+    Path(source).write_bytes(b"x")
+    check(initial_filepath(source) == source, "an existing folder keeps the last file")
+    humanoid_retarget.register()
+    humanoid_retarget._remember_filepath(bpy.context, "last_source_path", source)
+    humanoid_retarget._remember_filepath(bpy.context, "last_target_path", target)
+    check(
+        humanoid_retarget._recall_filepath(bpy.context, "last_source_path") == source,
+        "the animation import remembers its own file",
+    )
+    check(
+        humanoid_retarget._recall_filepath(bpy.context, "last_target_path") == target,
+        "the target import remembers its own file",
+    )
+    check(
+        bpy.context.scene.hr_settings.last_source_path != bpy.context.scene.hr_settings.last_target_path,
+        "the two import buttons keep separate paths",
+    )
+
+
+def test_hide_imported_bones():
+    print("--- hide imported bones ---")
+    arm_data = bpy.data.armatures.new("HideBones")
+    arm = bpy.data.objects.new("HideBones", arm_data)
+    bpy.context.scene.collection.objects.link(arm)
+    bpy.context.view_layer.objects.active = arm
+    bpy.ops.object.mode_set(mode="EDIT")
+    visible = arm.data.edit_bones.new("Visible")
+    visible.head = (0.0, 0.0, 0.0)
+    visible.tail = (0.0, 0.0, 1.0)
+    helper = arm.data.edit_bones.new("Helper")
+    helper.head = (0.2, 0.0, 0.0)
+    helper.tail = (0.2, 0.0, 1.0)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    arm.data.bones["Helper"].hide = True
+    bpy.ops.mesh.primitive_cube_add(size=1.0)
+    mesh = bpy.context.active_object
+    mesh.name = "HideBonesMesh"
+    mesh.parent = arm
+    set_armature_bones_visible(arm, False)
+    set_armature_bones_visible(arm, False)
+    check(arm.data.bones["Visible"].hide is True, "imported bones are hidden")
+    check(arm.data.bones["Helper"].hide is True, "already hidden bones stay hidden")
+    check(mesh.hide_get() is False, "mesh stays visible while bones are hidden")
+    set_armature_bones_visible(arm, True)
+    check(arm.data.bones["Visible"].hide is False, "bones can be shown again")
+    check(arm.data.bones["Helper"].hide is True, "bones hidden before the tool stay hidden")
+    check(mesh.hide_get() is False, "showing bones leaves the mesh visible")
+
+
 def _count_imported_gltf_actions(path):
     before = {action.name for action in bpy.data.actions}
     before_objects = set(bpy.data.objects)
@@ -728,6 +790,8 @@ def main():
     test_mapping_root_reference_and_ik()
     test_source_clip_picker()
     test_hide_bone_spheres()
+    test_import_buttons_remember_paths()
+    test_hide_imported_bones()
     test_gltf_animation_scope()
     test_stand_layout()
     print("RETARGET_TEST_OK")

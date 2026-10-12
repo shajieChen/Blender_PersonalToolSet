@@ -19,6 +19,17 @@ class PipelineError(RuntimeError):
     pass
 
 
+
+def initial_filepath(stored: str) -> str:
+    """Return a stored file path when its folder still exists."""
+    if not stored:
+        return ""
+    folder = stored if os.path.isdir(stored) else os.path.dirname(stored)
+    if folder and os.path.isdir(folder):
+        return stored
+    return ""
+
+
 def _call_op(operator, **wanted):
     allowed = set(operator.get_rna_type().properties.keys())
     kwargs = {key: value for key, value in wanted.items() if key in allowed}
@@ -194,6 +205,32 @@ def set_bone_sphere_display(armature, show: bool) -> None:
             obj.hide_set(False)
         except RuntimeError:
             pass
+
+
+
+def set_armature_bones_visible(armature, show: bool) -> None:
+    """Hide or restore bones on one armature. Skinned meshes stay visible."""
+    if armature is None or getattr(armature, "type", None) != "ARMATURE":
+        return
+    data = getattr(armature, "data", None)
+    if data is None or not hasattr(data, "bones"):
+        return
+    if not show:
+        if "hr_bones_hidden_by_tool" not in armature:
+            hidden_before = [bone.name for bone in data.bones if bone.hide]
+            armature["hr_bone_hide_before"] = "\n".join(hidden_before)
+            armature["hr_bones_hidden_by_tool"] = True
+        for bone in data.bones:
+            bone.hide = True
+        return
+    if not armature.get("hr_bones_hidden_by_tool"):
+        return
+    previously = {name for name in str(armature.get("hr_bone_hide_before", "")).split("\n") if name}
+    for bone in data.bones:
+        bone.hide = bone.name in previously
+    del armature["hr_bones_hidden_by_tool"]
+    if "hr_bone_hide_before" in armature:
+        del armature["hr_bone_hide_before"]
 
 
 def stand_positions(mode, source_half_x, source_half_y, target_half_x, target_half_y, gap=0.35):
