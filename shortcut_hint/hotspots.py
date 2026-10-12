@@ -95,13 +95,16 @@ def hotspot_at(hotspots, x, y, pad=0.0):
     return None
 
 
-def chip_anchor(hotspots, gap):
-    """Top-right of the hint, sitting just under the lowest navigation control."""
-    if not hotspots:
-        return None
-    right = max(spot["cx"] + spot["radius"] for spot in hotspots)
-    top = min(spot["cy"] - spot["radius"] for spot in hotspots) - gap
-    return {"right": right, "top": top}
+def chip_anchor_beside(spot, gap):
+    """Right edge and vertical center, sitting just left of the hovered button.
+
+    Blender's own tooltip drops below-left of the icon and covers anything
+    drawn under the column.
+    """
+    return {
+        "right": spot["cx"] - spot["radius"] - gap,
+        "center_y": spot["cy"],
+    }
 
 
 def place_chip(anchor_right, anchor_top, chip_w, chip_h, region_w, region_h, margin):

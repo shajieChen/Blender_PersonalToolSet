@@ -81,12 +81,12 @@ class HotspotTests(unittest.TestCase):
         move = next(spot for spot in spots if spot["id"] == "move")
         self.assertEqual(hotspots.hotspot_at(spots, move["cx"], move["cy"])["id"], "move")
 
-    def test_chip_sits_under_the_lowest_button(self):
+    def test_chip_sits_left_of_the_hovered_button(self):
         spots = self.spots()
-        persp = next(spot for spot in spots if spot["id"] == "persp")
-        anchor = hotspots.chip_anchor(spots, gap=8)
-        self.assertAlmostEqual(anchor["top"], persp["cy"] - persp["radius"] - 8)
-        self.assertGreater(anchor["right"], persp["cx"])
+        move = next(spot for spot in spots if spot["id"] == "move")
+        anchor = hotspots.chip_anchor_beside(move, gap=8)
+        self.assertAlmostEqual(anchor["center_y"], move["cy"])
+        self.assertAlmostEqual(anchor["right"], move["cx"] - move["radius"] - 8)
 
     def test_camera_view_drops_the_perspective_button(self):
         ids = [spot["id"] for spot in self.spots(view_perspective="CAMERA")]

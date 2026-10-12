@@ -1,10 +1,10 @@
 bl_info = {
     "name": "Shortcut Hint",
     "author": "Blender Plugin",
-    "version": (1, 0, 0),
+    "version": (1, 0, 1),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 快捷键",
-    "description": "鼠标停在视图导航按钮上时，在按钮下方用彩色按键显示快捷键",
+    "description": "鼠标停在视图导航按钮上时，在按钮左侧用彩色按键显示快捷键",
     "category": "3D View",
 }
 
@@ -14,7 +14,7 @@ import bpy
 from bpy.props import BoolProperty
 
 from .chords import binding_for
-from .hotspots import chip_anchor, hotspot_at, navigation_hotspots, place_chip, ui_scale_factor
+from .hotspots import chip_anchor_beside, hotspot_at, navigation_hotspots, place_chip, ui_scale_factor
 
 _handle = None
 _trackers = set()
@@ -175,7 +175,7 @@ def _update_hover(context, event):
         context.preferences.system.pixel_size,
         context.preferences.system.ui_scale,
     )
-    spot = hotspot_at(spots, local_x, local_y, pad=2.0 * scale)
+    spot = hotspot_at(spots, local_x, local_y, pad=6.0 * scale)
     if spot is None:
         _set_hint(None, None, None)
         return
@@ -184,7 +184,7 @@ def _update_hover(context, event):
     if not chips:
         _set_hint(None, None, None)
         return
-    anchor = chip_anchor(spots, gap=8.0 * scale)
+    anchor = chip_anchor_beside(spot, gap=10.0 * scale)
     hint = {
         "region": region.as_pointer(),
         "label": _operator_label(spot["operator"]),
@@ -246,7 +246,7 @@ def _draw():
         anchor = hint["anchor"]
         x, y = place_chip(
             anchor["right"],
-            anchor["top"],
+            anchor["center_y"] + height * 0.5,
             width,
             height,
             region.width,
@@ -287,7 +287,7 @@ class ShortcutHintPreferences(bpy.types.AddonPreferences):
 
     show_overlay: BoolProperty(
         name="显示悬停快捷键",
-        description="鼠标停在视图右上角的导航按钮上时，在按钮下方显示彩色快捷键",
+        description="鼠标停在视图右上角的导航按钮上时，在按钮左侧显示彩色快捷键",
         default=True,
     )
 
@@ -308,7 +308,7 @@ class SHORTCUT_PT_hint(bpy.types.Panel):
         layout.prop(prefs, "show_overlay")
         col = layout.column(align=True)
         col.label(text="停在右上角导航按钮上")
-        col.label(text="快捷键显示在按钮下方")
+        col.label(text="彩色快捷键显示在按钮左侧")
 
 
 class SHORTCUT_OT_track(bpy.types.Operator):
