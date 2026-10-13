@@ -1078,6 +1078,95 @@ def test_rest_hips_yaw_preserves_arm_chain():
         check(angle < 1.0e-4, role + " stays at identity")
 
 
+def _body_basis(obj, names):
+    bones = obj.data.bones
+    up = bones[names["head"]].head_local - bones[names["hips"]].head_local
+    up.normalize()
+    left = bones[names["upperarm_l"]].head_local - bones[names["upperarm_r"]].head_local
+    left = left - up * left.dot(up)
+    left.normalize()
+    forward = left.cross(up).normalized()
+    left = up.cross(forward).normalized()
+    return Matrix((
+        (left.x, up.x, forward.x),
+        (left.y, up.y, forward.y),
+        (left.z, up.z, forward.z),
+    ))
+
+
+def _rest_delta(obj, bone_name):
+    pose = obj.pose.bones[bone_name].matrix.to_3x3()
+    rest = obj.data.bones[bone_name].matrix_local.to_3x3()
+    return pose @ rest.inverted()
+
+
+def _chain_twist_angle(obj, names, role, child_role):
+    chain = obj.pose.bones[names[child_role]].head - obj.pose.bones[names[role]].head
+    chain.normalize()
+    rotation = _rest_delta(obj, names[role]).to_quaternion().normalized()
+    if rotation.w < 0.0:
+        rotation.negate()
+    frame = Vector((0.0, 1.0, 0.0)).rotation_difference(chain)
+    local = frame.inverted() @ rotation @ frame
+    twist = local.to_swing_twist("Y")[1]
+    return (twist + math.pi) % (2.0 * math.pi) - math.pi
+
+
+def _body_delta_angle(source, target, source_names, target_names, role):
+    source_body = _body_basis(source, source_names)
+    target_body = _body_basis(target, target_names)
+    source_delta = source_body.inverted() @ _rest_delta(source, source_names[role]) @ source_body
+    target_delta = target_body.inverted() @ _rest_delta(target, target_names[role]) @ target_body
+    return source_delta.to_quaternion().rotation_difference(target_delta.to_quaternion()).angle
+
+
+def test_torso_twist_keeps_head_delta():
+    print("--- torso twist keeps head delta ---")
+    source_names = _role_names("TorS")
+    target_names = _role_names("TorT")
+    source = build_biped("TorsoSource", source_names, arm_roll=0.0, scale=1.0)
+    target = build_biped("TorsoTarget", target_names, arm_roll=0.9, scale=1.0)
+    bpy.context.view_layer.objects.active = source
+    bpy.ops.object.mode_set(mode="POSE")
+    spine = source.pose.bones[source_names["spine"]]
+    head = source.pose.bones[source_names["head"]]
+    spine.rotation_mode = "QUATERNION"
+    head.rotation_mode = "QUATERNION"
+    spine.rotation_quaternion = Quaternion((0.0, 1.0, 0.0), math.radians(40.0))
+    head.rotation_quaternion = Quaternion((1.0, 0.0, 0.0), math.radians(25.0))
+    for bone in (spine, head):
+        bone.keyframe_insert("rotation_quaternion", frame=1)
+        bone.keyframe_insert("rotation_quaternion", frame=4)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    _report, baked = bake_retarget(
+        source,
+        target,
+        RetargetOptions(pairs=pairs, reference="REST", root_motion="KEEP", foot_ik=False, hand_ik=False),
+    )
+    check(len(baked) == 1 and target.animation_data.action == baked[-1], "torso sample uses the baked action")
+    bpy.context.scene.frame_set(4)
+    bpy.context.view_layer.update()
+    for role, child in (("spine", "chest"), ("chest", "neck"), ("neck", "head")):
+        lost = _wrap_angle(
+            _chain_twist_angle(source, source_names, role, child)
+            - _chain_twist_angle(target, target_names, role, child)
+        )
+        print("TORSO_TWIST", role, round(math.degrees(lost), 6))
+        check(abs(lost) < math.radians(2.0), role + " twist stays within 2 degrees")
+    head_error = _body_delta_angle(source, target, source_names, target_names, "head")
+    print("HEAD_DELTA_DEG", round(math.degrees(head_error), 6))
+    check(head_error < math.radians(2.0), "head keeps its own rest-relative rotation")
+    direction = _armature_chain(source, source_names["upperarm_l"], source_names["forearm_l"]).dot(
+        _armature_chain(target, target_names["upperarm_l"], target_names["forearm_l"])
+    )
+    print("TORSO_ARM", round(direction, 6))
+    check(abs(direction - 1.0) < 1.5e-3, "upper arm chain survives the torso twist")
+    for role in ("hand_l", "hand_r"):
+        angle = target.pose.bones[target_names[role]].rotation_quaternion.angle
+        check(angle < 1.0e-4, role + " stays at identity")
+
+
 def test_swing_preserves_target_roll():
     print("--- swing keeps target roll ---")
     source_names = _role_names("SwS")
@@ -1717,6 +1806,7 @@ def main():
     test_gltf_animation_scope()
     test_stand_layout()
     test_rest_hips_yaw_preserves_arm_chain()
+    test_torso_twist_keeps_head_delta()
     test_swing_preserves_target_roll()
     test_skinned_duplicate_bone()
     test_bone_gizmos()

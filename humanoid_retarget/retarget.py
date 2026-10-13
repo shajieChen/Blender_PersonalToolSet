@@ -2,8 +2,9 @@
 
 Rest rotation swings each target bone so the limb points the same way as
 the source, measured from one mapped joint to the next in the character's
-left/up/forward frame. Twist around that limb stays on the target bind, so a
-different bone roll does not spin the skinned mesh. Current-pose reference
+left/up/forward frame. Limb twist stays on the target bind. Hips, spine, chest
+and neck also take the source twist about that chain. The head has no outgoing
+chain, so its rest-relative rotation is transferred in the body frame. Current-pose reference
 keeps the captured target pose and adds only the change since that pose. Hip
 translation is scaled by the
 hips-to-head height ratio and can drop horizontal travel. Optional hand and
@@ -244,6 +245,32 @@ def _anatomical_roles(arm, fallback):
     return fallback
 
 
+_TORSO_TWIST_ROLES = frozenset({"hips", "spine", "chest", "neck"})
+
+
+def _twist_about_chain(src, source_name, src_chain, desired, orient):
+    """Add the source rest-relative twist about the posed chain. Bind stays on the right."""
+    source_rest = _rot3(src.data.bones[source_name].matrix_local)
+    source_delta = _rot3(src.pose.bones[source_name].matrix) @ source_rest.inverted()
+    source_rotation = source_delta.to_quaternion().normalized()
+    if source_rotation.w < 0.0:
+        source_rotation.negate()
+    chain_frame = Vector((0.0, 1.0, 0.0)).rotation_difference(src_chain.normalized())
+    chain_rotation = chain_frame.inverted() @ source_rotation @ chain_frame
+    twist = chain_rotation.to_swing_twist("Y")[1]
+    twist = (twist + pi) % (2.0 * pi) - pi
+    return Quaternion(desired.normalized(), twist).to_matrix() @ orient
+
+
+def _head_orient(src, pose_bone, source_name, source_body, target_body):
+    """Map the head's rest-relative rotation through the body frame onto the target rest."""
+    source_rest = _rot3(src.data.bones[source_name].matrix_local)
+    source_delta = _rot3(src.pose.bones[source_name].matrix) @ source_rest.inverted()
+    change = source_body.inverted() @ source_delta @ source_body
+    target_rest = _rot3(pose_bone.bone.matrix_local)
+    return target_body @ change @ target_body.inverted() @ target_rest
+
+
 def _apply_body_orientations(src, tgt, pairs, options):
     """Point each target limb at the source limb without taking the source roll.
 
@@ -282,23 +309,17 @@ def _apply_body_orientations(src, tgt, pairs, options):
         if absolute:
             src_chain = _chain_vector(src, src_roles, role, True)
             tgt_chain = _chain_vector(tgt, tgt_roles, role, False)
-            if src_chain is None or tgt_chain is None:
+            if role == "head" and (src_chain is None or tgt_chain is None):
+                orient = _head_orient(src, pose_bone, source_name, source_body, target_body)
+            elif src_chain is None or tgt_chain is None:
                 continue
-            desired = target_body @ (source_body.inverted() @ src_chain).normalized()
-            rest_orient = pose_bone.bone.matrix_local.to_3x3()
-            swing = tgt_chain.normalized().rotation_difference(desired.normalized())
-            orient = swing.to_matrix() @ rest_orient
-            if role == "hips":
-                source_rest = _rot3(src.data.bones[source_name].matrix_local)
-                source_delta = _rot3(src.pose.bones[source_name].matrix) @ source_rest.inverted()
-                source_rotation = source_delta.to_quaternion().normalized()
-                if source_rotation.w < 0.0:
-                    source_rotation.negate()
-                chain_frame = Vector((0.0, 1.0, 0.0)).rotation_difference(src_chain.normalized())
-                chain_rotation = chain_frame.inverted() @ source_rotation @ chain_frame
-                hips_twist = chain_rotation.to_swing_twist("Y")[1]
-                hips_twist = (hips_twist + pi) % (2.0 * pi) - pi
-                orient = Quaternion(desired.normalized(), hips_twist).to_matrix() @ orient
+            else:
+                desired = target_body @ (source_body.inverted() @ src_chain).normalized()
+                rest_orient = pose_bone.bone.matrix_local.to_3x3()
+                swing = tgt_chain.normalized().rotation_difference(desired.normalized())
+                orient = swing.to_matrix() @ rest_orient
+                if role in _TORSO_TWIST_ROLES:
+                    orient = _twist_about_chain(src, source_name, src_chain, desired, orient)
         else:
             source_ref = _stored_matrix(data.get("source_matrix"), source_name, src.data.bones[source_name].matrix_local)
             target_ref = _stored_matrix(data.get("target_matrix"), target_name, tgt.data.bones[target_name].matrix_local)
