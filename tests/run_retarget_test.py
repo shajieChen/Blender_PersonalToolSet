@@ -13,7 +13,7 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 import humanoid_retarget
-from humanoid_retarget.classify import classify_armature
+from humanoid_retarget.classify import classify_armature, classify_by_name, correct_deform_pairs
 from humanoid_retarget.pipeline import export_armature, load_source, load_target_and_retarget, initial_filepath, set_armature_bones_visible, set_bone_sphere_display
 from humanoid_retarget.mapping import load_preset, merge_preset, save_preset
 from humanoid_retarget.retarget import RetargetOptions, bake_retarget, capture_reference
@@ -367,11 +367,11 @@ def test_mapping_root_reference_and_ik():
     scene = bpy.context.scene
     scene.frame_set(10)
     bpy.context.view_layer.update()
-    quiet = bone_dir(target, target_names["upperarm_l"]).dot(rest_direction(target, target_names["upperarm_l"]))
-    driven = bone_dir(target, target_names["upperarm_r"]).dot(rest_direction(target, target_names["upperarm_r"]))
-    print("MAP", quiet, driven)
-    check(quiet > 0.95, "edited mapping does not play the arm clip on the original left bone")
-    check(driven < 0.8, "edited mapping plays the arm clip on the chosen bone")
+    on_chosen = bone_dir(target, target_names["upperarm_r"]).dot(bone_dir(source, roles["upperarm_l"]))
+    on_other = bone_dir(target, target_names["upperarm_l"]).dot(bone_dir(source, roles["upperarm_r"]))
+    print("MAP", round(on_chosen, 3), round(on_other, 3))
+    check(on_chosen > 0.95, "edited mapping plays the raised arm on the chosen bone")
+    check(on_other > 0.95, "edited mapping points the other bone along the source bone it is mapped from")
 
     keep = build_biped("KeepRig", _role_names("Keep"), arm_roll=0.0, scale=1.0)
     stay = build_biped("StayRig", _role_names("Stay"), arm_roll=0.0, scale=1.0)
@@ -636,6 +636,28 @@ def test_import_buttons_remember_paths():
     )
 
 
+
+def test_file_load_does_not_hide_bones_inside_the_pointer_callback():
+    print("--- startup bone hide is deferred ---")
+    humanoid_retarget.register()
+    arm_data = bpy.data.armatures.new("LoadBones")
+    arm = bpy.data.objects.new("LoadBones", arm_data)
+    bpy.context.scene.collection.objects.link(arm)
+    bpy.context.view_layer.objects.active = arm
+    arm.select_set(True)
+    bpy.ops.object.mode_set(mode="EDIT")
+    bone = arm.data.edit_bones.new("Bone")
+    bone.head = (0.0, 0.0, 0.0)
+    bone.tail = (0.0, 0.0, 1.0)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    settings = bpy.context.scene.hr_settings
+    settings.show_bones = True
+    settings.source = arm
+    check(arm.data.bones["Bone"].hide is False, "restoring the source pointer does not rewrite bone visibility")
+    settings.show_bones = False
+    check(arm.data.bones["Bone"].hide is True, "turning the checkbox off still hides bones")
+
+
 def test_hide_imported_bones():
     print("--- hide imported bones ---")
     arm_data = bpy.data.armatures.new("HideBones")
@@ -660,9 +682,11 @@ def test_hide_imported_bones():
     check(arm.data.bones["Visible"].hide is True, "imported bones are hidden")
     check(arm.data.bones["Helper"].hide is True, "already hidden bones stay hidden")
     check(mesh.hide_get() is False, "mesh stays visible while bones are hidden")
+    check(arm.hide_get() is True, "octahedral bone cones are hidden with the armature")
     set_armature_bones_visible(arm, True)
     check(arm.data.bones["Visible"].hide is False, "bones can be shown again")
     check(arm.data.bones["Helper"].hide is True, "bones hidden before the tool stay hidden")
+    check(arm.hide_get() is False, "showing bones reveals the armature again")
     check(mesh.hide_get() is False, "showing bones leaves the mesh visible")
 
 
@@ -782,6 +806,156 @@ def test_stand_layout():
     print("STAND", round(source.location.x, 3), round(target.location.x, 3))
 
 
+
+def test_split_parent_orientation():
+    print("--- body orientation across different parents ---")
+    src_names = _role_names("SplitS")
+    tgt_names = _role_names("SplitT")
+    source = build_biped("SplitSource", src_names, arm_roll=0.0, scale=1.0)
+    target = build_biped("SplitTarget", tgt_names, arm_roll=0.4, scale=1.0)
+    bpy.context.view_layer.objects.active = source
+    bpy.ops.object.mode_set(mode="EDIT")
+    root = source.data.edit_bones.new("SplitRoot")
+    root.head = Vector((0.0, 0.0, 0.8))
+    root.tail = Vector((0.0, 0.0, 0.95))
+    source.data.edit_bones[src_names["hips"]].parent = root
+    source.data.edit_bones[src_names["spine"]].parent = root
+    bpy.ops.object.mode_set(mode="POSE")
+    root_pose = source.pose.bones["SplitRoot"]
+    spine_pose = source.pose.bones[src_names["spine"]]
+    arm_pose = source.pose.bones[src_names["upperarm_l"]]
+    root_pose.rotation_mode = "XYZ"
+    spine_pose.rotation_mode = "XYZ"
+    arm_pose.rotation_mode = "XYZ"
+    root_pose.rotation_euler = (0.0, 0.0, 0.0)
+    spine_pose.rotation_euler = (0.0, 0.0, 0.0)
+    arm_pose.rotation_euler = (0.0, 0.0, 0.0)
+    root_pose.keyframe_insert("rotation_euler", frame=1)
+    spine_pose.keyframe_insert("rotation_euler", frame=1)
+    arm_pose.keyframe_insert("rotation_euler", frame=1)
+    root_pose.rotation_euler = (0.6, 0.2, 0.8)
+    spine_pose.rotation_euler = (0.4, 0.0, 0.3)
+    arm_pose.rotation_euler = (0.0, 0.0, -1.1)
+    root_pose.keyframe_insert("rotation_euler", frame=8)
+    spine_pose.keyframe_insert("rotation_euler", frame=8)
+    arm_pose.keyframe_insert("rotation_euler", frame=8)
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+    pairs = [(role, src_names[role], tgt_names[role]) for role in src_names]
+    options = RetargetOptions(pairs=pairs)
+    bake_retarget(source, target, options)
+    bpy.context.scene.frame_set(8)
+    bpy.context.view_layer.update()
+
+    def chain(arm, parent_name, child_name):
+        direction = arm.pose.bones[child_name].head - arm.pose.bones[parent_name].head
+        return direction.normalized()
+
+    spine_dot = chain(source, src_names["spine"], src_names["chest"]).dot(
+        chain(target, tgt_names["spine"], tgt_names["chest"])
+    )
+    arm_dot = chain(source, src_names["upperarm_l"], src_names["forearm_l"]).dot(
+        chain(target, tgt_names["upperarm_l"], tgt_names["forearm_l"])
+    )
+    print("SPLIT", round(spine_dot, 3), round(arm_dot, 3))
+    check(spine_dot > 0.98, "spine direction follows the source when its parent is not the hips")
+    check(arm_dot > 0.98, "arm direction follows the source across a different parent chain")
+
+    wrong = [(role, source_name, target_name) for role, source_name, target_name in pairs]
+    wrong = [
+        (role, source_name, "OffChest" if role == "chest" else target_name)
+        for role, source_name, target_name in wrong
+    ]
+    bpy.context.view_layer.objects.active = target
+    bpy.ops.object.mode_set(mode="EDIT")
+    extra = target.data.edit_bones.new("OffChest")
+    extra.head = Vector((0.4, 0.2, 1.2))
+    extra.tail = Vector((0.4, 0.2, 1.45))
+    extra.parent = target.data.edit_bones[tgt_names["hips"]]
+    bpy.ops.object.mode_set(mode="OBJECT")
+    replaced = RetargetOptions(pairs=wrong)
+    bake_retarget(source, target, replaced)
+    chest_targets = [target_name for role, _source_name, target_name in replaced.resolved_pairs if role == "chest"]
+    check(chest_targets == [tgt_names["chest"]], "chest mapping moves off the side bone and onto the spine")
+
+
+def test_swing_preserves_target_roll():
+    print("--- swing keeps target roll ---")
+    source_names = _role_names("SwS")
+    target_names = _role_names("SwT")
+    source = build_biped("SwingSource", source_names, arm_roll=0.0, scale=1.0)
+    target = build_biped("SwingTarget", target_names, arm_roll=0.9, scale=1.0)
+    animate(source, source_names)
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    bake_retarget(source, target, RetargetOptions(pairs=pairs))
+    bpy.context.scene.frame_set(10)
+    bpy.context.view_layer.update()
+    direction = bone_dir(source, source_names["upperarm_l"]).dot(bone_dir(target, target_names["upperarm_l"]))
+    print("SWING DIR", round(direction, 3))
+    check(direction > 0.98, "swing matches the raised arm direction")
+    pose = target.pose.bones[target_names["upperarm_l"]]
+    bone = pose.bone
+    rest_dir = (bone.tail_local - bone.head_local).normalized()
+    pose_dir = (pose.tail - pose.head).normalized()
+    swing = rest_dir.rotation_difference(pose_dir)
+    expected = (swing.to_matrix() @ (bone.matrix_local.to_3x3() @ Vector((1.0, 0.0, 0.0)))).normalized()
+    actual = (pose.matrix.to_3x3() @ Vector((1.0, 0.0, 0.0))).normalized()
+    print("SWING ROLL", round(expected.dot(actual), 3))
+    check(expected.dot(actual) > 0.98, "target arm roll stays on the bind instead of the source roll")
+
+
+def test_skinned_duplicate_bone():
+    print("--- skinned duplicate ---")
+    arm_data = bpy.data.armatures.new("SkinPick")
+    arm = bpy.data.objects.new("SkinPick", arm_data)
+    bpy.context.collection.objects.link(arm)
+    bpy.context.view_layer.objects.active = arm
+    bpy.ops.object.mode_set(mode="EDIT")
+    decoy = arm_data.edit_bones.new("bip Head")
+    decoy.head = Vector((0.0, 0.0, 1.5))
+    decoy.tail = Vector((0.0, 0.0, 1.7))
+    real = arm_data.edit_bones.new("Head")
+    real.head = Vector((0.0, 0.0, 1.5))
+    real.tail = Vector((0.0, 0.0, 1.7))
+    bpy.ops.object.mode_set(mode="OBJECT")
+    mesh_data = bpy.data.meshes.new("SkinPickMesh")
+    mesh_data.from_pydata([(0, 0, 0), (0, 0.1, 0), (0.1, 0, 0), (0, 0, 0.1)], [], [(0, 1, 2), (0, 2, 3)])
+    mesh = bpy.data.objects.new("SkinPickMesh", mesh_data)
+    bpy.context.collection.objects.link(mesh)
+    mesh.parent = arm
+    modifier = mesh.modifiers.new("Armature", "ARMATURE")
+    modifier.object = arm
+    group = mesh.vertex_groups.new(name="Head")
+    group.add([0, 1, 2, 3], 1.0, "REPLACE")
+    found = classify_by_name(arm)
+    check(found.get("head") == "Head", "name match prefers the bone that deforms the mesh")
+
+    source_names = _role_names("DuS")
+    target_names = _role_names("DuT")
+    source = build_biped("DupSource", source_names, arm_roll=0.0, scale=1.0)
+    target = build_biped("DupTarget", target_names, arm_roll=0.0, scale=1.0)
+    target.data.bones[target_names["head"]].name = "Head"
+    bpy.context.view_layer.objects.active = target
+    bpy.ops.object.mode_set(mode="EDIT")
+    extra = target.data.edit_bones.new("bip Head")
+    extra.head = Vector((0.3, 0.0, 1.5))
+    extra.tail = Vector((0.3, 0.0, 1.7))
+    extra.parent = target.data.edit_bones[target_names["chest"]]
+    bpy.ops.object.mode_set(mode="OBJECT")
+    body = bpy.data.meshes.new("DupBody")
+    body.from_pydata([(0, 0, 0), (0, 0.1, 0), (0.1, 0, 0), (0, 0, 0.1)], [], [(0, 1, 2), (0, 2, 3)])
+    body_obj = bpy.data.objects.new("DupBody", body)
+    bpy.context.collection.objects.link(body_obj)
+    body_obj.parent = target
+    body_mod = body_obj.modifiers.new("Armature", "ARMATURE")
+    body_mod.object = target
+    body_group = body_obj.vertex_groups.new(name="Head")
+    body_group.add([0, 1, 2, 3], 1.0, "REPLACE")
+    pairs = [(role, source_names[role], target_names[role] if role != "head" else "bip Head") for role in source_names]
+    resolved = {role: target_name for role, _source_name, target_name in correct_deform_pairs(source, target, pairs)}
+    check(resolved.get("head") == "Head", "a preset duplicate is replaced by the weighted head bone")
+
+
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     _source, _target = test_geometry_and_bake()
@@ -791,9 +965,13 @@ def main():
     test_source_clip_picker()
     test_hide_bone_spheres()
     test_import_buttons_remember_paths()
+    test_file_load_does_not_hide_bones_inside_the_pointer_callback()
     test_hide_imported_bones()
     test_gltf_animation_scope()
     test_stand_layout()
+    test_swing_preserves_target_roll()
+    test_skinned_duplicate_bone()
+    test_split_parent_orientation()
     print("RETARGET_TEST_OK")
 
 

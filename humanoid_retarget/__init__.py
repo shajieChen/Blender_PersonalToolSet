@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Humanoid Retarget",
     "author": "Blender Plugin",
-    "version": (1, 6, 1),
+    "version": (1, 6, 5),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 重定向",
     "description": "导入带动画的模型，自动绑定或映射到另一个人形，再导出",
@@ -90,7 +90,6 @@ def _on_source_changed(self, context):
     else:
         _preview_selected_action(self, context, jump=True)
     set_bone_sphere_display(self.source, self.show_bone_spheres)
-    set_armature_bones_visible(self.source, bool(getattr(self, "show_bones", False)))
     _apply_current_stand(self)
 
 
@@ -106,7 +105,6 @@ def _apply_current_stand(settings):
 
 
 def _on_target_changed(self, _context):
-    set_armature_bones_visible(self.target, bool(getattr(self, "show_bones", False)))
     _apply_current_stand(self)
 
 
@@ -119,9 +117,7 @@ def _on_show_spheres(self, _context):
 
 
 def _on_show_bones(self, _context):
-    visible = bool(getattr(self, "show_bones", False))
-    set_armature_bones_visible(self.source, visible)
-    set_armature_bones_visible(self.target, visible)
+    _apply_saved_view_now()
 
 
 def _on_source_action_changed(self, context):
@@ -166,6 +162,11 @@ def _options_from_settings(settings, use_mapping=True):
 def _remember_generated_pairs(settings, options, had_mapping):
     if not had_mapping and options.resolved_pairs:
         _fill_mapping(settings, options.resolved_pairs)
+        return
+    resolved = {role: (source_name, target_name) for role, source_name, target_name in options.resolved_pairs or []}
+    for item in settings.mappings:
+        if item.role in {"chest", "neck", "head"} and item.role in resolved:
+            item.source_bone, item.target_bone = resolved[item.role]
 
 
 def _set_status(context, text, level="INFO"):
@@ -718,15 +719,33 @@ def _apply_saved_stand(_dummy=None):
     apply_stand_layout(settings.source, settings.target, settings.stand_layout)
 
 
-def _apply_saved_sphere_setting(_dummy=None):
+def _apply_saved_view_now():
+    """Hide bones after the file has finished loading.
+
+    Writing bone.hide while Blender is still reading the file, or from the
+    source-pointer callback that runs during that read, locks the main thread.
+    """
     scene = getattr(bpy.context, "scene", None)
     if scene is None or not hasattr(scene, "hr_settings"):
-        return
+        return None
     settings = scene.hr_settings
     if settings.source is not None:
         set_bone_sphere_display(settings.source, settings.show_bone_spheres)
     set_armature_bones_visible(settings.source, bool(settings.show_bones))
     set_armature_bones_visible(settings.target, bool(settings.show_bones))
+    return None
+
+
+def _schedule_saved_view():
+    if bpy.app.background:
+        _apply_saved_view_now()
+        return
+    if not bpy.app.timers.is_registered(_apply_saved_view_now):
+        bpy.app.timers.register(_apply_saved_view_now, first_interval=0.2)
+
+
+def _apply_saved_sphere_setting(_dummy=None):
+    _schedule_saved_view()
 
 
 def register():
@@ -746,6 +765,8 @@ def register():
 
 
 def unregister():
+    if bpy.app.timers.is_registered(_apply_saved_view_now):
+        bpy.app.timers.unregister(_apply_saved_view_now)
     if _apply_saved_sphere_setting in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.remove(_apply_saved_sphere_setting)
     if _apply_saved_stand in bpy.app.handlers.load_post:

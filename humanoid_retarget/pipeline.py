@@ -208,8 +208,21 @@ def set_bone_sphere_display(armature, show: bool) -> None:
 
 
 
+def _hide_armature_object(armature, hidden: bool) -> None:
+    """Eye-icon hide. The armature modifier still deforms the mesh."""
+    try:
+        armature.hide_set(hidden)
+    except RuntimeError:
+        pass
+
+
 def set_armature_bones_visible(armature, show: bool) -> None:
-    """Hide or restore bones on one armature. Skinned meshes stay visible."""
+    """Hide or restore one armature's bone display. Skinned meshes stay visible.
+
+    Octahedral cones are drawn by the armature object, so hiding individual
+    bone flags is not enough. hide_set removes those cones without disabling
+    the armature modifier.
+    """
     if armature is None or getattr(armature, "type", None) != "ARMATURE":
         return
     data = getattr(armature, "data", None)
@@ -219,18 +232,26 @@ def set_armature_bones_visible(armature, show: bool) -> None:
         if "hr_bones_hidden_by_tool" not in armature:
             hidden_before = [bone.name for bone in data.bones if bone.hide]
             armature["hr_bone_hide_before"] = "\n".join(hidden_before)
+            try:
+                armature["hr_object_hidden_before"] = bool(armature.hide_get())
+            except RuntimeError:
+                armature["hr_object_hidden_before"] = False
             armature["hr_bones_hidden_by_tool"] = True
         for bone in data.bones:
             bone.hide = True
+        _hide_armature_object(armature, True)
         return
     if not armature.get("hr_bones_hidden_by_tool"):
         return
     previously = {name for name in str(armature.get("hr_bone_hide_before", "")).split("\n") if name}
     for bone in data.bones:
         bone.hide = bone.name in previously
+    _hide_armature_object(armature, bool(armature.get("hr_object_hidden_before", False)))
     del armature["hr_bones_hidden_by_tool"]
     if "hr_bone_hide_before" in armature:
         del armature["hr_bone_hide_before"]
+    if "hr_object_hidden_before" in armature:
+        del armature["hr_object_hidden_before"]
 
 
 def stand_positions(mode, source_half_x, source_half_y, target_half_x, target_half_y, gap=0.35):
@@ -395,16 +416,30 @@ def retarget_selected_meshes(source, meshes, options=None):
     return armature, summary, baked
 
 
+def _reveal_for_export(obj, revealed):
+    """Viewport-hidden armatures still have to be selected for export."""
+    try:
+        if obj.hide_get():
+            obj.hide_set(False)
+            revealed.append(obj)
+    except RuntimeError:
+        pass
+    obj.hide_select = False
+    obj.select_set(True)
+
+
 def _select_hierarchy(arm_obj):
     ensure_object_mode()
+    revealed = []
     for obj in bpy.context.view_layer.objects:
         obj.select_set(False)
-    arm_obj.select_set(True)
+    _reveal_for_export(arm_obj, revealed)
     bpy.context.view_layer.objects.active = arm_obj
-    for obj in bpy.context.scene.objects:
+    for obj in list(bpy.context.scene.objects):
         parent = obj.parent
         if parent == arm_obj or (parent is not None and parent.parent == arm_obj):
-            obj.select_set(True)
+            _reveal_for_export(obj, revealed)
+    return revealed
 
 
 def _export_fbx_with_rest_bind(path):
@@ -459,7 +494,24 @@ def export_armature(arm_obj, path, export_all_actions=True):
     directory = os.path.dirname(path)
     if directory:
         os.makedirs(directory, exist_ok=True)
-    _select_hierarchy(arm_obj)
+    revealed = _select_hierarchy(arm_obj)
+    hidden_bones = [bone for bone in arm_obj.data.bones if bone.hide]
+    for bone in hidden_bones:
+        bone.hide = False
+    try:
+        _export_current_selection(arm_obj, path, ext, export_all_actions)
+    finally:
+        for bone in hidden_bones:
+            bone.hide = True
+        for obj in revealed:
+            try:
+                obj.hide_set(True)
+            except RuntimeError:
+                pass
+    return path
+
+
+def _export_current_selection(arm_obj, path, ext, export_all_actions):
     if ext == ".fbx":
         _export_fbx_with_rest_bind(path)
     else:

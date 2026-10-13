@@ -74,6 +74,44 @@ def normalize_bone_name(name: str) -> str:
     return text
 
 
+
+def chest_parent_of_neck(arm_obj, spine_name, neck_name):
+    """Bone directly under the neck when that bone still leads down to the spine."""
+    if not arm_obj or not spine_name or not neck_name:
+        return None
+    neck = arm_obj.data.bones.get(neck_name)
+    if neck is None or neck.parent is None or neck.parent.name == spine_name:
+        return None
+    bone = neck.parent
+    seen = set()
+    while bone is not None and bone.name != spine_name and bone.name not in seen:
+        seen.add(bone.name)
+        bone = bone.parent
+    if bone is None:
+        return None
+    return neck.parent.name
+
+
+def correct_chest_pairs(src, tgt, pairs):
+    """Keep chest on the spine instead of a side bone such as Bone02."""
+    if not pairs:
+        return pairs
+    roles = {role: (source_name, target_name) for role, source_name, target_name in pairs}
+    if "spine" not in roles or "neck" not in roles:
+        return list(pairs)
+    source_chest = chest_parent_of_neck(src, roles["spine"][0], roles["neck"][0])
+    target_chest = chest_parent_of_neck(tgt, roles["spine"][1], roles["neck"][1])
+    corrected = []
+    for role, source_name, target_name in pairs:
+        if role == "chest":
+            if source_chest and source_chest in src.data.bones:
+                source_name = source_chest
+            if target_chest and target_chest in tgt.data.bones:
+                target_name = target_chest
+        corrected.append((role, source_name, target_name))
+    return corrected
+
+
 def classify_armature(arm_obj: bpy.types.Object) -> dict[str, str]:
     """Return role -> bone name. Missing roles are omitted."""
     if arm_obj is None or arm_obj.type != "ARMATURE":
@@ -96,22 +134,74 @@ def classify_armature(arm_obj: bpy.types.Object) -> dict[str, str]:
         if bone_name and bone_name not in used and bone_name in arm_obj.data.bones:
             unique[role] = bone_name
             used.add(bone_name)
+    chest_name = chest_parent_of_neck(arm_obj, unique.get("spine"), unique.get("neck"))
+    if chest_name:
+        owner = next((role for role, name in unique.items() if name == chest_name), None)
+        if owner is None or owner == "chest":
+            unique["chest"] = chest_name
     return unique
+
+
+def skinned_bone_names(arm_obj):
+    """Bones that actually move a mesh bound to this armature."""
+    names = set()
+    if arm_obj is None:
+        return names
+    meshes = []
+    for obj in bpy.data.objects:
+        if obj.type != "MESH":
+            continue
+        bound = obj.parent == arm_obj
+        for modifier in obj.modifiers:
+            if modifier.type == "ARMATURE" and modifier.object == arm_obj:
+                bound = True
+        if bound:
+            meshes.append(obj)
+    bone_names = set(arm_obj.data.bones.keys())
+    for mesh in meshes:
+        weighted = set()
+        for vertex in mesh.data.vertices:
+            for slot in vertex.groups:
+                if slot.weight > 0.001:
+                    weighted.add(slot.group)
+        for group in mesh.vertex_groups:
+            if group.index in weighted and group.name in bone_names:
+                names.add(group.name)
+    return names
+
+
+def correct_deform_pairs(src, tgt, pairs):
+    """Use the weighted bone when a preset names an unweighted duplicate."""
+    skinned = skinned_bone_names(tgt)
+    if not skinned:
+        return list(pairs)
+    by_key = {}
+    for name in skinned:
+        by_key.setdefault(normalize_bone_name(name), name)
+    corrected = []
+    for role, source_name, target_name in pairs:
+        if target_name not in skinned:
+            alias = by_key.get(normalize_bone_name(target_name))
+            if alias and alias in tgt.data.bones:
+                target_name = alias
+        corrected.append((role, source_name, target_name))
+    return corrected
 
 
 def classify_by_name(arm_obj: bpy.types.Object) -> dict[str, str]:
     found = {}
     used = set()
     bones = list(arm_obj.data.bones)
+    skinned = skinned_bone_names(arm_obj)
     for role, tokens in _NAME_TOKENS.items():
         token_set = set(tokens)
-        for bone in bones:
-            if bone.name in used:
-                continue
-            if normalize_bone_name(bone.name) in token_set:
-                found[role] = bone.name
-                used.add(bone.name)
-                break
+        matches = [bone for bone in bones if bone.name not in used and normalize_bone_name(bone.name) in token_set]
+        if not matches:
+            continue
+        weighted = [bone for bone in matches if bone.name in skinned]
+        bone = weighted[0] if weighted else matches[0]
+        found[role] = bone.name
+        used.add(bone.name)
     return found
 
 

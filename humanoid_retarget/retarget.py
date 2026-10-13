@@ -1,8 +1,11 @@
 """Bake source humanoid motion onto a target humanoid skeleton.
 
-Rotation is copied in each bone's reference axes, with a correction so a
-different bone roll does not twist the limb. The reference is the rest pose
-unless a current pose was captured. Hip translation is scaled by the
+Rest rotation swings each target bone so the limb points the same way as
+the source, measured from one mapped joint to the next in the character's
+left/up/forward frame. Twist around that limb stays on the target bind, so a
+different bone roll does not spin the skinned mesh. Current-pose reference
+keeps the captured target pose and adds only the change since that pose. Hip
+translation is scaled by the
 hips-to-head height ratio and can drop horizontal travel. Optional hand and
 foot IK runs after the FK pose.
 """
@@ -12,7 +15,7 @@ from __future__ import annotations
 import bpy
 from mathutils import Matrix, Vector
 
-from .classify import CORE_ROLES, describe_roles, rig_height
+from .classify import CORE_ROLES, classify_armature, correct_chest_pairs, correct_deform_pairs, describe_roles, rig_height
 from .ik import apply_contact_ik
 from .mapping import build_pairs
 
@@ -98,6 +101,207 @@ def _new_target_action(target, name):
 
 def _basis_matrix(pose_bone):
     return pose_bone.matrix_basis.to_quaternion().to_matrix().to_4x4()
+
+
+_BODY_ROLE_ORDER = (
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "shoulder_l",
+    "upperarm_l",
+    "forearm_l",
+    "hand_l",
+    "shoulder_r",
+    "upperarm_r",
+    "forearm_r",
+    "hand_r",
+    "thigh_l",
+    "shin_l",
+    "foot_l",
+    "toe_l",
+    "thigh_r",
+    "shin_r",
+    "foot_r",
+    "toe_r",
+)
+
+
+def _rot3(matrix):
+    return matrix.to_3x3().to_quaternion().to_matrix()
+
+
+def _body_matrix(arm, roles):
+    """Armature-space basis whose columns are the character's left, up and forward."""
+    hips_name = roles.get("hips")
+    head_name = roles.get("head") or roles.get("neck") or roles.get("spine")
+    if not hips_name or not head_name:
+        return Matrix.Identity(3)
+    if hips_name not in arm.data.bones or head_name not in arm.data.bones:
+        return Matrix.Identity(3)
+    up = arm.data.bones[head_name].head_local - arm.data.bones[hips_name].head_local
+    if up.length < 1e-6:
+        up = Vector((0.0, 0.0, 1.0))
+    up.normalize()
+    if "upperarm_l" in roles and "upperarm_r" in roles:
+        left = arm.data.bones[roles["upperarm_l"]].head_local - arm.data.bones[roles["upperarm_r"]].head_local
+    else:
+        left = Vector((1.0, 0.0, 0.0))
+    left = left - up * left.dot(up)
+    if left.length < 1e-6:
+        left = Vector((1.0, 0.0, 0.0))
+    else:
+        left.normalize()
+    forward = left.cross(up)
+    if forward.length < 1e-6:
+        forward = Vector((0.0, -1.0, 0.0))
+    else:
+        forward.normalize()
+    left = up.cross(forward).normalized()
+    return Matrix((
+        (left.x, up.x, forward.x),
+        (left.y, up.y, forward.y),
+        (left.z, up.z, forward.z),
+    ))
+
+
+def _desired_orientation(source_pose, source_ref, target_ref, source_body, target_body, absolute):
+    current = _rot3(source_pose)
+    if absolute:
+        return target_body @ source_body.inverted() @ current
+    change = source_body.inverted() @ current @ _rot3(source_ref).inverted() @ source_body
+    return target_body @ change @ target_body.inverted() @ _rot3(target_ref)
+
+
+_CHAIN_CHILD = {
+    "hips": "spine",
+    "spine": "chest",
+    "chest": "neck",
+    "neck": "head",
+    "shoulder_l": "upperarm_l",
+    "upperarm_l": "forearm_l",
+    "forearm_l": "hand_l",
+    "shoulder_r": "upperarm_r",
+    "upperarm_r": "forearm_r",
+    "forearm_r": "hand_r",
+    "thigh_l": "shin_l",
+    "shin_l": "foot_l",
+    "foot_l": "toe_l",
+    "thigh_r": "shin_r",
+    "shin_r": "foot_r",
+    "foot_r": "toe_r",
+}
+
+
+def _chain_end(arm, roles, role):
+    """Next joint. A child that hangs off a different mapped bone is a swapped map."""
+    bone_name = roles.get(role)
+    if not bone_name or bone_name not in arm.data.bones:
+        return None
+    child_role = _CHAIN_CHILD.get(role)
+    mapped = set(roles.values())
+    if child_role and child_role in roles:
+        child_name = roles[child_role]
+        parent = arm.data.bones[child_name].parent if child_name in arm.data.bones else None
+        foreign = parent is not None and parent.name in mapped and parent.name != bone_name
+        if not foreign:
+            return child_name
+    children = [child.name for child in arm.data.bones[bone_name].children if child.name in mapped]
+    if len(children) == 1:
+        return children[0]
+    return None
+
+
+def _chain_vector(arm, roles, role, posed):
+    """Vector from this mapped joint to the next one. Bone Y is not the chain."""
+    end_name = _chain_end(arm, roles, role)
+    if not end_name:
+        return None
+    if posed:
+        start = arm.pose.bones[roles[role]].head
+        end = arm.pose.bones[end_name].head
+    else:
+        start = arm.data.bones[roles[role]].head_local
+        end = arm.data.bones[end_name].head_local
+    vector = end - start
+    if vector.length < 1e-6:
+        return None
+    return vector
+
+
+def _anatomical_roles(arm, fallback):
+    """Body axes follow the real left arm, even if a mapping swaps left and right."""
+    found = classify_armature(arm)
+    needed = ("upperarm_l", "upperarm_r", "hips", "head")
+    if all(key in found and found[key] in arm.data.bones for key in needed):
+        return found
+    return fallback
+
+
+def _apply_body_orientations(src, tgt, pairs, options):
+    """Point each target limb at the source limb without taking the source roll.
+
+    matrix_basis is parent-relative, so a spine parented to a root rotator would
+    otherwise miss that rotation when the target spine hangs off the pelvis.
+    Rest mode swings the bind orientation onto the source chain direction.
+    Current mode adds only the orientation change since the captured pose.
+    """
+    src_roles = {role: source_name for role, source_name, _target_name in pairs}
+    tgt_roles = {role: target_name for role, _source_name, target_name in pairs}
+    source_body = _body_matrix(src, _anatomical_roles(src, src_roles))
+    target_body = _body_matrix(tgt, _anatomical_roles(tgt, tgt_roles))
+    absolute = options.reference != "CURRENT"
+    data = options.reference_data or {}
+    for _role, _source_name, target_name in pairs:
+        pose_bone = tgt.pose.bones[target_name]
+        pose_bone.rotation_mode = "QUATERNION"
+        pose_bone.rotation_quaternion = (1.0, 0.0, 0.0, 0.0)
+        pose_bone.location = (0.0, 0.0, 0.0)
+    bpy.context.view_layer.update()
+
+    order = {role: index for index, role in enumerate(_BODY_ROLE_ORDER)}
+
+    def _depth(bone_name):
+        bone = tgt.data.bones.get(bone_name)
+        depth = 0
+        seen = set()
+        while bone is not None and bone.name not in seen and bone.parent is not None:
+            seen.add(bone.name)
+            depth += 1
+            bone = bone.parent
+        return depth
+
+    for role, source_name, target_name in sorted(pairs, key=lambda pair: (_depth(pair[2]), order.get(pair[0], 100))):
+        pose_bone = tgt.pose.bones[target_name]
+        if absolute:
+            src_chain = _chain_vector(src, src_roles, role, True)
+            tgt_chain = _chain_vector(tgt, tgt_roles, role, False)
+            if src_chain is None or tgt_chain is None:
+                continue
+            desired = target_body @ (source_body.inverted() @ src_chain).normalized()
+            rest_orient = pose_bone.bone.matrix_local.to_3x3()
+            swing = tgt_chain.normalized().rotation_difference(desired.normalized())
+            orient = swing.to_matrix() @ rest_orient
+        else:
+            source_ref = _stored_matrix(data.get("source_matrix"), source_name, src.data.bones[source_name].matrix_local)
+            target_ref = _stored_matrix(data.get("target_matrix"), target_name, tgt.data.bones[target_name].matrix_local)
+            orient = _desired_orientation(
+                src.pose.bones[source_name].matrix,
+                source_ref,
+                target_ref,
+                source_body,
+                target_body,
+                False,
+            )
+        rest = _rot3(pose_bone.bone.matrix_local)
+        parent = pose_bone.parent
+        if parent:
+            basis = rest.inverted() @ _rot3(parent.bone.matrix_local) @ _rot3(parent.matrix).inverted() @ orient
+        else:
+            basis = rest.inverted() @ orient
+        pose_bone.rotation_quaternion = basis.to_quaternion()
+        bpy.context.view_layer.update()
 
 
 def _rotation_onto(src_pose, tgt_pose, src_bone, tgt_bone, src_ref_basis, tgt_ref_basis):
@@ -247,7 +451,7 @@ def bake_retarget(src, tgt, options=None):
     options = options or RetargetOptions()
     if options.reference == "CURRENT" and not options.reference_data:
         raise RetargetError("已选择当前姿势作为零点，但还没有捕获参考姿势")
-    pairs = _pairs_from_options(src, tgt, options)
+    pairs = correct_deform_pairs(src, tgt, correct_chest_pairs(src, tgt, _pairs_from_options(src, tgt, options)))
     options.resolved_pairs = pairs
     src_roles = {role: name for role, name, _target_name in pairs}
     tgt_roles = {role: name for role, _source_name, name in pairs}
@@ -277,18 +481,11 @@ def bake_retarget(src, tgt, options=None):
                 bpy.context.view_layer.update()
                 references = {}
                 for _role, src_name, tgt_name in pairs:
-                    src_basis, tgt_basis, src_head, tgt_head = _reference_for(
+                    _src_basis, _tgt_basis, src_head, tgt_head = _reference_for(
                         src, tgt, src_name, tgt_name, options
                     )
                     references[tgt_name] = (src_head, tgt_head)
-                    _rotation_onto(
-                        src.pose.bones[src_name],
-                        tgt.pose.bones[tgt_name],
-                        src.data.bones[src_name],
-                        tgt.data.bones[tgt_name],
-                        src_basis,
-                        tgt_basis,
-                    )
+                _apply_body_orientations(src, tgt, pairs, options)
                 bpy.context.view_layer.update()
                 hip_role = next(pair for pair in pairs if pair[0] == "hips")
                 src_head, tgt_head = references[hip_role[2]]
