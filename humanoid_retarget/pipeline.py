@@ -8,7 +8,7 @@ import bpy
 
 from .autorig import AutoRigError, auto_rig_meshes
 from .classify import CORE_ROLES, classify_armature
-from .retarget import ACTION_SEP, RetargetError, bake_retarget, collect_actions
+from .retarget import ACTION_SEP, RetargetError, RetargetOptions, bake_retarget, collect_actions
 
 SOURCE_EXTS = {".fbx", ".glb", ".gltf", ".bvh"}
 TARGET_EXTS = {".fbx", ".glb", ".gltf", ".obj"}
@@ -385,18 +385,157 @@ def load_target_and_retarget(path, source, options=None):
         auto = True
         note = f"目标没有可用骨架，已按 T/A Pose 自动绑定（{weight_mode}）"
     move_to_collection(objects, "HR_Target")
-    try:
-        report, baked = bake_retarget(source, armature, options)
-    except RetargetError as exc:
-        raise PipelineError(str(exc)) from exc
+    report, baked = retarget_existing(source, armature, options)
     armature["hr_role"] = "target"
     summary = note + "\n" + report
     return armature, summary, baked, auto
 
 
-def retarget_existing(source, target, options=None):
+def _animation_binding(obj):
+    anim = obj.animation_data if obj is not None else None
+    if anim is None:
+        return None, None
+    return anim.action, getattr(anim, "action_slot", None)
+
+
+def _capture_user_state(source, target):
+    active = bpy.context.view_layer.objects.active
+    mode = bpy.context.object.mode if bpy.context.object is not None else "OBJECT"
+    return {
+        "active": active,
+        "mode": mode,
+        "frame": bpy.context.scene.frame_current,
+        "selected": [obj for obj in bpy.context.view_layer.objects if obj.select_get()],
+        "source_anim": _animation_binding(source),
+        "target_anim": _animation_binding(target),
+        "actions": set(bpy.data.actions),
+    }
+
+
+def _assign_saved_action(obj, action, slot):
+    if obj is None:
+        return
+    if action is None:
+        if obj.animation_data is not None:
+            obj.animation_data_clear()
+        return
+    anim = obj.animation_data or obj.animation_data_create()
+    anim.action = action
+    if slot is not None:
+        try:
+            anim.action_slot = slot
+        except (TypeError, RuntimeError):
+            pass
+
+
+def _restore_user_state(source, target, state):
+    _assign_saved_action(source, *state["source_anim"])
+    _assign_saved_action(target, *state["target_anim"])
+    bpy.context.scene.frame_set(state["frame"])
+    for obj in bpy.context.view_layer.objects:
+        obj.select_set(obj in state["selected"])
+    if state["active"] is not None and state["active"].name in bpy.data.objects:
+        bpy.context.view_layer.objects.active = state["active"]
+        if bpy.context.object is not None and bpy.context.object.mode != state["mode"]:
+            try:
+                bpy.ops.object.mode_set(mode=state["mode"])
+            except RuntimeError:
+                ensure_object_mode()
+
+
+def _release_action(action):
+    if action is None:
+        return
     try:
-        report, baked = bake_retarget(source, target, options)
+        action.use_fake_user = False
+    except (AttributeError, RuntimeError):
+        pass
+    if action.users == 0:
+        bpy.data.actions.remove(action)
+
+
+def _delete_owned_armature(obj):
+    if obj is None or obj.name not in bpy.data.objects:
+        return
+    data = obj.data
+    bpy.context.view_layer.objects.active = obj
+    if bpy.context.object is not None and bpy.context.object.mode != "OBJECT":
+        bpy.ops.object.mode_set(mode="OBJECT")
+    bpy.data.objects.remove(obj, do_unlink=True)
+    if data is not None and getattr(data, "users", 0) == 0:
+        bpy.data.armatures.remove(data)
+
+
+def retarget_through_human_metarig(source, target, options):
+    from . import rigify_metarig
+
+    state = _capture_user_state(source, target)
+    owned = None
+    delivered = []
+    failed = True
+    try:
+        definition = rigify_metarig.load_human_metarig_definition()
+        source_hop = rigify_metarig.calibrate_source_to_metarig(source, definition, options)
+        target_hop = rigify_metarig.calibrate_target_to_metarig(target, definition, options)
+        owned = rigify_metarig.create_human_metarig_armature(definition)
+        owned.hide_set(True)
+        if options.reference == "CURRENT":
+            first_reference, second_reference = rigify_metarig.capture_hop_references(
+                source,
+                owned,
+                target,
+                source_hop.pairs,
+                target_hop.pairs,
+                state["frame"],
+            )
+        else:
+            first_reference = None
+            second_reference = None
+        first_options = RetargetOptions(
+            pairs=source_hop.pairs,
+            reference=options.reference,
+            reference_data=first_reference,
+            root_motion="KEEP",
+            foot_ik=False,
+            hand_ik=False,
+            standard_skeleton="DIRECT",
+        )
+        bake_retarget(source, owned, first_options)
+        second_options = RetargetOptions(
+            pairs=target_hop.pairs,
+            reference=options.reference,
+            reference_data=second_reference,
+            root_motion=options.root_motion,
+            foot_ik=options.foot_ik,
+            hand_ik=options.hand_ik,
+            standard_skeleton="DIRECT",
+        )
+        report, delivered = bake_retarget(owned, target, second_options)
+        source_names = {role: source_name for role, source_name, _sample_name in source_hop.pairs}
+        corrected = {role: target_name for role, _sample_name, target_name in second_options.resolved_pairs or []}
+        options.resolved_pairs = [
+            (role, source_names[role], corrected[role])
+            for role in corrected
+            if role in source_names
+        ]
+        failed = False
+        return report, delivered
+    finally:
+        _delete_owned_armature(owned)
+        for action in list(bpy.data.actions):
+            if action not in state["actions"] and action not in delivered:
+                _release_action(action)
+        if failed:
+            _restore_user_state(source, target, state)
+
+
+def retarget_existing(source, target, options=None):
+    options = options or RetargetOptions()
+    try:
+        if options.standard_skeleton == "RIGIFY_HUMAN_METARIG":
+            report, baked = retarget_through_human_metarig(source, target, options)
+        else:
+            report, baked = bake_retarget(source, target, options)
     except RetargetError as exc:
         raise PipelineError(str(exc)) from exc
     target["hr_role"] = "target"

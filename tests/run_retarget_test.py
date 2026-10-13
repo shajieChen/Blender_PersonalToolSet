@@ -1108,8 +1108,532 @@ def test_bone_gizmos():
     check(any(role == "upperarm_l" for role, _child, _start, _end in links), "gizmo draws the left arm")
 
 
+METARIG_TESTS = []
+
+
+def _metarig_mark(name):
+    print(name)
+    METARIG_TESTS.append(name)
+
+
+class _LayoutRecord:
+    def __init__(self):
+        self.events = []
+
+    def prop(self, _data, prop, text="", **_kwargs):
+        self.events.append(("prop", prop, text))
+        return self
+
+    def label(self, text="", **_kwargs):
+        self.events.append(("label", text))
+        return self
+
+    def box(self):
+        self.events.append(("box",))
+        return self
+
+    def row(self, **_kwargs):
+        return self
+
+    def column(self, **_kwargs):
+        return self
+
+    def separator(self, **_kwargs):
+        return self
+
+    def operator(self, *_args, **_kwargs):
+        return self
+
+    def template_list(self, *_args, **_kwargs):
+        return self
+
+    def __getattr__(self, name):
+        if name.startswith("_"):
+            raise AttributeError(name)
+
+        def _call(*_args, **_kwargs):
+            return self
+
+        return _call
+
+
+def _matrix_close(left, right):
+    return max(abs(left[row][col] - right[row][col]) for row in range(4) for col in range(4)) < 1.0e-6
+
+
+def _near(actual, expected, tol=1.0e-3):
+    return all(abs(left - right) < tol for left, right in zip(actual, expected))
+
+
+def _object_names():
+    return {obj.name for obj in bpy.data.objects}
+
+
+def _action_names():
+    return {action.name for action in bpy.data.actions}
+
+
+def test_standard_skeleton_selector():
+    _metarig_mark("test_standard_skeleton_selector")
+    from humanoid_retarget.retarget import RetargetError, RetargetOptions
+
+    humanoid_retarget.register()
+    settings = bpy.context.scene.hr_settings
+    prop = settings.bl_rna.properties["standard_skeleton"]
+    identifiers = [item.identifier for item in prop.enum_items]
+    check(identifiers[0] == "RIGIFY_HUMAN_METARIG", "Rigify human metarig is the first standard")
+    check("DIRECT" in identifiers, "direct mapping remains available")
+    check(settings.standard_skeleton == "DIRECT", "existing scenes keep direct mapping")
+    check(RetargetOptions().standard_skeleton == "DIRECT", "omitted standard stays direct")
+    rejected = False
+    try:
+        RetargetOptions(standard_skeleton="MIXAMO")
+    except RetargetError:
+        rejected = True
+    check(rejected, "an unknown standard is rejected")
+
+
+def test_standard_skeleton_panel_order():
+    _metarig_mark("test_standard_skeleton_panel_order")
+    from humanoid_retarget import HR_PT_panel
+
+    humanoid_retarget.register()
+    panel = type("PanelHarness", (), {"layout": _LayoutRecord()})()
+    HR_PT_panel.draw(panel, bpy.context)
+    events = panel.layout.events
+    stand = next(index for index, event in enumerate(events) if event[:2] == ("prop", "stand_layout"))
+    standard = next(index for index, event in enumerate(events) if event[:2] == ("prop", "standard_skeleton"))
+    source = next(index for index, event in enumerate(events) if event[0] == "label" and event[1] == "1. 动画来源")
+    check(stand < standard < source, "the standard sits between the stand selector and step 1")
+    check(events[standard][2] == "标准人形骨架", "the standard selector uses the standard-skeleton label")
+
+
+def test_human_metarig_definition():
+    _metarig_mark("test_human_metarig_definition")
+    from humanoid_retarget.rigify_metarig import load_human_metarig_definition
+
+    before_objects = _object_names()
+    definition = load_human_metarig_definition()
+    check(_object_names() == before_objects, "the sample armature is removed after loading")
+    check(definition.source_id == "rigify.metarigs.human", "the standard is the full human metarig")
+    spine = definition.bones["spine"]
+    thigh = definition.bones["thigh.L"]
+    check(_near(spine.head, (0.0, 0.0552, 1.0099)), "spine head comes from the human sample")
+    check(_near(spine.tail, (0.0, 0.0172, 1.1573)), "spine tail comes from the human sample")
+    check(abs(spine.roll) < 1.0e-3, "spine roll comes from the human sample")
+    check(thigh.parent == "spine", "thigh.L keeps its sample parent")
+    check(_near(thigh.head, (0.0980, 0.0124, 1.0720)), "thigh.L head comes from the human sample")
+    check(abs(definition.bones["upper_arm.L"].roll - 2.0724) < 1.0e-3, "upper_arm.L roll comes from the human sample")
+    check(abs(definition.bones["forearm.L"].roll - 2.1535) < 1.0e-3, "forearm.L roll comes from the human sample")
+    check(abs(definition.bones["hand.L"].roll - 2.2103) < 1.0e-3, "hand.L roll comes from the human sample")
+    check(definition.roles["hips"] == "spine", "hips is the sample root, not a name guess")
+    check(definition.roles["upperarm_l"] == "upper_arm.L", "left arm maps to the left sample bone")
+    check(definition.roles["upperarm_r"] == "upper_arm.R", "right arm maps to the right sample bone")
+    check(definition.bones["upper_arm.L"].head[0] > 0 > definition.bones["upper_arm.R"].head[0], "left and right arms stay on their sides")
+    check(definition.bones["spine.003"].parent == "spine.002", "chest keeps the sample spine ancestor")
+    check(definition.bones["spine.002"].parent == "spine.001", "the middle spine ancestor is kept")
+    def _excluded(name):
+        lower = name.lower()
+        heads = ("breast", "ear.", "face", "thumb", "palm", "forehead", "jaw", "f_index", "f_middle", "f_ring", "f_pinky")
+        return lower == "face" or lower.startswith(heads)
+
+    check(
+        all(not _excluded(name) for name in definition.bones),
+        "face, breast, ear and fingers are outside the first body definition",
+    )
+
+
+def _rest_signature(obj):
+    active = bpy.context.view_layer.objects.active
+    mode = bpy.context.object.mode if bpy.context.object is not None else "OBJECT"
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.mode_set(mode="EDIT")
+    rows = [
+        (
+            bone.name,
+            bone.parent.name if bone.parent else "",
+            tuple(round(value, 5) for value in bone.head),
+            tuple(round(value, 5) for value in bone.tail),
+            round(bone.roll, 5),
+        )
+        for bone in obj.data.edit_bones
+    ]
+    bpy.ops.object.mode_set(mode="OBJECT")
+    if active is not None and active.name in bpy.data.objects:
+        bpy.context.view_layer.objects.active = active
+        if mode != "OBJECT":
+            bpy.ops.object.mode_set(mode=mode)
+    return rows
+
+
+def test_metarig_calibration_keeps_rest():
+    _metarig_mark("test_metarig_calibration_keeps_rest")
+    from humanoid_retarget.rigify_metarig import (
+        calibrate_source_to_metarig,
+        calibrate_target_to_metarig,
+        create_human_metarig_armature,
+        load_human_metarig_definition,
+    )
+
+    definition = load_human_metarig_definition()
+    source_names = junk_names()
+    target_names = {role: "Tgt_" + role for role in source_names}
+    source = build_biped("CalSource", source_names, arm_roll=0.2, scale=1.0)
+    target = build_biped("CalTarget", target_names, arm_roll=-0.4, scale=1.3)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    source.matrix_world = Matrix.Translation((3.0, 0.0, 0.0)) @ Matrix.Rotation(0.3, 4, "Z")
+    target.matrix_world = Matrix.Translation((-2.0, 1.0, 0.0))
+    bpy.context.view_layer.update()
+    source_rest = _rest_signature(source)
+    target_rest = _rest_signature(target)
+    source_world = source.matrix_world.copy()
+    target_world = target.matrix_world.copy()
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    options = RetargetOptions(pairs=pairs)
+    source_hop = calibrate_source_to_metarig(source, definition, options)
+    target_hop = calibrate_target_to_metarig(target, definition, options)
+    check(source_hop.definition is definition and target_hop.definition is definition, "both hops use the same definition")
+    check(_rest_signature(source) == source_rest, "source rest stays unchanged")
+    check(_rest_signature(target) == target_rest, "target rest stays unchanged")
+    check(_matrix_close(source.matrix_world, source_world), "source world matrix stays unchanged")
+    check(_matrix_close(target.matrix_world, target_world), "target world matrix stays unchanged")
+    source_roles = {role: metarig_name for role, _source_name, metarig_name in source_hop.pairs}
+    target_roles = {role: metarig_name for role, metarig_name, _target_name in target_hop.pairs}
+    check(source_roles["upperarm_l"] == "upper_arm.L", "source calibration keeps the left arm on the left")
+    check(target_roles["upperarm_r"] == "upper_arm.R", "target calibration keeps the right arm on the right")
+    check(source_roles["hips"] == "spine" and target_roles["hips"] == "spine", "both hops use the same hips bone")
+    metarig = create_human_metarig_armature(definition)
+    try:
+        bpy.context.view_layer.objects.active = metarig
+        bpy.ops.object.mode_set(mode="EDIT")
+        check(metarig.data.edit_bones["thigh.L"].parent.name == "spine", "the owned armature keeps the sample parent")
+        check(abs(metarig.data.edit_bones["hand.L"].roll - definition.bones["hand.L"].roll) < 1.0e-4, "the owned armature keeps the sample roll")
+        bpy.ops.object.mode_set(mode="OBJECT")
+    finally:
+        bpy.data.objects.remove(metarig, do_unlink=True)
+
+
+def _chain_dot(source, target, source_name, target_name, child_source, child_target):
+    start = (source.matrix_world @ source.pose.bones[child_source].head) - (source.matrix_world @ source.pose.bones[source_name].head)
+    finish = (target.matrix_world @ target.pose.bones[child_target].head) - (target.matrix_world @ target.pose.bones[target_name].head)
+    return start.normalized().dot(finish.normalized())
+
+
+def test_metarig_two_hop_bake():
+    _metarig_mark("test_metarig_two_hop_bake")
+    from humanoid_retarget.pipeline import retarget_existing
+
+    source_names = junk_names()
+    target_names = {role: "Tgt_" + role for role in source_names}
+    source = build_biped("HopSource", source_names, arm_roll=0.0, scale=1.0)
+    animate(source, source_names)
+    target = build_biped("HopTarget", target_names, arm_roll=0.55, scale=1.25)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    options = RetargetOptions(pairs=pairs, standard_skeleton="RIGIFY_HUMAN_METARIG")
+    before_objects = _object_names()
+    before_actions = _action_names()
+    _report, baked = retarget_existing(source, target, options)
+    check(len(baked) == 1, "one source clip produces one target clip")
+    check(baked[0].frame_range[0] == 1 and baked[0].frame_range[1] == 10, "the target clip keeps the source frame range")
+    check(_object_names() == before_objects, "the intermediate armature is released")
+    new_actions = _action_names() - before_actions
+    check(new_actions == {baked[0].name}, "only the delivered target action remains")
+    for role, source_name, target_name in options.resolved_pairs:
+        check(source_name == source_names[role], "resolved source bones stay on the original rig")
+        check(target_name == target_names[role], "resolved target bones stay on the original rig")
+    scene = bpy.context.scene
+    scene.frame_set(10)
+    bpy.context.view_layer.update()
+    dot = _chain_dot(
+        source,
+        target,
+        source_names["upperarm_l"],
+        target_names["upperarm_l"],
+        source_names["forearm_l"],
+        target_names["forearm_l"],
+    )
+    check(abs(dot - 1.0) < 1.5e-3, "the two-hop arm chain points with the source")
+
+
+def test_metarig_swing_limits():
+    _metarig_mark("test_metarig_swing_limits")
+    from humanoid_retarget.pipeline import bake_retarget, retarget_through_human_metarig
+
+    source_names = junk_names()
+    target_names = {role: "Tgt_" + role for role in source_names}
+    source = build_biped("LimitSource", source_names)
+    target = build_biped("LimitTarget", target_names, arm_roll=0.4)
+    bpy.context.view_layer.objects.active = source
+    bpy.ops.object.mode_set(mode="POSE")
+    hips = source.pose.bones[source_names["hips"]]
+    hand = source.pose.bones[source_names["hand_l"]]
+    hips.rotation_mode = "XYZ"
+    hand.rotation_mode = "XYZ"
+    hips.rotation_euler = (0.0, 0.0, math.radians(40.0))
+    hand.rotation_euler = (1.0, 0.4, 0.2)
+    hips.keyframe_insert("rotation_euler", frame=1)
+    hand.keyframe_insert("rotation_euler", frame=1)
+    hips.keyframe_insert("rotation_euler", frame=4)
+    hand.keyframe_insert("rotation_euler", frame=4)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    options = RetargetOptions(pairs=pairs, standard_skeleton="RIGIFY_HUMAN_METARIG", foot_ik=False, hand_ik=False)
+    seen = []
+    real_bake = bake_retarget
+
+    def _record(src, tgt, bake_options=None):
+        result = real_bake(src, tgt, bake_options)
+        bpy.context.scene.frame_set(4)
+        bpy.context.view_layer.update()
+        hands = []
+        for role in ("hand_l", "hand_r"):
+            name = next(target_name for pair_role, _source_name, target_name in bake_options.pairs if pair_role == role)
+            hands.append(tgt.pose.bones[name].rotation_quaternion.copy())
+        hip_name = next(target_name for pair_role, _source_name, target_name in bake_options.pairs if pair_role == "hips")
+        rest = tgt.data.bones[hip_name].matrix_local.to_3x3()
+        posed = tgt.pose.bones[hip_name].matrix.to_3x3()
+        delta = (posed @ rest.inverted()).to_quaternion()
+        seen.append(abs(delta.to_swing_twist("Z")[1]))
+        seen.append(hands)
+        return result
+
+    import humanoid_retarget.pipeline as pipeline_module
+
+    pipeline_module.bake_retarget = _record
+    try:
+        retarget_through_human_metarig(source, target, options)
+    finally:
+        pipeline_module.bake_retarget = real_bake
+    check(len(seen) == 4, "each hop records hips and hands")
+    for index in (1, 3):
+        for quat in seen[index]:
+            check(quat.angle < 1.0e-4, "each hop leaves the hand at identity")
+    check(seen[0] < math.radians(20.0), "the metarig hop does not restore the source hips yaw")
+    check(seen[2] < math.radians(5.0), "the target hop does not keep hips yaw")
+
+
+def test_metarig_same_clip():
+    _metarig_mark("test_metarig_same_clip")
+    from humanoid_retarget.pipeline import retarget_existing
+    from humanoid_retarget.retarget import ACTION_SEP, collect_actions
+
+    source_names = junk_names()
+    target_names = {role: "Tgt_" + role for role in source_names}
+    source = build_biped("ClipSource", source_names)
+    target = build_biped("ClipTarget", target_names, arm_roll=0.2)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    action_a = bpy.data.actions.new("ClipA")
+    action_b = bpy.data.actions.new("ClipB")
+    action_a.use_fake_user = True
+    action_b.use_fake_user = True
+
+    def _key(action, frame, angle):
+        anim = source.animation_data or source.animation_data_create()
+        anim.action = action
+        if action.slots:
+            try:
+                slot = action.slots.new(id_type="OBJECT", name=source.name)
+            except TypeError:
+                slot = action.slots.new("OBJECT", source.name)
+            anim.action_slot = slot
+        bone = source.pose.bones[source_names["upperarm_l"]]
+        bone.rotation_mode = "XYZ"
+        bone.rotation_euler = (angle, 0.0, 0.0)
+        bone.keyframe_insert("rotation_euler", frame=frame)
+
+    bpy.context.view_layer.objects.active = source
+    bpy.ops.object.mode_set(mode="POSE")
+    _key(action_a, 1, 0.2)
+    _key(action_b, 3, -0.4)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    source["hr_actions"] = ACTION_SEP.join((action_a.name, action_b.name))
+    source.animation_data.action = action_b
+    source.animation_data.use_nla = False
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    retarget_existing(source, target, RetargetOptions(pairs=pairs, standard_skeleton="RIGIFY_HUMAN_METARIG"))
+    shown = collect_actions(source)
+    check(source.animation_data.action == action_b, "the source still shows the entry clip")
+    check(all(action in {action_a, action_b} for action in shown), "intermediate actions are not source clips")
+    check("ClipB" in target.animation_data.action.name, "the target shows the same entry clip")
+    check(bpy.context.scene.frame_start == 3 and bpy.context.scene.frame_end == 3, "the timeline is the entry clip")
+
+
+def test_metarig_root_reference_and_ik():
+    _metarig_mark("test_metarig_root_reference_and_ik")
+    from humanoid_retarget.classify import rig_height
+    from humanoid_retarget.pipeline import bake_retarget, retarget_through_human_metarig
+
+    source_names = junk_names()
+    target_names = {role: "Tgt_" + role for role in source_names}
+    source = build_biped("RootSource", source_names, scale=1.0)
+    animate(source, source_names)
+    target = build_biped("RootTarget", target_names, arm_roll=0.3, scale=1.25)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    sentinel = {"source_basis": {"missing": []}, "target_basis": {"missing": []}, "source_matrix": {}, "target_matrix": {}}
+    options = RetargetOptions(
+        pairs=pairs,
+        standard_skeleton="RIGIFY_HUMAN_METARIG",
+        reference="CURRENT",
+        reference_data=sentinel,
+        root_motion="IN_PLACE",
+        foot_ik=True,
+        hand_ik=True,
+    )
+    calls = []
+    ratios = []
+    real_bake = bake_retarget
+
+    def _record(src, tgt, bake_options=None):
+        calls.append(bake_options)
+        source_roles = {role: source_name for role, source_name, _target_name in bake_options.pairs}
+        target_roles = {role: target_name for role, _source_name, target_name in bake_options.pairs}
+        ratios.append(rig_height(tgt, target_roles) / rig_height(src, source_roles))
+        return real_bake(src, tgt, bake_options)
+
+    import humanoid_retarget.pipeline as pipeline_module
+
+    pipeline_module.bake_retarget = _record
+    try:
+        retarget_through_human_metarig(source, target, options)
+    finally:
+        pipeline_module.bake_retarget = real_bake
+    check(len(calls) == 2, "the standard mode bakes two hops")
+    check(calls[0].root_motion == "KEEP" and calls[1].root_motion == "IN_PLACE", "in-place root motion is only the final hop")
+    check(calls[0].foot_ik is False and calls[0].hand_ik is False, "the first hop does not run IK")
+    check(calls[1].foot_ik is True and calls[1].hand_ik is True, "IK runs once on the final hop")
+    check(calls[0].reference_data is not sentinel and calls[1].reference_data is not sentinel, "current-pose reference is captured per hop")
+    check(calls[0].reference_data is not calls[1].reference_data, "the two hops do not share one reference")
+    source_height = rig_height(source, {role: source_names[role] for role in source_names})
+    target_height = rig_height(target, {role: target_names[role] for role in target_names})
+    expected = target_height / source_height
+    def _hip_world(frame):
+        bpy.context.scene.frame_set(frame)
+        bpy.context.view_layer.update()
+        return target.matrix_world @ target.pose.bones[target_names["hips"]].head
+
+    delta = _hip_world(10) - _hip_world(1)
+    check(abs(delta.x) < 1.0e-3 and abs(delta.y) < 1.0e-3, "the final hop removes horizontal root travel")
+    check(abs(ratios[0] * ratios[1] - expected) < 1.0e-4, "the two hop scales multiply to the direct height ratio")
+
+
+def test_metarig_failure_cleanup():
+    _metarig_mark("test_metarig_failure_cleanup")
+    from humanoid_retarget.pipeline import PipelineError, retarget_existing
+    from humanoid_retarget.retarget import RetargetError
+    import humanoid_retarget.pipeline as pipeline_module
+    import humanoid_retarget.rigify_metarig as metarig_module
+
+    source_names = junk_names()
+    target_names = {role: "Tgt_" + role for role in source_names}
+    source = build_biped("FailSource", source_names)
+    animate(source, source_names)
+    target = build_biped("FailTarget", target_names)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    options = RetargetOptions(pairs=pairs, standard_skeleton="RIGIFY_HUMAN_METARIG")
+    original_action = target.animation_data.action if target.animation_data else None
+    active = bpy.context.view_layer.objects.active
+    frame = bpy.context.scene.frame_current
+
+    def _run(label, mutate):
+        before_objects = _object_names()
+        before_actions = _action_names()
+        mutate()
+        failed = False
+        try:
+            retarget_existing(source, target, options)
+        except PipelineError:
+            failed = True
+        finally:
+            metarig_module.load_human_metarig_definition = _run.loader
+            pipeline_module.bake_retarget = _run.bake
+        check(failed, label + " fails closed")
+        check(_object_names() == before_objects, label + " removes owned armatures")
+        extra = _action_names() - before_actions
+        check(not extra, label + " removes undelivered actions")
+        current = target.animation_data.action if target.animation_data else None
+        check(current == original_action, label + " restores the target action")
+        check(bpy.context.view_layer.objects.active == active, label + " restores the active object")
+        check(bpy.context.scene.frame_current == frame, label + " restores the frame")
+
+    _run.loader = metarig_module.load_human_metarig_definition
+    _run.bake = pipeline_module.bake_retarget
+
+    def _fail_loader():
+        def _boom():
+            raise RetargetError("loader failed")
+
+        metarig_module.load_human_metarig_definition = _boom
+
+    def _fail_first():
+        def _boom(src, tgt, bake_options=None):
+            raise RetargetError("first hop failed")
+
+        pipeline_module.bake_retarget = _boom
+
+    def _fail_second():
+        def _boom(src, tgt, bake_options=None):
+            _boom.n += 1
+            if _boom.n == 2:
+                bpy.data.actions.new("PartialHop")
+                tgt.animation_data_clear()
+                raise RetargetError("second hop failed")
+            return _run.bake(src, tgt, bake_options)
+
+        _boom.n = 0
+        pipeline_module.bake_retarget = _boom
+
+    _run("loader", _fail_loader)
+    _run("first hop", _fail_first)
+    _run("second hop", _fail_second)
+
+
+def test_direct_mode_without_rigify():
+    _metarig_mark("test_direct_mode_without_rigify")
+    from humanoid_retarget.pipeline import retarget_existing
+    from humanoid_retarget.retarget import RetargetError, bake_retarget
+    import humanoid_retarget.rigify_metarig as metarig_module
+
+    source_names = junk_names()
+    target_names = {role: "Tgt_" + role for role in source_names}
+    source = build_biped("DirectSource", source_names)
+    animate(source, source_names)
+    target = build_biped("DirectTarget", target_names, arm_roll=0.25, scale=1.1)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    calls = []
+    original = metarig_module.load_human_metarig_definition
+
+    def _boom():
+        calls.append("loader")
+        raise RetargetError("loader must not run")
+
+    metarig_module.load_human_metarig_definition = _boom
+    try:
+        report, baked = retarget_existing(source, target, RetargetOptions(pairs=pairs, standard_skeleton="DIRECT"))
+    finally:
+        metarig_module.load_human_metarig_definition = original
+    check(calls == [], "direct mode does not load the metarig")
+    check(len(baked) == 1, "direct mode still bakes the source clip")
+    check(source.animation_data.action is not None and target.animation_data.action == baked[-1], "direct mode keeps same-clip display")
+    check("loader must not run" not in report, "direct mode does not report a metarig failure")
+
+
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
+    test_standard_skeleton_selector()
+    test_standard_skeleton_panel_order()
+    test_human_metarig_definition()
+    test_metarig_calibration_keeps_rest()
+    test_metarig_two_hop_bake()
+    test_metarig_swing_limits()
+    test_metarig_same_clip()
+    test_metarig_root_reference_and_ik()
+    test_metarig_failure_cleanup()
+    test_direct_mode_without_rigify()
+    print("METARIG_TEST_COUNT", len(METARIG_TESTS))
     _source, _target = test_geometry_and_bake()
     test_mixamo_names()
     test_autorig_and_roundtrip(_source)

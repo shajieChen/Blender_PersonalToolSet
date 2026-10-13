@@ -35,6 +35,7 @@ class RetargetOptions:
         root_motion="KEEP",
         foot_ik=False,
         hand_ik=False,
+        standard_skeleton="DIRECT",
     ):
         self.pairs = pairs
         self.reference = reference if reference in {"REST", "CURRENT"} else "REST"
@@ -42,6 +43,9 @@ class RetargetOptions:
         self.root_motion = root_motion if root_motion in {"KEEP", "IN_PLACE"} else "KEEP"
         self.foot_ik = bool(foot_ik)
         self.hand_ik = bool(hand_ik)
+        if standard_skeleton not in {"DIRECT", "RIGIFY_HUMAN_METARIG"}:
+            raise RetargetError("未知的标准人形骨架: " + str(standard_skeleton))
+        self.standard_skeleton = standard_skeleton
         self.resolved_pairs = None
 
 

@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Humanoid Retarget",
     "author": "Blender Plugin",
-    "version": (1, 6, 6),
+    "version": (1, 7, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 重定向",
     "description": "导入带动画的模型，自动绑定或映射到另一个人形，再导出",
@@ -166,6 +166,7 @@ def _options_from_settings(settings, use_mapping=True):
         root_motion=settings.root_motion,
         foot_ik=settings.use_foot_ik,
         hand_ik=settings.use_hand_ik,
+        standard_skeleton=settings.standard_skeleton,
     )
 
 
@@ -230,6 +231,15 @@ class HRSettings(PropertyGroup):
         ),
         default="SIDE",
         update=_on_stand_layout,
+    )
+    standard_skeleton: EnumProperty(
+        name="标准人形骨架",
+        description="选择重定向使用的中间标准。默认仍是来源直接映射到目标",
+        items=(
+            ("RIGIFY_HUMAN_METARIG", "Rigify human metarig", "用 Rigify 的完整 Human metarig 作为中间骨架"),
+            ("DIRECT", "当前直接映射", "不创建中间骨架，来源直接映射到目标"),
+        ),
+        default="DIRECT",
     )
     status: StringProperty(name="状态", default="先导入带动画的模型，再导入要接收动作的角色。")
     mappings: CollectionProperty(type=HRMapItem)
@@ -639,6 +649,7 @@ class HR_PT_panel(Panel):
         layout = self.layout
         settings = context.scene.hr_settings
         layout.prop(settings, "stand_layout", text="站位")
+        layout.prop(settings, "standard_skeleton", text="标准人形骨架")
 
         source_box = layout.box()
         source_box.label(text="1. 动画来源")
