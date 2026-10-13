@@ -1,4 +1,4 @@
-"""Headless checks for Unity-style WASD fly camera math."""
+"""Headless checks for Unity-style viewport navigation."""
 
 import math
 import os
@@ -79,16 +79,64 @@ def test_mouse_look_locks_roll():
     check(steep_up.z > 0.0, "the clamped look stays upright")
 
 
+def test_preview_fly_turns_around_the_eye():
+    rotation = level_rotation()
+    location = Vector((1.0, 2.0, 3.0))
+    distance = 6.0
+    eye = fly.view_eye(location, rotation, distance)
+    turned = fly.fly_look(rotation, 40.0, 15.0, 0.003)
+    moved = fly.location_for_eye(eye, turned, distance)
+    stayed = fly.view_eye(moved, turned, distance)
+    check((stayed - eye).length < 1.0e-5, "mouse look keeps the preview eye fixed")
+    check((moved - location).length > 0.1, "the orbit pivot shifts so the eye can stay put")
+    delta = fly.fly_translation(turned, {"W"}, 3.0, 1.0)
+    flown = eye + delta
+    placed = fly.location_for_eye(flown, turned, distance)
+    check((fly.view_eye(placed, turned, distance) - flown).length < 1.0e-5, "flight moves the preview eye")
+    check((flown - eye).dot(fly.fly_axes(turned)[0]) > 2.0, "W carries the eye forward")
+
+
+def test_unity_viewport_gestures():
+    check(fly.right_drag_mode("PERSP") == "FLY", "perspective right-drag flies")
+    check(fly.right_drag_mode("CAMERA") == "FLY", "camera view right-drag flies")
+    check(fly.right_drag_mode("ORTHO") == "ORBIT", "orthographic right-drag orbits")
+    rotation = level_rotation()
+    sideways = fly.pan_offset(rotation, 10.0, 0.0, 5.0, 0.1)
+    vertical = fly.pan_offset(rotation, 0.0, 10.0, 5.0, 0.1)
+    check(sideways.x < -1.0 and abs(sideways.y) < 1.0e-6, "dragging right pans the camera left")
+    check(vertical.z < -1.0 and abs(vertical.y) < 1.0e-6, "dragging up pans the camera down")
+    closer = fly.zoom_distance(10.0, 20.0, 0.01)
+    farther = fly.zoom_distance(10.0, -20.0, 0.01)
+    check(closer < 10.0 and farther > 10.0, "dragging up zooms toward the pivot")
+    check(fly.zoom_distance(0.01, 1000.0, 0.01) == 0.01, "zoom distance does not collapse")
+    check(fly.zoom_distance(10000.0, -1000.0, 0.01) == 10000.0, "zoom distance stays finite")
+    eye = Vector((0.0, 0.0, 0.0))
+    distance = 6.0
+    forward, _right, _up = fly.fly_axes(rotation)
+    pivot = eye + forward * distance
+    new_eye, turned = fly.orbit_eye(eye, rotation, 80.0, 0.0, 0.003, distance)
+    new_forward, _right, _up = fly.fly_axes(turned)
+    check(abs((new_eye - pivot).length - distance) < 1.0e-4, "orbit keeps the pivot distance")
+    check((pivot - new_eye).normalized().dot(new_forward) > 0.999, "orbit still looks at the pivot")
+    check((new_eye - eye).length > 0.1, "orbit moves the eye around the pivot")
+
+
 def test_registration():
     fly.register()
     check(hasattr(bpy.types, "WASD_PT_fly_camera"), "the fly panel is registered")
     check(hasattr(bpy.types, "VIEW3D_OT_wasd_fly_camera"), "the fly operator is registered")
-    keymap_items = []
+    check(hasattr(bpy.types, "VIEW3D_OT_unity_scene_nav"), "viewport pan orbit and zoom are registered")
+    check(hasattr(bpy.types, "VIEW3D_OT_unity_frame_selected"), "frame selected is registered")
+    found = []
     for keymap in bpy.context.window_manager.keyconfigs.addon.keymaps:
         for item in keymap.keymap_items:
-            if item.idname == "view3d.wasd_fly_camera":
-                keymap_items.append((item.type, item.value))
-    check(("RIGHTMOUSE", "PRESS") in keymap_items, "right mouse press starts flythrough")
+            action = getattr(item.properties, "action", "")
+            found.append((item.idname, item.type, bool(item.alt), action))
+    check(("view3d.wasd_fly_camera", "RIGHTMOUSE", False, "") in found, "right mouse press starts flythrough")
+    check(("view3d.unity_scene_nav", "MIDDLEMOUSE", False, "PAN") in found, "middle mouse pans")
+    check(("view3d.unity_scene_nav", "LEFTMOUSE", True, "ORBIT") in found, "alt left mouse orbits")
+    check(("view3d.unity_scene_nav", "RIGHTMOUSE", True, "ZOOM") in found, "alt right mouse zooms")
+    check(("view3d.unity_frame_selected", "F", False, "") in found, "F frames the selection")
     fly.unregister()
     print("WASD_FLY_TEST_OK")
 
@@ -100,6 +148,8 @@ if __name__ == "__main__":
         test_wasd_matches_unity()
         test_shift_and_scroll()
         test_mouse_look_locks_roll()
+        test_preview_fly_turns_around_the_eye()
+        test_unity_viewport_gestures()
         test_registration()
     except Exception:
         import traceback
