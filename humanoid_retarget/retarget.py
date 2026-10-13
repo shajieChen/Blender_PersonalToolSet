@@ -13,7 +13,8 @@ foot IK runs after the FK pose.
 from __future__ import annotations
 
 import bpy
-from mathutils import Matrix, Vector
+from math import pi
+from mathutils import Matrix, Quaternion, Vector
 
 from .classify import CORE_ROLES, classify_armature, correct_chest_pairs, correct_deform_pairs, describe_roles, rig_height
 from .ik import apply_contact_ik
@@ -287,6 +288,17 @@ def _apply_body_orientations(src, tgt, pairs, options):
             rest_orient = pose_bone.bone.matrix_local.to_3x3()
             swing = tgt_chain.normalized().rotation_difference(desired.normalized())
             orient = swing.to_matrix() @ rest_orient
+            if role == "hips":
+                source_rest = _rot3(src.data.bones[source_name].matrix_local)
+                source_delta = _rot3(src.pose.bones[source_name].matrix) @ source_rest.inverted()
+                source_rotation = source_delta.to_quaternion().normalized()
+                if source_rotation.w < 0.0:
+                    source_rotation.negate()
+                chain_frame = Vector((0.0, 1.0, 0.0)).rotation_difference(src_chain.normalized())
+                chain_rotation = chain_frame.inverted() @ source_rotation @ chain_frame
+                hips_twist = chain_rotation.to_swing_twist("Y")[1]
+                hips_twist = (hips_twist + pi) % (2.0 * pi) - pi
+                orient = Quaternion(desired.normalized(), hips_twist).to_matrix() @ orient
         else:
             source_ref = _stored_matrix(data.get("source_matrix"), source_name, src.data.bones[source_name].matrix_local)
             target_ref = _stored_matrix(data.get("target_matrix"), target_name, tgt.data.bones[target_name].matrix_local)

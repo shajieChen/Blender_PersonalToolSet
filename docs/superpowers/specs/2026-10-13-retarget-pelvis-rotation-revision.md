@@ -1,253 +1,173 @@
-# 骨盆旋转：第 2 轮唯一实施指令
+# 骨盆偏航：唯一实施修订
+PATCH
 
-日期：2026-10-13。决策：**DO_NOT_PATCH**。此决策由本轮 A/B 实测得出，不沿用第一轮结论。
+日期：2026-10-13。本文替代本文件旧版 DO_NOT_PATCH 与旧验收门；Cursor 只能按本文件实施。本文授权的是后续实施范围，本次审查没有修改插件或测试，也没有完成产品修复。
 
 ```text
-A/B -> 五帧 yaw 残差 < 1°
-    -> spine + 两侧 thigh 局部 quaternion 必须补偿
-    -> 超过 1e-4 -> FAIL -> 不改插件
-固定非髋 quaternion -> 肢体方向失配 -> FAIL
+REST hips 链方向 -> swing 保留方向、丢失绕链自由度
+                + 来源 rest-relative twist 标量
+                -> hips orient -> 原有子骨补偿 -> yaw 恢复
 ```
 
 ## 目标
 
-复核能否只改变 hips 骨骼，恢复来源偏航，并满足用户全部硬门。两公式的偏航门均通过；全部硬门均失败。实施者停止在此结论，不修改 `retarget.py`，不新增第三公式，不升级插件版本。
+**确定原因：** 当前 _apply_body_orientations 的 REST 分支（retarget.py:281-289）仅把 hips→spine 的单一方向变成 swing，再乘目标 rest orientation，没有读取来源 hips 的 rest-relative 旋转中绕 posed chain 的自由度；因此链方向几乎完全匹配时，骨盆仍丢失显著 body-up yaw。Epic 的 retarget-root 文档明确默认旋转跟随来源，retarget root 通常为 pelvis/hips；保留 target bind 骨轴不等于冻结来源的动画 yaw。采用这一生产重定向规则与用户要求，本问题是插件 REST hips 的旋转信息缺失，不是 same-clip 显示问题。已测公式 A 在本次完整烘焙的五个指定帧满足新门，不需要第三公式。该判断不声称所有 retargeter 都必须使用 A，也不声称它是 Epic 的内部公式。
 
-当前未修复偏航丢失。DO_NOT_PATCH 仅适用于本轮严格“非髋局部四元数不变”约束，不声称单角迁移本身不可行。
+### 原始规则与来源
+
+以下页面于 2026-10-13 实时检索并打开。原文只证明产品旋转规则或 API 含义，不能单独证明跨 bind 公式。
+
+1. **Epic：retarget root 是 pelvis/hips。**
+   > Within both IK Rig Assets, you must define the root for each character, which is typically the pelvis or hip bone.
+   URL：https://dev.epicgames.com/documentation/en-us/unreal-engine/retargeting-bipeds-with-ik-rig-in-unreal-engine
+   这是角色定义；独自不足以决定 yaw。需和下一条明确旋转规则一起读。
+
+2. **Epic Unreal 5.1：rotation_alpha 的 source-follow 规则。**
+   > At 1 the root is rotated fully to match the source root rotation.
+   URL：https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/TargetRootSettings?application_version=5.1
+   页面把该参数的说明默认值写为 1；值为 0 是选择保留 retarget-pose 旋转，不是所有骨盆 yaw 必须留在 target bind 的规则。这里是 retargeted root rotation，不授权直接复制来源绝对骨轴。
+
+3. **Epic Unreal 5.8：明确将 pelvis rotation 与 FK chains 分开。**
+   > Blends the animation on the retarget pelvis between the retarget pose (0) and the incoming retarget source (1).
+   URL：https://dev.epicgames.com/documentation/unreal-engine/retargeting-operation-stack-in-unreal-engine-5-8
+   引文来自 Pelvis Rotation / Rotation Alpha。它确认来源旋转不是只有 hips→spine 的方向。这里只使用可读文档，不声称本机运行过 Unreal。
+
+4. **Auto-Rig Pro：Root Bone 的旋转转移规则，作为交叉核对。**
+   > Setting it as Root will retarget translation + rotation, while only rotation is used otherwise.
+   URL：https://www.lucky3d.fr/auto-rig-pro/doc/remap_doc.html#root-bone
+   同节把 root 定义为通常的 hips/pelvis。这是旋转转移规则，不是 A 的推导。该产品对对象归零、rest pose 的流程要求不迁入本补丁。
+
+5. **Blender 5.1.2 官方 API 文档源码：单角提取。**
+   > Split the rotation into a swing quaternion with the specified axis fixed at zero, and the remaining twist rotation angle.
+   URL：https://github.com/blender/blender/blob/v5.1.2/source/blender/python/mathutils/mathutils_Quaternion.cc#L323-L334
+   函数 Quaternion.to_swing_twist 接受 X/Y/Z，返回 swing 与 twist angle。官方 5.1 API 网页抓取为 402，以上同版本源码已实际打开核验。这里只用它提取角，不把 API 说明冒充产品重定向公式。
+
+Blender Rigify/manual 页面已检索和尝试打开，但本主线程抓取为 402；不依赖它作因果证明。Mixamo 的已打开官方页只说映射 skeleton；Maya HumanIK 的已打开 character-structure 页只规定 hips rotation 存到哪个节点，均不足以决定 source-follow yaw。它们没有提供可替代上述 Epic 规则的 target-bind 必保留 yaw 规则。检索范围有限，不能以未找到文档证明不存在其他模式。
 
 ## 修改范围
 
-本轮只写问题文档和本文件。`humanoid_retarget`、现有测试、用户场景及输入模型全部保持原样。
+**本轮实际写入：** 本修订档与插件外 codex_sideways_cause.md。问题事实档不改；新测量未推翻其数值，只替换旧验收合同。旧事实档的 DO_NOT_PATCH / 非髋 quaternion 不变 / 世界 dot 门不再是实施指令。
 
-测量时仅在独立 Blender 进程 monkeypatch `_apply_body_orientations`。`bake_retarget`、Action/slot、帧范围、髋平移、IK 与插帧调用均复用当前源码。没有修改磁盘上的函数。
+**后续 Cursor PATCH 范围：**
+- humanoid_retarget/retarget.py：新增 Quaternion 与 pi 必要导入；只在 REST hips orient 增加 A 的单角旋转。其它 role 的算法、CURRENT、平移、Action/slot 与 same-clip 行为不变。
+- humanoid_retarget/__init__.py：仅把 bl_info version 从 (1, 7, 0) 改为 (1, 7, 1)。本轮不改版本。
+- tests/run_retarget_test.py：后续新增 test_rest_hips_yaw_preserves_arm_chain，并在 main 中调用；本轮不修改测试。不得改动既有测试或测试过滤器来制造 GREEN。
 
-依赖仍是 `pipeline.py -> retarget.py -> classify/mapping/ik`。测量脚本依赖插件，插件不依赖脚本。Blender 进程持有导入的对象和 Action，脚本只借用引用；进程自然结束释放。没有公共 API、所有权或注册生命周期变化。
+依赖保持 pipeline.py -> retarget.py -> classify/mapping/ik；测量与测试依赖产品，不反向引入运行依赖。无需新策略、接口或配置。Blender 主线程持有 armatures、Action；本函数借用引用，只更新目标 PoseBone。无新注册/注销、线程、长期对象、公共 API 或外部依赖。
 
 ## 实施步骤
 
-本节是已执行的审查过程，不授权产品实施。
+### 1. 复用本轮已读材料与源码定位
 
-### 1. 已重跑当前基线
+已完整读精确求解函数：_body_matrix:139、_chain_vector:220、_apply_body_orientations:246-308；已读原问题/修订档及公式 A 测量脚本；已核对现有 build_biped、test_swing_preserves_target_roll、test_metarig_swing_limits 和 main 的相关代码。未变化材料直接复用，只有源码变化或证据冲突时局部刷新。
 
-Blender `5.1.2`、build `ec6e62d40fa9`，原始 GLB→FBX；`a050_300000`，REST / KEEP / IK off。两侧 hips→spine 实际为 `Pelvis→Spine`、`Bip01 Pelvis→Bip01 Spine`。完整烘焙 `0..52` 后读取五帧；不是仅计算几个未插帧姿势。
+本轮探子一批、两个独立只读任务：Blender/Rigify/Mixamo 与 Maya 官方规则；主线程负责 Epic/ARP、精确源码、公式与最终验证。探子不修改文件。后续若确实有跨目录缺口，才补派聚焦任务，不重复检索已闭合问题。
 
-第一轮给出的 yaw、倾角、非 identity swing、位移和约 90° bind 差已重算，结果见问题文档。原始世界 dot 和严格 hand identity 额外发现基线失败，不假定旧口径成立。
+### 2. 精确公式 A，不得换为 B
 
-### 2. 只测以下 A/B，两公式均在父先子后循环内执行
-
-共同记号：`R_s/R_t` 是 hips rest armature-space 旋转；`P_s` 是来源 hips pose armature-space 旋转，含父骨；`D_s=P_s @ R_s^-1`。`B_s/B_t` 使用当前 `_body_matrix`，只来自 rest joint heads。`n_s` 是来源 posed hips→spine 单位方向；`n_t=normalize(B_t @ B_s^-1 @ n_s)` 是当前算法的目标 desired chain。
-
-目标原有 `S_t` 把目标 rest chain 指向 `n_t`，原有 `O_0=S_t @ R_t`。`Rot(axis,angle)` 为 Blender 右手主动旋转；`@` 右侧先执行。
-
-**A：posed chain twist 单角迁移。**
+保持现有 src_chain、tgt_chain、desired、swing、orient 计算顺序。src_chain 是 posed source hips→spine；tgt_chain 是 target rest hips→spine。身体轴只来自各自 rest head_local。骨骼局部 +Y 不是链轴；仅借 +Y 作为 Blender API 的计算坐标。
 
 ```text
-q = Quaternion(D_s), normalize, choose w >= 0
-F maps +Y to n_s
-q_local = F^-1 @ q @ F
-theta_A = q_local.to_swing_twist('Y')[1], wrap to [-pi,pi)
-O_A = Rot(n_t, theta_A) @ S_t @ R_t
+src_chain = _chain_vector(src, src_roles, role, True)
+tgt_chain = _chain_vector(tgt, tgt_roles, role, False)
+desired = target_body @ normalize(source_body^-1 @ src_chain)
+swing = rotation_difference(normalize(tgt_chain), normalize(desired))
+orient = swing.to_matrix() @ target_rest_orientation
+D = _rot3(source_pose.matrix) @ _rot3(source_rest.matrix_local)^-1
+q = normalize(Quaternion(D)); choose q.w >= 0
+F = rotation_difference(+Y, normalize(src_chain))
+q_chain = F^-1 @ q @ F
+theta = wrap(q_chain.to_swing_twist('Y')[1], [-pi, pi))
+orient = Rot(normalize(desired), theta) @ orient
+rest = _rot3(pose_bone.bone.matrix_local)
+basis = rest^-1 @ parent_rest_rotation @ parent_pose_rotation^-1 @ orient
 ```
 
-等价带符号角为 `wrap(2 atan2(q.xyz dot n_s, q.w))`；实际调用 Blender API 并与此投影公式核对，本轮最大差 `1.541112638e-7 rad`。只传这个标量角；不复制来源 pelvis 轴。`Rot(n_t)` 左乘在 swing 之后，对目标 desired chain 不再改变方向。
+最后一行只适用于有 parent 的分支；无 parent 时保持 basis = rest^-1 @ orient。保留现有 target_rest_orientation 的原始 rest_orient 计算，不用 source rest 替换它。因为 Rot(desired, theta) 不改变 desired 自身，所以 A 不改变 hips 链方向。target bind 仍是乘法的最右侧基础；只转移 theta 一个标量。
 
-**B：身体 up yaw 单角迁移。**
+**准确插入点：** 当前 REST 分支 orient = swing.to_matrix() @ rest_orient 之后、else CURRENT 分支之前，仍在原有父先子后循环内。新代码等价如下；需要 from math import pi 及现有 mathutils 导入增加 Quaternion：
 
-```text
-l_s = B_s.col[0], u_s = B_s.col[1]
-v_s = normalize(project_perpendicular(D_s @ l_s, u_s))
-psi_s = atan2(u_s dot (l_s cross v_s), l_s dot v_s)
-l_t = B_t.col[0], u_t = B_t.col[1]
-beta_t = rest yaw of the semantic target left about u_t
-theta_B = wrap(psi_s - beta_t)
-O_B = Rot(u_t, theta_B) @ S_t @ R_t
+```python
+if role == "hips":
+    source_rest = _rot3(src.data.bones[source_name].matrix_local)
+    source_delta = _rot3(src.pose.bones[source_name].matrix) @ source_rest.inverted()
+    source_rotation = source_delta.to_quaternion().normalized()
+    if source_rotation.w < 0.0:
+        source_rotation.negate()
+    chain_frame = Vector((0.0, 1.0, 0.0)).rotation_difference(src_chain.normalized())
+    chain_rotation = chain_frame.inverted() @ source_rotation @ chain_frame
+    hips_twist = chain_rotation.to_swing_twist("Y")[1]
+    hips_twist = (hips_twist + pi) % (2.0 * pi) - pi
+    orient = Quaternion(desired.normalized(), hips_twist).to_matrix() @ orient
 ```
 
-探针使用语义 rest left，而不是目标 pelvis 的局部 X：其骨骼局部表示为 `R_t^-1 @ l_t`，经过 rest 后正是身体 left。因此目标自身 rest yaw `beta_t≈-8.389e-12°`，等于零到数值误差。本轮按 `theta_B=wrap(psi_s-beta_t)` 实际计算。yaw 度量也以每侧 rest 身体 left 为零；没有把另一 bind 的绝对 facing 或骨轴复制过来。若 rest left 与身体 left 不同，必须显式减去自身 rest yaw；本轮没有这种非零 rest yaw fixture，也不作跨 fixture 的承诺。
+不把这段放到 CURRENT 或全 role 公共出口。保留 rest、parent-relative basis、rotation_quaternion 写入及紧接的 bpy.context.view_layer.update()，让子骨看见新的父旋转，再按现有算法重求解。原有缺失/退化链 continue 不改；不新增事后 hips keyframe 修饰器。
 
-B 的左乘明确绕目标身体 up；它保持与 up 的倾角，但可能改变髋链的方位。不能把它误记为 A 的绕 posed chain 旋转，也不能更换乘法顺序来偷偷尝试第三公式。
+**子骨局部 quaternion 变化是必要父级补偿，明确允许。** spine、thigh_l、thigh_r 继续按自身 target bind 与来源方向求解，用新的局部旋转抵消父级变化。它们没有新增 source roll 迁移公式。禁止冻结它们的旧局部 quaternion；旧实测冻结后手臂方向大幅失配。
 
-在当前函数中，先计算原有 `orient`，仅当 `absolute and role == 'hips'` 时换为 `O_A/O_B`，再执行原有 parent-relative basis 求解及 `rotation_quaternion` 赋值，立即 `view_layer.update()`，随后求解子骨并插帧。没有先给子骨插帧再后处理髋 quaternion。
+### 3. 合成 RED -> 最小 GREEN -> 回归
 
-### 3. 实测 A：允许现有子骨求解器补偿
+新增测试名：**test_rest_hips_yaw_preserves_arm_chain**，文件 tests/run_retarget_test.py。不得加载 GLB/FBX 或使用用户绝对资源路径。
 
-| 帧 | 来源 yaw ° | 目标 yaw ° | lost yaw ° | 髋链倾角误差 ° | 髋链方向误差 ° |
-| --- | --- | --- | --- | --- | --- |
-| 1 | -36.965572860 | -36.588082571 | -0.377490289 | 1.534009794e-05 | 0.000016083 |
-| 20 | -41.451326176 | -40.609836635 | -0.841489540 | 1.223558855e-05 | 0.000016042 |
-| 31 | -42.653081115 | -42.137721247 | -0.515359868 | 1.064735904e-05 | 0.000012073 |
-| 37 | -38.585408028 | -38.154399035 | -0.431008993 | 1.213983354e-05 | 0.000012050 |
-| 52 | -6.720701598 | -6.630727194 | -0.089974404 | 1.729135448e-05 | 0.000017522 |
+- 用现有 build_biped 创建两个全新 synthetic armatures；包含 hips、spine、chest、头、双肩、upperarm_l -> forearm_l -> hand_l 及身体轴需要的右臂，不能只建 hips/spine。可使用不同 arm_roll 保证仍保留 target arm bind roll。建立 fixture 之外不得进入 Edit Mode 改目标 rest。
+- 用来源自身 rest 旋转把 +40° body-up armature-space delta 换算为来源 hips 局部 quaternion，再制作 Action。不是复制来源 quaternion 到目标。对象为 identity、同一身体轴；目标先记 rest，不加手部关键帧、不启用 IK。
+- 使用 REST / KEEP / foot_ik=False / hand_ik=False 经正常 bake 路径，并在实际 baked Action 上采样。
+- yaw 用本文件的 rest-body-left 度量，断言 abs(wrap(source yaw - target yaw)) < 2°。
+- 上臂 chain 用 pose head 的 upperarm_l -> forearm_l，归一化后在 armature space 比较，断言 abs(dot - 1) < 1.5e-3；不得使用 bone tail 或 matrix_world。补充 forearm_l -> hand_l 同门，双手 quaternion identity-angle < 1e-4 rad。
+- 在未补丁版本选中此测试，selected > 0，确认失败来自 lost yaw，不是导入错误；随后只加 A，重跑同一测试 GREEN，再跑相关与全量回归。不允许 monkeypatch 在正式产品测试中掩盖缺陷。
 
-实际世界空间链：每格 `dot / abs(dot-1)`。
+**现有回归合同冲突已发现：** test_metarig_swing_limits:1412-1413 明确要求第一跳 yaw < 20°、第二跳 < 5°，是在测试旧版丢 yaw。REST hips 新规则同样作用于两跳，不能偷偷跳过 metarig 来保住这两条旧断言。本修订不授权删除、skip、松门或改动既有测试；在用户单独批准更新旧行为预期之前，全量回归合同为 **Blocked**。可以实施精确补丁与新增测试，但不得宣布全回归 GREEN 或正式完成。双手 identity、链方向、CURRENT、same-clip 与 rest 未变这些旧门继续保留。
 
-| 帧 | upperarm_l | forearm_l | thigh_l | spine |
-| --- | --- | --- | --- | --- |
-| 1 | 0.999569286380 / 4.307136202e-04 | 0.999888843502 / 1.111564980e-04 | 0.999456655338 / 5.433446618e-04 | 0.999470618150 / 5.293818500e-04 |
-| 20 | 0.999458408439 / 5.415915606e-04 | 0.999639050736 / 3.609492640e-04 | 0.999456200417 / 5.437995831e-04 | 0.999458808014 / 5.411919856e-04 |
-| 31 | 0.999460228807 / 5.397711926e-04 | 0.999891980409 / 1.080195909e-04 | 0.999470340761 / 5.296592393e-04 | 0.999457972427 / 5.420275726e-04 |
-| 37 | 0.999484326383 / 5.156736173e-04 | 0.999965644315 / 3.435568460e-05 | 0.999467810544 / 5.321894561e-04 | 0.999457998190 / 5.420018096e-04 |
-| 52 | 0.999530782073 / 4.692179270e-04 | 0.999467652871 / 5.323471285e-04 | 0.999463844942 / 5.361550582e-04 | 0.999456338792 / 5.436612077e-04 |
+### 4. 编译前检查与执行入口
 
-双手和非髋骨局部变化：
+Python 插件无 C++ 构建项。先核对 Blender 5.1.2、Quaternion.to_swing_twist('Y')、Quaternion(axis, angle)、pi 导入、真实 role 名与 parent basis 顺序；用 compile 源码检查语法，避免 py_compile 在受保护目录写缓存。明确错误先修复，保留日志，不重复跑未修正版本。
 
-| 帧 | hand_l identity 误差 | hand_r identity 误差 | 非髋 quaternion 最大分量变化 | 最大旋转差 rad | 有非髋变化 > 1e-4 |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 1.192092896e-07 | 2.384185791e-07 | 0.313635115 | 0.639174154 | 是：spine、thigh_l、thigh_r |
-| 20 | 1.192092896e-07 | 2.384185791e-07 | 0.407853448 | 0.847756214 | 是：spine、thigh_l、thigh_r |
-| 31 | 1.192092896e-07 | 2.384185791e-07 | 0.362002334 | 0.746024036 | 是：spine、thigh_l、thigh_r |
-| 37 | 1.192092896e-07 | 2.384185791e-07 | 0.324809419 | 0.662168587 | 是：spine、thigh_l、thigh_r |
-| 52 | 1.192092896e-07 | 2.384185791e-07 | 0.057827031 | 0.115730567 | 是：spine、thigh_l、thigh_r |
+正式 headless 回归入口：
+```powershell
+& 'C:\Program Files\Blender Foundation\Blender 5.1\blender.exe' --background --factory-startup --python-exit-code 1 --python 'H:\Blender_Plugin\tests\run_retarget_test.py'
+```
 
-### 4. 实测 B：允许现有子骨求解器补偿
+聚焦测试使用项目现有加载/调用方式，确保真实函数被调用、selected > 0；不改 main 的既有测试列表来躲失败。处理上述回归合同冲突后再跑全量，不以退出码非零充当通过。
 
-| 帧 | 来源 yaw ° | 目标 yaw ° | lost yaw ° | 髋链倾角误差 ° | 髋链方向误差 ° |
-| --- | --- | --- | --- | --- | --- |
-| 1 | -36.965572860 | -37.582066392 | 0.616493532 | 5.063265681e-06 | 7.198539185 |
-| 20 | -41.451326176 | -40.767844924 | -0.683481252 | 5.687940124e-06 | 26.703212689 |
-| 31 | -42.653081115 | -43.310102159 | 0.657021044 | 5.662628384e-06 | 10.589619351 |
-| 37 | -38.585408028 | -39.210981354 | 0.625573326 | 3.194527192e-06 | 6.576044650 |
-| 52 | -6.720701598 | -6.730282286 | 0.009580688 | 1.081069157e-05 | 0.364031990 |
+### 5. 手动真实资源验收与临时诊断清理
 
-实际世界空间链：每格 `dot / abs(dot-1)`。
+GLB/FBX 仍是手动集成检查，不是 unit test。完整 bake 0..52 后采样 1/20/31/37/52：
+- source：H:\SErsiko_ExtactedTool\output\c0000_突刺_wp_a_0300.glb；target：C:\Users\chenshajie1\Downloads\body.FBX。
+- a050_300000；REST、KEEP、两种 IK 关闭。实际链 Pelvis -> Spine 与 Bip01 Pelvis -> Bip01 Spine。
+- CURRENT 另外确认保持原 _desired_orientation 路径与行为。保留已交付 same-clip 规则，不能重新自动挑别的 Action。
 
-| 帧 | upperarm_l | forearm_l | thigh_l | spine |
-| --- | --- | --- | --- | --- |
-| 1 | 0.999569266936 / 4.307330636e-04 | 0.999888861484 / 1.111385164e-04 | 0.999456678997 / 5.433210033e-04 | 0.999470589217 / 5.294107825e-04 |
-| 20 | 0.999458400573 / 5.415994270e-04 | 0.999639048107 / 3.609518925e-04 | 0.999456208931 / 5.437910693e-04 | 0.999458774293 / 5.412257069e-04 |
-| 31 | 0.999460258957 / 5.397410427e-04 | 0.999891969114 / 1.080308859e-04 | 0.999470369487 / 5.296305133e-04 | 0.999457937941 / 5.420620591e-04 |
-| 37 | 0.999484324639 / 5.156753615e-04 | 0.999965636226 / 3.436377373e-05 | 0.999467841625 / 5.321583753e-04 | 0.999457976250 / 5.420237497e-04 |
-| 52 | 0.999530766588 / 4.692334116e-04 | 0.999467677769 / 5.323222311e-04 | 0.999463866207 / 5.361337929e-04 | 0.999456335883 / 5.436641169e-04 |
+本次新增临时产品埋点、注册项、轮询、开关、依赖：无。只有插件外独立进程的内存 monkeypatch；已恢复原函数、进程自然结束。保留 H:\tmp\pelvis_sideways_cause_20261013 的测量 JSON、日志与重现脚本作为证据。后续 Cursor 若加临时诊断，先逐项登记，再仅移除本次新增且正式功能不依赖的调用点/注册/配置，清理后重跑聚焦、回归与真实 pair；不得批量清理用户文件。
 
-双手和非髋骨局部变化：
-
-| 帧 | hand_l identity 误差 | hand_r identity 误差 | 非髋 quaternion 最大分量变化 | 最大旋转差 rad | 有非髋变化 > 1e-4 |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 1.192092896e-07 | 2.384185791e-07 | 0.312666415 | 0.645171130 | 是：spine、thigh_l、thigh_r |
-| 20 | 1.192092896e-07 | 2.384185791e-07 | 0.334266639 | 0.723462434 | 是：spine、thigh_l、thigh_r |
-| 31 | 1.192092896e-07 | 2.384185791e-07 | 0.343678633 | 0.744436700 | 是：spine、thigh_l、thigh_r |
-| 37 | 1.192092896e-07 | 2.384185791e-07 | 0.323912593 | 0.673442443 | 是：spine、thigh_l、thigh_r |
-| 52 | 1.192092896e-07 | 2.384185791e-07 | 0.058549456 | 0.117298517 | 是：spine、thigh_l、thigh_r |
-
-四元数变化是归一化后、先对齐 `q/-q` 符号的最大分量差；另报旋转差 rad。两种度量都远超 `1e-4`，不会因度量选择改变结论。五帧变化骨均是 `spine`、`thigh_l`、`thigh_r`，完整逐骨数据在 JSON。它们用新的局部旋转抵消髋骨的父旋转，保持其 armature-space 方向。这已经超出“只改 hips”的验收范围。
-
-### 5. 排除基线差异，核实子骨补偿代价
-
-原始导入的世界身体 up 相差 `1.890161306°`；双手残留约 1–2 个 float epsilon 的 scale。未对齐对象或归一化手 scale 来放宽验收。
-
-补充记录各自身体坐标中的方向 dot，作为诊断，不替代世界门：
-
-| 模式 | 帧 | 四链身体坐标 abs(dot-1) 最大值 |
-| --- | --- | --- |
-| baseline | 1 | 1.610933609e-13 |
-| baseline | 20 | 3.519406988e-13 |
-| baseline | 31 | 3.086420008e-13 |
-| baseline | 37 | 2.082778394e-13 |
-| baseline | 52 | 1.809663530e-13 |
-| A | 1 | 1.137312466e-12 |
-| A | 20 | 2.100319918e-12 |
-| A | 31 | 8.777423233e-13 |
-| A | 37 | 2.180811087e-12 |
-| A | 52 | 1.164401908e-12 |
-| B | 1 | 3.987588038e-12 |
-| B | 20 | 3.058220344e-12 |
-| B | 31 | 2.506217456e-12 |
-| B | 37 | 5.724198893e-12 |
-| B | 52 | 2.502331675e-12 |
-
-A/B 的现有子骨求解器确实保住了身体坐标中的四链方向，但依赖局部 quaternion 补偿。即使只看这项达到方向精度，也不能叫 pass。
-
-另做 A_fixed / B_fixed 对照：仍在同一 parent-first 循环内先改变 hips，随后给每根非髋 mapped bone 使用当前 bake 的对应帧局部 quaternion，再 update；没有事后改髋。这是同一 A/B 公式的局部不变约束对照，不是第三公式。
-
-下表四链列为原始世界 `abs(dot-1)`；完整 dot 和 yaw 在 JSON。双手误差仍分别为 `1.192092896e-7`、`2.384185791e-7`。
-
-| 模式 | 帧 | lost yaw ° | upperarm_l | forearm_l | thigh_l | spine | 非髋 quaternion 最大分量变化 |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| A_fixed | 1 | -0.377490289 | 7.464390641e-02 | 1.805959247e-01 | 8.048336140e-02 | 2.620404359e-03 | 4.378762475e-08 |
-| A_fixed | 20 | -0.841489540 | 1.989877238e-01 | 1.549666549e-01 | 2.856821169e-01 | 1.174864255e-02 | 6.125656782e-08 |
-| A_fixed | 31 | -0.515355044 | 2.448296751e-01 | 2.040418953e-01 | 2.458022377e-01 | 1.996327802e-02 | 5.104023415e-08 |
-| A_fixed | 37 | -0.431008993 | 8.168949322e-02 | 1.827066354e-01 | 1.393881882e-01 | 4.887496326e-03 | 6.968501404e-08 |
-| A_fixed | 52 | -0.089977343 | 1.214029857e-04 | 2.162729055e-03 | 9.881222052e-04 | 4.493534443e-04 | 6.934487218e-08 |
-| B_fixed | 1 | 0.616496238 | 5.102659225e-02 | 1.746473300e-01 | 4.710821348e-02 | 1.897072400e-02 | 4.378762475e-08 |
-| B_fixed | 20 | -0.683476076 | 2.509316698e-01 | 8.521554746e-02 | 2.284182157e-01 | 1.503448219e-01 | 6.125656782e-08 |
-| B_fixed | 31 | 0.657021044 | 1.927396303e-01 | 2.310440305e-01 | 1.936848591e-01 | 6.485601816e-02 | 5.104023415e-08 |
-| B_fixed | 37 | 0.625573326 | 4.884245628e-02 | 2.035384687e-01 | 1.079059473e-01 | 1.383883821e-02 | 6.968501404e-08 |
-| B_fixed | 52 | 0.009573926 | 2.150657769e-04 | 1.866972034e-03 | 7.702827402e-04 | 4.669380337e-04 | 6.934487218e-08 |
-
-固定非髋局部旋转后，虽没有变化超过 `1e-4`，四链方向明显失配；身体坐标诊断也失败。A_fixed 最大四链世界误差约 `0.285682117`；B_fixed 约 `0.250931670`。因此失败不是仅由原始对象朝向或手 scale 引起。
+效率记录：旧档读取输出被截断时只补读缺失范围；Windows apply_patch 包装器两次未正确传入多行参数，改为原生执行器参数后成功。首个 Blender 启动因脚本不存在退出 1，不是 RED；最终有效测量退出 0。未改公式重试；后续直接复用成功入口。
 
 ## 强制约束
 
-- 五帧全部要求：`abs(lost yaw) < 2°`。
-- 每帧四条实际世界链全部要求：`abs(dot-1) < 1.5e-7`。
-- 每帧双手完整 `matrix_basis` 与 identity 的最大元素误差均 `< 1e-7`。
-- 相对当前真实 bake，不得有任何非髋 mapped quaternion 变化 `> 1e-4`。
-- 倾角一致不能替代完整方向一致；身体坐标 dot 不能替代原始世界 dot。
-- 允许子骨改变局部 quaternion 才保持方向，不算只改 hips，不算通过。
-
-这两个公式在同一 bake 中恢复偏航，但都不满足全部硬门。推荐 **DO_NOT_PATCH**。选择 A 会引入子骨补偿；选择 B 除补偿外，还改变髋链方位。固定子骨则使肢体方向失败。绝对轴复制存在已测约 90° bind 差；事后改髋无法让子骨求解抵消，且不是合法测试。上述替代方案均不采用。
-
-三个后续变化情形的边界：更换 bind 需重新测量角的含义；增加可选 IK 会改变本轮 IK off 证据；改变父骨结构会改变局部补偿分布。保留当前小核心，不为这些可能性增加接口、策略注册或配置。
+- REST only；CURRENT 不加 yaw。仅 role == 'hips' 得到新增 theta；其余骨的算法不改，允许它们自动补偿父级。
+- 禁止 B：绕 body_up 左乘会改变 hips 链方位；旧实测 frame 20 为 26.703212689°，不是 PASS。
+- 不复制 matrix_basis、matrix_local 或来源绝对 orientation 到目标。不把 matrix_world 乘进 align。
+- 不编辑现有目标 rest；不清 hand scale，不改手求解，不以两跳/骨名预设替代 yaw 修复。
+- foot IK / hand IK 默认仍关闭。公共 API、配置、IK 和参考模式不扩大。
+- 不执行 stash pop、宽泛 Git 回退、暂存、提交或推送；保留用户所有既有改动。
+- 对缺失链沿用 continue；A 不证明所有姿势/180°退化分解的普适正确性。新 fixture 若暴露不满足门的情况，报告 Concern/Blocked，不发明第三公式。
 
 ## 验收标准
 
-本轮审查交付已完成；两公式修复验收均 **FAIL**，当前缺陷仍在。
+本次 fresh Runtime 证据：H:\tmp\pelvis_sideways_cause_20261013\measurement.json 与 probe.log；Blender 5.1.2 / ec6e62d40fa9；完整两次 bake，每次 53 帧，采样共 10 行；选中真实 Action 1 个。当前源码 retarget.py SHA256：d8d7eacdb2407ea4ccb6136d73865fdc8bc21343784fda3ca407285a24dd3d0b。本次插件仍为 1.7.0。
 
-| 项目 | 当前基线 | A | B |
-|---|---|---|---|
-| 五帧偏航 < 2° | FAIL | 满足 | 满足 |
-| 原始世界四链 < 1.5e-7 | FAIL | FAIL | FAIL |
-| 双手完整 basis < 1e-7 | FAIL | FAIL | FAIL |
-| 所有非髋 quaternion 不变门 | 对照本身 | FAIL | FAIL |
-| 全部门同时通过 | 否 | 否 | 否 |
+| 帧 | 基线 lost yaw ° | A lost yaw ° | A 髋链方向误差 ° | 四链相对基线最大变化 ° | 手 identity-angle rad | 新门 |
+|---|---|---|---|---|---|---|
+| 1 | -36.349079593 | -0.377490289 | 0.000016083 | 0.000077541 | 0 | PASS |
+| 20 | -42.134817830 | -0.841489540 | 0.000016042 | 0.000111078 | 0 | PASS |
+| 31 | -41.996057057 | -0.515359868 | 0.000012073 | 0.000062674 | 0 | PASS |
+| 37 | -37.959831937 | -0.431008993 | 0.000012050 | 0.000140078 | 0 | PASS |
+| 52 | -6.711136037 | -0.089974404 | 0.000017522 | 0.000062828 | 0 | PASS |
 
-本轮不添加产品测试、不修改函数、不改版本；没有授权实施选项。PATCH 分支才需要合成双骨架 pass-rule 回归及 GLB/FBX 手动核验，本轮不能把失败实测包装成合成测试通过。
+五帧全部要求：abs(lost yaw) < 2°；髋链在各自身体坐标中的 source-target 方向误差 < 0.05°；upperarm_l、forearm_l、thigh_l、spine 相对 unmodified bake 的 target 身体坐标方向变化均 < 0.05°；hand_l/hand_r quaternion identity-angle < 1e-4 rad。
 
-运行入口：
+A 最大 yaw 残差 0.841489540°，髋链方向误差最大 0.000017522°，四链相对基线最大变化 0.000140078°；双手始终 (1,0,0,0)。子骨局部 quaternion 变化 > 1e-4 不是失败。世界 dot < 1.5e-7 与 hand matrix_basis < 1e-7 不是本验收门：两者在未改基线已经失败，不能归咎 A。
 
-```powershell
-& 'C:\Program Files\Blender Foundation\Blender 5.1\blender.exe' --background --factory-startup --python-exit-code 1 --python 'H:\tmp\pelvis_round2_20261013_live\probe.py'
-```
-
-最终探针选中 1 个真实 Action，执行基线/A/B/A_fixed/B_fixed 五次完整烘焙，共 25 个采样；进程退出码 0 表示测量有效，不表示候选通过。最终 JSON 明确 A/B `pass_all_frames=false`。
-
-已读并复用材料：当前 `retarget.py` 的身体轴、链选择、父先子后函数和 bake；`pipeline.py` 的导入、Action、站位；现有测试 fixture 定义；第一轮探针仅用于识别 yaw 口径，没有读取其结果充当本轮值。精确插入函数完整读取，其他未变材料不重复通读。
-
-探子批次：无。位置已知且局部，主线程直接读取。预检：核验 Blender 5.1.2、Action/slot、Quaternion API、父骨 basis 换算、IK 状态。Python 插件无 C++ 构建项。本轮不改产品代码，既有产品回归与 Visual 均 NotRun。
-
-效率记录：首跑发现原始世界方向与身体坐标精度不同，以及手 scale 残留，因此在同一探针补充身体坐标 dot 和手 basis/scale 后重跑一次；新增证据解决具体口径问题，不重复尝试未改公式。文档网页被阻断后改用已打开的官方 API 文档源码；未据文献缺席决定结果。
-
-新增临时生产埋点、统计、采样、轮询、调试钩子、开关、依赖：无。仅有独立测量进程内 patch，已恢复并自然结束。保留插件外必要测试和 JSON/日志证据；没有部署到插件的临时诊断需要清理。收尾复核：插件全部文件哈希保持一致，`retarget.py` SHA256 为 `B32D42CF36AD01252D7881DEF7C75F7B46C987F104E79AE40571347DD5660F1A`。文档 UTF-8 解码、数据门与 Git 差异需作为交付检查保存。
-
-本轮独立证据目录：`H:\tmp\pelvis_round2_20261013_live`。
-
-- `probe.py`：本轮 Blender 测量测试，包含 A/B 和固定非髋局部四元数的对照。
-- `measurement.json`：25 个采样结果、各链世界方向、每根非髋骨四元数变化、文件哈希。
-- `probe-final.log`：最终进程日志，包含 `ROUND2_MEASUREMENT_OK` 和 `Blender quit`；退出码 0。
-- `write_docs.py`：把最终 JSON 写入本轮两份 UTF-8 文档。
-
-这是必要测试与测量证据，位于插件之外。未保存或覆盖用户的 Blender 场景。monkeypatch 仅在独立进程内生效，结束前恢复原函数；没有插件注册项、日志开关、轮询或运行依赖残留。
+证据分层：Static 已核对；Contract 依据官方规则明确；Process 退出 0；Runtime 是独立测量进程的 A 候选 PASS，非已部署产品；Build 不适用；正式产品 synthetic RED/GREEN、CURRENT/regression 与 Visual 均 NotRun；旧 metarig 回归合同 Blocked。只有后续磁盘补丁、版本 1.7.1、必要测试/合同解决、手动 pair 与清理后复验全部闭合，才能报告产品完成。
 
 ## 禁止事项
 
-不修改 `retarget.py` 或其他插件文件。不采用第三公式。不拷贝来源绝对骨轴。不改变 rest、映射、scale、IK、参考姿势或非髋 keyframes 来制造通过。不做 baked hips 后处理。不把同一个 Action 的测量泛化为全部动作验证。不提交、不推送、不暂存、不清理用户原有工作。
-
-## 实时原始资料
-
-本轮执行了实时搜索：`swing twist decomposition transfer twist angle different rest orientations shared axis retarget quaternion`，并检索 Blender API 和分解论文。
-
-[Blender Quaternion.to_swing_twist 文档](https://docs.blender.org/api/5.1/mathutils.html#mathutils.Quaternion.to_swing_twist) 的索引文字为：
-
-> Split the rotation into a swing quaternion with the specified axis fixed at zero, and the remaining twist rotation angle.
-
-官方网页的直接打开被 402/403 阻断；浏览器工具没有可用浏览器。已实际打开 [Blender v5.1.2 官方 API 文档源码](https://github.com/blender/blender/blob/v5.1.2/source/blender/python/mathutils/mathutils_Quaternion.cc#L323-L334)，核验上述同一原文、`X/Y/Z` 参数和返回的 twist angle。探针实际调用了 `to_swing_twist('Y')`，不是只依据搜索摘要。
-
-已打开 Dobrowolski 的原始论文 [Swing-twist decomposition in Clifford algebra](https://arxiv.org/html/1506.05481v1)。原文：
-
-> the twist factor is a generalized projection of a spinor onto a vector
-
-论文 §2.1 给出 twist-after-swing 的 `q = q_t q_s`；§2.2 给出投影归一化求 twist。它讨论一般分解、肢体约束和算法，并非只讲插值或 twist bones。这确实支持“绕指定方向提取一个角”的数学操作；但没有证明不同 bind 的这两个 retarget 公式满足本任务所有硬门，尤其没有证明非髋局部四元数可保持不变。
-
-没有找到直接证明本任务完整约束的跨 bind 单角迁移公式。这一搜索结论有检索范围限制；文献缺席不是禁止补丁的理由。本轮结论来自下面的实际失败测量。
-
-**DO_NOT_PATCH**
+不得恢复旧版“只有 hips 局部 quaternion 能变”的门。不得将公式 A 换成 B、另造第三公式、事后修改已烘焙 hips、改世界轴或归零手 scale。不得修改手部或 limb source-roll 规则。不得删除旧回归、绕过冲突或把候选 Runtime PASS 写成产品修复完成。不得修改本轮受保护插件/测试；Cursor 后续实施按本文件明确范围进行，旧测试预期另需授权。

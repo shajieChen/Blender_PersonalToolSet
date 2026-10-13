@@ -6,7 +6,7 @@ import sys
 import traceback
 
 import bpy
-from mathutils import Euler, Matrix, Vector
+from mathutils import Euler, Matrix, Quaternion, Vector
 
 ROOT = r"H:\Blender_Plugin"
 if ROOT not in sys.path:
@@ -1008,6 +1008,76 @@ def test_split_parent_orientation():
     check(chest_targets == [tgt_names["chest"]], "chest mapping moves off the side bone and onto the spine")
 
 
+def _rest_body_yaw(obj, names):
+    """Yaw of rest body-left about rest body-up after the hips pose delta."""
+    bones = obj.data.bones
+    up = bones[names["head"]].head_local - bones[names["hips"]].head_local
+    up.normalize()
+    left = bones[names["upperarm_l"]].head_local - bones[names["upperarm_r"]].head_local
+    left = left - up * left.dot(up)
+    left.normalize()
+    pose = obj.pose.bones[names["hips"]]
+    delta = pose.matrix.to_3x3() @ bones[names["hips"]].matrix_local.to_3x3().inverted()
+    rotated = delta @ left
+    projected = rotated - up * rotated.dot(up)
+    projected.normalize()
+    return math.atan2(up.dot(left.cross(projected)), left.dot(projected))
+
+
+def _wrap_angle(angle):
+    return (angle + math.pi) % (2.0 * math.pi) - math.pi
+
+
+def _armature_chain(obj, start_name, end_name):
+    start = obj.pose.bones[start_name].head
+    end = obj.pose.bones[end_name].head
+    return (end - start).normalized()
+
+
+def test_rest_hips_yaw_preserves_arm_chain():
+    print("--- rest hips yaw preserves arm chain ---")
+    source_names = _role_names("YawS")
+    target_names = _role_names("YawT")
+    source = build_biped("YawSource", source_names, arm_roll=0.0, scale=1.0)
+    target = build_biped("YawTarget", target_names, arm_roll=0.9, scale=1.0)
+    bpy.context.view_layer.objects.active = source
+    bpy.ops.object.mode_set(mode="POSE")
+    hips = source.pose.bones[source_names["hips"]]
+    up = (
+        source.data.bones[source_names["head"]].head_local
+        - source.data.bones[source_names["hips"]].head_local
+    ).normalized()
+    rest = hips.bone.matrix_local.to_3x3()
+    delta = Quaternion(up, math.radians(40.0)).to_matrix()
+    hips.rotation_mode = "QUATERNION"
+    hips.rotation_quaternion = (rest.inverted() @ delta @ rest).to_quaternion()
+    hips.keyframe_insert("rotation_quaternion", frame=1)
+    hips.keyframe_insert("rotation_quaternion", frame=4)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    _report, baked = bake_retarget(
+        source,
+        target,
+        RetargetOptions(pairs=pairs, reference="REST", root_motion="KEEP", foot_ik=False, hand_ik=False),
+    )
+    check(len(baked) == 1 and target.animation_data.action == baked[-1], "sample the baked action")
+    bpy.context.scene.frame_set(4)
+    bpy.context.view_layer.update()
+    lost = _wrap_angle(_rest_body_yaw(source, source_names) - _rest_body_yaw(target, target_names))
+    print("LOST_YAW_DEG", round(math.degrees(lost), 6))
+    check(abs(lost) < math.radians(2.0), "rest hips yaw stays within 2 degrees")
+    for start_role, end_role in (("upperarm_l", "forearm_l"), ("forearm_l", "hand_l")):
+        direction = _armature_chain(source, source_names[start_role], source_names[end_role]).dot(
+            _armature_chain(target, target_names[start_role], target_names[end_role])
+        )
+        print("ARM_CHAIN", start_role, round(direction, 6))
+        check(abs(direction - 1.0) < 1.5e-3, start_role + " chain keeps the source direction")
+    for role in ("hand_l", "hand_r"):
+        angle = target.pose.bones[target_names[role]].rotation_quaternion.angle
+        print("HAND_ANGLE", role, angle)
+        check(angle < 1.0e-4, role + " stays at identity")
+
+
 def test_swing_preserves_target_roll():
     print("--- swing keeps target roll ---")
     source_names = _role_names("SwS")
@@ -1646,6 +1716,7 @@ def main():
     test_hide_imported_bones()
     test_gltf_animation_scope()
     test_stand_layout()
+    test_rest_hips_yaw_preserves_arm_chain()
     test_swing_preserves_target_roll()
     test_skinned_duplicate_bone()
     test_bone_gizmos()
