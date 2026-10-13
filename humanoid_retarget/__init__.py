@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Humanoid Retarget",
     "author": "Blender Plugin",
-    "version": (1, 7, 2),
+    "version": (1, 7, 3),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 重定向",
     "description": "导入带动画的模型，自动绑定或映射到另一个人形，再导出",
@@ -27,7 +27,13 @@ from .pipeline import (
     set_armature_bones_visible,
     set_bone_sphere_display,
 )
-from .retarget import RetargetError, RetargetOptions, capture_reference, collect_actions, preview_action
+from .retarget import (
+    RetargetError,
+    RetargetOptions,
+    capture_reference,
+    collect_actions,
+    preview_source_and_target,
+)
 from .gizmos import register_draw, unregister_draw
 
 
@@ -76,7 +82,7 @@ def _preview_selected_action(settings, context, jump):
     action = bpy.data.actions.get(settings.source_action)
     if action is None:
         return None
-    preview_action(source, action, context.scene, jump=jump)
+    preview_source_and_target(source, settings.target, action, context.scene, jump=jump)
     source.select_set(True)
     if context.view_layer is not None:
         context.view_layer.objects.active = source
@@ -350,7 +356,7 @@ class HR_OT_import_source(Operator):
 class HR_OT_play_source(Operator):
     bl_idname = "hr.play_source"
     bl_label = "播放"
-    bl_description = "播放或暂停当前选中的来源动画"
+    bl_description = "播放或暂停当前选中的动画，重定向角色同步切换到对应片段"
     bl_options = {"REGISTER"}
 
     def execute(self, context):

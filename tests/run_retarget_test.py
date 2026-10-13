@@ -695,6 +695,105 @@ def test_source_clip_picker():
         bpy.ops.screen.animation_play()
 
 
+
+def test_playback_switches_target_clip():
+    print("--- playback switches the retargeted clip ---")
+    from humanoid_retarget.retarget import ACTION_SEP, target_action_for_source_clip
+
+    humanoid_retarget.register()
+    tag = "Switch"
+    source_names = _role_names(tag + "S")
+    target_names = _role_names(tag + "T")
+    source = build_biped(tag + "Source", source_names, arm_roll=0.0, scale=1.0)
+    target = build_biped(tag + "Target", target_names, arm_roll=0.4, scale=1.0)
+    action_a = bpy.data.actions.new(tag + "_A")
+    action_b = bpy.data.actions.new(tag + "_B")
+    action_a.use_fake_user = True
+    action_b.use_fake_user = True
+
+    def new_slot(action):
+        try:
+            return action.slots.new(id_type="OBJECT", name=source.name)
+        except TypeError:
+            return action.slots.new("OBJECT", source.name)
+
+    def key_clip(action, slot, frames, angle):
+        bpy.context.view_layer.objects.active = source
+        bpy.ops.object.mode_set(mode="POSE")
+        anim = source.animation_data or source.animation_data_create()
+        anim.action = action
+        anim.action_slot = slot
+        bone = source.pose.bones[source_names["upperarm_l"]]
+        bone.rotation_mode = "XYZ"
+        for frame in frames:
+            bone.rotation_euler = angle
+            bone.keyframe_insert("rotation_euler", frame=frame)
+        bpy.ops.object.mode_set(mode="OBJECT")
+
+    slot_a = new_slot(action_a)
+    slot_b = new_slot(action_b)
+    key_clip(action_a, slot_a, (1, 5), (0.2, 0.0, 0.0))
+    key_clip(action_b, slot_b, (11, 20), (-0.5, 0.0, 0.0))
+    source["hr_actions"] = ACTION_SEP.join((action_a.name, action_b.name))
+    anim = source.animation_data
+    anim.action = action_a
+    anim.action_slot = slot_a
+    anim.use_nla = False
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    _report, baked = bake_retarget(source, target, RetargetOptions(pairs=pairs))
+    check(len(baked) == 2, "two clips are baked onto the target")
+    check(target.animation_data.action == baked[0], "bake leaves the target on the entry clip")
+
+    settings = bpy.context.scene.hr_settings
+    settings.source = source
+    settings.target = target
+    settings.source_action = action_b.name
+    scene = bpy.context.scene
+    check(source.animation_data.action == action_b, "dropdown assigns the selected source clip")
+    check(target.animation_data.action == baked[1], "dropdown assigns the matching baked clip")
+    check(target.animation_data.action_slot == baked[1].slots[0], "switched clip uses its baked slot")
+    check(target.animation_data.use_nla is False, "switched clip does not turn nla back on")
+    check(scene.frame_start == 11 and scene.frame_end == 20, "timeline follows the selected clip")
+    check(scene.frame_current == 11, "selecting a clip jumps to its first frame")
+
+    settings.source_action = action_a.name
+    check(target.animation_data.action == baked[0], "switching back restores the entry baked clip")
+    check(scene.frame_start == 1 and scene.frame_end == 5, "timeline returns to the entry clip")
+
+    settings.source_action = action_b.name
+    result = bpy.ops.hr.play_source()
+    check("FINISHED" in result, "play button finished on the second clip")
+    check(target.animation_data.action == baked[1], "play keeps the matching baked clip")
+    screen = bpy.context.screen
+    if screen and screen.is_animation_playing:
+        bpy.ops.screen.animation_play()
+
+    baked[1].name = target.name + "_HR_HumanMetarig_" + action_b.name
+    target["hr_actions"] = ACTION_SEP.join(action.name for action in baked)
+    settings.source_action = action_a.name
+    settings.source_action = action_b.name
+    check(
+        target.animation_data.action == baked[1],
+        "a rigify hop name still selects the matching baked clip",
+    )
+
+    tiny = bpy.data.actions.new("Zed")
+    longer = bpy.data.actions.new("YZed")
+    tiny.use_fake_user = True
+    longer.use_fake_user = True
+    new_slot(tiny)
+    new_slot(longer)
+    hit = bpy.data.actions.new(target.name + "_Zed")
+    miss = bpy.data.actions.new(target.name + "_YZed")
+    hit.use_fake_user = True
+    miss.use_fake_user = True
+    source["hr_actions"] = ACTION_SEP.join((tiny.name, longer.name))
+    target["hr_actions"] = ACTION_SEP.join((miss.name, hit.name))
+    found = target_action_for_source_clip(source, target, tiny)
+    check(found == hit, "a shorter clip name does not take the longer bake")
+    print("PASS playback switches the retargeted clip")
+
+
 def test_hide_bone_spheres():
     print("--- hide bone spheres ---")
     humanoid_retarget.register()
@@ -1799,6 +1898,7 @@ def main():
     test_mapping_root_reference_and_ik()
     test_bake_displays_same_source_clip()
     test_source_clip_picker()
+    test_playback_switches_target_clip()
     test_hide_bone_spheres()
     test_import_buttons_remember_paths()
     test_file_load_does_not_hide_bones_inside_the_pointer_callback()

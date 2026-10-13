@@ -477,6 +477,61 @@ def preview_action(arm_obj, action, scene, jump=True):
     return start, end
 
 
+def target_action_for_source_clip(source, target, source_action):
+    """Return the baked target clip that matches one source clip.
+
+    A direct bake is named ``{target}_{clip}``. The Rigify hop names the
+    final clip ``{target}_{metarig}_{clip}``. Both end in the source clip
+    name, and ``hr_actions`` stays in the same order as the source clips.
+    """
+    if source is None or target is None or source_action is None or source == target:
+        return None
+    stored = target.get("hr_actions")
+    if not stored:
+        return None
+    names = [name for name in str(stored).split(ACTION_SEP) if name]
+    source_actions = collect_actions(source)
+    clip_names = [action.name for action in source_actions]
+
+    def exact_tail(action_name, clip_name):
+        if not action_name.endswith("_" + clip_name):
+            return False
+        for other in clip_names:
+            if len(other) > len(clip_name) and action_name.endswith("_" + other):
+                return False
+        return True
+
+    matches = [name for name in names if exact_tail(name, source_action.name)]
+    if len(matches) == 1:
+        return bpy.data.actions.get(matches[0])
+    direct = f"{target.name}_{source_action.name}"
+    if direct in matches:
+        return bpy.data.actions.get(direct)
+    try:
+        index = source_actions.index(source_action)
+    except ValueError:
+        index = next(
+            (i for i, action in enumerate(source_actions) if action.name == source_action.name),
+            None,
+        )
+    if index is not None and index < len(names):
+        return bpy.data.actions.get(names[index])
+    if matches:
+        return bpy.data.actions.get(matches[0])
+    return None
+
+
+def preview_source_and_target(source, target, action, scene, jump=True):
+    """Show one source clip, and the matching baked clip on the target."""
+    preview_action(source, action, scene, jump=jump)
+    baked = target_action_for_source_clip(source, target, action)
+    if baked is None:
+        return
+    _assign_action(target, baked)
+    if target.animation_data:
+        target.animation_data.use_nla = False
+
+
 def bake_retarget(src, tgt, options=None):
     if src is None or src.type != "ARMATURE":
         raise RetargetError("请先导入带骨架和动画的来源模型。")
