@@ -956,6 +956,29 @@ def test_skinned_duplicate_bone():
     check(resolved.get("head") == "Head", "a preset duplicate is replaced by the weighted head bone")
 
 
+def test_bone_gizmos():
+    print("--- bone gizmos ---")
+    humanoid_retarget.register()
+    check(bpy.context.scene.hr_settings.draw_bone_gizmos is True, "bone gizmos default to on")
+    names = _role_names("Gz")
+    arm = build_biped("GizmoRig", names, arm_roll=0.0, scale=1.0)
+    bpy.context.view_layer.objects.active = arm
+    bpy.ops.object.mode_set(mode="EDIT")
+    hips = arm.data.edit_bones[names["hips"]]
+    hips.tail = hips.head + Vector((0.45, 0.0, 0.0))
+    bpy.ops.object.mode_set(mode="OBJECT")
+    from humanoid_retarget.gizmos import gizmo_links
+    roles = {role: names[role] for role in names}
+    links = gizmo_links(arm, roles)
+    hips_link = next(item for item in links if item[0] == "hips" and item[1] == "spine")
+    spine_head = arm.matrix_world @ arm.pose.bones[names["spine"]].head
+    check((hips_link[3] - spine_head).length < 1e-4, "gizmo ends on the child joint")
+    direction = (hips_link[3] - hips_link[2]).normalized()
+    print("GIZMO", tuple(round(v, 3) for v in direction))
+    check(direction.z > 0.9, "gizmo follows the body chain when bone Y points sideways")
+    check(any(role == "upperarm_l" for role, _child, _start, _end in links), "gizmo draws the left arm")
+
+
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     _source, _target = test_geometry_and_bake()
@@ -971,6 +994,7 @@ def main():
     test_stand_layout()
     test_swing_preserves_target_roll()
     test_skinned_duplicate_bone()
+    test_bone_gizmos()
     test_split_parent_orientation()
     print("RETARGET_TEST_OK")
 

@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Humanoid Retarget",
     "author": "Blender Plugin",
-    "version": (1, 6, 5),
+    "version": (1, 6, 6),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 重定向",
     "description": "导入带动画的模型，自动绑定或映射到另一个人形，再导出",
@@ -28,6 +28,7 @@ from .pipeline import (
     set_bone_sphere_display,
 )
 from .retarget import RetargetError, RetargetOptions, capture_reference, collect_actions, preview_action
+from .gizmos import register_draw, unregister_draw
 
 
 
@@ -118,6 +119,15 @@ def _on_show_spheres(self, _context):
 
 def _on_show_bones(self, _context):
     _apply_saved_view_now()
+
+
+def _on_draw_gizmos(self, context):
+    screen = getattr(context, "screen", None)
+    if screen is None:
+        return
+    for area in screen.areas:
+        if area.type == "VIEW_3D":
+            area.tag_redraw()
 
 
 def _on_source_action_changed(self, context):
@@ -259,6 +269,12 @@ class HRSettings(PropertyGroup):
     )
     last_source_path: StringProperty(name="上次动画来源", subtype="FILE_PATH")
     last_target_path: StringProperty(name="上次目标模型", subtype="FILE_PATH")
+    draw_bone_gizmos: BoolProperty(
+        name="绘制骨骼 Gizmo",
+        description="在关节上画标记，并沿着身体关节连线。不使用 Blender 默认的八面体骨骼",
+        default=True,
+        update=_on_draw_gizmos,
+    )
     show_bones: BoolProperty(
         name="显示骨骼",
         description="显示导入模型的骨骼。关闭后只保留网格，避免骨骼挡住角色",
@@ -674,6 +690,7 @@ class HR_PT_panel(Panel):
 
         settings_box = layout.box()
         settings_box.label(text="Settings")
+        settings_box.prop(settings, "draw_bone_gizmos")
         settings_box.prop(settings, "show_bones")
         settings_box.prop(settings, "show_bone_spheres")
 
@@ -760,11 +777,13 @@ def register():
         bpy.app.handlers.load_post.append(_apply_saved_sphere_setting)
     if _apply_saved_stand not in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.append(_apply_saved_stand)
+    register_draw()
     _apply_saved_sphere_setting()
     _apply_saved_stand()
 
 
 def unregister():
+    unregister_draw()
     if bpy.app.timers.is_registered(_apply_saved_view_now):
         bpy.app.timers.unregister(_apply_saved_view_now)
     if _apply_saved_sphere_setting in bpy.app.handlers.load_post:
