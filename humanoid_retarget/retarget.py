@@ -448,6 +448,10 @@ def bake_retarget(src, tgt, options=None):
     if src == tgt:
         raise RetargetError("来源和目标是同一个骨架。")
 
+    source_anim = src.animation_data
+    source_action = source_anim.action if source_anim else None
+    source_slot = getattr(source_anim, "action_slot", None) if source_anim else None
+
     options = options or RetargetOptions()
     if options.reference == "CURRENT" and not options.reference_data:
         raise RetargetError("已选择当前姿势作为零点，但还没有捕获参考姿势")
@@ -470,10 +474,13 @@ def bake_retarget(src, tgt, options=None):
 
     scene = bpy.context.scene
     baked = []
+    baked_sources = []
     original_frame = scene.frame_current
     try:
         for action in actions:
             _assign_action(src, action)
+            if action == source_action and source_slot is not None:
+                src.animation_data.action_slot = source_slot
             start, end = _frame_range(action)
             target_action = _new_target_action(tgt, f"{tgt.name}_{action.name}")
             for frame in range(start, end + 1):
@@ -499,16 +506,29 @@ def bake_retarget(src, tgt, options=None):
                     pose_bone.keyframe_insert(data_path="location", frame=frame)
             target_action.use_fake_user = True
             baked.append((target_action, start, end))
+            baked_sources.append(action)
     finally:
         scene.frame_set(original_frame)
 
     if baked:
-        first, start, end = baked[0]
-        _assign_action(tgt, first)
-        _stash_nla(tgt, [action for action, _start, _end in baked[1:]])
-        scene.frame_start = min(item[1] for item in baked)
-        scene.frame_end = max(item[2] for item in baked)
-        scene.frame_set(scene.frame_start)
+        selected_index = next(
+            (index for index, action in enumerate(baked_sources) if action == source_action),
+            0,
+        )
+        selected_source = baked_sources[selected_index]
+        selected_target, start, end = baked[selected_index]
+        _assign_action(src, selected_source)
+        if selected_source == source_action and source_slot is not None:
+            src.animation_data.action_slot = source_slot
+        src.animation_data.use_nla = False
+        _stash_nla(tgt, [
+            action for index, (action, _start, _end) in enumerate(baked)
+            if index != selected_index
+        ])
+        _assign_action(tgt, selected_target)
+        scene.frame_start = start
+        scene.frame_end = end
+        scene.frame_set(start)
 
     tgt["hr_retarget_from"] = src.name
     tgt["hr_actions"] = ACTION_SEP.join(action.name for action, _start, _end in baked)

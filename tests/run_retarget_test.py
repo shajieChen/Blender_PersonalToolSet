@@ -521,6 +521,135 @@ def test_mapping_root_reference_and_ik():
         os.remove(preset_path)
 
 
+def test_bake_displays_same_source_clip():
+    print("--- bake displays the same source clip ---")
+    from humanoid_retarget.retarget import ACTION_SEP, RetargetOptions, bake_retarget, collect_actions
+
+    chain_links = (
+        ("upperarm_l", "forearm_l"),
+        ("forearm_l", "hand_l"),
+        ("thigh_l", "shin_l"),
+        ("spine", "chest"),
+    )
+    keyed_roles = ("upperarm_l", "forearm_l", "thigh_l", "spine")
+    angles_a = ((0.2, 0.0, 0.0), (0.1, 0.0, 0.0), (0.15, 0.0, 0.0), (0.1, 0.0, 0.0))
+    angles_b = ((-0.6, 0.0, 0.0), (-0.3, 0.0, 0.0), (-0.35, 0.0, 0.0), (-0.2, 0.0, 0.0))
+
+    def new_slot(action, obj):
+        try:
+            return action.slots.new(id_type="OBJECT", name=obj.name)
+        except TypeError:
+            return action.slots.new("OBJECT", obj.name)
+
+    def key_clip(obj, names, action, slot, frames, angles):
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.mode_set(mode="POSE")
+        anim = obj.animation_data or obj.animation_data_create()
+        anim.action = action
+        anim.action_slot = slot
+        for frame in frames:
+            for role, angle in zip(keyed_roles, angles):
+                bone = obj.pose.bones[names[role]]
+                bone.rotation_mode = "XYZ"
+                bone.rotation_euler = angle
+                bone.keyframe_insert("rotation_euler", frame=frame)
+        bpy.ops.object.mode_set(mode="OBJECT")
+
+    def world_head(obj, bone_name):
+        return obj.matrix_world @ obj.pose.bones[bone_name].head
+
+    def run_fixture(tag, key_b, entry_name, expect_name, expect_range, expect_count):
+        source_names = _role_names(tag + "S")
+        target_names = _role_names(tag + "T")
+        source = build_biped(tag + "Source", source_names, arm_roll=0.0, scale=1.0)
+        target = build_biped(tag + "Target", target_names, arm_roll=0.55, scale=1.0)
+        bpy.context.view_layer.objects.active = source
+        bpy.ops.object.mode_set(mode="OBJECT")
+        action_a = bpy.data.actions.new(tag + "_A")
+        action_b = bpy.data.actions.new(tag + "_B")
+        action_a.use_fake_user = True
+        action_b.use_fake_user = True
+        slot_a = new_slot(action_a, source)
+        # Blender 5.1 marks an action non-empty as soon as it has a slot, even with no curves.
+        slot_b = new_slot(action_b, source) if key_b else None
+        key_clip(source, source_names, action_a, slot_a, (1, 5), angles_a)
+        if key_b:
+            key_clip(source, source_names, action_b, slot_b, (11, 20), angles_b)
+        else:
+            check(action_b.is_empty, "fallback fixture B is empty")
+        source["hr_actions"] = ACTION_SEP.join((action_a.name, action_b.name))
+        anim = source.animation_data or source.animation_data_create()
+        anim.use_nla = False
+        if entry_name is None:
+            anim.action = None
+            entry_slot = None
+        else:
+            entry_action = action_a if entry_name == "A" else action_b
+            entry_slot = slot_a if entry_name == "A" else slot_b
+            anim.action = entry_action
+            if entry_slot is not None:
+                anim.action_slot = entry_slot
+        scene = bpy.context.scene
+        scene.frame_start = 0
+        scene.frame_end = 100
+        scene.frame_current = 99
+        collected = collect_actions(source)
+        check(len(collected) == expect_count, tag + " collects the bakeable clips")
+        if expect_count == 2:
+            check(collected[0] == action_a and collected[1] == action_b, tag + " keeps A then B")
+        pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+        _report, baked = bake_retarget(source, target, RetargetOptions(pairs=pairs))
+        check(len(baked) == expect_count, tag + " bakes every non-empty clip")
+        check(target["hr_actions"] == ACTION_SEP.join(action.name for action in baked), tag + " keeps bake order")
+        shown_source = action_a if expect_name == "A" else action_b
+        shown_target = baked[0] if expect_name == "A" else baked[1]
+        check(source.animation_data.action == shown_source, tag + " source shows the selected clip")
+        check(target.animation_data.action == shown_target, tag + " target shows the same clip")
+        check(target.animation_data.action_slot == shown_target.slots[0], tag + " target slot is the baked slot")
+        if entry_name == expect_name:
+            check(source.animation_data.action_slot == entry_slot, tag + " source keeps the entry slot")
+        else:
+            check(source.animation_data.action_slot == action_a.slots[0], tag + " fallback uses A's slot")
+        check(scene.frame_start == expect_range[0], tag + " frame_start is the shown clip")
+        check(scene.frame_end == expect_range[1], tag + " frame_end is the shown clip")
+        check(scene.frame_current == expect_range[2], tag + " frame_current is the shown clip")
+        check(source.animation_data.use_nla is False, tag + " source nla is off")
+        check(target.animation_data.use_nla is False, tag + " target nla is off")
+        for action in baked:
+            check(action.use_fake_user, tag + " baked action keeps a fake user")
+        strips = [strip for track in target.animation_data.nla_tracks for strip in track.strips]
+        others = [action for action in baked if action != shown_target]
+        check(len(strips) == len(others), tag + " only the other clips are nla strips")
+        check(all(strip.action != shown_target for strip in strips), tag + " shown clip is not also a strip")
+        for action in others:
+            match = next(strip for strip in strips if strip.action == action)
+            check(match.action_slot == action.slots[0], tag + " nla strip uses the action slot")
+        for frame in (expect_range[0], expect_range[1]):
+            scene.frame_set(frame)
+            bpy.context.view_layer.update()
+            for start_role, end_role in chain_links:
+                start = world_head(source, source_names[end_role]) - world_head(source, source_names[start_role])
+                finish = world_head(target, target_names[end_role]) - world_head(target, target_names[start_role])
+                dot = start.normalized().dot(finish.normalized())
+                check(abs(dot - 1.0) < 1.5e-7, tag + " " + start_role + " chain matches at " + str(frame))
+            identity = Matrix.Identity(4)
+            for role in ("hand_l", "hand_r"):
+                basis = target.pose.bones[target_names[role]].matrix_basis
+                error = max(abs(basis[row][col] - identity[row][col]) for row in range(4) for col in range(4))
+                check(error < 1e-7, tag + " " + role + " stays at identity")
+        scene.frame_set(expect_range[0])
+        check(
+            (scene.frame_start, scene.frame_end, scene.frame_current) == expect_range,
+            tag + " timeline stays on the shown clip",
+        )
+
+    run_fixture("ClipA", True, "A", "A", (1, 5, 1), 2)
+    run_fixture("ClipB", True, "B", "B", (11, 20, 11), 2)
+    run_fixture("ClipEmpty", False, "B", "A", (1, 5, 1), 1)
+    run_fixture("ClipNone", True, None, "A", (1, 5, 1), 2)
+    print("PASS bake displays the same source clip")
+
+
 def test_source_clip_picker():
     print("--- source clip picker ---")
     humanoid_retarget.register()
@@ -985,6 +1114,7 @@ def main():
     test_mixamo_names()
     test_autorig_and_roundtrip(_source)
     test_mapping_root_reference_and_ik()
+    test_bake_displays_same_source_clip()
     test_source_clip_picker()
     test_hide_bone_spheres()
     test_import_buttons_remember_paths()
