@@ -297,7 +297,7 @@ class HRSettings(PropertyGroup):
     show_gizmo_labels: BoolProperty(
         name="显示标准骨骼名",
         description="在每个关节旁显示标准人形骨架名（UE 风格）及该骨架自身的骨骼名",
-        default=True,
+        default=False,
         update=_on_draw_labels,
     )
     show_bones: BoolProperty(
