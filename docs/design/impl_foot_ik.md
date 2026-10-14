@@ -1526,3 +1526,117 @@ tokens used
 已按本次 UE 源码修正调研摘要：初始链长取首尾距离；Floor 使用 `abs(Z)`；高速解除植步直接放行，不经过弹簧。
 
 ---
+
+
+---
+
+# 附录A：关节角度限实施档（PBIK FBoneSettings 移植，防肩/肘反转伪穿插）
+
+依据：`evidence_self_penetration.md` 第二轮复核附录 5.1-5.5。
+目标：把 UE PBIK 的逐轴关节限移植进本插件烘焙管线，消除"手臂反转/过伸"类伪穿插。
+
+## A.1 数据与默认值（对应 IKRigFullBodyIK.h L67-100）
+
+```python
+# foot_ik.py 新增（纯数值，无 bpy）
+from dataclasses import dataclass
+from enum import Enum
+
+class LimitType(Enum):
+    FREE = 0
+    LIMITED = 1
+    LOCKED = 2
+
+@dataclass
+class AxisLimit:
+    type: LimitType = LimitType.FREE
+    min_deg: float = 0.0    # -180..0，相对参考姿势
+    max_deg: float = 0.0    # 0..180
+
+@dataclass
+class JointLimitSettings:
+    rotation_stiffness: float = 0.0   # 0..1
+    x: AxisLimit = field(default_factory=AxisLimit)
+    y: AxisLimit = field(default_factory=AxisLimit)
+    z: AxisLimit = field(default_factory=AxisLimit)
+
+# 人形默认限位表（度；source pose 常见约定，用户可改）
+HUMANOID_LIMITS = {
+    "upperarm_l": JointLimitSettings(  # 肩：外展/内收
+        y=AxisLimit(LimitType.LIMITED, -60, 180),
+        z=AxisLimit(LimitType.LIMITED, -90, 90),
+    ),
+    "forearm_l": JointLimitSettings(   # 肘：仅弯曲
+        x=AxisLimit(LimitType.LIMITED, 0, 150),
+        y=AxisLimit(LimitType.LOCKED),
+        z=AxisLimit(LimitType.LOCKED),
+    ),
+    # _r 侧镜像（min/max 取反交换）
+}
+```
+
+锁定阈值（PBIKConstraint.cpp L131）：`Limited 且 (max-min) < 2° → 视为 Locked`。
+
+## A.2 限位算法（对应 PBIKConstraint.cpp L111-239）
+
+```python
+def clamp_joint_rotation(
+    parent_rest: Quaternion,   # 参考姿势下父骨世界旋转
+    child_rest: Quaternion,    # 参考姿势下子骨世界旋转
+    parent_now: Quaternion,    # 当前父骨世界旋转
+    child_now: Quaternion,     # 当前子骨世界旋转
+    settings: JointLimitSettings,
+) -> Quaternion:
+    """返回修正后的子骨世界旋转（PBIK 分解-限位-回转 同构实现）。"""
+    a_rot = parent_now @ parent_rest.inverted()   # UpdateLocalRotateAxes L247
+    b_rot = child_now @ child_rest.inverted()     # L248
+
+    # 1. 修 max<min（L124）与三轴 Free 提前返回（L118-121）
+    # 2. 三轴全锁 → FIXED：child = parent_now @ (parent_rest⁻¹ @ child_rest)
+    #    （等价 L135-148 的相对旋转保持）
+    # 3. 两轴锁 → HINGE：对自由轴 RotateToAlignAxes（L152-170）
+    # 4. Limited 轴：分解角（L266）→ 越界轴 RotateWithinLimits（L222-239）
+    #    TgtRot = Quaternion(axis=旋转轴, angle=目标边界角)
+    #    RotateToAlignAxes(TgtVec, CurVec) → child_now 乘修正四元数
+```
+
+实现要点：
+- 分解角用"子骨 Z 轴在父骨 X/Y/Z 上的投影角"（DecomposeRotationAngles L266-290），
+  不是欧拉角直接 clamp——语义必须与 PBIK 一致
+- 修正应用于 `child_now`，父骨不动（本插件 FK 链向下传播）
+- 末帧（或每帧最后一次迭代）执行 FinalPass 式"根到叶反向序"精确化（L544-550）
+
+## A.3 接线点（retarget.py 烘焙循环）
+
+```text
+现有顺序：FK(_apply_body_orientations) → 髋部 → IK goal → 烘焙关键帧
+插入位置：FK 之后、髋部之前，逐链执行：
+    for (parent, child) in 启用限位的关节对:
+        clamp_joint_rotation(...)
+仅当 joint_limits_enabled 开启时执行；关闭时路径与现状逐位一致。
+```
+
+- 配置入口：`HRSettings` 新增 `joint_limits_enabled: BoolProperty`（默认 False）+
+  高级折叠面板（每关节 X/Y/Z 类型与 min/max）
+- 限位在**米制计算空间外**的骨骼世界旋转上做（直接 mathutils 四元数，无需 MotionSpace）
+- `retarget_through_human_metarig` 两跳：仅第二跳启用（同 foot_ik 约定）
+
+## A.4 边界情况
+
+| 情况 | 行为（对应 PBIK） |
+|---|---|
+| max < min | 修为 min+1（L124） |
+| Limited 范围 <2° | 视为 Locked（L131） |
+| 参考姿势缺 CURRENT 矩阵 | 报错重捕获（沿用现有合同） |
+| 限位与 IK goal 冲突 | IK 在限位后执行，goal 落点以限位为界（PBIK 同序：constraint 先于 effector 最终混合） |
+| 手臂链未完整映射 | 跳过该侧限位并报告 |
+
+## A.5 测试断言
+
+```python
+# 肘关节 x 限 [0,150]：输入 -30°（过伸）→ 输出 0°
+# 肩 y 限 [-60,180]：输入 200° → 输出 180°
+# Locked 轴：任意输入 → 与参考姿势相对角一致
+# max<min 输入 (10,-10) → 生效范围 (10,11)
+# 限位关闭 → 输出与现状逐位一致（回归保护）
+```
