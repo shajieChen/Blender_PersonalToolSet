@@ -1,14 +1,27 @@
-"""Optional two-bone IK so a hand or foot meets the source contact point.
+"""Contact IK built on UE-equivalent goal, floor constraint and speed planting.
 
-The body stays on the FK result. IK only rewrites the two bones of a chain
-when the user turns the option on.
+The body stays on the FK result. When foot or hand IK is on, each limb chain
+gets a goal from the source chain extension ratio (not the global height
+scale), feet additionally run floor + planting passes, then a two-bone
+solver aims the joints at the goal.
 """
 
 from __future__ import annotations
 
-import math
-
+import bpy
 from mathutils import Matrix, Vector
+
+from .foot_ik import (
+    IKGoal,
+    LimbReference,
+    RetargetGeometry,
+    FootIKSettings,
+    LimbPlantState,
+    constrain_goal_floor,
+    generate_limb_goal,
+    plant_goal,
+)
+from .motion_space import MotionSpace
 
 _LEG_CHAINS = (
     ("thigh_l", "shin_l", "foot_l"),
@@ -18,111 +31,172 @@ _ARM_CHAINS = (
     ("upperarm_l", "forearm_l", "hand_l"),
     ("upperarm_r", "forearm_r", "hand_r"),
 )
+_FOOT_ROLES = frozenset({"foot_l", "foot_r"})
 
 
-def apply_contact_ik(src, tgt, pairs, scale: float, feet: bool, hands: bool) -> None:
-    if not feet and not hands:
-        return
-    pair_map = {role: (source_name, target_name) for role, source_name, target_name in pairs}
-    if "hips" not in pair_map:
-        return
-    chains = []
-    if feet:
-        chains.extend(_LEG_CHAINS)
-    if hands:
-        chains.extend(_ARM_CHAINS)
-    for chain in chains:
-        if all(role in pair_map for role in chain):
-            _solve_chain(src, tgt, pair_map, scale, chain)
+def apply_contact_ik(
+    src,
+    tgt,
+    geometry: RetargetGeometry,
+    settings: FootIKSettings,
+    states: dict,
+    speeds: dict,
+    pelvis_delta: Vector,
+    dt: float,
+) -> None:
+    for limb in geometry.limbs:
+        end_role = limb.roles[2]
+        source_start_pose = src.pose.bones.get(limb.source_names[0])
+        source_end_pose = src.pose.bones.get(limb.source_names[2])
+        target_start_pose = tgt.pose.bones.get(limb.target_names[0])
+        if not source_start_pose or not source_end_pose or not target_start_pose:
+            continue
+
+        source_space = geometry.source_space
+        target_space = geometry.target_space
+
+        source_start = source_space.position(src.matrix_world @ source_start_pose.head)
+        source_end = source_space.position(src.matrix_world @ source_end_pose.head)
+        source_end_matrix = src.matrix_world @ source_end_pose.matrix
+        source_end_rotation = source_space.rotation(source_end_matrix)
+        target_start = target_space.position(tgt.matrix_world @ target_start_pose.head)
+
+        goal = generate_limb_goal(
+            source_start,
+            source_end,
+            source_end_rotation,
+            target_start,
+            limb,
+            pelvis_delta,
+        )
+
+        if end_role in _FOOT_ROLES:
+            goal.position = constrain_goal_floor(
+                goal.position,
+                source_end.z,
+                limb.height_offset,
+                settings,
+            )
+            state = states.get(end_role)
+            speed = speeds.get(end_role, -1.0)
+            if state is not None:
+                goal.position = plant_goal(
+                    goal.position,
+                    speed,
+                    state,
+                    dt,
+                    settings,
+                )
+
+        _solve_chain(tgt, target_space, limb, goal)
 
 
-def _solve_chain(src, tgt, pair_map, scale: float, chain) -> None:
-    _upper_role, _mid_role, end_role = chain
-    src_hips = src.pose.bones[pair_map["hips"][0]]
-    tgt_hips = tgt.pose.bones[pair_map["hips"][1]]
-    src_end = src.pose.bones[pair_map[end_role][0]]
-    tgt_upper = tgt.pose.bones[pair_map[chain[0]][1]]
-    tgt_mid = tgt.pose.bones[pair_map[chain[1]][1]]
+def _solve_chain(tgt, space: MotionSpace, reference: LimbReference, goal: IKGoal) -> float:
+    upper_name, mid_name, end_name = reference.target_names
+    upper_pose = tgt.pose.bones[upper_name]
+    mid_pose = tgt.pose.bones[mid_name]
+    end_pose = tgt.pose.bones[end_name]
 
-    src_world = src.matrix_world
-    tgt_world = tgt.matrix_world
-    src_hip_w = src_world @ src_hips.head
-    src_end_w = src_world @ src_end.head
-    desired = (tgt_world @ tgt_hips.head) + (src_end_w - src_hip_w) * scale
+    world = tgt.matrix_world
+    root = space.position(world @ upper_pose.head)
+    pole = space.position(world @ mid_pose.head)
+    if (pole - root).length < 1e-6:
+        pole = reference.reference_pole
 
-    upper_head = tgt_world @ tgt_upper.head
-    upper_len = _rest_world_length(tgt, tgt_upper.name)
-    mid_len = _rest_world_length(tgt, tgt_mid.name)
-    if upper_len < 1e-5 or mid_len < 1e-5:
-        return
+    knee, reachable = _two_bone(
+        root,
+        reference.target_upper_length,
+        reference.target_lower_length,
+        goal.position,
+        pole,
+        reference.reference_pole - root,
+    )
 
-    pole = tgt_world @ tgt_mid.head
-    upper_dir, mid_dir = _two_bone(upper_head, upper_len, mid_len, desired, pole)
-    _aim_bone(tgt, tgt_upper, upper_dir, upper_head)
-    import bpy
-
+    _aim_joint(tgt, upper_name, mid_name, space, knee - root)
     bpy.context.view_layer.update()
-    knee = tgt.matrix_world @ tgt_upper.tail
-    _aim_bone(tgt, tgt_mid, mid_dir, knee)
+
+    upper_pose = tgt.pose.bones[upper_name]
+    mid_pose = tgt.pose.bones[mid_name]
+    knee_now = space.position(world @ mid_pose.head)
+    root_now = space.position(world @ upper_pose.head)
+    _aim_joint(tgt, mid_name, end_name, space, reachable - knee_now)
+    bpy.context.view_layer.update()
+
+    _write_end_rotation(tgt, end_name, space, goal.rotation)
+    bpy.context.view_layer.update()
+
+    end_pose = tgt.pose.bones[end_name]
+    final = space.position(world @ end_pose.head)
+    return (final - goal.position).length
 
 
-def _rest_world_length(obj, bone_name: str) -> float:
-    bone = obj.data.bones[bone_name]
-    head = obj.matrix_world @ bone.head_local
-    tail = obj.matrix_world @ bone.tail_local
-    return (tail - head).length
+def _aim_joint(obj, start_name: str, end_name: str, space: MotionSpace, desired_direction: Vector) -> None:
+    start_pose = obj.pose.bones[start_name]
+    end_pose = obj.pose.bones[end_name]
+
+    current_arm = end_pose.head - start_pose.head
+    if current_arm.length < 1e-9:
+        raise RuntimeError(f"degenerate joint segment {start_name}->{end_name}")
+    desired_arm = space.axes @ desired_direction
+    if desired_arm.length < 1e-9:
+        raise RuntimeError(f"degenerate aim direction at {start_name}")
+
+    swing = current_arm.normalized().rotation_difference(desired_arm.normalized())
+
+    matrix = start_pose.matrix.copy()
+    rotation = swing.to_matrix().to_4x4()
+    rotated = rotation @ matrix
+    rotated.translation = matrix.translation
+    start_pose.matrix = rotated
 
 
-def _two_bone(root: Vector, upper_len: float, mid_len: float, target: Vector, pole: Vector):
+def _two_bone(
+    root: Vector,
+    upper_len: float,
+    lower_len: float,
+    target: Vector,
+    pole: Vector,
+    fallback_direction: Vector,
+):
     reach = target - root
     distance = reach.length
-    maximum = upper_len + mid_len - 1e-4
-    minimum = abs(upper_len - mid_len) + 1e-4
-    if distance < 1e-6:
-        reach = Vector((0.0, 0.0, -1.0))
-        distance = 1.0
-    distance = min(max(distance, minimum), maximum)
-    direction = reach.normalized()
-    target = root + direction * distance
+    epsilon = min(1e-6, 0.01 * min(upper_len, lower_len))
+    maximum = upper_len + lower_len - epsilon
+    minimum = abs(upper_len - lower_len) + epsilon
+    if distance < 1e-10:
+        direction = fallback_direction.normalized()
+        distance = minimum
+    else:
+        direction = reach.normalized()
+        distance = min(max(distance, minimum), maximum)
 
-    cos_angle = (upper_len * upper_len + distance * distance - mid_len * mid_len) / (2.0 * upper_len * distance)
+    import math
+
+    cos_angle = (upper_len * upper_len + distance * distance - lower_len * lower_len) / (2.0 * upper_len * distance)
     cos_angle = min(1.0, max(-1.0, cos_angle))
     angle = math.acos(cos_angle)
 
     pole_dir = pole - root
     pole_dir = pole_dir - direction * pole_dir.dot(direction)
-    if pole_dir.length < max(upper_len, mid_len) * 0.02:
-        pole_dir = Vector((0.0, -1.0, 0.0))
+    if pole_dir.length < max(upper_len, lower_len) * 0.02:
+        axes = (Vector((1.0, 0.0, 0.0)), Vector((0.0, 1.0, 0.0)), Vector((0.0, 0.0, 1.0)))
+        pole_dir = min(axes, key=lambda axis: abs(direction.dot(axis)))
         pole_dir = pole_dir - direction * pole_dir.dot(direction)
         if pole_dir.length < 1e-6:
-            pole_dir = Vector((1.0, 0.0, 0.0))
+            pole_dir = direction.cross(Vector((0.0, 0.0, 1.0)))
+            if pole_dir.length < 1e-6:
+                pole_dir = direction.cross(Vector((1.0, 0.0, 0.0)))
     pole_dir.normalize()
 
-    upper_dir = (direction * math.cos(angle) + pole_dir * math.sin(angle)).normalized()
-    knee = root + upper_dir * upper_len
-    mid_dir = target - knee
-    if mid_dir.length < 1e-6:
-        mid_dir = direction
-    return upper_dir, mid_dir.normalized()
+    upper_direction = (direction * math.cos(angle) + pole_dir * math.sin(angle)).normalized()
+    knee = root + upper_direction * upper_len
+    reachable_end = root + direction * distance
+    return knee, reachable_end
 
 
-def _aim_bone(obj, pose_bone, world_direction: Vector, world_head: Vector) -> None:
-    arm = obj.matrix_world.inverted()
-    direction = (arm.to_3x3() @ world_direction).normalized()
-    head = arm @ world_head
-    previous = pose_bone.matrix.copy()
-    y_axis = direction
-    x_axis = previous.col[0].xyz - y_axis * previous.col[0].xyz.dot(y_axis)
-    if x_axis.length < 1e-6:
-        x_axis = Vector((1.0, 0.0, 0.0)) - y_axis * y_axis.x
-    if x_axis.length < 1e-6:
-        x_axis = Vector((0.0, 1.0, 0.0))
-    x_axis.normalize()
-    z_axis = x_axis.cross(y_axis).normalized()
-    x_axis = y_axis.cross(z_axis).normalized()
-    pose_bone.matrix = Matrix((
-        (x_axis.x, y_axis.x, z_axis.x, head.x),
-        (x_axis.y, y_axis.y, z_axis.y, head.y),
-        (x_axis.z, y_axis.z, z_axis.z, head.z),
-        (0.0, 0.0, 0.0, 1.0),
-    ))
+def _write_end_rotation(obj, end_name, space: MotionSpace, rotation) -> None:
+    pose_bone = obj.pose.bones[end_name]
+    translation = pose_bone.matrix.translation.copy()
+    matrix = space.armature_rotation(rotation).to_4x4()
+    matrix.translation = translation
+    pose_bone.matrix = matrix

@@ -18,7 +18,18 @@ from math import pi
 from mathutils import Matrix, Quaternion, Vector
 
 from .classify import CORE_ROLES, classify_armature, correct_chest_pairs, correct_deform_pairs, describe_roles, rig_height
+from .foot_ik import (
+    FootIKSettings,
+    LimbPlantState,
+    LimbReference,
+    PelvisReference,
+    RetargetGeometry,
+    geometric_foot_speeds,
+    retarget_pelvis_position,
+    validate_foot_ik_settings,
+)
 from .ik import apply_contact_ik
+from .motion_space import MotionSpaceError, build_motion_space, validate_motion_space
 from .mapping import build_pairs
 
 
@@ -38,6 +49,7 @@ class RetargetOptions:
         foot_ik=False,
         hand_ik=False,
         standard_skeleton="DIRECT",
+        foot_ik_settings=None,
     ):
         self.pairs = pairs
         self.reference = reference if reference in {"REST", "CURRENT"} else "REST"
@@ -48,6 +60,17 @@ class RetargetOptions:
         if standard_skeleton not in {"DIRECT", "RIGIFY_HUMAN_METARIG"}:
             raise RetargetError("未知的标准人形骨架: " + str(standard_skeleton))
         self.standard_skeleton = standard_skeleton
+        if foot_ik_settings is None:
+            foot_ik_settings = FootIKSettings()
+        if not isinstance(foot_ik_settings, FootIKSettings):
+            raise RetargetError("foot_ik_settings 必须是 FootIKSettings")
+        try:
+            validate_foot_ik_settings(foot_ik_settings)
+        except ValueError as exc:
+            raise RetargetError(str(exc))
+        self.foot_ik_settings = FootIKSettings(**{
+            field: getattr(foot_ik_settings, field) for field in foot_ik_settings.__dataclass_fields__
+        })
         self.resolved_pairs = None
 
 
@@ -532,6 +555,233 @@ def preview_source_and_target(source, target, action, scene, jump=True):
         target.animation_data.use_nla = False
 
 
+_IK_CHAIN_ROLES = (
+    ("thigh_l", "shin_l", "foot_l"),
+    ("thigh_r", "shin_r", "foot_r"),
+    ("upperarm_l", "forearm_l", "hand_l"),
+    ("upperarm_r", "forearm_r", "hand_r"),
+)
+
+
+def _prepare_retarget_geometry(src, tgt, pairs, options, scene):
+    src_roles = {role: name for role, name, _t in pairs}
+    tgt_roles = {role: name for role, _s, name in pairs}
+    if "hips" not in src_roles or "hips" not in tgt_roles:
+        raise RetargetError("重定向需要 hips 映射。")
+
+    seen = set()
+    for _role, src_name, tgt_name in pairs:
+        if src_name in seen or tgt_name in seen:
+            raise RetargetError("映射中存在重复骨骼，无法准备 IK 几何。")
+        seen.add(src_name)
+        seen.add(tgt_name)
+
+    meters_per_unit = scene.unit_settings.scale_length or 1.0
+    settings = options.foot_ik_settings
+    source_body = _body_matrix(src, _anatomical_roles(src, src_roles))
+    target_body = _body_matrix(tgt, _anatomical_roles(tgt, tgt_roles))
+    try:
+        source_space = build_motion_space(src, source_body, meters_per_unit, settings.floor_height_m)
+        target_space = build_motion_space(tgt, target_body, meters_per_unit, settings.floor_height_m)
+    except MotionSpaceError as exc:
+        raise RetargetError(f"脚 IK 空间构建失败: {exc}")
+
+    def reference_matrices(arm, roles, names):
+        matrices = {}
+        for name in names:
+            pose = arm.pose.bones.get(name)
+            if pose is None:
+                continue
+            if options.reference == "CURRENT" and options.reference_data:
+                table = options.reference_data.get(
+                    "source_matrix" if arm == src else "target_matrix"
+                )
+                raw = table.get(name) if table else None
+                if raw:
+                    matrices[name] = Matrix(raw)
+                    continue
+                raise RetargetError(f"当前姿势参考缺少 {name} 的矩阵，请重新捕获参考。")
+            matrices[name] = arm.data.bones[name].matrix_local.copy()
+        return matrices
+
+    src_hips_name = src_roles["hips"]
+    tgt_hips_name = tgt_roles["hips"]
+    hips_matrices = reference_matrices(src, src_roles, [src_hips_name])
+    tgt_hips_matrices = reference_matrices(tgt, tgt_roles, [tgt_hips_name])
+
+    def head_world(arm, matrix, space):
+        return space.position(arm.matrix_world @ matrix.translation)
+
+    source_hips_pos = head_world(src, hips_matrices[src_hips_name], source_space)
+    target_hips_pos = head_world(tgt, tgt_hips_matrices[tgt_hips_name], target_space)
+    source_height = source_hips_pos.z
+    if source_height < 1e-6:
+        source_height = 0.01
+    xy_offset = Vector((
+        target_hips_pos.x - source_hips_pos.x,
+        target_hips_pos.y - source_hips_pos.y,
+        0.0,
+    ))
+
+    pelvis = PelvisReference(
+        source_name=src_hips_name,
+        target_name=tgt_hips_name,
+        source_position=source_hips_pos,
+        target_position=target_hips_pos,
+        inverse_source_height=1.0 / source_height,
+        xy_offset=xy_offset,
+    )
+
+    limbs = []
+    wanted = []
+    if options.foot_ik:
+        wanted.extend(_IK_CHAIN_ROLES[:2])
+    if options.hand_ik:
+        wanted.extend(_IK_CHAIN_ROLES[2:])
+    for roles in wanted:
+        if not all(role in src_roles and role in tgt_roles for role in roles):
+            print(f"[HumanoidRetarget] 跳过未完整映射的链: {roles[0]}")
+            continue
+        src_names = tuple(src_roles[role] for role in roles)
+        tgt_names = tuple(tgt_roles[role] for role in roles)
+        src_mats = reference_matrices(src, src_roles, [src_names[0], src_names[2]])
+        tgt_mats = reference_matrices(tgt, tgt_roles, list(tgt_names))
+
+        src_start = head_world(src, src_mats[src_names[0]], source_space)
+        src_end = head_world(src, src_mats[src_names[2]], source_space)
+        tgt_start = head_world(tgt, tgt_mats[tgt_names[0]], target_space)
+        tgt_mid = head_world(tgt, tgt_mats[tgt_names[1]], target_space)
+        tgt_end = head_world(tgt, tgt_mats[tgt_names[2]], target_space)
+
+        source_initial = (src_end - src_start).length
+        target_initial = (tgt_end - tgt_start).length
+        if source_initial < 1e-6 or target_initial < 1e-6:
+            print(f"[HumanoidRetarget] 跳过参考长度为零的链: {roles[0]}")
+            continue
+
+        upper_len = (tgt_mid - tgt_start).length
+        lower_len = (tgt_end - tgt_mid).length
+
+        def rest_head_world(arm, name, space):
+            return space.position(arm.matrix_world @ arm.data.bones[name].head_local)
+
+        tgt_rest_start = rest_head_world(tgt, tgt_names[0], target_space)
+        tgt_rest_mid = rest_head_world(tgt, tgt_names[1], target_space)
+        tgt_rest_end = rest_head_world(tgt, tgt_names[2], target_space)
+        rest_upper = (tgt_rest_mid - tgt_rest_start).length
+        rest_lower = (tgt_rest_end - tgt_rest_mid).length
+        if abs(rest_upper - upper_len) > 1e-4 or abs(rest_lower - lower_len) > 1e-4:
+            raise RetargetError(f"目标链 {roles[0]} 的 CURRENT 参考关节距离与 rest 不一致。")
+
+        src_end_matrix = src.matrix_world @ src_mats[src_names[2]]
+        tgt_end_matrix = tgt.matrix_world @ tgt_mats[tgt_names[2]]
+        source_end_rotation = source_space.rotation(src_end_matrix)
+        target_end_rotation = target_space.rotation(tgt_end_matrix)
+
+        src_rest_end = rest_head_world(src, src_names[2], source_space)
+
+        limbs.append(LimbReference(
+            roles=roles,
+            source_names=src_names,
+            target_names=tgt_names,
+            source_initial_length=source_initial,
+            target_initial_length=target_initial,
+            target_upper_length=rest_upper,
+            target_lower_length=rest_lower,
+            source_end_rotation=source_end_rotation,
+            target_end_rotation=target_end_rotation,
+            height_offset=tgt_end.z - src_end.z,
+            source_rest_end_height=src_rest_end.z,
+            reference_pole=tgt_mid,
+        ))
+
+    return RetargetGeometry(
+        source_space=source_space,
+        target_space=target_space,
+        pelvis=pelvis,
+        limbs=tuple(limbs),
+    )
+
+
+def _hips_translation_with_floor(src, tgt, geometry, settings, in_place):
+    pelvis = geometry.pelvis
+    src_pose = src.pose.bones[pelvis.source_name]
+    current = geometry.source_space.position(src.matrix_world @ src_pose.head)
+
+    position, pelvis_delta = retarget_pelvis_position(
+        current, pelvis, settings, in_place
+    )
+
+    tgt_pose = tgt.pose.bones[pelvis.target_name]
+    matrix = tgt_pose.matrix.copy()
+    matrix.translation = geometry.target_space.armature_position(position)
+    tgt_pose.matrix = matrix
+    return pelvis_delta
+
+
+def _sample_foot_motion(src, action, frame_range, geometry, settings, in_place, scene):
+    start, end = frame_range
+    count = end - start + 1
+    if count < 2:
+        return {}
+    fps = scene.render.fps
+    fps_base = scene.render.fps_base
+    if fps <= 0 or fps_base <= 0:
+        raise RetargetError("场景帧率无效，无法进行接触采样。")
+    dt = fps_base / fps
+
+    foot_roles = [limb.roles[2] for limb in geometry.limbs if limb.roles[2] in ("foot_l", "foot_r")]
+    hips_name = geometry.pelvis.source_name
+    hips_ref = geometry.pelvis.source_position
+
+    samples = {role: [] for role in foot_roles}
+    anim = src.animation_data
+    original_use_nla = anim.use_nla if anim else None
+    if anim:
+        anim.use_nla = False
+    original_frame = scene.frame_current
+    try:
+        for frame in range(start, end + 1):
+            scene.frame_set(frame)
+            bpy.context.view_layer.update()
+            validate_motion_space(src, geometry.source_space)
+            src_pose_hips = src.pose.bones.get(hips_name)
+            if src_pose_hips is not None:
+                hips_now = geometry.source_space.position(src.matrix_world @ src_pose_hips.head)
+            else:
+                hips_now = geometry.pelvis.source_position.copy()
+            for role in foot_roles:
+                limb = next(item for item in geometry.limbs if item.roles[2] == role)
+                foot_pose = src.pose.bones.get(limb.source_names[2])
+                if foot_pose is None:
+                    samples[role].append(None)
+                    continue
+                pos = geometry.source_space.position(src.matrix_world @ foot_pose.head)
+                if in_place:
+                    pos = Vector((
+                        pos.x - hips_now.x + hips_ref.x,
+                        pos.y - hips_now.y + hips_ref.y,
+                        pos.z,
+                    ))
+                samples[role].append(pos.copy())
+    finally:
+        if anim is not None and original_use_nla is not None:
+            anim.use_nla = original_use_nla
+        scene.frame_set(original_frame)
+
+    speeds = {}
+    for role in foot_roles:
+        positions = tuple(p for p in samples[role] if p is not None)
+        if len(positions) != count:
+            speeds[role] = tuple(-1.0 for _ in range(count))
+            continue
+        limb = next(item for item in geometry.limbs if item.roles[2] == role)
+        speeds[role] = geometric_foot_speeds(
+            positions, limb.source_rest_end_height, dt, settings
+        )
+    return speeds
+
+
 def bake_retarget(src, tgt, options=None):
     if src is None or src.type != "ARMATURE":
         raise RetargetError("请先导入带骨架和动画的来源模型。")
@@ -561,6 +811,21 @@ def bake_retarget(src, tgt, options=None):
     scale = min(max(scale, 0.01), 100.0)
     in_place = options.root_motion == "IN_PLACE"
 
+    use_foot_ik = options.foot_ik
+    use_hand_ik = options.hand_ik
+    ik_geometry = None
+    if use_foot_ik or use_hand_ik:
+        try:
+            ik_geometry = _prepare_retarget_geometry(src, tgt, pairs, options, bpy.context.scene)
+        except MotionSpaceError as exc:
+            raise RetargetError(f"脚 IK 空间构建失败: {exc}")
+    ik_settings = options.foot_ik_settings
+    planting_on = (
+        use_foot_ik
+        and ik_geometry is not None
+        and ik_settings.planting_enabled
+    )
+
     if tgt.animation_data:
         tgt.animation_data_clear()
 
@@ -568,6 +833,8 @@ def bake_retarget(src, tgt, options=None):
     baked = []
     baked_sources = []
     original_frame = scene.frame_current
+    original_start = scene.frame_start
+    original_end = scene.frame_end
     try:
         for action in actions:
             _assign_action(src, action)
@@ -575,9 +842,34 @@ def bake_retarget(src, tgt, options=None):
                 src.animation_data.action_slot = source_slot
             start, end = _frame_range(action)
             target_action = _new_target_action(tgt, f"{tgt.name}_{action.name}")
+
+            speeds = {}
+            plant_states = {}
+            dt = scene.render.fps_base / scene.render.fps if scene.render.fps else 1.0
+            if planting_on:
+                speeds = _sample_foot_motion(
+                    src, action, (start, end), ik_geometry, ik_settings, in_place, scene
+                )
+                for limb in ik_geometry.limbs:
+                    end_role = limb.roles[2]
+                    if end_role in ("foot_l", "foot_r"):
+                        plant_states[end_role] = LimbPlantState(
+                            previous_goal=limb.reference_pole.copy()
+                        )
+            if ik_geometry is not None:
+                for limb in ik_geometry.limbs:
+                    end_role = limb.roles[2]
+                    if end_role in ("foot_l", "foot_r") and end_role not in plant_states and planting_on:
+                        plant_states[end_role] = LimbPlantState(
+                            previous_goal=limb.reference_pole.copy()
+                        )
+
             for frame in range(start, end + 1):
                 scene.frame_set(frame)
                 bpy.context.view_layer.update()
+                if ik_geometry is not None:
+                    validate_motion_space(src, ik_geometry.source_space)
+                    validate_motion_space(tgt, ik_geometry.target_space)
                 references = {}
                 for _role, src_name, tgt_name in pairs:
                     _src_basis, _tgt_basis, src_head, tgt_head = _reference_for(
@@ -588,9 +880,25 @@ def bake_retarget(src, tgt, options=None):
                 bpy.context.view_layer.update()
                 hip_role = next(pair for pair in pairs if pair[0] == "hips")
                 src_head, tgt_head = references[hip_role[2]]
-                _hips_translation(src, tgt, hip_role[1], hip_role[2], scale, src_head, tgt_head, in_place)
+                pelvis_delta = Vector((0.0, 0.0, 0.0))
+                if use_foot_ik and ik_geometry is not None:
+                    pelvis_delta = _hips_translation_with_floor(
+                        src, tgt, ik_geometry, ik_settings, in_place
+                    )
+                else:
+                    _hips_translation(src, tgt, hip_role[1], hip_role[2], scale, src_head, tgt_head, in_place)
                 bpy.context.view_layer.update()
-                apply_contact_ik(src, tgt, pairs, scale, options.foot_ik, options.hand_ik)
+                if ik_geometry is not None:
+                    frame_speeds = {}
+                    frame_index = frame - start
+                    for role, values in speeds.items():
+                        if 0 <= frame_index < len(values):
+                            frame_speeds[role] = values[frame_index]
+                        else:
+                            frame_speeds[role] = -1.0
+                    apply_contact_ik(
+                        src, tgt, ik_geometry, ik_settings, plant_states, frame_speeds, pelvis_delta, dt
+                    )
                 bpy.context.view_layer.update()
                 for _role, _src_name, tgt_name in pairs:
                     pose_bone = tgt.pose.bones[tgt_name]
@@ -600,6 +908,8 @@ def bake_retarget(src, tgt, options=None):
             baked.append((target_action, start, end))
             baked_sources.append(action)
     finally:
+        scene.frame_start = original_start
+        scene.frame_end = original_end
         scene.frame_set(original_frame)
 
     if baked:
@@ -634,7 +944,8 @@ def bake_retarget(src, tgt, options=None):
         describe_roles(tgt_roles),
         f"对应 {len(pairs)} 根骨骼，身高比例 {scale:.3f}",
         f"根运动: {root_label}，参考姿势: {'当前姿势' if options.reference == 'CURRENT' else 'Rest'}",
-        f"IK: {'、'.join(ik_parts) if ik_parts else '关闭'}",
+        f"IK: {'、'.join(ik_parts) if ik_parts else '关闭'}"
+        + ("（地面约束+速度植步）" if use_foot_ik and ik_geometry is not None else ""),
         f"烘焙 {len(baked)} 个动作: " + ", ".join(action.name for action, _s, _e in baked),
         "动画已经写在目标骨架上，隐藏来源后仍可播放。",
     ]

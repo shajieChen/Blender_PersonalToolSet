@@ -11,7 +11,7 @@ bl_info = {
 import json
 
 import bpy
-from bpy.props import BoolProperty, CollectionProperty, EnumProperty, IntProperty, PointerProperty, StringProperty
+from bpy.props import BoolProperty, CollectionProperty, EnumProperty, FloatProperty, IntProperty, PointerProperty, StringProperty
 from bpy.types import Operator, Panel, PropertyGroup, UIList
 
 from .mapping import PresetError, build_pairs, load_preset, merge_preset, save_preset
@@ -34,6 +34,7 @@ from .retarget import (
     collect_actions,
     preview_source_and_target,
 )
+from .foot_ik import FootIKSettings
 from .gizmos import register_draw, unregister_draw
 
 
@@ -176,6 +177,24 @@ def _options_from_settings(settings, use_mapping=True):
         foot_ik=settings.use_foot_ik,
         hand_ik=settings.use_hand_ik,
         standard_skeleton=settings.standard_skeleton,
+        foot_ik_settings=FootIKSettings(
+            floor_enabled=settings.foot_floor_enabled,
+            floor_alpha=settings.foot_floor_alpha,
+            maintain_height_offset=settings.foot_maintain_height_offset,
+            falloff_start_m=settings.foot_falloff_start_m,
+            falloff_distance_m=settings.foot_falloff_distance_m,
+            pelvis_floor_weight=settings.foot_pelvis_floor_weight,
+            source_crotch_offset_m=settings.foot_source_crotch_offset_m,
+            target_crotch_offset_m=settings.foot_target_crotch_offset_m,
+            planting_enabled=settings.foot_planting_enabled,
+            speed_threshold_mps=settings.foot_speed_threshold_mps,
+            stiffness=settings.foot_stiffness,
+            critical_damping=settings.foot_critical_damping,
+            contact_window_s=settings.foot_contact_window_s,
+            contact_height_tolerance_m=settings.foot_contact_height_tolerance_m,
+            contact_minimum_tolerance_m=settings.foot_contact_minimum_tolerance_m,
+            floor_height_m=settings.foot_floor_height_m,
+        ),
     )
 
 
@@ -271,8 +290,24 @@ class HRSettings(PropertyGroup):
         ),
         default="KEEP",
     )
-    use_foot_ik: BoolProperty(name="脚 IK", description="让脚落到按身高缩放后的来源落点，身体仍用 FK", default=False)
-    use_hand_ik: BoolProperty(name="手 IK", description="让手落到按身高缩放后的来源位置，身体仍用 FK", default=False)
+    use_foot_ik: BoolProperty(name="脚 IK", description="按来源链伸展比例生成目标落点，支持地面约束和速度植步，身体仍用 FK", default=False)
+    use_hand_ik: BoolProperty(name="手 IK", description="按来源链伸展比例生成手部落点，身体仍用 FK", default=False)
+    foot_floor_enabled: BoolProperty(name="地面约束", description="脚 IK 开启时把脚部目标高度钳制到地面附近", default=True)
+    foot_floor_alpha: FloatProperty(name="地面强度", description="地面约束的混合权重", default=1.0, min=0.0, max=1.0)
+    foot_maintain_height_offset: FloatProperty(name="保留参考脚高", description="保留来源与目标在参考姿势下的脚部高度差", default=1.0, min=0.0, max=1.0)
+    foot_falloff_start_m: FloatProperty(name="衰减起点", description="低于此高度（米）时脚部目标被完全拉向地面", default=0.08, min=0.0, unit="LENGTH")
+    foot_falloff_distance_m: FloatProperty(name="衰减距离", description="从起点向上渐变到此距离（米）后约束关闭", default=0.20, min=0.0, unit="LENGTH")
+    foot_pelvis_floor_weight: FloatProperty(name="髋部地面权重", description="髋部高度按蹲姿比例映射的强度", default=1.0, min=0.0, max=1.0)
+    foot_planting_enabled: BoolProperty(name="速度植步", description="接触地面且速度低的帧钉住脚部目标，减少脚滑", default=True)
+    foot_speed_threshold_mps: FloatProperty(name="植步速度阈值", description="低于此水平速度（米/秒）视为触地", default=0.15, min=0.0)
+    foot_stiffness: FloatProperty(name="弹簧刚度", description="植步解除后目标回位的弹簧刚度", default=250.0, min=0.0)
+    foot_critical_damping: FloatProperty(name="临界阻尼", description="植步弹簧阻尼比，1.0 为临界阻尼", default=1.0, min=0.0, max=1.0)
+    foot_contact_window_s: FloatProperty(name="接触窗口", description="判定局部最低点的时间窗口（秒）", default=0.08, min=0.0)
+    foot_contact_height_tolerance_m: FloatProperty(name="接触高度容差", description="脚部低于参考高度加此容差（米）才算接触", default=0.02, min=0.0, unit="LENGTH")
+    foot_contact_minimum_tolerance_m: FloatProperty(name="最低点容差", description="窗口内高于局部最低点超过此值（米）不算接触", default=0.01, min=0.0, unit="LENGTH")
+    foot_floor_height_m: FloatProperty(name="地面高度", description="世界空间地面平面的高度（米）", default=0.0, unit="LENGTH")
+    foot_source_crotch_offset_m: FloatProperty(name="来源胯部偏移", description="髋部到胯部参考点的垂直偏移（米）", default=0.0, unit="LENGTH")
+    foot_target_crotch_offset_m: FloatProperty(name="目标胯部偏移", description="目标髋部到胯部参考点的垂直偏移（米）", default=0.0, unit="LENGTH")
     export_format: EnumProperty(
         name="格式",
         items=(
@@ -703,6 +738,26 @@ class HR_PT_panel(Panel):
         option_box.prop(settings, "root_motion", text="根运动")
         option_box.prop(settings, "use_foot_ik")
         option_box.prop(settings, "use_hand_ik")
+        foot_col = option_box.column()
+        foot_col.enabled = settings.use_foot_ik
+        foot_col.prop(settings, "foot_floor_enabled")
+        if settings.foot_floor_enabled:
+            floor_col = foot_col.column()
+            floor_col.prop(settings, "foot_floor_alpha")
+            floor_col.prop(settings, "foot_maintain_height_offset")
+            floor_col.prop(settings, "foot_falloff_start_m")
+            floor_col.prop(settings, "foot_falloff_distance_m")
+        foot_col.prop(settings, "foot_pelvis_floor_weight")
+        foot_col.prop(settings, "foot_planting_enabled")
+        if settings.foot_planting_enabled:
+            plant_col = foot_col.column()
+            plant_col.prop(settings, "foot_speed_threshold_mps")
+            plant_col.prop(settings, "foot_stiffness")
+            plant_col.prop(settings, "foot_critical_damping")
+            plant_col.prop(settings, "foot_contact_window_s")
+            plant_col.prop(settings, "foot_contact_height_tolerance_m")
+            plant_col.prop(settings, "foot_contact_minimum_tolerance_m")
+        foot_col.prop(settings, "foot_floor_height_m")
         option_box.operator("hr.retarget_existing", icon="ACTION")
 
         export_box = layout.box()

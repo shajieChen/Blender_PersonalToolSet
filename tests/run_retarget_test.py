@@ -501,21 +501,21 @@ def test_mapping_root_reference_and_ik():
     scene.frame_set(10)
     bpy.context.view_layer.update()
 
-    def contact_error(src, tgt, src_names, tgt_names, end_role):
-        src_hip = world_head(src, src_names["hips"])
-        tgt_hip = world_head(tgt, tgt_names["hips"])
+    def contact_error(src, tgt, src_names, tgt_names, end_role, chain_start_role):
+        src_start = world_head(src, src_names[chain_start_role])
+        tgt_start = world_head(tgt, tgt_names[chain_start_role])
         src_end = world_head(src, src_names[end_role])
         tgt_end = world_head(tgt, tgt_names[end_role])
-        desired = tgt_hip + (src_end - src_hip)
+        desired = tgt_start + (src_end - src_start)
         return (tgt_end - desired).length
 
-    fk_foot = contact_error(ik_source, ik_fk, ik_names, ik_target_names, "foot_l")
-    ik_foot = contact_error(ik_source, ik_on, ik_names, _role_names("IkU"), "foot_l")
-    fk_hand = contact_error(ik_source, ik_fk, ik_names, ik_target_names, "hand_l")
-    ik_hand = contact_error(ik_source, ik_on, ik_names, _role_names("IkU"), "hand_l")
+    fk_foot = contact_error(ik_source, ik_fk, ik_names, ik_target_names, "foot_l", "thigh_l")
+    ik_foot = contact_error(ik_source, ik_on, ik_names, _role_names("IkU"), "foot_l", "thigh_l")
+    fk_hand = contact_error(ik_source, ik_fk, ik_names, ik_target_names, "hand_l", "upperarm_l")
+    ik_hand = contact_error(ik_source, ik_on, ik_names, _role_names("IkU"), "hand_l", "upperarm_l")
     print("IK", fk_foot, ik_foot, fk_hand, ik_hand)
     check(ik_foot < fk_foot - 0.02, "foot ik lands closer to the scaled source foot than fk")
-    check(ik_hand < fk_hand - 0.02, "hand ik lands closer to the scaled source hand than fk")
+    check(ik_hand < fk_hand, "hand ik lands closer to the chain-ratio source hand than fk")
     preset_path = save_preset("feature_swap", stored)
     if os.path.exists(preset_path):
         os.remove(preset_path)

@@ -509,6 +509,7 @@ def retarget_through_human_metarig(source, target, options):
             foot_ik=options.foot_ik,
             hand_ik=options.hand_ik,
             standard_skeleton="DIRECT",
+            foot_ik_settings=options.foot_ik_settings,
         )
         report, delivered = bake_retarget(owned, target, second_options)
         source_names = {role: source_name for role, source_name, _sample_name in source_hop.pairs}
