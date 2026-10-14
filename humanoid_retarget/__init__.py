@@ -35,6 +35,13 @@ from .retarget import (
     preview_source_and_target,
 )
 from .foot_ik import FootIKSettings
+from .joint_limits import (
+    AxisAngleLimit,
+    BoneAngleLimits,
+    JointLimitSettings,
+    LimitType,
+)
+from .soft_repulsion import SoftRepulsionSettings
 from .gizmos import register_draw, unregister_draw
 
 
@@ -195,6 +202,45 @@ def _options_from_settings(settings, use_mapping=True):
             contact_minimum_tolerance_m=settings.foot_contact_minimum_tolerance_m,
             floor_height_m=settings.foot_floor_height_m,
         ),
+        soft_repulsion=settings.use_soft_repulsion,
+        soft_repulsion_settings=(
+            SoftRepulsionSettings(
+                enabled=True,
+                minimum_distance_m=settings.soft_minimum_distance_m,
+                maximum_distance_m=settings.soft_maximum_distance_m,
+                coefficient=settings.soft_coefficient,
+                inverted=settings.soft_inverted,
+                torso_radius_m=settings.soft_torso_radius_m,
+                hand_radius_m=settings.soft_hand_radius_m,
+                forearm_radius_m=settings.soft_forearm_radius_m,
+            )
+            if settings.use_soft_repulsion else None
+        ),
+        joint_limits=settings.use_joint_limits,
+        joint_limit_settings=(
+            JointLimitSettings(
+                enabled=True,
+                iterations=settings.joint_iterations,
+                max_angle_degrees=settings.joint_max_angle_degrees,
+                bones=tuple(
+                    BoneAngleLimits(
+                        role=item.role,
+                        x=AxisAngleLimit(
+                            LimitType(item.x_type), item.min_x, item.max_x
+                        ),
+                        y=AxisAngleLimit(
+                            LimitType(item.y_type), item.min_y, item.max_y
+                        ),
+                        z=AxisAngleLimit(
+                            LimitType(item.z_type), item.min_z, item.max_z
+                        ),
+                        rotation_stiffness=item.rotation_stiffness,
+                    )
+                    for item in settings.joint_limit_bones
+                ),
+            )
+            if settings.use_joint_limits else None
+        ),
     )
 
 
@@ -235,6 +281,52 @@ class HR_UL_mappings(UIList):
             row.prop_search(item, "target_bone", settings.target.data, "bones", text="")
         else:
             row.prop(item, "target_bone", text="")
+
+
+_LIMIT_ITEMS = (
+    ("FREE", "Free", "不限制"),
+    ("LIMITED", "Limited", "按 PBIK 范围分支处理"),
+    ("LOCKED", "Locked", "按 PBIK 锁定组合处理"),
+)
+
+
+class HRJointLimitItem(PropertyGroup):
+    role: StringProperty(name="骨骼 role", default="forearm_l")
+    x_type: EnumProperty(name="X", items=_LIMIT_ITEMS, default="FREE")
+    y_type: EnumProperty(name="Y", items=_LIMIT_ITEMS, default="FREE")
+    z_type: EnumProperty(name="Z", items=_LIMIT_ITEMS, default="FREE")
+    min_x: FloatProperty(name="X 最小（度）", default=0.0)
+    max_x: FloatProperty(name="X 最大（度）", default=0.0)
+    min_y: FloatProperty(name="Y 最小（度）", default=0.0)
+    max_y: FloatProperty(name="Y 最大（度）", default=0.0)
+    min_z: FloatProperty(name="Z 最小（度）", default=0.0)
+    max_z: FloatProperty(name="Z 最大（度）", default=0.0)
+    rotation_stiffness: FloatProperty(
+        name="旋转刚度", default=0.0, min=0.0, max=1.0
+    )
+
+
+class HR_OT_add_joint_limit(Operator):
+    bl_idname = "hr.add_joint_limit"
+    bl_label = "添加关节限"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        context.scene.hr_settings.joint_limit_bones.add()
+        return {"FINISHED"}
+
+
+class HR_OT_remove_joint_limit(Operator):
+    bl_idname = "hr.remove_joint_limit"
+    bl_label = "删除关节限"
+    bl_options = {"REGISTER", "UNDO"}
+    index: IntProperty(default=-1)
+
+    def execute(self, context):
+        items = context.scene.hr_settings.joint_limit_bones
+        if 0 <= self.index < len(items):
+            items.remove(self.index)
+        return {"FINISHED"}
 
 
 class HRSettings(PropertyGroup):
@@ -308,6 +400,22 @@ class HRSettings(PropertyGroup):
     foot_floor_height_m: FloatProperty(name="地面高度", description="世界空间地面平面的高度（米）", default=0.0, unit="LENGTH")
     foot_source_crotch_offset_m: FloatProperty(name="来源胯部偏移", description="髋部到胯部参考点的垂直偏移（米）", default=0.0, unit="LENGTH")
     foot_target_crotch_offset_m: FloatProperty(name="目标胯部偏移", description="目标髋部到胯部参考点的垂直偏移（米）", default=0.0, unit="LENGTH")
+    use_soft_repulsion: BoolProperty(
+        name="软斥力", description="手臂目标被躯干胶囊软推离开，减少手部穿入身体", default=False,
+    )
+    soft_minimum_distance_m: FloatProperty(name="完全作用距离（米）", description="低于此距离时软推达到最大强度", default=0.10, min=0.0)
+    soft_maximum_distance_m: FloatProperty(name="作用结束距离（米）", description="超过此距离后软推完全关闭", default=0.20, min=0.0)
+    soft_coefficient: FloatProperty(name="斥力系数", description="软推力场强度", default=64.0, min=0.0)
+    soft_inverted: BoolProperty(name="反转力场", description="把斥力改为吸力（一般保持关闭）", default=False)
+    soft_torso_radius_m: FloatProperty(name="躯干半径（米）", description="躯干胶囊代理半径", default=0.15, min=0.0)
+    soft_hand_radius_m: FloatProperty(name="手部代理半径（米）", description="手部球代理半径", default=0.025, min=0.0)
+    soft_forearm_radius_m: FloatProperty(name="前臂代理半径（米）", description="前臂球代理半径", default=0.035, min=0.0)
+    use_joint_limits: BoolProperty(
+        name="关节角度限", description="按 PBIK 语义限制肩肘等关节的旋转范围，防关节反转", default=False,
+    )
+    joint_iterations: IntProperty(name="求解轮数", description="限位与两骨求解的交替轮数", default=20, min=0, max=1000)
+    joint_max_angle_degrees: FloatProperty(name="单轮增量上限（度）", description="每轮旋转修正的最大角度增量", default=30.0, min=0.0, max=45.0)
+    joint_limit_bones: CollectionProperty(type=HRJointLimitItem)
     export_format: EnumProperty(
         name="格式",
         items=(
@@ -758,6 +866,36 @@ class HR_PT_panel(Panel):
             plant_col.prop(settings, "foot_contact_height_tolerance_m")
             plant_col.prop(settings, "foot_contact_minimum_tolerance_m")
         foot_col.prop(settings, "foot_floor_height_m")
+        option_box.prop(settings, "use_soft_repulsion")
+        if settings.use_soft_repulsion:
+            soft_col = option_box.column()
+            soft_col.prop(settings, "soft_minimum_distance_m")
+            soft_col.prop(settings, "soft_maximum_distance_m")
+            soft_col.prop(settings, "soft_coefficient")
+            soft_col.prop(settings, "soft_inverted")
+            soft_col.prop(settings, "soft_torso_radius_m")
+            soft_col.prop(settings, "soft_hand_radius_m")
+            soft_col.prop(settings, "soft_forearm_radius_m")
+            soft_col.label(text="软推不保证网格无穿插")
+        option_box.prop(settings, "use_joint_limits")
+        if settings.use_joint_limits:
+            joint_col = option_box.column()
+            joint_col.prop(settings, "joint_iterations")
+            joint_col.prop(settings, "joint_max_angle_degrees")
+            joint_col.label(text="限制相对本帧 FK 输入的求解变化")
+            joint_col.operator("hr.add_joint_limit")
+            for index, item in enumerate(settings.joint_limit_bones):
+                box = joint_col.box()
+                row = box.row()
+                row.prop(item, "role")
+                operator = row.operator("hr.remove_joint_limit", text="删除")
+                operator.index = index
+                for axis in ("x", "y", "z"):
+                    row = box.row(align=True)
+                    row.prop(item, axis + "_type")
+                    row.prop(item, "min_" + axis)
+                    row.prop(item, "max_" + axis)
+                box.prop(item, "rotation_stiffness")
         option_box.operator("hr.retarget_existing", icon="ACTION")
 
         export_box = layout.box()
@@ -792,6 +930,7 @@ CLASSES = (
     HR_AddonPreferences,
     HRMapItem,
     HR_UL_mappings,
+    HRJointLimitItem,
     HRSettings,
     HR_OT_import_source,
     HR_OT_play_source,
@@ -804,6 +943,8 @@ CLASSES = (
     HR_OT_capture_reference,
     HR_OT_export,
     HR_OT_export_file,
+    HR_OT_add_joint_limit,
+    HR_OT_remove_joint_limit,
     HR_PT_panel,
 )
 

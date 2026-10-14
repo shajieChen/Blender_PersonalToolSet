@@ -18,8 +18,14 @@ from math import pi
 from mathutils import Matrix, Quaternion, Vector
 
 from .classify import CORE_ROLES, classify_armature, correct_chest_pairs, correct_deform_pairs, describe_roles, rig_height
+from copy import deepcopy
+
 from .foot_ik import (
     FootIKSettings,
+    IKGoal,
+    constrain_goal_floor,
+    generate_limb_goal,
+    plant_goal,
     LimbPlantState,
     LimbReference,
     PelvisReference,
@@ -29,6 +35,21 @@ from .foot_ik import (
     validate_foot_ik_settings,
 )
 from .ik import apply_contact_ik
+from .joint_limits import (
+    BoneAngleLimits,
+    JointBody,
+    JointLimitSettings,
+    JointRotationConstraint,
+    normalize_rotation,
+    run_rotation_limit_pass,
+    validate_joint_limit_settings,
+)
+from .soft_repulsion import (
+    SoftRepulsionSettings,
+    repel_capsule_point,
+    validate_soft_repulsion_settings,
+)
+from .ik import _aim_joint, _two_bone, _write_end_rotation
 from .motion_space import MotionSpaceError, build_motion_space, validate_motion_space
 from .mapping import build_pairs
 
@@ -50,6 +71,10 @@ class RetargetOptions:
         hand_ik=False,
         standard_skeleton="DIRECT",
         foot_ik_settings=None,
+        soft_repulsion=False,
+        soft_repulsion_settings=None,
+        joint_limits=False,
+        joint_limit_settings=None,
     ):
         self.pairs = pairs
         self.reference = reference if reference in {"REST", "CURRENT"} else "REST"
@@ -71,6 +96,36 @@ class RetargetOptions:
         self.foot_ik_settings = FootIKSettings(**{
             field: getattr(foot_ik_settings, field) for field in foot_ik_settings.__dataclass_fields__
         })
+        self.soft_repulsion = bool(soft_repulsion)
+        self.joint_limits = bool(joint_limits)
+        self.soft_repulsion_settings = None
+        self.joint_limit_settings = None
+
+        if self.soft_repulsion or self.joint_limits:
+            if self.standard_skeleton != "DIRECT":
+                raise RetargetError("新姿势通道当前仅支持 DIRECT 模式")
+
+        if self.soft_repulsion:
+            supplied = soft_repulsion_settings or SoftRepulsionSettings()
+            if not isinstance(supplied, SoftRepulsionSettings):
+                raise RetargetError("soft_repulsion_settings 必须是 SoftRepulsionSettings")
+            self.soft_repulsion_settings = deepcopy(supplied)
+            self.soft_repulsion_settings.enabled = True
+            try:
+                validate_soft_repulsion_settings(self.soft_repulsion_settings)
+            except ValueError as exc:
+                raise RetargetError(str(exc)) from exc
+
+        if self.joint_limits:
+            supplied = joint_limit_settings or JointLimitSettings()
+            if not isinstance(supplied, JointLimitSettings):
+                raise RetargetError("joint_limit_settings 必须是 JointLimitSettings")
+            self.joint_limit_settings = deepcopy(supplied)
+            self.joint_limit_settings.enabled = True
+            try:
+                validate_joint_limit_settings(self.joint_limit_settings)
+            except ValueError as exc:
+                raise RetargetError(str(exc)) from exc
         self.resolved_pairs = None
 
 
@@ -563,18 +618,19 @@ _IK_CHAIN_ROLES = (
 )
 
 
-def _prepare_retarget_geometry(src, tgt, pairs, options, scene):
+def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coordinates=False, extra_arm_chains=False):
     src_roles = {role: name for role, name, _t in pairs}
     tgt_roles = {role: name for role, _s, name in pairs}
     if "hips" not in src_roles or "hips" not in tgt_roles:
         raise RetargetError("重定向需要 hips 映射。")
 
-    seen = set()
-    for _role, src_name, tgt_name in pairs:
-        if src_name in seen or tgt_name in seen:
-            raise RetargetError("映射中存在重复骨骼，无法准备 IK 几何。")
-        seen.add(src_name)
-        seen.add(tgt_name)
+    if not armature_coordinates:
+        seen = set()
+        for _role, src_name, tgt_name in pairs:
+            if src_name in seen or tgt_name in seen:
+                raise RetargetError("映射中存在重复骨骼，无法准备 IK 几何。")
+            seen.add(src_name)
+            seen.add(tgt_name)
 
     meters_per_unit = scene.unit_settings.scale_length or 1.0
     settings = options.foot_ik_settings
@@ -610,6 +666,8 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene):
     tgt_hips_matrices = reference_matrices(tgt, tgt_roles, [tgt_hips_name])
 
     def head_world(arm, matrix, space):
+        if armature_coordinates:
+            return space.position(matrix.translation)
         return space.position(arm.matrix_world @ matrix.translation)
 
     source_hips_pos = head_world(src, hips_matrices[src_hips_name], source_space)
@@ -636,7 +694,7 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene):
     wanted = []
     if options.foot_ik:
         wanted.extend(_IK_CHAIN_ROLES[:2])
-    if options.hand_ik:
+    if options.hand_ik or extra_arm_chains:
         wanted.extend(_IK_CHAIN_ROLES[2:])
     for roles in wanted:
         if not all(role in src_roles and role in tgt_roles for role in roles):
@@ -663,6 +721,8 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene):
         lower_len = (tgt_end - tgt_mid).length
 
         def rest_head_world(arm, name, space):
+            if armature_coordinates:
+                return space.position(arm.data.bones[name].head_local)
             return space.position(arm.matrix_world @ arm.data.bones[name].head_local)
 
         tgt_rest_start = rest_head_world(tgt, tgt_names[0], target_space)
@@ -673,8 +733,12 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene):
         if abs(rest_upper - upper_len) > 1e-4 or abs(rest_lower - lower_len) > 1e-4:
             raise RetargetError(f"目标链 {roles[0]} 的 CURRENT 参考关节距离与 rest 不一致。")
 
-        src_end_matrix = src.matrix_world @ src_mats[src_names[2]]
-        tgt_end_matrix = tgt.matrix_world @ tgt_mats[tgt_names[2]]
+        if armature_coordinates:
+            src_end_matrix = src_mats[src_names[2]]
+            tgt_end_matrix = tgt_mats[tgt_names[2]]
+        else:
+            src_end_matrix = src.matrix_world @ src_mats[src_names[2]]
+            tgt_end_matrix = tgt.matrix_world @ tgt_mats[tgt_names[2]]
         source_end_rotation = source_space.rotation(src_end_matrix)
         target_end_rotation = target_space.rotation(tgt_end_matrix)
 
@@ -703,10 +767,13 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene):
     )
 
 
-def _hips_translation_with_floor(src, tgt, geometry, settings, in_place):
+def _hips_translation_with_floor(src, tgt, geometry, settings, in_place, armature_coordinates=False):
     pelvis = geometry.pelvis
     src_pose = src.pose.bones[pelvis.source_name]
-    current = geometry.source_space.position(src.matrix_world @ src_pose.head)
+    if armature_coordinates:
+        current = geometry.source_space.position(src_pose.head)
+    else:
+        current = geometry.source_space.position(src.matrix_world @ src_pose.head)
 
     position, pelvis_delta = retarget_pelvis_position(
         current, pelvis, settings, in_place
@@ -719,7 +786,7 @@ def _hips_translation_with_floor(src, tgt, geometry, settings, in_place):
     return pelvis_delta
 
 
-def _sample_foot_motion(src, action, frame_range, geometry, settings, in_place, scene):
+def _sample_foot_motion(src, action, frame_range, geometry, settings, in_place, scene, armature_coordinates=False):
     start, end = frame_range
     count = end - start + 1
     if count < 2:
@@ -747,7 +814,10 @@ def _sample_foot_motion(src, action, frame_range, geometry, settings, in_place, 
             validate_motion_space(src, geometry.source_space)
             src_pose_hips = src.pose.bones.get(hips_name)
             if src_pose_hips is not None:
-                hips_now = geometry.source_space.position(src.matrix_world @ src_pose_hips.head)
+                if armature_coordinates:
+                    hips_now = geometry.source_space.position(src_pose_hips.head)
+                else:
+                    hips_now = geometry.source_space.position(src.matrix_world @ src_pose_hips.head)
             else:
                 hips_now = geometry.pelvis.source_position.copy()
             for role in foot_roles:
@@ -756,7 +826,10 @@ def _sample_foot_motion(src, action, frame_range, geometry, settings, in_place, 
                 if foot_pose is None:
                     samples[role].append(None)
                     continue
-                pos = geometry.source_space.position(src.matrix_world @ foot_pose.head)
+                if armature_coordinates:
+                    pos = geometry.source_space.position(foot_pose.head)
+                else:
+                    pos = geometry.source_space.position(src.matrix_world @ foot_pose.head)
                 if in_place:
                     pos = Vector((
                         pos.x - hips_now.x + hips_ref.x,
@@ -782,7 +855,495 @@ def _sample_foot_motion(src, action, frame_range, geometry, settings, in_place, 
     return speeds
 
 
+def _bone_depth(pose_bone):
+    depth = 0
+    parent = pose_bone.parent
+    while parent is not None:
+        depth += 1
+        parent = parent.parent
+    return depth
+
+
+def _prepare_pose_channels(src, tgt, pairs, options, scene):
+    if scene.render.fps <= 0 or scene.render.fps_base <= 0:
+        raise RetargetError("姿势通道需要有效帧率")
+
+    for column in (0, 1, 2):
+        names = [pair[column] for pair in pairs]
+        if len(names) != len(set(names)):
+            raise RetargetError("姿势通道不接受重复 role 或骨骼")
+
+    roles = {role: name for role, _source, name in pairs}
+    needed = set()
+
+    if options.soft_repulsion:
+        needed.update((
+            "hips", "chest",
+            "upperarm_l", "forearm_l", "hand_l",
+            "upperarm_r", "forearm_r", "hand_r",
+        ))
+
+    configurations = {}
+    references = {}
+    if options.joint_limits:
+        for limits in options.joint_limit_settings.bones:
+            if limits.role not in roles:
+                raise RetargetError(f"关节限 role 未映射: {limits.role}")
+            name = roles[limits.role]
+            pose = tgt.pose.bones[name]
+            if pose.parent is None:
+                raise RetargetError(f"关节限骨没有实际父骨: {name}")
+            configurations[name] = limits
+            needed.add(limits.role)
+
+            if options.reference == "CURRENT":
+                table = (options.reference_data or {}).get("target_matrix", {})
+                if name not in table:
+                    raise RetargetError(f"当前参考缺少关节轴: {name}")
+                matrix = Matrix(table[name])
+            else:
+                matrix = tgt.data.bones[name].matrix_local
+            references[name] = matrix.to_quaternion().normalized()
+
+    missing = needed - roles.keys()
+    if missing:
+        raise RetargetError("姿势通道缺少映射: " + ", ".join(sorted(missing)))
+
+    if tgt.animation_data and tgt.animation_data.drivers:
+        raise RetargetError("姿势通道不支持目标骨架驱动器")
+
+    for name in roles.values():
+        pose = tgt.pose.bones[name]
+        if any(
+            not constraint.mute and constraint.influence != 0.0
+            for constraint in pose.constraints
+        ):
+            raise RetargetError(f"姿势通道不支持目标生效约束: {name}")
+        if max(abs(value - 1.0) for value in pose.scale) > 1e-6:
+            raise RetargetError(f"姿势通道不支持目标骨缩放: {name}")
+
+    geometry = None
+    if options.foot_ik or options.hand_ik or options.soft_repulsion:
+        geometry = _prepare_retarget_geometry(
+            src,
+            tgt,
+            pairs,
+            options,
+            scene,
+            armature_coordinates=True,
+            extra_arm_chains=options.soft_repulsion,
+        )
+
+        expected = []
+        if options.foot_ik:
+            expected.extend(_IK_CHAIN_ROLES[:2])
+        if options.hand_ik or options.soft_repulsion:
+            expected.extend(_IK_CHAIN_ROLES[2:])
+        actual = {limb.roles for limb in geometry.limbs}
+        if any(chain not in actual for chain in expected):
+            raise RetargetError("姿势通道需要完整且非退化的启用链")
+
+        for limb in geometry.limbs:
+            upper, mid, end = (
+                tgt.pose.bones[name] for name in limb.target_names
+            )
+            if mid.parent != upper or end.parent != mid:
+                raise RetargetError("姿势通道需要直接两段父子链")
+            if min(
+                limb.target_upper_length,
+                limb.target_lower_length,
+            ) <= 1e-6:
+                raise RetargetError("姿势通道链长度退化")
+
+    return geometry, roles, configurations, references
+
+
+def _apply_target_joint_pass(
+    tgt,
+    configurations,
+    references,
+    initial_rotations,
+    settings,
+    final,
+):
+    if not configurations:
+        return
+
+    bodies = {}
+    for name in configurations:
+        pose = tgt.pose.bones[name]
+        while pose is not None:
+            if pose.name not in bodies:
+                limits = configurations.get(pose.name)
+                if limits is None:
+                    limits = BoneAngleLimits(rotation_stiffness=1.0)
+                    inverse_mass = 0.0
+                else:
+                    inverse_mass = 1.0
+                bodies[pose.name] = JointBody(
+                    rotation=pose.matrix.to_quaternion().normalized(),
+                    initial_rotation=initial_rotations[pose.name].copy(),
+                    settings=limits,
+                    inverse_mass=inverse_mass,
+                )
+            pose = pose.parent
+
+    names = sorted(
+        configurations,
+        key=lambda name: (_bone_depth(tgt.pose.bones[name]), name),
+        reverse=not final,
+    )
+    joints = tuple(
+        JointRotationConstraint(
+            bodies[tgt.pose.bones[name].parent.name],
+            bodies[name],
+            references[name],
+        )
+        for name in names
+    )
+    run_rotation_limit_pass(
+        joints, final, settings.max_angle_degrees
+    )
+
+    for name in sorted(
+        configurations,
+        key=lambda name: (_bone_depth(tgt.pose.bones[name]), name),
+    ):
+        pose = tgt.pose.bones[name]
+        orient = normalize_rotation(
+            bodies[name].rotation
+        ).to_matrix()
+        rest = _rot3(pose.bone.matrix_local)
+        parent = pose.parent
+        if parent is None:
+            basis = rest.inverted() @ orient
+        else:
+            basis = (
+                rest.inverted()
+                @ _rot3(parent.bone.matrix_local)
+                @ _rot3(parent.matrix).inverted()
+                @ orient
+            )
+        pose.rotation_mode = "QUATERNION"
+        pose.rotation_quaternion = basis.to_quaternion()
+        bpy.context.view_layer.update()
+
+
+def _build_pose_channel_goals(
+    src,
+    tgt,
+    geometry,
+    options,
+    states,
+    speeds,
+    pelvis_delta,
+    dt,
+):
+    goals = {}
+    if geometry is None:
+        return goals
+
+    for limb in geometry.limbs:
+        role = limb.roles[2]
+        source_start = src.pose.bones[limb.source_names[0]]
+        source_end = src.pose.bones[limb.source_names[2]]
+        target_start = tgt.pose.bones[limb.target_names[0]]
+        target_end = tgt.pose.bones[limb.target_names[2]]
+        source_space = geometry.source_space
+        target_space = geometry.target_space
+
+        if role in {"hand_l", "hand_r"} and not options.hand_ik:
+            goal = IKGoal(
+                target_space.position(target_end.head),
+                target_space.rotation(target_end.matrix),
+            )
+        else:
+            source_end_position = source_space.position(source_end.head)
+            goal = generate_limb_goal(
+                source_space.position(source_start.head),
+                source_end_position,
+                source_space.rotation(source_end.matrix),
+                target_space.position(target_start.head),
+                limb,
+                pelvis_delta,
+            )
+            if role in {"foot_l", "foot_r"}:
+                goal.position = constrain_goal_floor(
+                    goal.position,
+                    source_end_position.z,
+                    limb.height_offset,
+                    options.foot_ik_settings,
+                )
+                state = states.get(role)
+                if state is not None:
+                    goal.position = plant_goal(
+                        goal.position,
+                        speeds.get(role, -1.0),
+                        state,
+                        dt,
+                        options.foot_ik_settings,
+                    )
+
+        goals[role] = goal
+    return goals
+
+
+def _solve_pose_channel_chain(tgt, space, limb, goal, pole_goal):
+    upper_name, mid_name, end_name = limb.target_names
+    root = space.position(tgt.pose.bones[upper_name].head)
+    pole = (
+        pole_goal
+        if pole_goal is not None
+        else space.position(tgt.pose.bones[mid_name].head)
+    )
+    if (pole - root).length < 1e-6:
+        pole = limb.reference_pole
+
+    knee, reachable = _two_bone(
+        root,
+        limb.target_upper_length,
+        limb.target_lower_length,
+        goal.position,
+        pole,
+        limb.reference_pole - root,
+    )
+    _aim_joint(tgt, upper_name, mid_name, space, knee - root)
+    bpy.context.view_layer.update()
+
+    knee_now = space.position(tgt.pose.bones[mid_name].head)
+    _aim_joint(tgt, mid_name, end_name, space, reachable - knee_now)
+    bpy.context.view_layer.update()
+
+    _write_end_rotation(tgt, end_name, space, goal.rotation)
+    bpy.context.view_layer.update()
+
+
+def _correct_arm_goals(
+    tgt,
+    geometry,
+    goals,
+    dt,
+    settings,
+    target_roles,
+):
+    space = geometry.target_space
+    axis_start = space.position(
+        tgt.pose.bones[target_roles["hips"]].head
+    )
+    axis_end = space.position(
+        tgt.pose.bones[target_roles["chest"]].head
+    )
+    poles = {}
+
+    for limb in geometry.limbs:
+        if limb.roles[2] not in {"hand_l", "hand_r"}:
+            continue
+
+        end_role = limb.roles[2]
+        goal = goals[end_role]
+        goal.position = repel_capsule_point(
+            goal.position,
+            axis_start,
+            axis_end,
+            settings.hand_radius_m,
+            dt,
+            settings,
+        )
+
+        mid_pose = tgt.pose.bones[limb.target_names[1]]
+        poles[end_role] = repel_capsule_point(
+            space.position(mid_pose.head),
+            axis_start,
+            axis_end,
+            settings.forearm_radius_m,
+            dt,
+            settings,
+        )
+
+    return poles
+
+
+def _apply_pose_channels(
+    src,
+    tgt,
+    geometry,
+    target_roles,
+    configurations,
+    references,
+    options,
+    states,
+    speeds,
+    pelvis_delta,
+    dt,
+):
+    initial_rotations = {
+        pose.name: pose.matrix.to_quaternion().normalized()
+        for pose in tgt.pose.bones
+    }
+    goals = _build_pose_channel_goals(
+        src, tgt, geometry, options,
+        states, speeds, pelvis_delta, dt,
+    )
+    poles = {}
+    if options.soft_repulsion and geometry is not None:
+        poles = _correct_arm_goals(
+            tgt, geometry, goals, dt,
+            options.soft_repulsion_settings,
+            target_roles,
+        )
+
+    iterations = (
+        options.joint_limit_settings.iterations
+        if options.joint_limits else 1
+    )
+    for _iteration in range(iterations):
+        if geometry is not None:
+            for limb in geometry.limbs:
+                role = limb.roles[2]
+                _solve_pose_channel_chain(
+                    tgt,
+                    geometry.target_space,
+                    limb,
+                    goals[role],
+                    poles.get(role),
+                )
+        if options.joint_limits:
+            _apply_target_joint_pass(
+                tgt, configurations, references,
+                initial_rotations,
+                options.joint_limit_settings,
+                False,
+            )
+
+    if options.joint_limits and iterations > 0:
+        _apply_target_joint_pass(
+            tgt, configurations, references,
+            initial_rotations,
+            options.joint_limit_settings,
+            True,
+        )
+
+
+def _capture_channel_bake_state(src, tgt, scene):
+    objects = []
+    for obj in (src, tgt):
+        anim = obj.animation_data
+        objects.append((
+            obj,
+            anim is not None,
+            anim.action if anim else None,
+            getattr(anim, "action_slot", None) if anim else None,
+            anim.use_nla if anim else None,
+            tuple(
+                (pose.name, pose.rotation_mode, pose.matrix_basis.copy())
+                for pose in obj.pose.bones
+            ),
+        ))
+    return {
+        "objects": objects,
+        "frame": scene.frame_current,
+        "start": scene.frame_start,
+        "end": scene.frame_end,
+        "actions": [],
+        "tracks": [],
+        "properties": {
+            key: (key in tgt, tgt.get(key))
+            for key in ("hr_retarget_from", "hr_actions")
+        },
+    }
+
+
+def _new_channel_action(target, name, state):
+    action = bpy.data.actions.new(name)
+    state["actions"].append(action)
+    action.use_fake_user = True
+    slots = getattr(action, "slots", None)
+    if slots is not None:
+        try:
+            slots.new(id_type="OBJECT", name=target.name)
+        except TypeError:
+            slots.new("OBJECT", target.name)
+    _assign_action(target, action)
+    return action
+
+
+def _stash_channel_actions(target, actions, state):
+    anim = target.animation_data or target.animation_data_create()
+    for action in actions:
+        track = anim.nla_tracks.new()
+        state["tracks"].append((target, track))
+        track.name = action.name
+        strip = track.strips.new(
+            action.name[:60], int(action.frame_range[0]), action
+        )
+        slots = getattr(action, "slots", None)
+        if slots and hasattr(strip, "action_slot"):
+            strip.action_slot = slots[0]
+    anim.use_nla = False
+
+
+def _restore_channel_bake_state(tgt, scene, state):
+    for obj, track in reversed(state["tracks"]):
+        if obj.animation_data is not None:
+            obj.animation_data.nla_tracks.remove(track)
+
+    for obj, had_anim, action, slot, use_nla, _poses in state["objects"]:
+        if not had_anim:
+            if obj.animation_data is not None:
+                obj.animation_data_clear()
+        else:
+            anim = obj.animation_data or obj.animation_data_create()
+            anim.action = action
+            if hasattr(anim, "action_slot") and slot is not None:
+                anim.action_slot = slot
+            anim.use_nla = use_nla
+
+    for action in reversed(state["actions"]):
+        bpy.data.actions.remove(action, do_unlink=True)
+
+    for key, (existed, value) in state["properties"].items():
+        if existed:
+            tgt[key] = value
+        elif key in tgt:
+            del tgt[key]
+
+    scene.frame_start = state["start"]
+    scene.frame_end = state["end"]
+    scene.frame_set(state["frame"])
+
+    for obj, _had_anim, _action, _slot, _use_nla, poses in state["objects"]:
+        for name, mode, basis in poses:
+            pose = obj.pose.bones.get(name)
+            if pose is not None:
+                pose.rotation_mode = mode
+                pose.matrix_basis = basis
+    bpy.context.view_layer.update()
+
+
 def bake_retarget(src, tgt, options=None):
+    options = options or RetargetOptions()
+    enabled = options.soft_repulsion or options.joint_limits
+    if not enabled:
+        return _bake_retarget(src, tgt, options)
+
+    if (
+        src is None or tgt is None
+        or src.type != "ARMATURE"
+        or tgt.type != "ARMATURE"
+        or src == tgt
+    ):
+        raise RetargetError("姿势通道需要两个不同的骨架")
+
+    scene = bpy.context.scene
+    state = _capture_channel_bake_state(src, tgt, scene)
+    try:
+        return _bake_retarget(src, tgt, options, state)
+    except BaseException:
+        _restore_channel_bake_state(tgt, scene, state)
+        raise
+
+
+def _bake_retarget(src, tgt, options=None, channel_state=None):
     if src is None or src.type != "ARMATURE":
         raise RetargetError("请先导入带骨架和动画的来源模型。")
     if tgt is None or tgt.type != "ARMATURE":
@@ -813,8 +1374,25 @@ def bake_retarget(src, tgt, options=None):
 
     use_foot_ik = options.foot_ik
     use_hand_ik = options.hand_ik
+    use_channels = channel_state is not None
+    channel_roles = {}
+    channel_configurations = {}
+    channel_references = {}
+
     ik_geometry = None
-    if use_foot_ik or use_hand_ik:
+    if use_channels:
+        try:
+            (
+                ik_geometry,
+                channel_roles,
+                channel_configurations,
+                channel_references,
+            ) = _prepare_pose_channels(
+                src, tgt, pairs, options, bpy.context.scene
+            )
+        except MotionSpaceError as exc:
+            raise RetargetError(f"姿势通道空间构建失败: {exc}")
+    elif use_foot_ik or use_hand_ik:
         try:
             ik_geometry = _prepare_retarget_geometry(src, tgt, pairs, options, bpy.context.scene)
         except MotionSpaceError as exc:
@@ -826,8 +1404,11 @@ def bake_retarget(src, tgt, options=None):
         and ik_settings.planting_enabled
     )
 
-    if tgt.animation_data:
+    if not use_channels and tgt.animation_data:
         tgt.animation_data_clear()
+    if use_channels:
+        src.animation_data_create().use_nla = False
+        tgt.animation_data_create().use_nla = False
 
     scene = bpy.context.scene
     baked = []
@@ -841,14 +1422,22 @@ def bake_retarget(src, tgt, options=None):
             if action == source_action and source_slot is not None:
                 src.animation_data.action_slot = source_slot
             start, end = _frame_range(action)
-            target_action = _new_target_action(tgt, f"{tgt.name}_{action.name}")
+            if use_channels:
+                target_action = _new_channel_action(
+                    tgt, f"{tgt.name}_{action.name}", channel_state
+                )
+            else:
+                target_action = _new_target_action(
+                    tgt, f"{tgt.name}_{action.name}"
+                )
 
             speeds = {}
             plant_states = {}
             dt = scene.render.fps_base / scene.render.fps if scene.render.fps else 1.0
             if planting_on:
                 speeds = _sample_foot_motion(
-                    src, action, (start, end), ik_geometry, ik_settings, in_place, scene
+                    src, action, (start, end), ik_geometry, ik_settings, in_place, scene,
+                    armature_coordinates=use_channels,
                 )
                 for limb in ik_geometry.limbs:
                     end_role = limb.roles[2]
@@ -883,13 +1472,35 @@ def bake_retarget(src, tgt, options=None):
                 pelvis_delta = Vector((0.0, 0.0, 0.0))
                 if use_foot_ik and ik_geometry is not None:
                     pelvis_delta = _hips_translation_with_floor(
-                        src, tgt, ik_geometry, ik_settings, in_place
+                        src, tgt, ik_geometry, ik_settings, in_place,
+                        armature_coordinates=use_channels,
                     )
                 else:
                     _hips_translation(src, tgt, hip_role[1], hip_role[2], scale, src_head, tgt_head, in_place)
                 bpy.context.view_layer.update()
-                if ik_geometry is not None:
-                    frame_speeds = {}
+                frame_speeds = {}
+                if use_channels:
+                    if ik_geometry is not None:
+                        frame_index = frame - start
+                        for role, values in speeds.items():
+                            if 0 <= frame_index < len(values):
+                                frame_speeds[role] = values[frame_index]
+                            else:
+                                frame_speeds[role] = -1.0
+                    _apply_pose_channels(
+                        src,
+                        tgt,
+                        ik_geometry,
+                        channel_roles,
+                        channel_configurations,
+                        channel_references,
+                        options,
+                        plant_states,
+                        frame_speeds,
+                        pelvis_delta,
+                        dt,
+                    )
+                elif ik_geometry is not None:
                     frame_index = frame - start
                     for role, values in speeds.items():
                         if 0 <= frame_index < len(values):
@@ -923,10 +1534,16 @@ def bake_retarget(src, tgt, options=None):
         if selected_source == source_action and source_slot is not None:
             src.animation_data.action_slot = source_slot
         src.animation_data.use_nla = False
-        _stash_nla(tgt, [
+        remaining_actions = [
             action for index, (action, _start, _end) in enumerate(baked)
             if index != selected_index
-        ])
+        ]
+        if use_channels:
+            _stash_channel_actions(
+                tgt, remaining_actions, channel_state
+            )
+        else:
+            _stash_nla(tgt, remaining_actions)
         _assign_action(tgt, selected_target)
         scene.frame_start = start
         scene.frame_end = end
