@@ -136,6 +136,9 @@ def _on_draw_gizmos(self, context):
             area.tag_redraw()
 
 
+_on_draw_labels = _on_draw_gizmos
+
+
 def _on_source_action_changed(self, context):
     _preview_selected_action(self, context, jump=True)
 
@@ -290,6 +293,12 @@ class HRSettings(PropertyGroup):
         description="在关节上画标记，并沿着身体关节连线。不使用 Blender 默认的八面体骨骼",
         default=True,
         update=_on_draw_gizmos,
+    )
+    show_gizmo_labels: BoolProperty(
+        name="显示标准骨骼名",
+        description="在每个关节旁显示标准人形骨架名（UE 风格）及该骨架自身的骨骼名",
+        default=True,
+        update=_on_draw_labels,
     )
     show_bones: BoolProperty(
         name="显示骨骼",
@@ -708,6 +717,7 @@ class HR_PT_panel(Panel):
         settings_box = layout.box()
         settings_box.label(text="Settings")
         settings_box.prop(settings, "draw_bone_gizmos")
+        settings_box.prop(settings, "show_gizmo_labels")
         settings_box.prop(settings, "show_bones")
         settings_box.prop(settings, "show_bone_spheres")
 

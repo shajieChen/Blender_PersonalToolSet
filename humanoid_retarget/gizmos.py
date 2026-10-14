@@ -7,14 +7,17 @@ rigs points sideways, so the overlay uses the body chain instead.
 
 from __future__ import annotations
 
+import blf
 import bpy
 import gpu
+from bpy_extras.view3d_utils import location_3d_to_region_2d
 from gpu_extras.batch import batch_for_shader
 from mathutils import Vector
 
 from .classify import classify_armature
 
 _HANDLE = None
+_LABEL_HANDLE = None
 _ROLE_CACHE = {}
 
 _CHAIN = {
@@ -41,6 +44,34 @@ _COLOR = {
     "left": (0.30, 0.62, 1.0, 1.0),
     "right": (1.0, 0.38, 0.32, 1.0),
 }
+
+# Standard humanoid skeleton names (UE5 Mannequin style). Drawn next to each
+# mapped joint together with the rig's own bone name.
+_STANDARD_NAMES = {
+    "hips": "pelvis",
+    "spine": "spine_01",
+    "chest": "spine_02",
+    "neck": "neck_01",
+    "head": "head",
+    "shoulder_l": "clavicle_l",
+    "shoulder_r": "clavicle_r",
+    "upperarm_l": "upperarm_l",
+    "upperarm_r": "upperarm_r",
+    "forearm_l": "lowerarm_l",
+    "forearm_r": "lowerarm_r",
+    "hand_l": "hand_l",
+    "hand_r": "hand_r",
+    "thigh_l": "thigh_l",
+    "thigh_r": "thigh_r",
+    "shin_l": "calf_l",
+    "shin_r": "calf_r",
+    "foot_l": "foot_l",
+    "foot_r": "foot_r",
+    "toe_l": "ball_l",
+    "toe_r": "ball_r",
+}
+
+_LABEL_COLOR = (0.92, 0.92, 0.92, 0.9)
 
 _OCTA = (
     (0, 2), (0, 3), (0, 4), (0, 5),
@@ -201,17 +232,72 @@ def draw_callback():
         gpu.state.depth_test_set("NONE")
 
 
-def register_draw():
-    global _HANDLE
-    if _HANDLE is not None:
+def _draw_labels(arm, settings, region, rv3d):
+    """Screen-space labels: standard skeleton name plus the rig's bone name."""
+    roles = _roles_for(arm, settings)
+    if not roles:
         return
-    _HANDLE = bpy.types.SpaceView3D.draw_handler_add(draw_callback, (), "WINDOW", "POST_VIEW")
+    evaluated = _evaluated(arm)
+    font_id = 0
+    placed = []
+    for role, bone_name in roles.items():
+        joint = _joint(evaluated, bone_name)
+        if joint is None:
+            continue
+        screen = location_3d_to_region_2d(region, rv3d, joint)
+        if screen is None:
+            continue
+        if any((screen - other).length < 10.0 for other in placed):
+            continue
+        placed.append(screen)
+        standard = _STANDARD_NAMES.get(role, role)
+        x = screen.x + 5.0
+        y = screen.y + 5.0
+        blf.size(font_id, 11.0)
+        blf.color(font_id, *_COLOR[_side(role)])
+        blf.position(font_id, x, y, 0)
+        blf.draw(font_id, standard)
+        if bone_name.lower() == standard:
+            continue
+        _width, height = blf.dimensions(font_id, standard)
+        blf.size(font_id, 9.0)
+        blf.color(font_id, *_LABEL_COLOR)
+        blf.position(font_id, x, y - height - 1.0, 0)
+        blf.draw(font_id, bone_name)
+
+
+def draw_label_callback():
+    context = bpy.context
+    scene = getattr(context, "scene", None)
+    settings = getattr(scene, "hr_settings", None) if scene is not None else None
+    if settings is None or not settings.show_gizmo_labels:
+        return
+    region = getattr(context, "region", None)
+    rv3d = getattr(context, "region_data", None)
+    if region is None or rv3d is None:
+        return
+    try:
+        for arm in (settings.source, settings.target):
+            if arm is not None and getattr(arm, "type", None) == "ARMATURE":
+                _draw_labels(arm, settings, region, rv3d)
+    except Exception as exc:
+        print("[HumanoidRetarget] labels:", exc)
+
+
+def register_draw():
+    global _HANDLE, _LABEL_HANDLE
+    if _HANDLE is None:
+        _HANDLE = bpy.types.SpaceView3D.draw_handler_add(draw_callback, (), "WINDOW", "POST_VIEW")
+    if _LABEL_HANDLE is None:
+        _LABEL_HANDLE = bpy.types.SpaceView3D.draw_handler_add(draw_label_callback, (), "WINDOW", "POST_PIXEL")
 
 
 def unregister_draw():
-    global _HANDLE
-    if _HANDLE is None:
-        return
-    bpy.types.SpaceView3D.draw_handler_remove(_HANDLE, "WINDOW")
-    _HANDLE = None
+    global _HANDLE, _LABEL_HANDLE
+    if _HANDLE is not None:
+        bpy.types.SpaceView3D.draw_handler_remove(_HANDLE, "WINDOW")
+        _HANDLE = None
+    if _LABEL_HANDLE is not None:
+        bpy.types.SpaceView3D.draw_handler_remove(_LABEL_HANDLE, "WINDOW")
+        _LABEL_HANDLE = None
     _ROLE_CACHE.clear()
