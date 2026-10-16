@@ -14,7 +14,7 @@ foot IK runs after the FK pose.
 from __future__ import annotations
 
 import bpy
-from math import pi
+from math import isfinite, pi
 from mathutils import Matrix, Quaternion, Vector
 
 from .classify import CORE_ROLES, classify_armature, correct_chest_pairs, correct_deform_pairs, describe_roles, rig_height
@@ -864,6 +864,60 @@ def _bone_depth(pose_bone):
     return depth
 
 
+# FBX unit conversion often leaves a uniform pose scale (commonly 0.01 or 100).
+# Blender stores pose TRS without shear: a uniform scale commutes with rotation,
+# while a non-uniform scale plus rotation does not round-trip through matrix_basis.
+# Inherit Scale = Full then scales child joint positions, so the solver must see
+# unit pose scale and the uniform factor is written back onto the keyed pose.
+_UNIFORM_SCALE_SPAN = 1e-4
+
+
+def _uniform_pose_scale(scale):
+    values = tuple(float(component) for component in scale)
+    if len(values) != 3 or any(not isfinite(component) or component <= 1e-8 for component in values):
+        return None
+    if max(values) - min(values) > _UNIFORM_SCALE_SPAN * max(values):
+        return None
+    return values
+
+
+def _preserved_pose_scales(arm, names):
+    """Uniform pose scales for mapped bones and their ancestors, parents first."""
+    ordered = []
+    seen = set()
+
+    def visit(name):
+        pose = arm.pose.bones[name]
+        if pose.parent is not None and pose.parent.name not in seen:
+            visit(pose.parent.name)
+        if name not in seen:
+            seen.add(name)
+            ordered.append(name)
+
+    for name in names:
+        visit(name)
+    preserved = {}
+    for name in ordered:
+        uniform = _uniform_pose_scale(arm.pose.bones[name].scale)
+        if uniform is None:
+            shown = ", ".join(f"{float(component):.6g}" for component in arm.pose.bones[name].scale)
+            raise RetargetError(f"姿势通道不支持目标骨的非统一缩放: {name} ({shown})")
+        preserved[name] = uniform
+    return preserved
+
+
+def _pose_scales_need_compensation(preserved):
+    return any(
+        max(abs(component - 1.0) for component in scale) > 1e-6
+        for scale in preserved.values()
+    )
+
+
+def _write_pose_scales(arm, preserved, unit):
+    for name, scale in preserved.items():
+        arm.pose.bones[name].scale = (1.0, 1.0, 1.0) if unit else scale
+
+
 def _prepare_pose_channels(src, tgt, pairs, options, scene):
     if scene.render.fps <= 0 or scene.render.fps_base <= 0:
         raise RetargetError("姿势通道需要有效帧率")
@@ -919,8 +973,7 @@ def _prepare_pose_channels(src, tgt, pairs, options, scene):
             for constraint in pose.constraints
         ):
             raise RetargetError(f"姿势通道不支持目标生效约束: {name}")
-        if max(abs(value - 1.0) for value in pose.scale) > 1e-6:
-            raise RetargetError(f"姿势通道不支持目标骨缩放: {name}")
+    preserved_scales = _preserved_pose_scales(tgt, roles.values())
 
     geometry = None
     if options.foot_ik or options.hand_ik or options.soft_repulsion:
@@ -955,7 +1008,7 @@ def _prepare_pose_channels(src, tgt, pairs, options, scene):
             ) <= 1e-6:
                 raise RetargetError("姿势通道链长度退化")
 
-    return geometry, roles, configurations, references
+    return geometry, roles, configurations, references, preserved_scales
 
 
 def _apply_target_joint_pass(
@@ -1378,6 +1431,7 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
     channel_roles = {}
     channel_configurations = {}
     channel_references = {}
+    preserved_scales = {}
 
     ik_geometry = None
     if use_channels:
@@ -1387,6 +1441,7 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
                 channel_roles,
                 channel_configurations,
                 channel_references,
+                preserved_scales,
             ) = _prepare_pose_channels(
                 src, tgt, pairs, options, bpy.context.scene
             )
@@ -1403,6 +1458,7 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
         and ik_geometry is not None
         and ik_settings.planting_enabled
     )
+    compensate_scale = use_channels and _pose_scales_need_compensation(preserved_scales)
 
     if not use_channels and tgt.animation_data:
         tgt.animation_data_clear()
@@ -1455,6 +1511,8 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
 
             for frame in range(start, end + 1):
                 scene.frame_set(frame)
+                if compensate_scale:
+                    _write_pose_scales(tgt, preserved_scales, True)
                 bpy.context.view_layer.update()
                 if ik_geometry is not None:
                     validate_motion_space(src, ik_geometry.source_space)
@@ -1510,11 +1568,15 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
                     apply_contact_ik(
                         src, tgt, ik_geometry, ik_settings, plant_states, frame_speeds, pelvis_delta, dt
                     )
+                if compensate_scale:
+                    _write_pose_scales(tgt, preserved_scales, False)
                 bpy.context.view_layer.update()
                 for _role, _src_name, tgt_name in pairs:
                     pose_bone = tgt.pose.bones[tgt_name]
                     pose_bone.keyframe_insert(data_path="rotation_quaternion", frame=frame)
                     pose_bone.keyframe_insert(data_path="location", frame=frame)
+                    if compensate_scale and tgt_name in preserved_scales:
+                        pose_bone.keyframe_insert(data_path="scale", frame=frame)
             target_action.use_fake_user = True
             baked.append((target_action, start, end))
             baked_sources.append(action)
