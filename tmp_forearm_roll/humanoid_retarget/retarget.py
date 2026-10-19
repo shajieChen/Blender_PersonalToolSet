@@ -89,6 +89,7 @@ class RetargetOptions:
         joint_limits=False,
         joint_limit_settings=None,
         forearm_chain_twist=True,
+        forearm_roll_cyclic=False,
     ):
         self.pairs = pairs
         self.reference = reference if reference in {"REST", "CURRENT"} else "REST"
@@ -113,6 +114,7 @@ class RetargetOptions:
         self.soft_repulsion = bool(soft_repulsion)
         self.joint_limits = bool(joint_limits)
         self.forearm_chain_twist = bool(forearm_chain_twist)
+        self.forearm_roll_cyclic = bool(forearm_roll_cyclic)
         self.soft_repulsion_settings = None
         self.joint_limit_settings = None
 
@@ -384,13 +386,14 @@ def _use_chain_twist(options, role):
     return role in _FOREARM_CHAIN_TWIST_ROLES and bool(getattr(options, "forearm_chain_twist", True))
 
 
-# Forward playback only. The first sampled frame, and any frame that does not
-# follow the stored frame by +1, uses the per-frame shortest swing. While the
-# rest chain is within 15° of opposing the posed chain, later frames transport
-# that swing and keep the source twist delta. This roll is not the P0 zero.
-_FOREARM_ROLL_ENTER = 165.0 * pi / 180.0
-_FOREARM_ROLL_EXIT = 150.0 * pi / 180.0
-_FOREARM_ROLL_RETURN = 8.0 * pi / 180.0
+def _source_rest_quaternion(src, source_name):
+    """Rest-relative source rotation in armature space, with w >= 0."""
+    source_rest = _rot3(src.data.bones[source_name].matrix_local)
+    source_delta = _rot3(src.pose.bones[source_name].matrix) @ source_rest.inverted()
+    quat = source_delta.to_quaternion().normalized()
+    if quat.w < 0.0:
+        quat.negate()
+    return quat
 
 
 def _source_chain_twist(src, source_name, src_chain):
@@ -421,54 +424,112 @@ def _twist_component(quat, axis):
     return angle
 
 
-def _continuous_forearm_orient(options, role, desired, twist, p0_orient, rest_chain):
-    """Keep a forward-time roll reference across the forearm singularity.
+def _forearm_sample(src, tgt, src_roles, tgt_roles, source_body, target_body, role):
+    """P0 orientation, desired chain, and source rest quaternion at the current frame."""
+    source_name = src_roles[role]
+    src_chain = _chain_vector(src, src_roles, role, True)
+    tgt_chain = _chain_vector(tgt, tgt_roles, role, False)
+    desired = (target_body @ (source_body.inverted() @ src_chain)).normalized()
+    rest_orient = tgt.pose.bones[tgt_roles[role]].bone.matrix_local.to_3x3()
+    swing = tgt_chain.normalized().rotation_difference(desired)
+    orient = swing.to_matrix() @ rest_orient
+    orient = _twist_about_chain(src, source_name, src_chain, desired, orient)
+    quat = orient.to_quaternion().normalized()
+    if quat.w < 0.0:
+        quat.negate()
+    return {
+        "desired": desired,
+        "p0": quat,
+        "source": _source_rest_quaternion(src, source_name),
+        "src_chain": src_chain.normalized(),
+    }
 
-    Initialization: no stored previous frame, or a frame gap, selects P0.
-    The reference latches at 165° between the rest chain and the desired chain
-    and stays latched until the chains are at least 30° away from opposition
-    and the continuous roll is already within 8° of P0. It does not snap back.
+
+def _build_forearm_roll_cache(src, tgt, pairs, options, start, end):
+    """Integrate forearm roll from the range start. The result does not depend on call order.
+
+    Frame 0 of the range uses the per-frame swing. Later frames transport that pose
+    across the chain-direction change and add the source relative-rotation twist about
+    the current source chain. When forearm_roll_cyclic is set, the seam spin is spread
+    over the whole range in proportion to frame index, not over a fixed handful of frames.
     """
+    scene = bpy.context.scene
+    saved = scene.frame_current
+    src_roles = {role: source_name for role, source_name, _target_name in pairs}
+    tgt_roles = {role: target_name for role, _source_name, target_name in pairs}
+    source_body = _body_matrix(src, _anatomical_roles(src, src_roles))
+    target_body = _body_matrix(tgt, _anatomical_roles(tgt, tgt_roles))
+    roles = [role for role in _FOREARM_CHAIN_TWIST_ROLES if role in src_roles and role in tgt_roles]
+    samples = {role: [] for role in roles}
+    for frame in range(start, end + 1):
+        scene.frame_set(frame)
+        for role in roles:
+            samples[role].append(_forearm_sample(
+                src, tgt, src_roles, tgt_roles, source_body, target_body, role,
+            ))
+    scene.frame_set(saved)
+    cyclic = bool(getattr(options, "forearm_roll_cyclic", False))
+    orients = {}
+    for role, frames in samples.items():
+        if not frames:
+            continue
+        solved = [frames[0]["p0"].copy()]
+        for index in range(1, len(frames)):
+            previous = frames[index - 1]
+            current = frames[index]
+            carried = (
+                previous["desired"].rotation_difference(current["desired"]) @ solved[-1]
+            ).normalized()
+            relative = (current["source"] @ previous["source"].inverted()).normalized()
+            if relative.w < 0.0:
+                relative.negate()
+            twist = _twist_component(relative, current["src_chain"])
+            solved.append((Quaternion(current["desired"], twist) @ carried).normalized())
+        if cyclic and len(solved) > 1:
+            seam = _twist_component(solved[-1] @ solved[0].inverted(), frames[-1]["desired"])
+            last = len(solved) - 1
+            for index, quat in enumerate(solved):
+                fraction = index / float(last)
+                solved[index] = (Quaternion(frames[index]["desired"], -seam * fraction) @ quat).normalized()
+        for index, quat in enumerate(solved):
+            orients[(role, start + index)] = quat.to_matrix()
+    return {"signature": (start, end, cyclic), "orients": orients}
+
+
+def _ensure_forearm_roll_cache(src, tgt, pairs, options):
+    """Build the roll cache before any target pose is overwritten."""
+    if not bool(getattr(options, "forearm_chain_twist", True)):
+        return
+    if not bool(getattr(options, "forearm_roll_continuity", True)):
+        return
+    scene = bpy.context.scene
+    span = getattr(options, "_forearm_roll_range", None)
+    if span is None:
+        span = (scene.frame_start, max(scene.frame_end, scene.frame_current))
+    start, end = span
+    cyclic = bool(getattr(options, "forearm_roll_cyclic", False))
+    cache = getattr(options, "_forearm_roll_cache", None)
+    if cache and cache.get("signature") == (start, end, cyclic):
+        return
+    options._forearm_roll_cache = _build_forearm_roll_cache(src, tgt, pairs, options, start, end)
+
+
+def _continuous_forearm_orient(options, role, desired, twist, p0_orient, rest_chain):
+    """Return the precomputed forearm orientation for this frame.
+
+    The cache is a function of the source clip and the requested range. Evaluating
+    frames out of order reads the same orientation. twist and rest_chain stay in the
+    signature so existing callers do not change.
+    """
+    del twist, rest_chain
     if not bool(getattr(options, "forearm_roll_continuity", True)):
         return p0_orient
     frame = bpy.context.scene.frame_current
-    memory = getattr(options, "_forearm_roll_memory", None)
-    if memory is None:
-        memory = {}
-        options._forearm_roll_memory = memory
-    desired = desired.normalized()
-    p0_quat = p0_orient.to_quaternion().normalized()
-    previous = memory.get(role)
-    rest_angle = rest_chain.normalized().angle(desired)
-    if previous is None or previous["frame"] != frame - 1:
-        orient = p0_quat
-        latched = rest_angle >= _FOREARM_ROLL_ENTER
-    else:
-        carried = previous["desired"].rotation_difference(desired).to_matrix() @ previous["orient"].to_matrix()
-        delta = (twist - previous["twist"] + pi) % (2.0 * pi) - pi
-        continuous = (Quaternion(desired, delta).to_matrix() @ carried).to_quaternion().normalized()
-        rolled = abs(_twist_component(continuous @ p0_quat.inverted(), desired))
-        if previous["latched"]:
-            if rest_angle < _FOREARM_ROLL_EXIT and rolled <= _FOREARM_ROLL_RETURN:
-                orient = p0_quat
-                latched = False
-            else:
-                orient = continuous
-                latched = True
-        elif rest_angle >= _FOREARM_ROLL_ENTER:
-            orient = continuous
-            latched = True
-        else:
-            orient = p0_quat
-            latched = False
-    memory[role] = {
-        "frame": frame,
-        "desired": desired.copy(),
-        "twist": twist,
-        "orient": orient.copy(),
-        "latched": latched,
-    }
-    return orient.to_matrix()
+    cache = getattr(options, "_forearm_roll_cache", None)
+    stored = None if cache is None else cache["orients"].get((role, frame))
+    if stored is None:
+        return p0_orient
+    return stored
 
 
 def _apply_body_orientations(src, tgt, pairs, options):
@@ -481,6 +542,7 @@ def _apply_body_orientations(src, tgt, pairs, options):
     about the elbow-to-wrist chain, not about bone Y. Current mode adds only
     the orientation change since the captured pose.
     """
+    _ensure_forearm_roll_cache(src, tgt, pairs, options)
     src_roles = {role: source_name for role, source_name, _target_name in pairs}
     tgt_roles = {role: target_name for role, _source_name, target_name in pairs}
     source_body = _body_matrix(src, _anatomical_roles(src, src_roles))
@@ -1729,7 +1791,9 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
                             previous_goal=limb.reference_pole.copy()
                         )
 
-            options._forearm_roll_memory = {}
+            options._forearm_roll_range = (start, end)
+            options._forearm_roll_cache = None
+            _ensure_forearm_roll_cache(src, tgt, pairs, options)
             for frame in range(start, end + 1):
                 scene.frame_set(frame)
                 if compensate_scale:
