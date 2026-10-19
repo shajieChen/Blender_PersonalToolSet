@@ -1,0 +1,25 @@
+Independent-copy baseline. Official addon and scene were not modified.
+
+Blender scene at record time: unsaved Scene, frame 41, range 0-52.
+Source: Armature / a050_300000
+Target: Bip01 / Bip01_a050_300000
+Flags: foot IK off, hand IK off, reference REST, root KEEP, joint limits off, soft repulsion off.
+
+Official addon:
+C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_retarget\retarget.py
+SHA256 3713b574bc465d1a41018aa1f6589ba06367162eeac362ea67de25e5f4939698
+
+Copy before edits has the same hash.
+
+Quaternion key digests (4 curves, 53 keys, frames 0-52):
+Bip01 L Forearm ec9c2d78520ba1917c8336753345ad69fdbb74ac1caf1989244d5dec0f510f61
+Bip01 R Forearm 6afaa25df3533d035460c88bcaa35d303738aaaeaa1df2d0bd714f921e75449f
+Bip01 L UpperArm be78505233e125320cdf9bbe4b682388a94f063b4efb398a80686d25addad7fb
+Bip01 R UpperArm 713b24a546a10a26db4345535840b876a27bb31505fca8bb8b8117c2de165e30
+Bip01 L Hand 0bba3a154f4ecaae842b10fcc95b4614753f1ea703a3625cef7fed980732099c
+Bip01 R Hand 0bba3a154f4ecaae842b10fcc95b4614753f1ea703a3625cef7fed980732099c
+Bip01 Spine ec7c390c81de2939626b65bf35b94bb6fe1ceab03b8f5782c2cd40fb55f16a26
+Bip01 Pelvis e85e305fc5977325efd0753b03026cb6ece20c405d7842d38607b7af1cdcb084
+L_Forearm 8cf58f66e005d41e3f86830ddebdc68d98f1d8d908255888f1b613a91b9ff5e6
+
+Actions present with this clip name: Bip01_a050_300000, a050_300000. Count of all actions: 22.

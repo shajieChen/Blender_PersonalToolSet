@@ -1,0 +1,49 @@
+{
+  "file": "H:\\Blender_Plugin\\tmp_forearm_roll\\final_bake.blend",
+  "action": "Bip01_a050_300000",
+  "source_action": "a050_300000",
+  "frame_start": 0,
+  "frame_end": 52,
+  "digests": {
+    "Bip01 L Forearm": {
+      "curves": 4,
+      "frames": 53,
+      "sha256": "fa59ab1fdaf30404585a270a66fb7eef58ee533e9ffd1cceda73f8fb56553069"
+    },
+    "Bip01 R Forearm": {
+      "curves": 4,
+      "frames": 53,
+      "sha256": "f5bde1f2b1466c02f74ad2d46facd5a25d66f4ba18c18ed332d4a2c8d115be72"
+    },
+    "Bip01 L UpperArm": {
+      "curves": 4,
+      "frames": 53,
+      "sha256": "be78505233e125320cdf9bbe4b682388a94f063b4efb398a80686d25addad7fb"
+    },
+    "Bip01 R UpperArm": {
+      "curves": 4,
+      "frames": 53,
+      "sha256": "713b24a546a10a26db4345535840b876a27bb31505fca8bb8b8117c2de165e30"
+    },
+    "Bip01 L Hand": {
+      "curves": 4,
+      "frames": 53,
+      "sha256": "0bba3a154f4ecaae842b10fcc95b4614753f1ea703a3625cef7fed980732099c"
+    },
+    "Bip01 R Hand": {
+      "curves": 4,
+      "frames": 53,
+      "sha256": "0bba3a154f4ecaae842b10fcc95b4614753f1ea703a3625cef7fed980732099c"
+    },
+    "Bip01 Spine": {
+      "curves": 4,
+      "frames": 53,
+      "sha256": "ec7c390c81de2939626b65bf35b94bb6fe1ceab03b8f5782c2cd40fb55f16a26"
+    },
+    "Bip01 Pelvis": {
+      "curves": 4,
+      "frames": 53,
+      "sha256": "e85e305fc5977325efd0753b03026cb6ece20c405d7842d38607b7af1cdcb084"
+    }
+  }
+}
