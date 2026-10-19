@@ -127,6 +127,54 @@ def _on_stand_layout(self, _context):
     _apply_current_stand(self)
 
 
+_Y0_FLOOR_NAME = "HR_Y0_Floor"
+
+
+def _sync_y0_floor(scene, visible):
+    """Show or hide a gray square on the horizontal ground. It stays hidden until requested."""
+    floor = bpy.data.objects.get(_Y0_FLOOR_NAME)
+    if floor is None and not visible:
+        return
+    if floor is None:
+        floor = bpy.data.objects.new(_Y0_FLOOR_NAME, bpy.data.meshes.new(_Y0_FLOOR_NAME))
+        floor.hide_render = True
+        for axis in range(3):
+            floor.lock_location[axis] = True
+            floor.lock_rotation[axis] = True
+            floor.lock_scale[axis] = True
+    size = 5.0
+    mesh = floor.data
+    mesh.clear_geometry()
+    mesh.from_pydata(
+        [(-size, -size, 0.0), (size, -size, 0.0), (size, size, 0.0), (-size, size, 0.0)],
+        [],
+        [(0, 1, 2, 3)],
+    )
+    mesh.update()
+    gray = (0.45, 0.45, 0.45, 1.0)
+    material = bpy.data.materials.get(_Y0_FLOOR_NAME)
+    if material is None:
+        material = bpy.data.materials.new(_Y0_FLOOR_NAME)
+    material.diffuse_color = gray
+    if mesh.materials:
+        mesh.materials[0] = material
+    else:
+        mesh.materials.append(material)
+    floor.color = gray
+    floor.display_type = "SOLID"
+    floor.show_wire = False
+    floor.show_in_front = False
+    if floor.name not in scene.collection.objects:
+        scene.collection.objects.link(floor)
+    floor.hide_viewport = not visible
+    floor.hide_set(not visible)
+
+
+def _on_show_y0_floor(self, context):
+    scene = bpy.context.scene if context is None else context.scene
+    _sync_y0_floor(scene, self.show_y0_floor)
+
+
 def _on_show_spheres(self, _context):
     set_bone_sphere_display(self.source, self.show_bone_spheres)
 
@@ -338,6 +386,12 @@ class HRSettings(PropertyGroup):
         update=_on_source_action_changed,
     )
     target: PointerProperty(name="目标角色", type=bpy.types.Object, poll=_armature_poll, update=_on_target_changed)
+    show_y0_floor: BoolProperty(
+        name="显示地板",
+        description="在水平地面上放一块灰色方片，用来对照角色高度。默认关闭",
+        default=False,
+        update=_on_show_y0_floor,
+    )
     stand_layout: EnumProperty(
         name="站位",
         description="来源和目标在场景里的站位。默认来源在原点左侧，目标在右侧",
@@ -913,6 +967,7 @@ class HR_PT_panel(Panel):
         settings_box.prop(settings, "show_gizmo_labels")
         settings_box.prop(settings, "show_bones")
         settings_box.prop(settings, "show_bone_spheres")
+        settings_box.prop(settings, "show_y0_floor")
 
 
 
