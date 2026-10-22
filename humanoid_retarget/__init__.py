@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Humanoid Retarget",
     "author": "Blender Plugin",
-    "version": (1, 7, 3),
+    "version": (1, 7, 6),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 重定向",
     "description": "导入带动画的模型，自动绑定或映射到另一个人形，再导出",
@@ -9,11 +9,13 @@ bl_info = {
 }
 
 import json
+import os
 
 import bpy
-from bpy.props import BoolProperty, CollectionProperty, EnumProperty, FloatProperty, IntProperty, PointerProperty, StringProperty
+from bpy.props import BoolProperty, CollectionProperty, EnumProperty, FloatProperty, FloatVectorProperty, IntProperty, PointerProperty, StringProperty
 from bpy.types import Operator, Panel, PropertyGroup, UIList
 
+from .environment import EnvironmentError, load_environment, save_environment
 from .mapping import PresetError, build_pairs, load_preset, merge_preset, save_preset
 from .pipeline import (
     PipelineError,
@@ -66,6 +68,98 @@ def _remember_filepath(context, attr, path):
     addon = bpy.context.preferences.addons.get(__package__)
     if addon is not None and hasattr(addon.preferences, attr):
         setattr(addon.preferences, attr, path)
+
+
+def _environment_data(settings):
+    return {
+        "enabled": bool(settings.environment_enabled),
+        "shading": settings.environment_shading,
+        "studio_intensity": float(settings.environment_studio_intensity),
+        "world_strength": float(settings.environment_world_strength),
+        "world_color": tuple(float(v) for v in settings.environment_world_color),
+        "exposure": float(settings.environment_exposure),
+    }
+
+
+def _set_environment_data(settings, data):
+    settings.environment_shading = data["shading"]
+    settings.environment_studio_intensity = data["studio_intensity"]
+    settings.environment_world_strength = data["world_strength"]
+    settings.environment_world_color = data["world_color"]
+    settings.environment_exposure = data["exposure"]
+    settings.environment_enabled = bool(data["enabled"])
+
+
+def _apply_environment(settings, context=None):
+    """Apply the Settings environment to the world and every 3D viewport."""
+    if not settings.environment_enabled:
+        return
+    ctx = context or bpy.context
+    scene = getattr(ctx, "scene", None) or bpy.context.scene
+    if scene is None:
+        return
+    world = scene.world
+    if world is None:
+        world = bpy.data.worlds.new("World")
+        scene.world = world
+    if world.use_nodes and world.node_tree is not None:
+        background = next(
+            (node for node in world.node_tree.nodes if node.type == "BACKGROUND"),
+            None,
+        )
+        if background is not None:
+            background.inputs["Color"].default_value = tuple(
+                settings.environment_world_color
+            )
+            background.inputs["Strength"].default_value = float(
+                settings.environment_world_strength
+            )
+    scene.view_settings.exposure = float(settings.environment_exposure)
+    screen = getattr(ctx, "screen", None) or getattr(bpy.context, "screen", None)
+    if screen is None:
+        return
+    for area in screen.areas:
+        if area.type != "VIEW_3D":
+            continue
+        shading = area.spaces.active.shading
+        try:
+            if settings.environment_shading == "TEXTURE":
+                shading.type = "SOLID"
+                shading.color_type = "TEXTURE"
+            elif settings.environment_shading == "RENDERED":
+                shading.type = "RENDERED"
+            else:
+                shading.type = "MATERIAL"
+                shading.light = "STUDIO"
+                shading.studiolight_intensity = float(
+                    settings.environment_studio_intensity
+                )
+        except (AttributeError, TypeError, ValueError):
+            pass
+        area.tag_redraw()
+
+
+def _on_environment_changed(self, context):
+    _apply_environment(self, context)
+
+
+def _remember_environment_path(context, path):
+    if not path:
+        return
+    context.scene.hr_settings.environment_path = path
+    addon = bpy.context.preferences.addons.get(__package__)
+    if addon is not None and hasattr(addon.preferences, "last_environment_path"):
+        addon.preferences.last_environment_path = path
+
+
+def _recall_environment_path(context):
+    addon = bpy.context.preferences.addons.get(__package__)
+    if addon is not None:
+        stored = getattr(addon.preferences, "last_environment_path", "") or ""
+        if stored:
+            return stored
+    settings = getattr(context.scene, "hr_settings", None)
+    return (settings.environment_path or "") if settings is not None else ""
 
 
 def _armature_poll(_settings, obj):
@@ -586,6 +680,53 @@ class HRSettings(PropertyGroup):
         default=False,
         update=_on_show_spheres,
     )
+    environment_enabled: BoolProperty(
+        name="环境调整",
+        description="调整整个环境的亮度：世界背景、曝光和每个 3D 视口的着色",
+        default=False,
+        update=_on_environment_changed,
+    )
+    environment_shading: EnumProperty(
+        name="显示方式",
+        description="材质预览用工作室光，渲染预览用世界环境，纹理实体不打光直接显示贴图原色",
+        items=(
+            ("MATERIAL", "材质预览", "工作室光照，可调强度，太亮时先调低它"),
+            ("RENDERED", "渲染预览", "使用世界背景和曝光，接近最终渲染"),
+            ("TEXTURE", "纹理实体（不打光）", "实体着色直接显示贴图颜色，不受灯光影响"),
+        ),
+        default="MATERIAL",
+        update=_on_environment_changed,
+    )
+    environment_studio_intensity: FloatProperty(
+        name="工作室光强度",
+        description="材质预览的工作室光强度，1.0 是 Blender 默认，太亮时调低",
+        default=0.55, min=0.0, max=2.0,
+        update=_on_environment_changed,
+    )
+    environment_world_strength: FloatProperty(
+        name="世界背景强度",
+        description="世界环境光的强度，影响渲染预览和最终渲染",
+        default=0.4, min=0.0, max=2.0,
+        update=_on_environment_changed,
+    )
+    environment_world_color: FloatVectorProperty(
+        name="世界背景色",
+        description="世界环境光的颜色",
+        subtype="COLOR", size=4,
+        default=(0.05, 0.05, 0.05, 1.0), min=0.0, max=1.0,
+        update=_on_environment_changed,
+    )
+    environment_exposure: FloatProperty(
+        name="曝光",
+        description="视图变换曝光，负数变暗。影响所有相机和视口",
+        default=-0.3, min=-3.0, max=3.0,
+        update=_on_environment_changed,
+    )
+    environment_path: StringProperty(
+        name="环境预设路径",
+        description="上次保存/加载的环境预设文件。下次加载直接使用这个路径",
+        subtype="FILE_PATH",
+    )
 
 
 class HR_OT_import_source(Operator):
@@ -905,6 +1046,74 @@ class HR_OT_load_preset(Operator):
         return {"FINISHED"}
 
 
+class HR_OT_save_environment(Operator):
+    bl_idname = "hr.save_environment"
+    bl_label = "保存环境"
+    bl_description = "把当前环境调整存成预设文件，并记住这个路径，下次加载直接使用它"
+    bl_options = {"REGISTER"}
+
+    filepath: StringProperty(subtype="FILE_PATH")
+    filter_glob: StringProperty(default="*.json", options={"HIDDEN"})
+
+    def invoke(self, context, event):
+        remembered = _recall_environment_path(context)
+        self.filepath = remembered or "hr_environment.json"
+        context.window_manager.fileselect_add(self)
+        return {"RUNNING_MODAL"}
+
+    def execute(self, context):
+        settings = context.scene.hr_settings
+        try:
+            path = save_environment(self.filepath, _environment_data(settings))
+        except EnvironmentError as exc:
+            self.report({"ERROR"}, str(exc))
+            return {"CANCELLED"}
+        _remember_environment_path(context, path)
+        settings.environment_enabled = True
+        _apply_environment(settings, context)
+        try:
+            bpy.ops.wm.save_userpref()
+        except RuntimeError:
+            pass
+        text = f"已保存环境预设: {path}"
+        _set_status(context, text)
+        self.report({"INFO"}, text)
+        return {"FINISHED"}
+
+
+class HR_OT_load_environment(Operator):
+    bl_idname = "hr.load_environment"
+    bl_label = "加载环境"
+    bl_description = "加载环境预设。有记住的路径时直接加载，不再打开文件选择"
+    bl_options = {"REGISTER", "UNDO"}
+
+    filepath: StringProperty(subtype="FILE_PATH")
+    filter_glob: StringProperty(default="*.json", options={"HIDDEN"})
+
+    def invoke(self, context, event):
+        remembered = _recall_environment_path(context)
+        if remembered and os.path.isfile(remembered):
+            self.filepath = remembered
+            return self.execute(context)
+        context.window_manager.fileselect_add(self)
+        return {"RUNNING_MODAL"}
+
+    def execute(self, context):
+        settings = context.scene.hr_settings
+        try:
+            data = load_environment(self.filepath)
+        except EnvironmentError as exc:
+            self.report({"ERROR"}, str(exc))
+            return {"CANCELLED"}
+        _set_environment_data(settings, data)
+        _remember_environment_path(context, self.filepath)
+        _apply_environment(settings, context)
+        text = f"已加载环境预设: {self.filepath}"
+        _set_status(context, text)
+        self.report({"INFO"}, text)
+        return {"FINISHED"}
+
+
 class HR_OT_capture_reference(Operator):
     bl_idname = "hr.capture_reference"
     bl_label = "捕获当前姿势"
@@ -933,8 +1142,11 @@ class HR_OT_capture_reference(Operator):
         return {"FINISHED"}
 
 
+_ADDON_VERSION = ".".join(str(number) for number in bl_info["version"])
+
+
 class HR_PT_panel(Panel):
-    bl_label = "人形重定向"
+    bl_label = "人形重定向 " + _ADDON_VERSION
     bl_idname = "HR_PT_panel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -1060,6 +1272,18 @@ class HR_PT_panel(Panel):
         settings_box.prop(settings, "show_bones")
         settings_box.prop(settings, "show_bone_spheres")
         settings_box.prop(settings, "show_y0_floor")
+        settings_box.prop(settings, "environment_enabled")
+        if settings.environment_enabled:
+            env_col = settings_box.column()
+            env_col.prop(settings, "environment_shading", text="显示方式")
+            env_col.prop(settings, "environment_studio_intensity")
+            env_col.prop(settings, "environment_world_strength")
+            env_col.prop(settings, "environment_world_color")
+            env_col.prop(settings, "environment_exposure")
+            env_col.prop(settings, "environment_path")
+            env_row = env_col.row(align=True)
+            env_row.operator("hr.save_environment", text="保存环境")
+            env_row.operator("hr.load_environment", text="加载环境")
 
 
 
@@ -1068,6 +1292,7 @@ class HR_AddonPreferences(bpy.types.AddonPreferences):
 
     last_source_path: StringProperty(name="上次动画来源", subtype="FILE_PATH")
     last_target_path: StringProperty(name="上次目标模型", subtype="FILE_PATH")
+    last_environment_path: StringProperty(name="上次环境预设", subtype="FILE_PATH")
 
     def draw(self, _context):
         return
@@ -1087,6 +1312,8 @@ CLASSES = (
     HR_OT_build_mapping,
     HR_OT_save_preset,
     HR_OT_load_preset,
+    HR_OT_save_environment,
+    HR_OT_load_environment,
     HR_OT_capture_reference,
     HR_OT_export,
     HR_OT_export_file,
@@ -1104,6 +1331,35 @@ def _apply_saved_stand(_dummy=None):
     if settings.source is None and settings.target is None:
         return
     apply_stand_layout(settings.source, settings.target, settings.stand_layout)
+
+
+def _apply_saved_environment_now():
+    scene = getattr(bpy.context, "scene", None)
+    if scene is None or not hasattr(scene, "hr_settings"):
+        return None
+    settings = scene.hr_settings
+    if not settings.environment_enabled:
+        return None
+    path = _recall_environment_path(bpy.context)
+    if path and os.path.isfile(path):
+        try:
+            _set_environment_data(settings, load_environment(path))
+        except EnvironmentError:
+            pass
+    _apply_environment(settings)
+    return None
+
+
+def _schedule_saved_environment():
+    if bpy.app.background:
+        _apply_saved_environment_now()
+        return
+    if not bpy.app.timers.is_registered(_apply_saved_environment_now):
+        bpy.app.timers.register(_apply_saved_environment_now, first_interval=0.25)
+
+
+def _apply_saved_environment(_dummy=None):
+    _schedule_saved_environment()
 
 
 def _apply_saved_view_now():
@@ -1147,19 +1403,26 @@ def register():
         bpy.app.handlers.load_post.append(_apply_saved_sphere_setting)
     if _apply_saved_stand not in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.append(_apply_saved_stand)
+    if _apply_saved_environment not in bpy.app.handlers.load_post:
+        bpy.app.handlers.load_post.append(_apply_saved_environment)
     register_draw()
     _apply_saved_sphere_setting()
     _apply_saved_stand()
+    _apply_saved_environment()
 
 
 def unregister():
     unregister_draw()
     if bpy.app.timers.is_registered(_apply_saved_view_now):
         bpy.app.timers.unregister(_apply_saved_view_now)
+    if bpy.app.timers.is_registered(_apply_saved_environment_now):
+        bpy.app.timers.unregister(_apply_saved_environment_now)
     if _apply_saved_sphere_setting in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.remove(_apply_saved_sphere_setting)
     if _apply_saved_stand in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.remove(_apply_saved_stand)
+    if _apply_saved_environment in bpy.app.handlers.load_post:
+        bpy.app.handlers.load_post.remove(_apply_saved_environment)
     if hasattr(bpy.types.Scene, "hr_settings"):
         del bpy.types.Scene.hr_settings
     for cls in reversed(CLASSES):
