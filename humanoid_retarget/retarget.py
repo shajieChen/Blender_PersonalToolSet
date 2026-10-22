@@ -430,14 +430,60 @@ def _rotation_onto(src_pose, tgt_pose, src_bone, tgt_bone, src_ref_basis, tgt_re
     tgt_pose.location = (0.0, 0.0, 0.0)
 
 
-def _hips_translation(src, tgt, src_name, tgt_name, scale, src_ref_head, tgt_ref_head, in_place):
+def _reference_support_height(arm, foot_names, fallback_height):
+    foot_bones = set(foot_names)
+    for name in foot_names:
+        foot_bones.update(bone.name for bone in arm.data.bones[name].children_recursive)
+    lowest = None
+    for mesh in bpy.context.scene.objects:
+        if mesh.type != "MESH" or not any(mod.type == "ARMATURE" and mod.object == arm for mod in mesh.modifiers):
+            continue
+        groups = {group.index for group in mesh.vertex_groups if group.name in foot_bones}
+        for vertex in mesh.data.vertices:
+            weight = sum(group.weight for group in vertex.groups if group.group in groups)
+            if weight < 0.5:
+                continue
+            height = (mesh.matrix_world @ vertex.co).z
+            lowest = height if lowest is None else min(lowest, height)
+    if lowest is not None:
+        return lowest
+    positions = [arm.matrix_world @ point for name in foot_bones
+                 for point in (arm.data.bones[name].head_local, arm.data.bones[name].tail_local)]
+    return min(point.z for point in positions) if positions else fallback_height
+
+
+def _pelvis_vertical_scale(src, tgt, pairs, options):
+    hip_pair = next(pair for pair in pairs if pair[0] == "hips")
+    if options.reference == "CURRENT":
+        for table, name in (("source_matrix", hip_pair[1]), ("target_matrix", hip_pair[2])):
+            if name not in (options.reference_data or {}).get(table, {}):
+                raise RetargetError("当前参考缺少髋部矩阵，请重新捕获参考姿势。")
+    _, _, src_head, tgt_head = _reference_for(src, tgt, hip_pair[1], hip_pair[2], options)
+    unit_scale = bpy.context.scene.unit_settings.scale_length or 1.0
+    floor_height = options.foot_ik_settings.floor_height_m / unit_scale
+    heights = []
+    for arm, index, head in ((src, 1, src_head), (tgt, 2, tgt_head)):
+        foot_names = [pair[index] for pair in pairs if pair[0] in {"foot_l", "foot_r"}]
+        ground = _reference_support_height(arm, foot_names, floor_height)
+        height = ((arm.matrix_world @ head).z - ground) * unit_scale
+        if not isfinite(height) or height <= 1e-6:
+            raise RetargetError("参考髋部必须高于足部支撑平面，请检查骨骼映射和参考姿势。")
+        heights.append(height)
+    return heights[1] / heights[0]
+
+
+def _hips_translation(src, tgt, src_name, tgt_name, scale, src_ref_head, tgt_ref_head, in_place, vertical_scale=None):
     src_pose = src.pose.bones[src_name]
     tgt_pose = tgt.pose.bones[tgt_name]
     delta = src_pose.head - src_ref_head
     world_delta = src.matrix_world.to_3x3() @ delta
+    scaled_delta = world_delta * scale
+    if vertical_scale is not None:
+        scaled_delta.z = world_delta.z * vertical_scale
     if in_place:
-        world_delta = Vector((0.0, 0.0, world_delta.z))
-    target_delta = tgt.matrix_world.to_3x3().inverted() @ (world_delta * scale)
+        scaled_delta.x = 0.0
+        scaled_delta.y = 0.0
+    target_delta = tgt.matrix_world.to_3x3().inverted() @ scaled_delta
     matrix = tgt_pose.matrix.copy()
     matrix.translation = tgt_ref_head + target_delta
     tgt_pose.matrix = matrix
@@ -1427,6 +1473,7 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
 
     use_foot_ik = options.foot_ik
     use_hand_ik = options.hand_ik
+    vertical_scale = None if use_foot_ik else _pelvis_vertical_scale(src, tgt, pairs, options)
     use_channels = channel_state is not None
     channel_roles = {}
     channel_configurations = {}
@@ -1534,7 +1581,7 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
                         armature_coordinates=use_channels,
                     )
                 else:
-                    _hips_translation(src, tgt, hip_role[1], hip_role[2], scale, src_head, tgt_head, in_place)
+                    _hips_translation(src, tgt, hip_role[1], hip_role[2], scale, src_head, tgt_head, in_place, vertical_scale)
                 bpy.context.view_layer.update()
                 frame_speeds = {}
                 if use_channels:
