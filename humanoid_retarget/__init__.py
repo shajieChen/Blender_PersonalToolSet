@@ -40,6 +40,7 @@ from .joint_limits import (
     BoneAngleLimits,
     JointLimitSettings,
     LimitType,
+    provisional_arm_joint_limits,
 )
 from .soft_repulsion import SoftRepulsionSettings
 from .gizmos import register_draw, unregister_draw
@@ -249,6 +250,13 @@ def _options_from_settings(settings, use_mapping=True):
             contact_height_tolerance_m=settings.foot_contact_height_tolerance_m,
             contact_minimum_tolerance_m=settings.foot_contact_minimum_tolerance_m,
             floor_height_m=settings.foot_floor_height_m,
+            pelvis_ik_mode=settings.foot_pelvis_ik_mode,
+            pelvis_ik_alpha=settings.foot_pelvis_ik_alpha,
+            pelvis_ik_horizontal=settings.foot_pelvis_ik_horizontal,
+            pelvis_ik_vertical=settings.foot_pelvis_ik_vertical,
+            pelvis_ik_iterations=settings.foot_pelvis_ik_iterations,
+            pelvis_ik_pose_weight=settings.foot_pelvis_ik_pose_weight,
+            pelvis_ik_rotation=settings.foot_pelvis_ik_rotation,
         ),
         soft_repulsion=settings.use_soft_repulsion,
         soft_repulsion_settings=(
@@ -354,13 +362,64 @@ class HRJointLimitItem(PropertyGroup):
     )
 
 
+def _fill_joint_limit_bones(settings, bones):
+    settings.joint_limit_bones.clear()
+    for bone in bones:
+        item = settings.joint_limit_bones.add()
+        item.role = bone.role
+        item.x_type = bone.x.kind.value
+        item.y_type = bone.y.kind.value
+        item.z_type = bone.z.kind.value
+        item.min_x = bone.x.minimum
+        item.max_x = bone.x.maximum
+        item.min_y = bone.y.minimum
+        item.max_y = bone.y.maximum
+        item.min_z = bone.z.minimum
+        item.max_z = bone.z.maximum
+        item.rotation_stiffness = bone.rotation_stiffness
+
+
+def _joint_limit_ui_ineffective(settings):
+    items = settings.joint_limit_bones
+    if len(items) == 0:
+        return True
+    return all(
+        item.x_type == "FREE"
+        and item.y_type == "FREE"
+        and item.z_type == "FREE"
+        for item in items
+    )
+
+
+def _on_use_joint_limits_changed(self, context):
+    if self.use_joint_limits and _joint_limit_ui_ineffective(self):
+        _fill_joint_limit_bones(self, provisional_arm_joint_limits())
+
+
+def _ensure_default_joint_limits(settings):
+    """Seed shoulder/forearm limits when the channel is on but UI has no effective rows."""
+    if settings.use_joint_limits and _joint_limit_ui_ineffective(settings):
+        _fill_joint_limit_bones(settings, provisional_arm_joint_limits())
+
+
+def _sync_joint_limits_from_options(settings, options):
+    if not options.joint_limits or options.joint_limit_settings is None:
+        return
+    bones = options.joint_limit_settings.bones
+    if bones:
+        _fill_joint_limit_bones(settings, bones)
+
+
 class HR_OT_add_joint_limit(Operator):
     bl_idname = "hr.add_joint_limit"
-    bl_label = "添加关节限"
+    bl_label = "填充默认肩肘限"
+    bl_description = "写入锁骨 FIXED + 前臂铰链（导入/重定向前臂铰链轴会按 rest 再检测）"
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        context.scene.hr_settings.joint_limit_bones.add()
+        _fill_joint_limit_bones(
+            context.scene.hr_settings, provisional_arm_joint_limits()
+        )
         return {"FINISHED"}
 
 
@@ -436,7 +495,7 @@ class HRSettings(PropertyGroup):
         ),
         default="KEEP",
     )
-    use_foot_ik: BoolProperty(name="脚 IK", description="按来源链伸展比例生成目标落点，支持地面约束和速度植步，身体仍用 FK", default=False)
+    use_foot_ik: BoolProperty(name="脚 IK", description="按来源链比例生成脚部落点，支持接地、植步和骨盆协调", default=True)
     use_hand_ik: BoolProperty(name="手 IK", description="按来源链伸展比例生成手部落点，身体仍用 FK", default=False)
     foot_floor_enabled: BoolProperty(name="地面约束", description="脚 IK 开启时把脚部目标高度钳制到地面附近", default=True)
     foot_floor_alpha: FloatProperty(name="地面强度", description="地面约束的混合权重", default=1.0, min=0.0, max=1.0)
@@ -454,6 +513,21 @@ class HRSettings(PropertyGroup):
     foot_floor_height_m: FloatProperty(name="地面高度", description="世界空间地面平面的高度（米）", default=0.0, unit="LENGTH")
     foot_source_crotch_offset_m: FloatProperty(name="来源胯部偏移", description="髋部到胯部参考点的垂直偏移（米）", default=0.0, unit="LENGTH")
     foot_target_crotch_offset_m: FloatProperty(name="目标胯部偏移", description="目标髋部到胯部参考点的垂直偏移（米）", default=0.0, unit="LENGTH")
+    foot_pelvis_ik_mode: EnumProperty(
+        name="骨盆协调",
+        items=(
+            ("PRE_PULL", "目标预补偿", "按双脚目标预补偿骨盆，再共同满足腿长约束"),
+            ("PIN_INPUT", "固定骨盆", "保持输入骨盆位置，只求解各条腿"),
+            ("FREE", "自由调整", "不做质心预补偿，仅按腿长约束调整骨盆"),
+        ),
+        default="PRE_PULL",
+    )
+    foot_pelvis_ik_alpha: FloatProperty(name="骨盆补偿强度", description="骨盆协调结果的混合权重", default=1.0, min=0.0, max=1.0)
+    foot_pelvis_ik_horizontal: FloatProperty(name="水平调整", description="骨盆在角色水平面内的移动权重", default=1.0, min=0.0, max=1.0)
+    foot_pelvis_ik_vertical: FloatProperty(name="垂直调整", description="骨盆沿世界竖直方向的移动权重", default=1.0, min=0.0, max=1.0)
+    foot_pelvis_ik_iterations: IntProperty(name="协调迭代次数", description="双腿可达范围的共同修正次数", default=20, min=0, max=100)
+    foot_pelvis_ik_pose_weight: FloatProperty(name="保留来源伸展", description="根据来源动作和目标骨长减少额外的腿部挤折", default=1.0, min=0.0, max=1.0)
+    foot_pelvis_ik_rotation: FloatProperty(name="骨盆姿态调整", description="腿部约束对骨盆朝向的影响权重，0 为固定朝向", default=1.0, min=0.0, max=1.0)
     use_soft_repulsion: BoolProperty(
         name="软斥力", description="手臂目标被躯干胶囊软推离开，减少手部穿入身体", default=False,
     )
@@ -465,7 +539,10 @@ class HRSettings(PropertyGroup):
     soft_hand_radius_m: FloatProperty(name="手部代理半径（米）", description="手部球代理半径", default=0.025, min=0.0)
     soft_forearm_radius_m: FloatProperty(name="前臂代理半径（米）", description="前臂球代理半径", default=0.035, min=0.0)
     use_joint_limits: BoolProperty(
-        name="关节角度限", description="按 PBIK 语义限制肩肘等关节的旋转范围，防关节反转", default=False,
+        name="关节角度限",
+        description="按 PBIK 语义限制肩肘等关节的旋转范围，防关节反转；导入目标并重定向时同样生效",
+        default=False,
+        update=_on_use_joint_limits_changed,
     )
     joint_iterations: IntProperty(name="求解轮数", description="限位与两骨求解的交替轮数", default=20, min=0, max=1000)
     joint_max_angle_degrees: FloatProperty(name="单轮增量上限（度）", description="每轮旋转修正的最大角度增量", default=30.0, min=0.0, max=45.0)
@@ -612,6 +689,7 @@ class HR_OT_import_target(Operator):
 
     def execute(self, context):
         settings = context.scene.hr_settings
+        _ensure_default_joint_limits(settings)
         options = _options_from_settings(settings, use_mapping=False)
         try:
             armature, summary, _baked, _auto = load_target_and_retarget(self.filepath, settings.source, options)
@@ -625,6 +703,7 @@ class HR_OT_import_target(Operator):
         set_armature_bones_visible(armature, False)
         if options.resolved_pairs:
             _fill_mapping(settings, options.resolved_pairs)
+        _sync_joint_limits_from_options(settings, options)
         _set_status(context, summary)
         self.report({"INFO"}, "重定向完成")
         return {"FINISHED"}
@@ -638,6 +717,7 @@ class HR_OT_retarget_existing(Operator):
 
     def execute(self, context):
         settings = context.scene.hr_settings
+        _ensure_default_joint_limits(settings)
         had_mapping = bool(settings.mappings)
         options = _options_from_settings(settings, use_mapping=True)
         try:
@@ -647,6 +727,7 @@ class HR_OT_retarget_existing(Operator):
             _set_status(context, str(exc))
             return {"CANCELLED"}
         _remember_generated_pairs(settings, options, had_mapping)
+        _sync_joint_limits_from_options(settings, options)
         _set_status(context, summary)
         self.report({"INFO"}, "重定向完成")
         return {"FINISHED"}
@@ -660,6 +741,7 @@ class HR_OT_retarget_selected_mesh(Operator):
 
     def execute(self, context):
         settings = context.scene.hr_settings
+        _ensure_default_joint_limits(settings)
         meshes = [obj for obj in context.selected_objects if obj.type == "MESH"]
         options = _options_from_settings(settings, use_mapping=False)
         try:
@@ -673,6 +755,7 @@ class HR_OT_retarget_selected_mesh(Operator):
         set_armature_bones_visible(armature, False)
         if options.resolved_pairs:
             _fill_mapping(settings, options.resolved_pairs)
+        _sync_joint_limits_from_options(settings, options)
         _set_status(context, summary)
         self.report({"INFO"}, "自动绑定并重定向完成")
         return {"FINISHED"}
@@ -910,6 +993,15 @@ class HR_PT_panel(Panel):
             floor_col.prop(settings, "foot_falloff_start_m")
             floor_col.prop(settings, "foot_falloff_distance_m")
         foot_col.prop(settings, "foot_pelvis_floor_weight")
+        foot_col.prop(settings, "foot_pelvis_ik_mode")
+        if settings.foot_pelvis_ik_mode != "PIN_INPUT":
+            pelvis_col = foot_col.column()
+            pelvis_col.prop(settings, "foot_pelvis_ik_alpha")
+            pelvis_col.prop(settings, "foot_pelvis_ik_horizontal")
+            pelvis_col.prop(settings, "foot_pelvis_ik_vertical")
+            pelvis_col.prop(settings, "foot_pelvis_ik_iterations")
+            pelvis_col.prop(settings, "foot_pelvis_ik_pose_weight")
+            pelvis_col.prop(settings, "foot_pelvis_ik_rotation")
         foot_col.prop(settings, "foot_planting_enabled")
         if settings.foot_planting_enabled:
             plant_col = foot_col.column()

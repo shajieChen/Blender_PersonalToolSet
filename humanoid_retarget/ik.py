@@ -9,10 +9,12 @@ solver aims the joints at the goal.
 from __future__ import annotations
 
 import bpy
-from mathutils import Matrix, Vector
+from mathutils import Matrix, Quaternion, Vector
 
 from .foot_ik import (
     IKGoal,
+    LegReachConstraint,
+    solve_pelvis_motion,
     LimbReference,
     RetargetGeometry,
     FootIKSettings,
@@ -32,6 +34,7 @@ _ARM_CHAINS = (
     ("upperarm_r", "forearm_r", "hand_r"),
 )
 _FOOT_ROLES = frozenset({"foot_l", "foot_r"})
+_PELVIS_CONTACT_PASSES = 3
 
 
 def apply_contact_ik(
@@ -44,6 +47,7 @@ def apply_contact_ik(
     pelvis_delta: Vector,
     dt: float,
 ) -> None:
+    goals = {}
     for limb in geometry.limbs:
         end_role = limb.roles[2]
         source_start_pose = src.pose.bones.get(limb.source_names[0])
@@ -55,11 +59,11 @@ def apply_contact_ik(
         source_space = geometry.source_space
         target_space = geometry.target_space
 
-        source_start = source_space.position(src.matrix_world @ source_start_pose.head)
-        source_end = source_space.position(src.matrix_world @ source_end_pose.head)
+        source_start = source_space.world_position(src.matrix_world @ source_start_pose.head)
+        source_end = source_space.world_position(src.matrix_world @ source_end_pose.head)
         source_end_matrix = src.matrix_world @ source_end_pose.matrix
-        source_end_rotation = source_space.rotation(source_end_matrix)
-        target_start = target_space.position(tgt.matrix_world @ target_start_pose.head)
+        source_end_rotation = source_space.world_rotation(source_end_matrix)
+        target_start = target_space.world_position(tgt.matrix_world @ target_start_pose.head)
 
         goal = generate_limb_goal(
             source_start,
@@ -88,20 +92,237 @@ def apply_contact_ik(
                     settings,
                 )
 
-        _solve_chain(tgt, target_space, limb, goal)
+        goals[end_role] = goal
+
+    constraints = prepare_pelvis_constraints(src, tgt, geometry, goals, settings)
+    pelvis_matrix = tgt.pose.bones[geometry.pelvis.target_name].matrix.copy()
+    _solve_limb_goals(src, tgt, geometry, goals)
+    if not constraints or settings.pelvis_ik_mode == "PIN_INPUT" or settings.pelvis_ik_alpha == 0.0:
+        return
+    for _ in range(_PELVIS_CONTACT_PASSES):
+        for role, constraint in constraints.items():
+            constraint.goal = goals[role].position.copy()
+        previous = {role: goals[role].position.copy() for role in constraints}
+        apply_pelvis_ik(tgt, geometry, settings, constraints, pelvis_matrix)
+        _solve_limb_goals(src, tgt, geometry, goals, False)
+        if all((goals[role].position - previous[role]).length < 1e-6 for role in constraints):
+            break
 
 
-def _solve_chain(tgt, space: MotionSpace, reference: LimbReference, goal: IKGoal) -> float:
+def _solve_limb_goals(src, tgt, geometry, goals, apply_plan=True):
+    for limb in geometry.limbs:
+        goal = goals.get(limb.roles[2])
+        if goal is None:
+            continue
+        pole_hint = transfer_source_fold_pole(
+            src,
+            geometry.source_space,
+            tgt,
+            geometry.target_space,
+            limb,
+            goal.position,
+        )
+        _solve_chain(tgt, geometry.target_space, limb, goal, pole_hint=pole_hint)
+
+
+def prepare_pelvis_constraints(src, tgt, geometry, goals, settings):
+    constraints = {}
+    for limb in geometry.limbs:
+        role = limb.roles[2]
+        if role not in _FOOT_ROLES or role not in goals:
+            continue
+        source_start = geometry.source_space.position(src.pose.bones[limb.source_names[0]].head)
+        source_end = geometry.source_space.position(src.pose.bones[limb.source_names[2]].head)
+        preferred = (source_end - source_start).length * limb.target_initial_length / limb.source_initial_length
+        maximum = limb.target_upper_length + limb.target_lower_length
+        epsilon = min(1e-6, maximum * 1e-5)
+        maximum -= epsilon
+        minimum = abs(limb.target_upper_length - limb.target_lower_length) + epsilon
+        preferred = min(max(preferred, minimum), maximum)
+        minimum += (preferred - minimum) * settings.pelvis_ik_pose_weight
+        maximum -= (maximum - preferred) * settings.pelvis_ik_pose_weight
+        constraints[role] = LegReachConstraint(
+            geometry.target_space.position(tgt.pose.bones[limb.target_names[0]].head),
+            geometry.target_space.position(tgt.pose.bones[limb.target_names[2]].head),
+            goals[role].position.copy(), minimum, maximum,
+            (source_start - source_end).normalized(), preferred,
+        )
+    return constraints
+
+
+def apply_pelvis_ik(tgt, geometry, settings, constraints, input_matrix=None):
+    pelvis = tgt.pose.bones[geometry.pelvis.target_name]
+    matrix = input_matrix.copy() if input_matrix is not None else pelvis.matrix.copy()
+    pivot = geometry.target_space.position(matrix.translation)
+    offset, rotation = solve_pelvis_motion(tuple(constraints.values()), settings, pivot)
+    if not constraints or settings.pelvis_ik_mode == "PIN_INPUT" or settings.pelvis_ik_alpha == 0.0:
+        return offset
+    local_scale = pelvis.scale.copy()
+    axes = geometry.target_space.axes
+    rotated = (axes @ rotation.to_matrix() @ axes.transposed()).to_4x4() @ matrix
+    rotated.translation = matrix.translation + axes @ (offset / geometry.target_space.meters_per_unit)
+    pelvis.matrix = rotated
+    pelvis.scale = local_scale
+    bpy.context.view_layer.update()
+    return offset
+
+
+def transfer_source_fold_pole(
+    src,
+    source_space: MotionSpace,
+    tgt,
+    target_space: MotionSpace,
+    reference: LimbReference,
+    target_goal: Vector,
+) -> Vector:
+    """Map the source elbow/knee offset onto the target reach (retarget pole)."""
+    src_world = src.matrix_world
+    upper = source_space.world_position(
+        src_world @ src.pose.bones[reference.source_names[0]].head
+    )
+    mid = source_space.world_position(
+        src_world @ src.pose.bones[reference.source_names[1]].head
+    )
+    end = source_space.world_position(
+        src_world @ src.pose.bones[reference.source_names[2]].head
+    )
+    src_reach = end - upper
+    if src_reach.length_squared < 1e-16:
+        return reference.reference_pole.copy()
+    src_dir = src_reach.normalized()
+    src_perp = (mid - upper) - src_dir * (mid - upper).dot(src_dir)
+    tgt_world = tgt.matrix_world
+    root = target_space.world_position(
+        tgt_world @ tgt.pose.bones[reference.target_names[0]].head
+    )
+    tgt_dir = target_goal - root
+    if tgt_dir.length_squared < 1e-16 or src_perp.length_squared < 1e-16:
+        return bind_oriented_pole(
+            root,
+            target_goal,
+            target_space.world_position(
+                tgt_world @ tgt.data.bones[reference.target_names[0]].head_local
+            ),
+            target_space.world_position(
+                tgt_world @ tgt.data.bones[reference.target_names[1]].head_local
+            ),
+            target_space.world_position(
+                tgt_world @ tgt.data.bones[reference.target_names[2]].head_local
+            ),
+            Vector((0.0, -1.0, 0.0)),
+        )
+    tgt_dir = tgt_dir.normalized()
+    swung = src_dir.rotation_difference(tgt_dir) @ src_perp
+    return root + swung
+
+
+def bind_oriented_pole(
+    root: Vector,
+    target: Vector,
+    reference_root: Vector,
+    reference_mid: Vector,
+    reference_end: Vector,
+    preferred_side: Vector | None = None,
+) -> Vector:
+    """Build an elbow/knee pole from the bind fold, swung onto the current reach.
+
+    UE Preferred Angles / IK pole targets coerce bend side from the rest pose.
+    Using the live FK mid as the pole inherits a wrong-side fold and pretzels.
+    Nearly straight T/A-pose binds have tiny rest bend; then preferred_side
+    should point where the joint must bend (elbows: behind, knees: forward).
+    """
+    rest_reach = reference_end - reference_root
+    cur_reach = target - root
+    if rest_reach.length_squared < 1e-16 or cur_reach.length_squared < 1e-16:
+        return reference_mid.copy()
+    rest_dir = rest_reach.normalized()
+    cur_dir = cur_reach.normalized()
+    rest_offset = reference_mid - reference_root
+    rest_perp = rest_offset - rest_dir * rest_offset.dot(rest_dir)
+    span = max((reference_mid - reference_root).length, 1e-4)
+    if rest_perp.length < span * 0.02:
+        side = (
+            preferred_side.copy()
+            if preferred_side is not None
+            else Vector((0.0, -1.0, 0.0))
+        )
+        rest_perp = side - rest_dir * side.dot(rest_dir)
+        if rest_perp.length_squared < 1e-16:
+            rest_perp = rest_dir.cross(Vector((0.0, 0.0, 1.0)))
+        if rest_perp.length_squared < 1e-16:
+            rest_perp = rest_dir.cross(Vector((1.0, 0.0, 0.0)))
+        if rest_perp.length_squared < 1e-16:
+            return reference_mid.copy()
+        rest_perp = rest_perp.normalized() * (span * 0.35)
+    swing = rest_dir.rotation_difference(cur_dir)
+    return root + (swing @ rest_perp)
+
+
+def align_pole_to_bind_side(
+    root: Vector,
+    pole: Vector,
+    reference_pole: Vector,
+    target: Vector,
+) -> Vector:
+    """Keep a live pole on the same side of the reach axis as a bind-side tip."""
+    reach = target - root
+    if reach.length_squared < 1e-16:
+        return reference_pole.copy()
+    direction = reach.normalized()
+
+    def perpendicular(point: Vector) -> Vector:
+        offset = point - root
+        return offset - direction * offset.dot(direction)
+
+    mid_perp = perpendicular(pole)
+    ref_perp = perpendicular(reference_pole)
+    if ref_perp.length_squared < 1e-16:
+        return pole.copy()
+    if mid_perp.length_squared < 1e-16:
+        return root + ref_perp
+    if mid_perp.dot(ref_perp) < 0.0:
+        return root + ref_perp.normalized() * mid_perp.length
+    return pole.copy()
+
+
+def _solve_chain(
+    tgt,
+    space: MotionSpace,
+    reference: LimbReference,
+    goal: IKGoal,
+    pole_hint: Vector | None = None,
+) -> float:
     upper_name, mid_name, end_name = reference.target_names
     upper_pose = tgt.pose.bones[upper_name]
     mid_pose = tgt.pose.bones[mid_name]
     end_pose = tgt.pose.bones[end_name]
 
     world = tgt.matrix_world
-    root = space.position(world @ upper_pose.head)
-    pole = space.position(world @ mid_pose.head)
-    if (pole - root).length < 1e-6:
-        pole = reference.reference_pole
+    root = space.world_position(world @ upper_pose.head)
+    rest_root = space.world_position(world @ tgt.data.bones[upper_name].head_local)
+    rest_mid = space.world_position(world @ tgt.data.bones[mid_name].head_local)
+    rest_end = space.world_position(world @ tgt.data.bones[end_name].head_local)
+    end_role = reference.roles[2]
+    # Motion space: Z up, Y along character forward. Elbows bend back (-Y),
+    # knees bend forward (+Y) — Blender/UE pole conventions.
+    if end_role in ("hand_l", "hand_r"):
+        preferred_side = Vector((0.0, -1.0, 0.0))
+    elif end_role in ("foot_l", "foot_r"):
+        preferred_side = Vector((0.0, 1.0, 0.0))
+    else:
+        preferred_side = Vector((0.0, -1.0, 0.0))
+    bind_pole = bind_oriented_pole(
+        root,
+        goal.position,
+        rest_root,
+        rest_mid,
+        rest_end,
+        preferred_side,
+    )
+    if pole_hint is not None:
+        pole = pole_hint.copy()
+    else:
+        pole = bind_pole
 
     knee, reachable = _two_bone(
         root,
@@ -111,23 +332,53 @@ def _solve_chain(tgt, space: MotionSpace, reference: LimbReference, goal: IKGoal
         pole,
         reference.reference_pole - root,
     )
-
-    _aim_joint(tgt, upper_name, mid_name, space, knee - root)
-    bpy.context.view_layer.update()
-
-    upper_pose = tgt.pose.bones[upper_name]
-    mid_pose = tgt.pose.bones[mid_name]
-    knee_now = space.position(world @ mid_pose.head)
-    root_now = space.position(world @ upper_pose.head)
-    _aim_joint(tgt, mid_name, end_name, space, reachable - knee_now)
-    bpy.context.view_layer.update()
+    _apply_two_bone_aim(tgt, space, upper_name, mid_name, end_name, knee, reachable)
+    if pole_hint is None and _fold_opposes_bind(tgt, space, upper_name, mid_name, end_name, rest_root, rest_mid, rest_end):
+        flipped = root - (pole - root)
+        knee, reachable = _two_bone(
+            root,
+            reference.target_upper_length,
+            reference.target_lower_length,
+            goal.position,
+            flipped,
+            reference.reference_pole - root,
+        )
+        _apply_two_bone_aim(tgt, space, upper_name, mid_name, end_name, knee, reachable)
 
     _write_end_rotation(tgt, end_name, space, goal.rotation)
     bpy.context.view_layer.update()
 
     end_pose = tgt.pose.bones[end_name]
-    final = space.position(world @ end_pose.head)
+    final = space.world_position(world @ end_pose.head)
     return (final - goal.position).length
+
+
+def _apply_two_bone_aim(tgt, space, upper_name, mid_name, end_name, knee, reachable):
+    world = tgt.matrix_world
+    root = space.world_position(world @ tgt.pose.bones[upper_name].head)
+    _aim_joint(tgt, upper_name, mid_name, space, knee - root)
+    bpy.context.view_layer.update()
+    knee_now = space.world_position(world @ tgt.pose.bones[mid_name].head)
+    _aim_joint(tgt, mid_name, end_name, space, reachable - knee_now)
+    bpy.context.view_layer.update()
+
+
+def _fold_opposes_bind(tgt, space, upper_name, mid_name, end_name, rest_root, rest_mid, rest_end):
+    upper = space.world_position(tgt.matrix_world @ tgt.pose.bones[upper_name].head)
+    mid = space.world_position(tgt.matrix_world @ tgt.pose.bones[mid_name].head)
+    end = space.world_position(tgt.matrix_world @ tgt.pose.bones[end_name].head)
+    rest_reach = rest_end - rest_root
+    cur_reach = end - upper
+    if rest_reach.length_squared < 1e-16 or cur_reach.length_squared < 1e-16:
+        return False
+    rest_dir = rest_reach.normalized()
+    cur_dir = cur_reach.normalized()
+    rest_perp = (rest_mid - rest_root) - rest_dir * (rest_mid - rest_root).dot(rest_dir)
+    mid_perp = (mid - upper) - cur_dir * (mid - upper).dot(cur_dir)
+    if rest_perp.length_squared < 1e-16 or mid_perp.length_squared < 1e-16:
+        return False
+    preferred = rest_dir.rotation_difference(cur_dir) @ rest_perp
+    return mid_perp.dot(preferred) < 0.0
 
 
 def _aim_joint(obj, start_name: str, end_name: str, space: MotionSpace, desired_direction: Vector) -> None:
@@ -147,7 +398,21 @@ def _aim_joint(obj, start_name: str, end_name: str, space: MotionSpace, desired_
     rotation = swing.to_matrix().to_4x4()
     rotated = rotation @ matrix
     rotated.translation = matrix.translation
+    local_scale = start_pose.scale.copy()
+    local_rotation = start_pose.matrix_basis.to_quaternion().normalized()
     start_pose.matrix = rotated
+    local_axis = start_pose.bone.matrix_local.to_3x3().inverted() @ (
+        end_pose.bone.head_local - start_pose.bone.head_local
+    )
+    alignment = Vector((0.0, 1.0, 0.0)).rotation_difference(local_axis.normalized())
+    inverse_alignment = alignment.inverted()
+    _, original_twist = (inverse_alignment @ local_rotation @ alignment).to_swing_twist('Y')
+    local_swing, _ = (
+        inverse_alignment @ start_pose.matrix_basis.to_quaternion().normalized() @ alignment
+    ).to_swing_twist('Y')
+    corrected = alignment @ (local_swing @ Quaternion((0.0, 1.0, 0.0), original_twist)) @ inverse_alignment
+    start_pose.matrix_basis = Matrix.LocRotScale(start_pose.location, corrected.normalized(), local_scale)
+    start_pose.scale = local_scale
 
 
 def _two_bone(
@@ -196,7 +461,9 @@ def _two_bone(
 
 def _write_end_rotation(obj, end_name, space: MotionSpace, rotation) -> None:
     pose_bone = obj.pose.bones[end_name]
+    local_scale = pose_bone.scale.copy()
     translation = pose_bone.matrix.translation.copy()
     matrix = space.armature_rotation(rotation).to_4x4()
     matrix.translation = translation
     pose_bone.matrix = matrix
+    pose_bone.scale = local_scale

@@ -11,6 +11,8 @@ from dataclasses import dataclass, field
 
 from mathutils import Quaternion, Vector
 
+_PELVIS_MAX_STEP_ANGLE = math.radians(30.0)
+
 
 @dataclass
 class FootIKSettings:
@@ -30,6 +32,13 @@ class FootIKSettings:
     contact_height_tolerance_m: float = 0.02
     contact_minimum_tolerance_m: float = 0.01
     floor_height_m: float = 0.0
+    pelvis_ik_mode: str = "PRE_PULL"
+    pelvis_ik_alpha: float = 1.0
+    pelvis_ik_horizontal: float = 1.0
+    pelvis_ik_vertical: float = 1.0
+    pelvis_ik_iterations: int = 20
+    pelvis_ik_pose_weight: float = 1.0
+    pelvis_ik_rotation: float = 1.0
 
 
 @dataclass
@@ -90,7 +99,91 @@ class RetargetGeometry:
     limbs: tuple
 
 
+@dataclass
+class LegReachConstraint:
+    root: Vector
+    input_end: Vector
+    goal: Vector
+    minimum: float
+    maximum: float
+    preferred_direction: Vector
+    preferred_distance: float | None = None
+
+
+def solve_pelvis_motion(legs, settings: FootIKSettings, pivot: Vector):
+    if not legs or settings.pelvis_ik_mode == "PIN_INPUT" or settings.pelvis_ik_alpha == 0.0:
+        return Vector(), Quaternion()
+    axes = Vector((settings.pelvis_ik_horizontal, settings.pelvis_ik_horizontal, settings.pelvis_ik_vertical))
+    offset = Vector()
+    rotation = Quaternion()
+    if settings.pelvis_ik_mode == "PRE_PULL":
+        offset = sum((leg.goal - leg.input_end for leg in legs), Vector()) / len(legs)
+        offset = Vector(tuple(offset[i] * axes[i] for i in range(3)))
+    pose_legs = [leg for leg in legs if leg.preferred_distance is not None]
+    if settings.pelvis_ik_mode == "PRE_PULL" and pose_legs:
+        desired_roots = [leg.goal + leg.preferred_direction * leg.preferred_distance for leg in pose_legs]
+        initial_center = sum((leg.root for leg in pose_legs), Vector()) / len(pose_legs)
+        desired_center = sum(desired_roots, Vector()) / len(pose_legs)
+        if len(pose_legs) == 2:
+            initial_span = pose_legs[1].root - pose_legs[0].root
+            desired_span = desired_roots[1] - desired_roots[0]
+            if initial_span.length_squared > 1e-12 and desired_span.length_squared > 1e-12:
+                rotation = Quaternion().slerp(initial_span.rotation_difference(desired_span), settings.pelvis_ik_rotation * settings.pelvis_ik_pose_weight)
+        preferred_offset = desired_center - pivot - rotation @ (initial_center - pivot)
+        preferred_offset = Vector(tuple(preferred_offset[i] * axes[i] for i in range(3)))
+        offset = offset.lerp(preferred_offset, settings.pelvis_ik_pose_weight)
+    radius_squared = sum((leg.root - pivot).length_squared for leg in legs) / len(legs)
+    maximum = max(leg.maximum for leg in legs)
+    inverse_inertia = settings.pelvis_ik_rotation / max(radius_squared, maximum * maximum * 1e-6)
+    for _ in range(settings.pelvis_ik_iterations):
+        displacement = Vector()
+        angular = Vector()
+        for leg in legs:
+            lever = rotation @ (leg.root - pivot)
+            reach = pivot + offset + lever - leg.goal
+            distance = reach.length
+            limited = min(max(distance, leg.minimum), leg.maximum)
+            direction = reach.normalized() if distance > maximum * 1e-8 else leg.preferred_direction.normalized()
+            if direction.length_squared < 1e-12:
+                direction = Vector((0.0, 0.0, 1.0))
+            linear, twist = _pelvis_point_correction(lever, direction, limited - distance, axes, inverse_inertia)
+            displacement += linear
+            angular += twist
+            minimum_height = min(0.0, leg.preferred_direction.z * leg.minimum)
+            height_error = max(0.0, minimum_height - reach.z) * settings.pelvis_ik_pose_weight
+            linear, twist = _pelvis_point_correction(lever, Vector((0.0, 0.0, 1.0)), height_error, axes, inverse_inertia)
+            displacement += linear
+            angular += twist
+        displacement /= len(legs)
+        angular /= len(legs)
+        offset += displacement
+        angle = angular.length
+        if angle > 1e-9:
+            rotation = Quaternion(angular / angle, min(angle, _PELVIS_MAX_STEP_ANGLE)) @ rotation
+            rotation.normalize()
+        if displacement.length < maximum * 1e-6 and angle < 1e-6:
+            break
+    return offset * settings.pelvis_ik_alpha, Quaternion().slerp(rotation, settings.pelvis_ik_alpha)
+
+
+def _pelvis_point_correction(lever, direction, error, axes, inverse_inertia):
+    torque = lever.cross(direction)
+    linear = Vector(tuple(axes[i] * direction[i] for i in range(3)))
+    mobility = linear.dot(direction) + torque.length_squared * inverse_inertia
+    if mobility < 1e-12:
+        return Vector(), Vector()
+    magnitude = error / mobility
+    return linear * magnitude, torque * (magnitude * inverse_inertia)
+
+
 def validate_foot_ik_settings(settings: FootIKSettings) -> None:
+    if settings.pelvis_ik_mode not in {"PRE_PULL", "PIN_INPUT", "FREE"}:
+        raise ValueError("unknown pelvis IK mode")
+    if type(settings.pelvis_ik_iterations) is not int or not 0 <= settings.pelvis_ik_iterations <= 100:
+        raise ValueError("pelvis IK iterations must stay within 0..100")
+    for weight in (settings.pelvis_ik_alpha, settings.pelvis_ik_horizontal, settings.pelvis_ik_vertical, settings.pelvis_ik_pose_weight, settings.pelvis_ik_rotation):
+        if not math.isfinite(weight) or not 0.0 <= weight <= 1.0:
+            raise ValueError("pelvis IK weights must stay within 0..1")
     numeric = (
         settings.floor_alpha,
         settings.maintain_height_offset,

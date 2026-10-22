@@ -1879,6 +1879,99 @@ def test_direct_mode_without_rigify():
     check("loader must not run" not in report, "direct mode does not report a metarig failure")
 
 
+def _chain_roll(rest_axis, pose_axis, rest_mark, pose_mark):
+    swing = rest_axis.normalized().rotation_difference(pose_axis.normalized())
+    carried = swing @ rest_mark.normalized()
+    axis = pose_axis.normalized()
+
+    def perp(vector):
+        vector = vector - axis * vector.dot(axis)
+        return vector.normalized()
+
+    carried_n = perp(carried)
+    posed_n = perp(pose_mark)
+    return math.degrees(math.atan2(carried_n.cross(posed_n).dot(axis), carried_n.dot(posed_n)))
+
+
+def _chain_marker(matrix, axis):
+    columns = [matrix.col[index].xyz for index in range(3)]
+    return max(columns, key=lambda column: abs(math.sin(column.angle(axis)))).normalized()
+
+
+def test_forearm_chain_twist_signs():
+    """Forearm chain roll follows the source sign. Direction-only mode leaves it at the bind."""
+    print("--- forearm chain twist ---")
+    from humanoid_retarget.retarget import _anatomical_roles, _apply_body_orientations, _body_matrix, _chain_vector
+
+    source_names = _role_names("TwS")
+    target_names = _role_names("TwT")
+    if bpy.context.object is not None and bpy.context.object.mode != "OBJECT":
+        bpy.ops.object.mode_set(mode="OBJECT")
+    source = build_biped("TwistSource", source_names, arm_roll=0.0, scale=1.0)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    target = build_biped("TwistTarget", target_names, arm_roll=0.55, scale=1.0)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    pairs = [(role, source_names[role], target_names[role]) for role in source_names]
+    src_roles = {role: source_names[role] for role in source_names}
+    tgt_roles = {role: target_names[role] for role in source_names}
+    source_body = _body_matrix(source, _anatomical_roles(source, src_roles))
+    target_body = _body_matrix(target, _anatomical_roles(target, tgt_roles))
+
+    def reset(arm):
+        for bone in arm.pose.bones:
+            bone.rotation_mode = "QUATERNION"
+            bone.rotation_quaternion = (1.0, 0.0, 0.0, 0.0)
+            bone.location = (0.0, 0.0, 0.0)
+
+    def measure(side):
+        role = "forearm_" + side
+        source_name = source_names[role]
+        target_name = target_names[role]
+        hand_role = "hand_" + side
+        source_rest = _chain_vector(source, src_roles, role, False)
+        target_rest = _chain_vector(target, tgt_roles, role, False)
+        source_pose = _chain_vector(source, src_roles, role, True)
+        target_pose = _chain_vector(target, tgt_roles, role, True)
+        source_rest_m = source.data.bones[source_name].matrix_local.to_3x3()
+        target_rest_m = target.data.bones[target_name].matrix_local.to_3x3()
+        source_mark = _chain_marker(source_rest_m, source_rest)
+        target_mark = _chain_marker(target_rest_m, target_rest)
+        source_posed = source.pose.bones[source_name].matrix.to_3x3() @ (source_rest_m.inverted() @ source_mark)
+        target_posed = target.pose.bones[target_name].matrix.to_3x3() @ (target_rest_m.inverted() @ target_mark)
+        mapped = (target_body @ (source_body.inverted() @ source_pose)).normalized()
+        direction = math.degrees(math.acos(max(-1.0, min(1.0, mapped.dot(target_pose.normalized())))))
+        return (
+            direction,
+            _chain_roll(source_rest, source_pose, source_mark, source_posed),
+            _chain_roll(target_rest, target_pose, target_mark, target_posed),
+            target.pose.bones[target_names["upperarm_" + side]].rotation_quaternion.copy(),
+            target.pose.bones[target_names[hand_role]].matrix_basis.to_quaternion().angle,
+        )
+
+    for side in ("l", "r"):
+        for parent_deg in (0, 30, 60, 90):
+            for twist_deg in (30, 60, 90, -30, -60, -90):
+                reset(source)
+                upper = source.pose.bones[source_names["upperarm_" + side]]
+                forearm = source.pose.bones[source_names["forearm_" + side]]
+                upper.rotation_quaternion = Quaternion((1.0, 0.0, 0.0), math.radians(parent_deg))
+                forearm.rotation_quaternion = Quaternion((0.0, 1.0, 0.0), math.radians(twist_deg))
+                bpy.context.view_layer.update()
+                _apply_body_orientations(source, target, pairs, RetargetOptions(pairs=pairs, forearm_chain_twist=False))
+                off_direction, off_source, off_target, off_upper, off_hand = measure(side)
+                _apply_body_orientations(source, target, pairs, RetargetOptions(pairs=pairs, forearm_chain_twist=True))
+                on_direction, on_source, on_target, on_upper, on_hand = measure(side)
+                label = side + " parent " + str(parent_deg) + " twist " + str(twist_deg)
+                check(off_direction < 0.1, label + " direction-only keeps the chain direction")
+                check(abs(off_target) < 0.1, label + " direction-only leaves the target chain twist")
+                check(on_direction < 0.1, label + " chain direction error stays under 0.1 deg")
+                check(abs(on_target - on_source) < 0.1, label + " chain twist error stays under 0.1 deg")
+                check((twist_deg > 0) == (on_target > 0), label + " keeps the source twist sign")
+                check(off_upper.rotation_difference(on_upper).angle < math.radians(0.1), label + " upper arm stays on the direction solve")
+                check(on_hand < math.radians(0.1), label + " hand stays at identity")
+    print("FOREARM_TWIST_SIGN_OK")
+
+
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     test_standard_skeleton_selector()
@@ -1911,6 +2004,7 @@ def main():
     test_skinned_duplicate_bone()
     test_bone_gizmos()
     test_split_parent_orientation()
+    test_forearm_chain_twist_signs()
     print("RETARGET_TEST_OK")
 
 

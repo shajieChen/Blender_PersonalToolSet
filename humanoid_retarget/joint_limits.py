@@ -95,6 +95,86 @@ def validate_joint_limit_settings(
                 raise ValueError("joint angle limits must be finite")
 
 
+def bone_limits_are_free(limits: BoneAngleLimits) -> bool:
+    """True when every axis is Free — PBIK UpdateJointLimits early-outs."""
+    return all(
+        axis.kind == LimitType.FREE
+        for axis in (limits.x, limits.y, limits.z)
+    )
+
+
+def joint_limits_are_ineffective(bones: tuple) -> bool:
+    """True when no configured bone can constrain rotation."""
+    if not bones:
+        return True
+    return all(bone_limits_are_free(bone) for bone in bones)
+
+
+def detect_hinge_axis_index(
+    proximal_direction: Vector,
+    distal_direction: Vector,
+    local_axes: tuple,
+) -> int:
+    """Pick the local axis closest to the anatomical elbow/knee hinge.
+
+    Hinge ≈ proximal × distal in rest space. Without a universal degree table,
+    locking the other two axes still blocks twist while leaving flexion free.
+    """
+    hinge = proximal_direction.cross(distal_direction)
+    if hinge.length_squared < _KINDA_SMALL_NUMBER:
+        distal = _safe_normal(distal_direction)
+        fallback = Vector((1.0, 0.0, 0.0))
+        if abs(distal.dot(fallback)) > 0.9:
+            fallback = Vector((0.0, 0.0, 1.0))
+        hinge = distal.cross(fallback)
+    hinge = _safe_normal(hinge)
+    scores = [
+        abs(hinge.dot(_safe_normal(axis)))
+        for axis in local_axes
+    ]
+    return max(range(3), key=lambda index: scores[index])
+
+
+def fixed_bone_limits(role: str) -> BoneAngleLimits:
+    """All axes Locked = PBIK FIXED relative to the frame FK input."""
+    return BoneAngleLimits(
+        role=role,
+        x=AxisAngleLimit(LimitType.LOCKED),
+        y=AxisAngleLimit(LimitType.LOCKED),
+        z=AxisAngleLimit(LimitType.LOCKED),
+    )
+
+
+def hinge_bone_limits(role: str, hinge_axis: int) -> BoneAngleLimits:
+    """Two Locked axes + one Free hinge axis (no universal degree clamp)."""
+    axes = [
+        AxisAngleLimit(LimitType.LOCKED),
+        AxisAngleLimit(LimitType.LOCKED),
+        AxisAngleLimit(LimitType.LOCKED),
+    ]
+    axes[hinge_axis] = AxisAngleLimit(LimitType.FREE)
+    return BoneAngleLimits(
+        role=role,
+        x=axes[0],
+        y=axes[1],
+        z=axes[2],
+    )
+
+
+def provisional_arm_joint_limits() -> tuple:
+    """UI seed before a target rest pose can detect the elbow hinge axis.
+
+    Shoulder/clavicle roles use FIXED. Forearms provisionally hinge on X;
+    bake-time auto-seed replaces Free-only lists using rest-pose hinge detection.
+    """
+    return (
+        fixed_bone_limits("shoulder_l"),
+        fixed_bone_limits("shoulder_r"),
+        hinge_bone_limits("forearm_l", 0),
+        hinge_bone_limits("forearm_r", 0),
+    )
+
+
 def _inverse(q: Quaternion) -> Quaternion:
     return Quaternion((q.w, -q.x, -q.y, -q.z))
 

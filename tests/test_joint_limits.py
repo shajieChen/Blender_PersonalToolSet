@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from mathutils import Quaternion
+from mathutils import Quaternion, Vector
 
 from humanoid_retarget.joint_limits import (
     AxisAngleLimit,
@@ -9,7 +9,13 @@ from humanoid_retarget.joint_limits import (
     JointBody,
     JointRotationConstraint,
     LimitType,
+    bone_limits_are_free,
     decompose_rotation_angles,
+    detect_hinge_axis_index,
+    fixed_bone_limits,
+    hinge_bone_limits,
+    joint_limits_are_ineffective,
+    provisional_arm_joint_limits,
     run_rotation_limit_pass,
     update_joint_limits,
 )
@@ -96,6 +102,30 @@ class JointLimitTests(unittest.TestCase):
         before = tuple(joint.child.rotation)
         update_joint_limits(joint, True, 30.0)
         self.assertEqual(tuple(joint.child.rotation), before)
+
+    def test_free_only_configs_are_ineffective(self):
+        self.assertTrue(joint_limits_are_ineffective(()))
+        self.assertTrue(joint_limits_are_ineffective((
+            BoneAngleLimits(role="forearm_l"),
+        )))
+        self.assertFalse(bone_limits_are_free(fixed_bone_limits("shoulder_l")))
+        self.assertFalse(joint_limits_are_ineffective(
+            provisional_arm_joint_limits()
+        ))
+
+    def test_hinge_axis_follows_cross_product(self):
+        proximal = Vector((0.0, 1.0, 0.0))
+        distal = Vector((0.0, 1.0, 0.1))
+        local = (
+            Vector((1.0, 0.0, 0.0)),
+            Vector((0.0, 1.0, 0.0)),
+            Vector((0.0, 0.0, 1.0)),
+        )
+        self.assertEqual(detect_hinge_axis_index(proximal, distal, local), 0)
+        limits = hinge_bone_limits("forearm_l", 0)
+        self.assertEqual(limits.x.kind, LimitType.FREE)
+        self.assertEqual(limits.y.kind, LimitType.LOCKED)
+        self.assertEqual(limits.z.kind, LimitType.LOCKED)
 
 
 if __name__ == "__main__":

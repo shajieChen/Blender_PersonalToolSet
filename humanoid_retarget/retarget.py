@@ -34,12 +34,17 @@ from .foot_ik import (
     retarget_pelvis_position,
     validate_foot_ik_settings,
 )
-from .ik import apply_contact_ik
+from .ik import apply_contact_ik, apply_pelvis_ik, prepare_pelvis_constraints
 from .joint_limits import (
     BoneAngleLimits,
     JointBody,
     JointLimitSettings,
     JointRotationConstraint,
+    LimitType,
+    bone_limits_are_free,
+    detect_hinge_axis_index,
+    fixed_bone_limits,
+    hinge_bone_limits,
     normalize_rotation,
     run_rotation_limit_pass,
     validate_joint_limit_settings,
@@ -49,7 +54,15 @@ from .soft_repulsion import (
     repel_capsule_point,
     validate_soft_repulsion_settings,
 )
-from .ik import _aim_joint, _two_bone, _write_end_rotation
+from .ik import (
+    _aim_joint,
+    _apply_two_bone_aim,
+    _fold_opposes_bind,
+    _two_bone,
+    _write_end_rotation,
+    align_pole_to_bind_side,
+    bind_oriented_pole,
+)
 from .motion_space import MotionSpaceError, build_motion_space, validate_motion_space
 from .mapping import build_pairs
 
@@ -75,6 +88,7 @@ class RetargetOptions:
         soft_repulsion_settings=None,
         joint_limits=False,
         joint_limit_settings=None,
+        forearm_chain_twist=True,
     ):
         self.pairs = pairs
         self.reference = reference if reference in {"REST", "CURRENT"} else "REST"
@@ -98,6 +112,7 @@ class RetargetOptions:
         })
         self.soft_repulsion = bool(soft_repulsion)
         self.joint_limits = bool(joint_limits)
+        self.forearm_chain_twist = bool(forearm_chain_twist)
         self.soft_repulsion_settings = None
         self.joint_limit_settings = None
 
@@ -324,6 +339,19 @@ def _anatomical_roles(arm, fallback):
 
 
 _TORSO_TWIST_ROLES = frozenset({"hips", "spine", "chest", "neck"})
+_FOREARM_CHAIN_TWIST_ROLES = frozenset({"forearm_l", "forearm_r"})
+
+
+def should_flip_limb_fold(rest_pole, upper_delta, posed_pole):
+    """True when the posed elbow/knee fold opposes the bind-side preferred pole.
+
+    Kept for diagnostics. Do not π-flip the mid bone about the proximal axis in
+    bake: that inverts the bone binormal (candy-wrapper) under Hand IK.
+    """
+    if rest_pole.length_squared < 1e-10 or posed_pole.length_squared < 1e-10:
+        return False
+    preferred = upper_delta @ rest_pole
+    return posed_pole.dot(preferred) < 0.0
 
 
 def _twist_about_chain(src, source_name, src_chain, desired, orient):
@@ -349,13 +377,22 @@ def _head_orient(src, pose_bone, source_name, source_body, target_body):
     return target_body @ change @ target_body.inverted() @ target_rest
 
 
+def _use_chain_twist(options, role):
+    """Torso always keeps its chain twist. Forearms do too unless A/B mode turns it off."""
+    if role in _TORSO_TWIST_ROLES:
+        return True
+    return role in _FOREARM_CHAIN_TWIST_ROLES and bool(getattr(options, "forearm_chain_twist", True))
+
+
 def _apply_body_orientations(src, tgt, pairs, options):
-    """Point each target limb at the source limb without taking the source roll.
+    """Point each target limb at the source chain. Forearms also keep chain roll.
 
     matrix_basis is parent-relative, so a spine parented to a root rotator would
     otherwise miss that rotation when the target spine hangs off the pelvis.
-    Rest mode swings the bind orientation onto the source chain direction.
-    Current mode adds only the orientation change since the captured pose.
+    Direction-only mode swings the bind orientation onto the source chain and
+    leaves the target bind roll. Forearm chain-twist mode adds the source roll
+    about the elbow-to-wrist chain, not about bone Y. Current mode adds only
+    the orientation change since the captured pose.
     """
     src_roles = {role: source_name for role, source_name, _target_name in pairs}
     tgt_roles = {role: target_name for role, _source_name, target_name in pairs}
@@ -396,7 +433,7 @@ def _apply_body_orientations(src, tgt, pairs, options):
                 rest_orient = pose_bone.bone.matrix_local.to_3x3()
                 swing = tgt_chain.normalized().rotation_difference(desired.normalized())
                 orient = swing.to_matrix() @ rest_orient
-                if role in _TORSO_TWIST_ROLES:
+                if _use_chain_twist(options, role):
                     orient = _twist_about_chain(src, source_name, src_chain, desired, orient)
         else:
             source_ref = _stored_matrix(data.get("source_matrix"), source_name, src.data.bones[source_name].matrix_local)
@@ -910,6 +947,63 @@ def _bone_depth(pose_bone):
     return depth
 
 
+def _elbow_hinge_axis(tgt, upper_name, forearm_name, hand_name):
+    upper = tgt.data.bones[upper_name]
+    forearm = tgt.data.bones[forearm_name]
+    hand = tgt.data.bones[hand_name]
+    proximal = forearm.head_local - upper.head_local
+    distal = hand.head_local - forearm.head_local
+    local = forearm.matrix_local.to_3x3()
+    axes = tuple(local.col[index].xyz.copy() for index in range(3))
+    return detect_hinge_axis_index(proximal, distal, axes)
+
+
+def build_default_arm_joint_limits(tgt, roles):
+    """Clavicle FIXED + forearm HINGE from target rest pose (no degree table)."""
+    bones = []
+    for side in ("l", "r"):
+        shoulder = "shoulder_" + side
+        if shoulder in roles:
+            bones.append(fixed_bone_limits(shoulder))
+        upper = "upperarm_" + side
+        forearm = "forearm_" + side
+        hand = "hand_" + side
+        if upper in roles and forearm in roles and hand in roles:
+            axis = _elbow_hinge_axis(
+                tgt, roles[upper], roles[forearm], roles[hand]
+            )
+            bones.append(hinge_bone_limits(forearm, axis))
+    return tuple(bones)
+
+
+def _is_pure_hinge_limits(limits):
+    kinds = (limits.x.kind, limits.y.kind, limits.z.kind)
+    return kinds.count(LimitType.FREE) == 1 and kinds.count(LimitType.LOCKED) == 2
+
+
+def resolve_arm_joint_limits(tgt, roles, bones):
+    """Fill missing/Free shoulder+forearm; refresh provisional forearm hinges."""
+    auto = {bone.role: bone for bone in build_default_arm_joint_limits(tgt, roles)}
+    if not auto:
+        return tuple(bones)
+    current = {bone.role: bone for bone in bones}
+    merged = []
+    used = set()
+    for role, auto_bone in auto.items():
+        existing = current.get(role)
+        if existing is None or bone_limits_are_free(existing):
+            merged.append(auto_bone)
+        elif role.startswith("forearm_") and _is_pure_hinge_limits(existing):
+            merged.append(auto_bone)
+        else:
+            merged.append(existing)
+        used.add(role)
+    for role, bone in current.items():
+        if role not in used:
+            merged.append(bone)
+    return tuple(merged)
+
+
 # FBX unit conversion often leaves a uniform pose scale (commonly 0.01 or 100).
 # Blender stores pose TRS without shear: a uniform scale commutes with rotation,
 # while a non-uniform scale plus rotation does not round-trip through matrix_basis.
@@ -986,6 +1080,9 @@ def _prepare_pose_channels(src, tgt, pairs, options, scene):
     configurations = {}
     references = {}
     if options.joint_limits:
+        options.joint_limit_settings.bones = resolve_arm_joint_limits(
+            tgt, roles, options.joint_limit_settings.bones
+        )
         for limits in options.joint_limit_settings.bones:
             if limits.role not in roles:
                 raise RetargetError(f"关节限 role 未映射: {limits.role}")
@@ -1189,14 +1286,32 @@ def _build_pose_channel_goals(
 
 def _solve_pose_channel_chain(tgt, space, limb, goal, pole_goal):
     upper_name, mid_name, end_name = limb.target_names
-    root = space.position(tgt.pose.bones[upper_name].head)
-    pole = (
-        pole_goal
-        if pole_goal is not None
-        else space.position(tgt.pose.bones[mid_name].head)
+    world = tgt.matrix_world
+    root = space.position(world @ tgt.pose.bones[upper_name].head)
+    rest_root = space.position(world @ tgt.data.bones[upper_name].head_local)
+    rest_mid = space.position(world @ tgt.data.bones[mid_name].head_local)
+    rest_end = space.position(world @ tgt.data.bones[end_name].head_local)
+    end_role = limb.roles[2]
+    if end_role in ("hand_l", "hand_r"):
+        preferred_side = Vector((0.0, -1.0, 0.0))
+    elif end_role in ("foot_l", "foot_r"):
+        preferred_side = Vector((0.0, 1.0, 0.0))
+    else:
+        preferred_side = Vector((0.0, -1.0, 0.0))
+    bind_pole = bind_oriented_pole(
+        root,
+        goal.position,
+        rest_root,
+        rest_mid,
+        rest_end,
+        preferred_side,
     )
-    if (pole - root).length < 1e-6:
-        pole = limb.reference_pole
+    if pole_goal is not None:
+        pole = align_pole_to_bind_side(
+            root, pole_goal, bind_pole, goal.position
+        )
+    else:
+        pole = bind_pole
 
     knee, reachable = _two_bone(
         root,
@@ -1206,12 +1321,21 @@ def _solve_pose_channel_chain(tgt, space, limb, goal, pole_goal):
         pole,
         limb.reference_pole - root,
     )
-    _aim_joint(tgt, upper_name, mid_name, space, knee - root)
-    bpy.context.view_layer.update()
-
-    knee_now = space.position(tgt.pose.bones[mid_name].head)
-    _aim_joint(tgt, mid_name, end_name, space, reachable - knee_now)
-    bpy.context.view_layer.update()
+    _apply_two_bone_aim(tgt, space, upper_name, mid_name, end_name, knee, reachable)
+    if _fold_opposes_bind(
+        tgt, space, upper_name, mid_name, end_name,
+        rest_root, rest_mid, rest_end,
+    ):
+        flipped = root - (pole - root)
+        knee, reachable = _two_bone(
+            root,
+            limb.target_upper_length,
+            limb.target_lower_length,
+            goal.position,
+            flipped,
+            limb.reference_pole - root,
+        )
+        _apply_two_bone_aim(tgt, space, upper_name, mid_name, end_name, knee, reachable)
 
     _write_end_rotation(tgt, end_name, space, goal.rotation)
     bpy.context.view_layer.update()
@@ -1283,6 +1407,9 @@ def _apply_pose_channels(
         src, tgt, geometry, options,
         states, speeds, pelvis_delta, dt,
     )
+    if geometry is not None:
+        constraints = prepare_pelvis_constraints(src, tgt, geometry, goals, options.foot_ik_settings)
+        apply_pelvis_ik(tgt, geometry, options.foot_ik_settings, constraints)
     poles = {}
     if options.soft_repulsion and geometry is not None:
         poles = _correct_arm_goals(

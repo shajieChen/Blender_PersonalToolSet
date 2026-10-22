@@ -31,6 +31,9 @@ class MotionSpace:
             position / self.meters_per_unit
         )
 
+    def world_position(self, world_position: Vector) -> Vector:
+        return self.position(self.object_matrix.inverted() @ world_position)
+
     def rotation(self, armature_matrix: Matrix) -> Quaternion:
         rotation = armature_matrix.to_quaternion().to_matrix()
         return (
@@ -39,6 +42,9 @@ class MotionSpace:
 
     def armature_rotation(self, rotation: Quaternion) -> Matrix:
         return self.axes @ rotation.to_matrix()
+
+    def world_rotation(self, world_matrix: Matrix) -> Quaternion:
+        return self.rotation(self.object_matrix.inverted() @ world_matrix)
 
 
 class MotionSpaceError(RuntimeError):
