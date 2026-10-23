@@ -1,0 +1,177 @@
+diff --git "a/backup_pre_pelvis_fix\\foot_ik.py" "b/..\\floor_candidate_root\\humanoid_retarget\\foot_ik.py"
+index eaf2e10..3a18987 100644
+--- "a/backup_pre_pelvis_fix\\foot_ik.py"
++++ "b/..\\floor_candidate_root\\humanoid_retarget\\foot_ik.py"
+@@ -40,6 +40,14 @@ class PelvisReference:
+     target_position: Vector
+     inverse_source_height: float
+     xy_offset: Vector
++    # Rest sole levels in each rig's motion space (height of the grounded
++    # datum above the motion-space origin). Zero keeps the legacy mapping.
++    source_ground_z: float = 0.0
++    target_ground_z: float = 0.0
++    # Target rest sole level measured from world Z=0 (target_ground_z plus
++    # the configured floor height). Used to place mapped heights back into
++    # target motion space so a floor offset translates the body once.
++    target_ground_world_z: float = 0.0
+ 
+ 
+ @dataclass
+@@ -136,33 +144,58 @@ def retarget_pelvis_position(
+     settings: FootIKSettings,
+     in_place: bool,
+ ):
+-    ratio = (
+-        reference.target_position.z
+-        * reference.inverse_source_height
++    # Map heights in above-ground (sole-referenced) coordinates: the ratio,
++    # percent and constrained height all use heights above each rig's rest
++    # sole level, and the result is placed back into target motion space
++    # from the sole's world level. A world floor offset therefore moves
++    # the target motion origin instead of being scaled away by the ratio.
++    # With both ground levels at zero this reduces to the legacy formula.
++    source_ground = reference.source_ground_z
++    target_ground = reference.target_ground_z
++    source_height = reference.source_position.z - source_ground
++    target_height = reference.target_position.z - target_ground
++    if abs(source_height) > 1e-9:
++        ratio = target_height / source_height
++    else:
++        ratio = (
++            reference.target_position.z
++            * reference.inverse_source_height
++        )
++    base = current.copy()
++    base.x *= ratio
++    base.y *= ratio
++    base.z = (
++        reference.target_ground_world_z
++        + (current.z - source_ground) * ratio
+     )
+-    base = current.copy() * ratio
+ 
+     if abs(settings.pelvis_floor_weight) > 1e-8:
+         if current.z <= reference.source_position.z:
+             source_initial_crotch = (
+-                reference.source_position.z
++                source_height
+                 - settings.source_crotch_offset_m
+             )
+             source_current_crotch = (
+-                current.z - settings.source_crotch_offset_m
++                current.z - source_ground
++                - settings.source_crotch_offset_m
+             )
+             percent = source_current_crotch / max(
+                 0.01, source_initial_crotch
+             )
+             constrained = (
+-                reference.target_position.z
+-                - settings.target_crotch_offset_m
+-            ) * percent + settings.target_crotch_offset_m
++                (
++                    target_height
++                    - settings.target_crotch_offset_m
++                ) * percent
++                + settings.target_crotch_offset_m
++                + reference.target_ground_world_z
++            )
+         else:
+             constrained = (
+-                current.z
+-                + reference.target_position.z
+-                - reference.source_position.z
++                current.z - source_ground
++                + target_height
++                - source_height
++                + reference.target_ground_world_z
+             )
+         base.z += (
+             constrained - base.z
+diff --git "a/backup_pre_pelvis_fix\\retarget.py" "b/..\\floor_candidate_root\\humanoid_retarget\\retarget.py"
+index 856b47a..c8b0d6d 100644
+--- "a/backup_pre_pelvis_fix\\retarget.py"
++++ "b/..\\floor_candidate_root\\humanoid_retarget\\retarget.py"
+@@ -894,6 +894,33 @@ def _extract_foot_skin_points(tgt, bone_names):
+     return tuple(points)
+ 
+ 
++def _reference_sole_height(arm, roles, space):
++    """Lowest rest/bind foot-region skin point in motion space, or None.
++
++    Uses the same bind skin points as the contact recheck so the pelvis
++    ground datum matches the sole the recheck grounds to. Returns None
++    when the rig has no usable foot skin; the caller then keeps the
++    legacy zero-ground pelvis mapping for both rigs.
++    """
++    names = []
++    for chain in _IK_CHAIN_ROLES[:2]:
++        if not all(role in roles for role in chain):
++            continue
++        _upper, mid, end = (roles[role] for role in chain)
++        names.extend((mid, end))
++        names.extend(child.name for child in arm.data.bones[end].children)
++    if not names:
++        return None
++    points = _extract_foot_skin_points(arm, tuple(names))
++    if not points:
++        return None
++    lowest = None
++    for bind_point, _influences in points:
++        z = space.world_position(arm.matrix_world @ bind_point).z
++        lowest = z if lowest is None else min(lowest, z)
++    return lowest
++
++
+ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coordinates=False, extra_arm_chains=False):
+     src_roles = {role: name for role, name, _t in pairs}
+     tgt_roles = {role: name for role, _s, name in pairs}
+@@ -920,6 +947,21 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
+     except MotionSpaceError as exc:
+         raise RetargetError(f"½Å IK ¿Õ¼ä¹¹½¨Ê§°Ü: {exc}")
+ 
++    # Rest sole levels (motion space) ground the pelvis height mapping so
++    # the configured floor height translates the body once instead of
++    # being scaled away. Both-or-neither: if either rig has no usable
++    # foot skin, keep the legacy zero-ground mapping unchanged. The pose
++    # channel path (armature_coordinates) keeps its legacy datum.
++    sole_source = sole_target = None
++    if not armature_coordinates:
++        sole_source = _reference_sole_height(src, src_roles, source_space)
++        sole_target = _reference_sole_height(tgt, tgt_roles, target_space)
++    if sole_source is None or sole_target is None:
++        sole_source = sole_target = 0.0
++        target_ground_world = 0.0
++    else:
++        target_ground_world = sole_target + settings.floor_height_m
++
+     def reference_matrices(arm, roles, names):
+         matrices = {}
+         for name in names:
+@@ -966,6 +1008,9 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
+         target_position=target_hips_pos,
+         inverse_source_height=1.0 / source_height,
+         xy_offset=xy_offset,
++        source_ground_z=sole_source,
++        target_ground_z=sole_target,
++        target_ground_world_z=target_ground_world,
+     )
+ 
+     limbs = []
+@@ -1034,7 +1079,15 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
+             target_lower_length=rest_lower,
+             source_end_rotation=source_end_rotation,
+             target_end_rotation=target_end_rotation,
+-            height_offset=tgt_end.z - src_end.z,
++            # tgt_end is measured in target motion space, whose origin sits
++            # at the configured floor; adding the floor height back keeps
++            # the rest ankle-height difference in world terms so the floor
++            # offset is not applied twice. The pose channel path keeps its
++            # legacy datum.
++            height_offset=(
++                tgt_end.z - src_end.z
++                + (0.0 if armature_coordinates else settings.floor_height_m)
++            ),
+             source_rest_end_height=src_rest_end.z,
+             reference_pole=tgt_mid,
+             contact_local=(

@@ -26,6 +26,10 @@ class MotionSpace:
             @ (armature_position.copy() - self.origin)
         ) * self.meters_per_unit
 
+    def world_position(self, world_position: Vector) -> Vector:
+        """Convert a world-space point once, then apply the metric motion space."""
+        return self.position(self.object_matrix.inverted() @ world_position)
+
     def armature_position(self, position: Vector) -> Vector:
         return self.origin + self.axes @ (
             position / self.meters_per_unit
@@ -36,6 +40,10 @@ class MotionSpace:
         return (
             self.axes.transposed() @ rotation
         ).to_quaternion().normalized()
+
+    def world_rotation(self, world_matrix: Matrix) -> Quaternion:
+        """Convert a world-space matrix once, then read its motion-space rotation."""
+        return self.rotation(self.object_matrix.inverted() @ world_matrix)
 
     def armature_rotation(self, rotation: Quaternion) -> Matrix:
         return self.axes @ rotation.to_matrix()

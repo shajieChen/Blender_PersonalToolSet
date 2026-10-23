@@ -1,0 +1,446 @@
+diff --git "a/backup_pre_datum_fix\\foot_ik.py" "b/..\\floor_candidate_root\\humanoid_retarget\\foot_ik.py"
+index 3a18987..7ff8c1e 100644
+--- "a/backup_pre_datum_fix\\foot_ik.py"
++++ "b/..\\floor_candidate_root\\humanoid_retarget\\foot_ik.py"
+@@ -40,14 +40,15 @@ class PelvisReference:
+     target_position: Vector
+     inverse_source_height: float
+     xy_offset: Vector
+-    # Rest sole levels in each rig's motion space (height of the grounded
+-    # datum above the motion-space origin). Zero keeps the legacy mapping.
+-    source_ground_z: float = 0.0
+-    target_ground_z: float = 0.0
+-    # Target rest sole level measured from world Z=0 (target_ground_z plus
+-    # the configured floor height). Used to place mapped heights back into
+-    # target motion space so a floor offset translates the body once.
+-    target_ground_world_z: float = 0.0
++    # Ground datum captured at rig registration, in armature-local terms:
++    # the reference hips heights above the captured ground plane (meters).
++    # source_datum_matrix/scale convert a source armature-local point to
++    # its datum height. All three are None when no datum was captured;
++    # the pelvis mapping then keeps the legacy motion-space formula.
++    source_datum_height: float | None = None
++    target_datum_height: float | None = None
++    source_datum_matrix: object = None
++    source_datum_scale: float = 1.0
+ 
+ 
+ @dataclass
+@@ -143,59 +144,100 @@ def retarget_pelvis_position(
+     reference: PelvisReference,
+     settings: FootIKSettings,
+     in_place: bool,
++    current_datum_z=None,
+ ):
+-    # Map heights in above-ground (sole-referenced) coordinates: the ratio,
+-    # percent and constrained height all use heights above each rig's rest
+-    # sole level, and the result is placed back into target motion space
+-    # from the sole's world level. A world floor offset therefore moves
+-    # the target motion origin instead of being scaled away by the ratio.
+-    # With both ground levels at zero this reduces to the legacy formula.
+-    source_ground = reference.source_ground_z
+-    target_ground = reference.target_ground_z
+-    source_height = reference.source_position.z - source_ground
+-    target_height = reference.target_position.z - target_ground
+-    if abs(source_height) > 1e-9:
+-        ratio = target_height / source_height
+-    else:
+-        ratio = (
+-            reference.target_position.z
+-            * reference.inverse_source_height
+-        )
+-    base = current.copy()
+-    base.x *= ratio
+-    base.y *= ratio
+-    base.z = (
+-        reference.target_ground_world_z
+-        + (current.z - source_ground) * ratio
++    # Datum mapping: ratio, percent and constrained height all use heights
++    # above each rig's captured ground datum (armature-local, captured at
++    # registration). The result is a height above the ground, which the
++    # motion space then places relative to the configured floor exactly
++    # once; neither the floor height nor the object transform enters here.
++    if (
++        reference.source_datum_height is not None
++        and reference.target_datum_height is not None
++        and current_datum_z is not None
++    ):
++        source_height = reference.source_datum_height
++        target_height = reference.target_datum_height
++        current_z = current_datum_z
++        if abs(source_height) > 1e-9:
++            ratio = target_height / source_height
++        else:
++            ratio = (
++                reference.target_position.z
++                * reference.inverse_source_height
++            )
++        base = current.copy()
++        base.x *= ratio
++        base.y *= ratio
++        base.z = current_z * ratio
++
++        if abs(settings.pelvis_floor_weight) > 1e-8:
++            if current_z <= source_height:
++                source_initial_crotch = (
++                    source_height
++                    - settings.source_crotch_offset_m
++                )
++                source_current_crotch = (
++                    current_z - settings.source_crotch_offset_m
++                )
++                percent = source_current_crotch / max(
++                    0.01, source_initial_crotch
++                )
++                constrained = (
++                    (
++                        target_height
++                        - settings.target_crotch_offset_m
++                    ) * percent
++                    + settings.target_crotch_offset_m
++                )
++            else:
++                constrained = (
++                    current_z
++                    + target_height
++                    - source_height
++                )
++            base.z += (
++                constrained - base.z
++            ) * settings.pelvis_floor_weight
++
++        position = base.copy()
++        position.x += reference.xy_offset.x
++        position.y += reference.xy_offset.y
++
++        if in_place:
++            position.x = reference.target_position.x
++            position.y = reference.target_position.y
++
++        return position, position - base
++
++    # Legacy motion-space mapping (no captured datum): unchanged formula.
++    ratio = (
++        reference.target_position.z
++        * reference.inverse_source_height
+     )
++    base = current.copy() * ratio
+ 
+     if abs(settings.pelvis_floor_weight) > 1e-8:
+         if current.z <= reference.source_position.z:
+             source_initial_crotch = (
+-                source_height
++                reference.source_position.z
+                 - settings.source_crotch_offset_m
+             )
+             source_current_crotch = (
+-                current.z - source_ground
+-                - settings.source_crotch_offset_m
++                current.z - settings.source_crotch_offset_m
+             )
+             percent = source_current_crotch / max(
+                 0.01, source_initial_crotch
+             )
+             constrained = (
+-                (
+-                    target_height
+-                    - settings.target_crotch_offset_m
+-                ) * percent
+-                + settings.target_crotch_offset_m
+-                + reference.target_ground_world_z
+-            )
++                reference.target_position.z
++                - settings.target_crotch_offset_m
++            ) * percent + settings.target_crotch_offset_m
+         else:
+             constrained = (
+-                current.z - source_ground
+-                + target_height
+-                - source_height
+-                + reference.target_ground_world_z
++                current.z
++                + reference.target_position.z
++                - reference.source_position.z
+             )
+         base.z += (
+             constrained - base.z
+diff --git "a/backup_pre_datum_fix\\retarget.py" "b/..\\floor_candidate_root\\humanoid_retarget\\retarget.py"
+index c8b0d6d..2a28c77 100644
+--- "a/backup_pre_datum_fix\\retarget.py"
++++ "b/..\\floor_candidate_root\\humanoid_retarget\\retarget.py"
+@@ -14,6 +14,7 @@ foot IK runs after the FK pose.
+ from __future__ import annotations
+ 
+ import bpy
++import json
+ from math import acos, isfinite, pi
+ from mathutils import Matrix, Quaternion, Vector
+ 
+@@ -660,6 +661,10 @@ def capture_reference(src, tgt, pairs):
+             pose = tgt.pose.bones[target_name]
+             target_matrix[target_name] = [list(row) for row in pose.matrix]
+             target_basis[target_name] = [list(row) for row in _basis_matrix(pose)]
++    # Capturing a reference also (re)captures both ground datums at the
++    # current registration placement.
++    capture_ground_datum(src)
++    capture_ground_datum(tgt)
+     return {
+         "source_matrix": source_matrix,
+         "target_matrix": target_matrix,
+@@ -894,14 +899,22 @@ def _extract_foot_skin_points(tgt, bone_names):
+     return tuple(points)
+ 
+ 
+-def _reference_sole_height(arm, roles, space):
+-    """Lowest rest/bind foot-region skin point in motion space, or None.
++_DATUM_PROPERTY = "hr_ground_datum"
+ 
+-    Uses the same bind skin points as the contact recheck so the pelvis
+-    ground datum matches the sole the recheck grounds to. Returns None
+-    when the rig has no usable foot skin; the caller then keeps the
+-    legacy zero-ground pelvis mapping for both rigs.
++
++def capture_ground_datum(arm, roles=None):
++    """Capture the rig ground datum at registration time.
++
++    The datum is stored on the armature object in armature-local terms:
++    the object matrix at capture (which maps local points onto the
++    registration ground plane, world Z=0) plus the lowest foot-region
++    bind skin point, the same skin points the contact recheck uses.
++    Later object moves and floor-height changes do not alter it.
++    Returns the datum dict, or None when the rig has no usable foot
++    skin (any previously captured datum is then left untouched).
+     """
++    if roles is None:
++        roles = classify_armature(arm)
+     names = []
+     for chain in _IK_CHAIN_ROLES[:2]:
+         if not all(role in roles for role in chain):
+@@ -914,11 +927,43 @@ def _reference_sole_height(arm, roles, space):
+     points = _extract_foot_skin_points(arm, tuple(names))
+     if not points:
+         return None
+-    lowest = None
+-    for bind_point, _influences in points:
+-        z = space.world_position(arm.matrix_world @ bind_point).z
+-        lowest = z if lowest is None else min(lowest, z)
+-    return lowest
++    matrix = arm.matrix_world.copy()
++    sole = min(
++        (bind_point for bind_point, _influences in points),
++        key=lambda point: (matrix @ point).z,
++    )
++    datum = {
++        "version": 1,
++        "matrix": [list(row) for row in matrix],
++        "sole": [float(sole.x), float(sole.y), float(sole.z)],
++        "meters_per_unit": float(
++            bpy.context.scene.unit_settings.scale_length or 1.0
++        ),
++    }
++    arm[_DATUM_PROPERTY] = json.dumps(datum)
++    return datum
++
++
++def _load_ground_datum(arm):
++    """Stored ground datum as (capture matrix, sole point, unit scale)."""
++    raw = arm.get(_DATUM_PROPERTY) if hasattr(arm, "get") else None
++    if not raw:
++        return None
++    try:
++        data = json.loads(raw)
++        return (
++            Matrix(data["matrix"]),
++            Vector(data["sole"]),
++            float(data["meters_per_unit"]),
++        )
++    except (KeyError, TypeError, ValueError):
++        return None
++
++
++def _datum_height(datum, local_point):
++    """Height of an armature-local point above the captured ground, in meters."""
++    matrix, _sole, scale = datum
++    return float((matrix @ local_point).z) * scale
+ 
+ 
+ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coordinates=False, extra_arm_chains=False):
+@@ -947,20 +992,23 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
+     except MotionSpaceError as exc:
+         raise RetargetError(f"脚 IK 空间构建失败: {exc}")
+ 
+-    # Rest sole levels (motion space) ground the pelvis height mapping so
+-    # the configured floor height translates the body once instead of
+-    # being scaled away. Both-or-neither: if either rig has no usable
+-    # foot skin, keep the legacy zero-ground mapping unchanged. The pose
+-    # channel path (armature_coordinates) keeps its legacy datum.
+-    sole_source = sole_target = None
++    # Ground datum captured at registration (armature-local, stored on
++    # each armature). It is read here, never recomputed from the current
++    # object placement or floor height. Both-or-neither: if either rig
++    # has no captured datum, pelvis and ankle heights keep the legacy
++    # motion-space formula as a whole (non-zero floors and translation
++    # invariance are then not guaranteed). The pose channel path
++    # (armature_coordinates) keeps the legacy formula as well.
++    datum_source = datum_target = None
+     if not armature_coordinates:
+-        sole_source = _reference_sole_height(src, src_roles, source_space)
+-        sole_target = _reference_sole_height(tgt, tgt_roles, target_space)
+-    if sole_source is None or sole_target is None:
+-        sole_source = sole_target = 0.0
+-        target_ground_world = 0.0
+-    else:
+-        target_ground_world = sole_target + settings.floor_height_m
++        datum_source = _load_ground_datum(src)
++        datum_target = _load_ground_datum(tgt)
++    use_datum = datum_source is not None and datum_target is not None
++    if not use_datum and not armature_coordinates:
++        print(
++            "[HumanoidRetarget] 未找到地面 Datum（登记时捕获），"
++            "骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。"
++        )
+ 
+     def reference_matrices(arm, roles, names):
+         matrices = {}
+@@ -1001,6 +1049,15 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
+         0.0,
+     ))
+ 
++    source_datum_height = target_datum_height = None
++    if use_datum:
++        source_datum_height = _datum_height(
++            datum_source, hips_matrices[src_hips_name].translation
++        )
++        target_datum_height = _datum_height(
++            datum_target, tgt_hips_matrices[tgt_hips_name].translation
++        )
++
+     pelvis = PelvisReference(
+         source_name=src_hips_name,
+         target_name=tgt_hips_name,
+@@ -1008,9 +1065,10 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
+         target_position=target_hips_pos,
+         inverse_source_height=1.0 / source_height,
+         xy_offset=xy_offset,
+-        source_ground_z=sole_source,
+-        target_ground_z=sole_target,
+-        target_ground_world_z=target_ground_world,
++        source_datum_height=source_datum_height,
++        target_datum_height=target_datum_height,
++        source_datum_matrix=(datum_source[0] if use_datum else None),
++        source_datum_scale=(datum_source[2] if use_datum else 1.0),
+     )
+ 
+     limbs = []
+@@ -1079,14 +1137,21 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
+             target_lower_length=rest_lower,
+             source_end_rotation=source_end_rotation,
+             target_end_rotation=target_end_rotation,
+-            # tgt_end is measured in target motion space, whose origin sits
+-            # at the configured floor; adding the floor height back keeps
+-            # the rest ankle-height difference in world terms so the floor
+-            # offset is not applied twice. The pose channel path keeps its
+-            # legacy datum.
++            # With a captured datum, the rest ankle-height difference is
++            # measured above each rig's captured ground plane (meters),
++            # independent of the configured floor and object placement.
++            # Without a datum the legacy motion-space difference is kept.
+             height_offset=(
+-                tgt_end.z - src_end.z
+-                + (0.0 if armature_coordinates else settings.floor_height_m)
++                (
++                    _datum_height(
++                        datum_target, tgt_mats[tgt_names[2]].translation
++                    )
++                    - _datum_height(
++                        datum_source, src_mats[src_names[2]].translation
++                    )
++                )
++                if use_datum
++                else tgt_end.z - src_end.z
+             ),
+             source_rest_end_height=src_rest_end.z,
+             reference_pole=tgt_mid,
+@@ -1123,8 +1188,16 @@ def _hips_translation_with_floor(src, tgt, geometry, settings, in_place, armatur
+     else:
+         current = _metric_position(geometry.source_space, src.matrix_world @ src_pose.head)
+ 
++    current_datum_z = None
++    if pelvis.source_datum_matrix is not None:
++        current_datum_z = (
++            float((pelvis.source_datum_matrix @ src_pose.head).z)
++            * pelvis.source_datum_scale
++        )
++
+     position, pelvis_delta = retarget_pelvis_position(
+-        current, pelvis, settings, in_place
++        current, pelvis, settings, in_place,
++        current_datum_z=current_datum_z,
+     )
+ 
+     tgt_pose = tgt.pose.bones[pelvis.target_name]
+diff --git "a/backup_pre_datum_fix\\ik.py" "b/..\\floor_candidate_root\\humanoid_retarget\\ik.py"
+index e1d088b..b6cb77d 100644
+--- "a/backup_pre_datum_fix\\ik.py"
++++ "b/..\\floor_candidate_root\\humanoid_retarget\\ik.py"
+@@ -166,9 +166,23 @@ def apply_contact_ik(
+         )
+ 
+         if end_role in _FOOT_ROLES:
++            # The floor constraint works in captured-datum heights so it
++            # shares the pelvis datum; without a datum it keeps the
++            # legacy source motion-space height.
++            source_end_z = source_end.z
++            if geometry.pelvis.source_datum_matrix is not None:
++                source_end_z = (
++                    float(
++                        (
++                            geometry.pelvis.source_datum_matrix
++                            @ source_end_pose.head
++                        ).z
++                    )
++                    * geometry.pelvis.source_datum_scale
++                )
+             goal.position = constrain_goal_floor(
+                 goal.position,
+-                source_end.z,
++                source_end_z,
+                 limb.height_offset,
+                 settings,
+             )
+diff --git "a/backup_pre_datum_fix\\pipeline.py" "b/..\\floor_candidate_root\\humanoid_retarget\\pipeline.py"
+index efcd688..d0932c6 100644
+--- "a/backup_pre_datum_fix\\pipeline.py"
++++ "b/..\\floor_candidate_root\\humanoid_retarget\\pipeline.py"
+@@ -8,7 +8,7 @@ import bpy
+ 
+ from .autorig import AutoRigError, auto_rig_meshes
+ from .classify import CORE_ROLES, classify_armature
+-from .retarget import ACTION_SEP, RetargetError, RetargetOptions, bake_retarget, collect_actions
++from .retarget import ACTION_SEP, RetargetError, RetargetOptions, bake_retarget, capture_ground_datum, collect_actions
+ 
+ SOURCE_EXTS = {".fbx", ".glb", ".gltf", ".bvh"}
+ TARGET_EXTS = {".fbx", ".glb", ".gltf", ".obj"}
+@@ -91,7 +91,11 @@ def pick_armature(objects):
+         animated = 1 if obj.animation_data and obj.animation_data.action else 0
+         return (animated, len(obj.data.bones))
+ 
+-    return max(armatures, key=score)
++    armature = max(armatures, key=score)
++    # Registration point: capture the ground datum in armature-local
++    # terms now, before any later object placement or floor changes.
++    capture_ground_datum(armature)
++    return armature
+ 
+ 
+ def remember_source(arm_obj, actions):
+@@ -385,6 +389,9 @@ def load_target_and_retarget(path, source, options=None):
+         auto = True
+         note = f"目标没有可用骨架，已按 T/A Pose 自动绑定（{weight_mode}）"
+     move_to_collection(objects, "HR_Target")
++    # Auto-rigged armatures are created here rather than picked, so they
++    # reach their registration point at this line.
++    capture_ground_datum(armature)
+     report, baked = retarget_existing(source, armature, options)
+     armature["hr_role"] = "target"
+     summary = note + "\n" + report

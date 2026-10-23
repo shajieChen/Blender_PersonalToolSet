@@ -1,0 +1,545 @@
+--- official
++++ copy
+@@ -11,3 +11,3 @@
+ import bpy
+-from mathutils import Matrix, Vector
++from mathutils import Matrix, Quaternion, Vector
+ 
+@@ -35,14 +35,31 @@
+ 
+-# Accepted contact stack (coordinate-correct goals, skin feedback, knee floor,
+-# height-plan smoothing). Stays off unless a bake explicitly enables it, so the
+-# historical foot-IK path is unchanged.
+-_CONTACT_STACK_ENABLED = False
++# Experiment log for the dual-reference anti-penetration recheck. Entries are
++# (frame, role, corrections, lowest_world_z, failed). Motion-space Z equals
++# world Z here because the motion space origin sits at the floor height.
++CONTACT_LOG = []
+ _CONTACT_FLOOR_TOLERANCE = -0.001
+ _CONTACT_MAX_CORRECTIONS = 2
++# Experimental candidate switches. None keeps the current skin-feedback scheme.
+ _CONTACT_MAX_RAISE = None
+ _CONTACT_MIN_KNEE_DEG = None
++# Smooth knee preference: when set (degrees), the push toward the minimum knee
++# angle fades in with a smoothstep over this band below the threshold instead
++# of switching on at full strength. None keeps the hard threshold.
+ _CONTACT_KNEE_SMOOTH_DEG = None
+-CONTACT_LOG = []
++
++# Per-iteration trace of the ground-feedback recheck:
++# (frame, role, iteration, lowest_before, raise_this_iteration, knee_before).
+ CONTACT_TRACE = []
++
++# Temporal-smoothing experiment: a precomputed plan mapping
++# (frame, role) -> correction Vector added to the initial ankle goal before
++# the safety recheck runs. Built from a full first-pass bake (see
++# build_correction_plan), so it needs the whole time series and does not
++# depend on evaluation order. None disables it.
+ _CORRECTION_PLAN = None
++
++# Correction-plan cache. Keys are input signatures built by the bake (action
++# content, frame range, rests, mapping, floor/knee/smoothing parameters and
++# the algorithm version below); a plan is only reused when every input that
++# can change the solve is unchanged. Bump the version on any algorithm change.
+ CORRECTION_PLAN_VERSION = "height-plan-v1"
+@@ -50,2 +67,10 @@
+ 
++# Scheme-A experiment: after the two-bone aim, remove the calf twist about
++# the knee->ankle axis so the calf keeps the FK (bind-roll) reference instead
++# of the roll composed from the two shortest-arc swings. Off by default;
++# when off the solve is byte-identical to the previous behaviour.
++_CALF_ROLL_FIX_ENABLED = False
++# (frame, end_role, roll_before_deg, roll_after_deg) per corrected solve.
++CALF_ROLL_LOG = []
++
+ 
+@@ -55,16 +80,8 @@
+ 
+-def _p(space, world_point):
+-    if _CONTACT_STACK_ENABLED:
+-        return space.world_position(world_point)
+-    return space.position(world_point)
+-
+-
+-def _r(space, world_matrix):
+-    if _CONTACT_STACK_ENABLED:
+-        return space.world_rotation(world_matrix)
+-    return space.rotation(world_matrix)
+-
+-
+ def smooth_corrections_binomial(series):
+-    """Two passes of the [1, 2, 1] / 4 kernel. Ends are replicated."""
++    """Two passes of the [1,2,1]/4 binomial kernel over Vector series.
++
++    Edge handling: replicate the end values (zero-slope boundary), so the
++    clip start/end keep their own correction magnitude.
++    """
+     def one_pass(values):
+@@ -76,2 +93,3 @@
+         return out
++
+     return one_pass(one_pass(list(series)))
+@@ -79,7 +97,79 @@
+ 
++def smooth_corrections_constrained(series, lam):
++    """Joint solve: minimise sum(c-raw)^2 + lam * sum(c_t - c_{t-1})^2.
++
++    The Z component is additionally constrained to c_z >= raw_z (never plan
++    less ground correction than the per-frame feedback required); solved by
++    an active-set loop over the tridiagonal normal equations. X/Y follow the
++    unconstrained solve. lam is in frame^2 units.
++    """
++    import math
++
++    count = len(series)
++    if count == 0:
++        return []
++
++    def solve_unconstrained(raw, fixed):
++        # Tridiagonal system (I + lam * D^T D) c = raw with some rows fixed.
++        a = [0.0] * count
++        b = [0.0] * count
++        c_ = [0.0] * count
++        d = [float(v) for v in raw]
++        for i in range(count):
++            diag = 1.0 + lam * (2.0 if 0 < i < count - 1 else 1.0)
++            if count == 1:
++                diag = 1.0
++            a[i] = -lam if i > 0 else 0.0
++            c_[i] = -lam if i < count - 1 else 0.0
++            b[i] = diag
++        for i in range(count):
++            if i in fixed:
++                a[i] = 0.0
++                c_[i] = 0.0
++                b[i] = 1.0
++                d[i] = fixed[i]
++        # Thomas algorithm.
++        cp = [0.0] * count
++        dp = [0.0] * count
++        denom = b[0]
++        cp[0] = c_[0] / denom if count > 1 else 0.0
++        dp[0] = d[0] / denom
++        for i in range(1, count):
++            denom = b[i] - a[i] * cp[i - 1]
++            cp[i] = c_[i] / denom if i < count - 1 else 0.0
++            dp[i] = (d[i] - a[i] * dp[i - 1]) / denom
++        out = [0.0] * count
++        out[-1] = dp[-1]
++        for i in range(count - 2, -1, -1):
++            out[i] = dp[i] - cp[i] * out[i + 1]
++        return out
++
++    raw_z = [value.z for value in series]
++    fixed = {}
++    solved_z = solve_unconstrained(raw_z, fixed)
++    for _ in range(count):
++        violated = [i for i in range(count) if solved_z[i] < raw_z[i] - 1e-12 and i not in fixed]
++        if not violated:
++            break
++        for i in violated:
++            fixed[i] = raw_z[i]
++        solved_z = solve_unconstrained(raw_z, fixed)
++    solved_x = solve_unconstrained([v.x for v in series], {})
++    solved_y = solve_unconstrained([v.y for v in series], {})
++    from mathutils import Vector as _Vector
++
++    return [_Vector((solved_x[i], solved_y[i], solved_z[i])) for i in range(count)]
++
++
+ def build_height_plan(raw_series, lowest_series):
+-    """Add lift so the foot-low trajectory follows a smoothed target.
+-
+-    The plan never reduces the raw per-frame correction.
++    """Plan = raw correction + extra lift from a smoothed foot-height target.
++
++    The desired lowest-point trajectory is the per-frame feedback result
++    smoothed with the same binomial kernel, floored at the ground tolerance;
++    wherever the smoothed target sits above the raw result, the difference
++    is added to the correction Z (1:1 in ankle-goal Z while reachable).
++    Corrections are never reduced, so ground safety is preserved.
+     """
++    from mathutils import Vector as _Vector
++
+     plan = {}
+@@ -87,6 +177,6 @@
+     for role in roles:
+-        frames = sorted(frame for frame, item_role in raw_series if item_role == role)
++        frames = sorted(frame for frame, r in raw_series if r == role)
+         heights = [lowest_series.get((frame, role), 0.0) for frame in frames]
+         smoothed = smooth_corrections_binomial(
+-            [Vector((0.0, 0.0, value)) for value in heights]
++            [_Vector((0.0, 0.0, value)) for value in heights]
+         )
+@@ -94,7 +184,4 @@
+             raw = raw_series[(frame, role)]
+-            extra = max(
+-                0.0,
+-                max(target.z, _CONTACT_FLOOR_TOLERANCE) - lowest_series.get((frame, role), 0.0),
+-            )
+-            plan[(frame, role)] = raw + Vector((0.0, 0.0, extra))
++            extra = max(0.0, max(target.z, _CONTACT_FLOOR_TOLERANCE) - lowest_series.get((frame, role), 0.0))
++            plan[(frame, role)] = raw + _Vector((0.0, 0.0, extra))
+     return plan
+@@ -102,4 +189,32 @@
+ 
++def build_correction_plan(raw_series, mode, lam=4.0):
++    """raw_series: {(frame, role): Vector correction}. Returns plan dict."""
++    plan = {}
++    roles = sorted({role for _frame, role in raw_series})
++    for role in roles:
++        frames = sorted(frame for frame, r in raw_series if r == role)
++        series = [raw_series[(frame, role)] for frame in frames]
++        if mode == "B":
++            smoothed = smooth_corrections_binomial(series)
++        elif mode == "C":
++            smoothed = smooth_corrections_constrained(series, lam)
++        else:
++            raise ValueError(f"unknown correction smoothing mode {mode!r}")
++        for frame, value in zip(frames, smoothed):
++            plan[(frame, role)] = value
++    return plan
++
++
++def _contact_lowest_world(tgt, end_name, contact_local):
++    pose = tgt.pose.bones[end_name]
++    world = tgt.matrix_world
++    return min((world @ (pose.matrix @ point)).z for point in contact_local)
++
++
+ def skin_point_world(tgt, bind_point, influences, rest_inverses=None):
+-    """Linear-blend-skinned world position. Weights are normalised by their sum."""
++    """Linear-blend-skinned world position of one bind vertex.
++
++    Weights are normalised by their sum, matching the armature deform.
++    rest_inverses optionally caches bone rest inverses by bone name.
++    """
+     total = sum(weight for _name, weight in influences)
+@@ -119,2 +234,3 @@
+ def _skin_lowest_world(tgt, skin_points):
++    """Lowest LBS world Z and the dominant bone of that vertex."""
+     rest_inverses = {}
+@@ -151,7 +267,7 @@
+ 
+-        source_start = _p(source_space, src.matrix_world @ source_start_pose.head)
+-        source_end = _p(source_space, src.matrix_world @ source_end_pose.head)
++        source_start = source_space.world_position(src.matrix_world @ source_start_pose.head)
++        source_end = source_space.world_position(src.matrix_world @ source_end_pose.head)
+         source_end_matrix = src.matrix_world @ source_end_pose.matrix
+-        source_end_rotation = _r(source_space, source_end_matrix)
+-        target_start = _p(target_space, tgt.matrix_world @ target_start_pose.head)
++        source_end_rotation = source_space.world_rotation(source_end_matrix)
++        target_start = target_space.world_position(tgt.matrix_world @ target_start_pose.head)
+ 
+@@ -194,80 +310,88 @@
+ 
+-        if _CONTACT_STACK_ENABLED and end_role in _FOOT_ROLES and (limb.skin_points or limb.contact_local):
+-            _recheck_foot_contact(tgt, target_space, limb, goal, pole_hint, target_start_pose)
+-
+-
+-def _recheck_foot_contact(tgt, target_space, limb, goal, pole_hint, target_start_pose):
+-    """Skin-lowest recheck, optional knee-angle push, optional precomputed lift."""
+-    import math
+-
+-    def measure():
+-        if limb.skin_points:
+-            return _skin_lowest_world(tgt, limb.skin_points)
+-        pose = tgt.pose.bones[limb.target_names[2]]
+-        world = tgt.matrix_world
+-        lowest = min((world @ (pose.matrix @ point)).z for point in limb.contact_local)
+-        return lowest, limb.target_names[2]
+-
+-    def knee_deg():
+-        world = tgt.matrix_world
+-        upper, mid, end = (world @ tgt.pose.bones[name].head for name in limb.target_names)
+-        first = upper - mid
+-        second = end - mid
+-        if first.length < 1e-9 or second.length < 1e-9:
+-            return 180.0
+-        return math.degrees(first.angle(second))
+-
+-    corrections = 0
+-    raised = 0.0
+-    lowest, dominant = measure()
+-    knee = knee_deg()
+-    if _CORRECTION_PLAN is not None:
+-        planned = _CORRECTION_PLAN.get((bpy.context.scene.frame_current, limb.roles[2]))
+-        if planned is not None and planned.length > 1e-12:
+-            CONTACT_TRACE.append((
+-                bpy.context.scene.frame_current, limb.roles[2], -1,
+-                round(float(lowest), 4), round(float(planned.z), 4), round(float(knee), 3),
+-            ))
+-            goal.position = goal.position + planned
+-            raised += planned.z
+-            _solve_chain(tgt, target_space, limb, goal, pole_hint=pole_hint)
++        if end_role in _FOOT_ROLES and (limb.skin_points or limb.contact_local):
++            def measure():
++                if limb.skin_points:
++                    value, dominant = _skin_lowest_world(tgt, limb.skin_points)
++                    return value, dominant
++                return _contact_lowest_world(tgt, limb.target_names[2], limb.contact_local), limb.target_names[2]
++
++            def knee_deg():
++                world = tgt.matrix_world
++                upper, mid, end = (world @ tgt.pose.bones[name].head for name in limb.target_names)
++                first = upper - mid
++                second = end - mid
++                if first.length < 1e-9 or second.length < 1e-9:
++                    return 180.0
++                import math
++                return math.degrees(first.angle(second))
++
++            corrections = 0
++            raised = 0.0
+             lowest, dominant = measure()
+             knee = knee_deg()
+-    while corrections < _CONTACT_MAX_CORRECTIONS and (
+-        lowest < _CONTACT_FLOOR_TOLERANCE
+-        or (_CONTACT_MIN_KNEE_DEG is not None and knee < _CONTACT_MIN_KNEE_DEG)
+-    ):
+-        amount = 0.0
+-        if lowest < _CONTACT_FLOOR_TOLERANCE:
+-            amount = _CONTACT_FLOOR_TOLERANCE - lowest
+-            if _CONTACT_MAX_RAISE is not None:
+-                amount = min(amount, max(0.0, _CONTACT_MAX_RAISE - raised))
+-            goal.position.z += amount
+-            raised += amount
+-        CONTACT_TRACE.append((
+-            bpy.context.scene.frame_current, limb.roles[2], corrections,
+-            round(float(lowest), 4), round(float(amount), 4), round(float(knee), 3),
+-        ))
+-        if _CONTACT_MIN_KNEE_DEG is not None and knee < _CONTACT_MIN_KNEE_DEG:
+-            root = _p(target_space, tgt.matrix_world @ target_start_pose.head)
+-            reach = goal.position - root
+-            if reach.length > 1e-9:
+-                upper_len = limb.target_upper_length
+-                lower_len = limb.target_lower_length
+-                needed_sq = (
+-                    upper_len * upper_len + lower_len * lower_len
+-                    - 2.0 * upper_len * lower_len * math.cos(math.radians(_CONTACT_MIN_KNEE_DEG))
++            if _CORRECTION_PLAN is not None:
++                planned = _CORRECTION_PLAN.get(
++                    (bpy.context.scene.frame_current, end_role)
+                 )
+-                needed = math.sqrt(max(needed_sq, 1e-12))
+-                if reach.length < needed:
+-                    goal.position = root + reach.normalized() * needed
+-        _solve_chain(tgt, target_space, limb, goal, pole_hint=pole_hint)
+-        corrections += 1
+-        lowest, dominant = measure()
+-        knee = knee_deg()
+-    CONTACT_LOG.append((
+-        bpy.context.scene.frame_current, limb.roles[2], corrections,
+-        round(float(lowest), 4), bool(lowest < _CONTACT_FLOOR_TOLERANCE), dominant,
+-        round(float(raised), 4), round(float(knee), 3),
+-    ))
++                if planned is not None and planned.length > 1e-12:
++                    CONTACT_TRACE.append((
++                        bpy.context.scene.frame_current, end_role, -1,
++                        round(float(lowest), 4), round(float(planned.z), 4),
++                        round(float(knee), 3),
++                    ))
++                    goal.position = goal.position + planned
++                    raised += planned.z
++                    _solve_chain(tgt, target_space, limb, goal, pole_hint=pole_hint)
++                    lowest, dominant = measure()
++                    knee = knee_deg()
++            while corrections < _CONTACT_MAX_CORRECTIONS and (
++                lowest < _CONTACT_FLOOR_TOLERANCE
++                or (_CONTACT_MIN_KNEE_DEG is not None and knee < _CONTACT_MIN_KNEE_DEG)
++            ):
++                amount = 0.0
++                if lowest < _CONTACT_FLOOR_TOLERANCE:
++                    amount = _CONTACT_FLOOR_TOLERANCE - lowest
++                    if _CONTACT_MAX_RAISE is not None:
++                        amount = min(amount, max(0.0, _CONTACT_MAX_RAISE - raised))
++                    goal.position.z += amount
++                    raised += amount
++                CONTACT_TRACE.append((
++                    bpy.context.scene.frame_current, end_role, corrections,
++                    round(float(lowest), 4), round(float(amount), 4),
++                    round(float(knee), 3),
++                ))
++                if _CONTACT_MIN_KNEE_DEG is not None and knee < _CONTACT_MIN_KNEE_DEG:
++                    import math
++                    root = target_space.world_position(tgt.matrix_world @ target_start_pose.head)
++                    reach = goal.position - root
++                    if reach.length > 1e-9:
++                        upper_len = limb.target_upper_length
++                        lower_len = limb.target_lower_length
++                        target_deg = _CONTACT_MIN_KNEE_DEG
++                        if _CONTACT_KNEE_SMOOTH_DEG:
++                            deficit = _CONTACT_MIN_KNEE_DEG - knee
++                            blend = min(1.0, max(0.0, deficit / _CONTACT_KNEE_SMOOTH_DEG))
++                            blend = blend * blend * (3.0 - 2.0 * blend)
++                            target_deg = knee + blend * deficit
++                        needed_sq = (
++                            upper_len * upper_len + lower_len * lower_len
++                            - 2.0 * upper_len * lower_len * math.cos(math.radians(target_deg))
++                        )
++                        needed = math.sqrt(max(needed_sq, 1e-12))
++                        if reach.length < needed:
++                            goal.position = root + reach.normalized() * needed
++                _solve_chain(tgt, target_space, limb, goal, pole_hint=pole_hint)
++                corrections += 1
++                lowest, dominant = measure()
++                knee = knee_deg()
++            CONTACT_LOG.append((
++                bpy.context.scene.frame_current,
++                end_role,
++                corrections,
++                round(float(lowest), 4),
++                bool(lowest < _CONTACT_FLOOR_TOLERANCE),
++                dominant,
++                round(float(raised), 4),
++                round(float(knee), 3),
++            ))
+ 
+@@ -284,9 +408,9 @@
+     src_world = src.matrix_world
+-    upper = _p(source_space, 
++    upper = source_space.world_position(
+         src_world @ src.pose.bones[reference.source_names[0]].head
+     )
+-    mid = _p(source_space, 
++    mid = source_space.world_position(
+         src_world @ src.pose.bones[reference.source_names[1]].head
+     )
+-    end = _p(source_space, 
++    end = source_space.world_position(
+         src_world @ src.pose.bones[reference.source_names[2]].head
+@@ -299,3 +423,3 @@
+     tgt_world = tgt.matrix_world
+-    root = _p(target_space, 
++    root = target_space.world_position(
+         tgt_world @ tgt.pose.bones[reference.target_names[0]].head
+@@ -307,9 +431,9 @@
+             target_goal,
+-            _p(target_space, 
++            target_space.world_position(
+                 tgt_world @ tgt.data.bones[reference.target_names[0]].head_local
+             ),
+-            _p(target_space, 
++            target_space.world_position(
+                 tgt_world @ tgt.data.bones[reference.target_names[1]].head_local
+             ),
+-            _p(target_space, 
++            target_space.world_position(
+                 tgt_world @ tgt.data.bones[reference.target_names[2]].head_local
+@@ -392,2 +516,69 @@
+ 
++def _chain_roll_deg(tgt, mid_name, end_name):
++    """Signed twist (deg) of the mid bone about the mid->end chain axis.
++
++    Computed on the armature-space rest-relative rotation (pose matrix
++    relative to the bone rest matrix). The object transform is a similarity
++    (rotation + uniform scale), so the same signed angle is obtained from
++    world matrices; no local Euler/Y component is used.
++    """
++    import math
++
++    mid_pose = tgt.pose.bones[mid_name]
++    end_pose = tgt.pose.bones[end_name]
++    axis = end_pose.head - mid_pose.head
++    if axis.length < 1e-9:
++        return 0.0
++    axis.normalize()
++    rest = mid_pose.bone.matrix_local.to_3x3()
++    delta = (mid_pose.matrix.to_3x3() @ rest.inverted()).to_quaternion().normalized()
++    if delta.w < 0.0:
++        delta.negate()
++    vector = Vector((delta.x, delta.y, delta.z))
++    projected = axis * vector.dot(axis)
++    twist = Quaternion((delta.w, projected.x, projected.y, projected.z))
++    if twist.magnitude < 1e-10:
++        return 0.0
++    twist.normalize()
++    angle = 2.0 * math.degrees(math.acos(max(-1.0, min(1.0, abs(twist.w)))))
++    if Vector((twist.x, twist.y, twist.z)).dot(axis) < 0.0:
++        angle = -angle
++    return angle
++
++
++def _remove_calf_roll(tgt, mid_name, end_name):
++    """Rotate the mid bone about its own chain axis until its roll is zero.
++
++    The pivot is the mid (knee) head and the rotation axis is the current
++    knee->ankle direction, so neither joint position nor the chain direction
++    moves; only the axial roll changes. The correction is the inverse of
++    the Swing-Twist twist component of the rest-relative rotation about
++    that same axis, which adds linearly to the measured roll.
++    """
++    mid_pose = tgt.pose.bones[mid_name]
++    end_pose = tgt.pose.bones[end_name]
++    axis = end_pose.head - mid_pose.head
++    if axis.length < 1e-9:
++        return
++    axis.normalize()
++    matrix = mid_pose.matrix.copy()
++    rest = mid_pose.bone.matrix_local.to_3x3()
++    delta = (matrix.to_3x3() @ rest.inverted()).to_quaternion().normalized()
++    if delta.w < 0.0:
++        delta.negate()
++    vector = Vector((delta.x, delta.y, delta.z))
++    projected = axis * vector.dot(axis)
++    twist = Quaternion((delta.w, projected.x, projected.y, projected.z))
++    if twist.magnitude < 1e-10:
++        return
++    twist.normalize()
++    pivot = matrix.translation.copy()
++    mid_pose.matrix = (
++        Matrix.Translation(pivot)
++        @ twist.inverted().to_matrix().to_4x4()
++        @ Matrix.Translation(-pivot)
++        @ matrix
++    )
++
++
+ def _solve_chain(
+@@ -405,6 +596,6 @@
+     world = tgt.matrix_world
+-    root = _p(space, world @ upper_pose.head)
+-    rest_root = _p(space, world @ tgt.data.bones[upper_name].head_local)
+-    rest_mid = _p(space, world @ tgt.data.bones[mid_name].head_local)
+-    rest_end = _p(space, world @ tgt.data.bones[end_name].head_local)
++    root = space.world_position(world @ upper_pose.head)
++    rest_root = space.world_position(world @ tgt.data.bones[upper_name].head_local)
++    rest_mid = space.world_position(world @ tgt.data.bones[mid_name].head_local)
++    rest_end = space.world_position(world @ tgt.data.bones[end_name].head_local)
+     end_role = reference.roles[2]
+@@ -454,2 +645,12 @@
+ 
++    if _CALF_ROLL_FIX_ENABLED and end_role in _FOOT_ROLES:
++        roll_before = _chain_roll_deg(tgt, mid_name, end_name)
++        _remove_calf_roll(tgt, mid_name, end_name)
++        bpy.context.view_layer.update()
++        CALF_ROLL_LOG.append((
++            bpy.context.scene.frame_current, end_role,
++            round(roll_before, 3),
++            round(_chain_roll_deg(tgt, mid_name, end_name), 3),
++        ))
++
+     _write_end_rotation(tgt, end_name, space, goal.rotation)
+@@ -458,3 +659,3 @@
+     end_pose = tgt.pose.bones[end_name]
+-    final = _p(space, world @ end_pose.head)
++    final = space.world_position(world @ end_pose.head)
+     return (final - goal.position).length
+@@ -464,6 +665,6 @@
+     world = tgt.matrix_world
+-    root = _p(space, world @ tgt.pose.bones[upper_name].head)
++    root = space.world_position(world @ tgt.pose.bones[upper_name].head)
+     _aim_joint(tgt, upper_name, mid_name, space, knee - root)
+     bpy.context.view_layer.update()
+-    knee_now = _p(space, world @ tgt.pose.bones[mid_name].head)
++    knee_now = space.world_position(world @ tgt.pose.bones[mid_name].head)
+     _aim_joint(tgt, mid_name, end_name, space, reachable - knee_now)
+@@ -473,5 +674,5 @@
+ def _fold_opposes_bind(tgt, space, upper_name, mid_name, end_name, rest_root, rest_mid, rest_end):
+-    upper = _p(space, tgt.matrix_world @ tgt.pose.bones[upper_name].head)
+-    mid = _p(space, tgt.matrix_world @ tgt.pose.bones[mid_name].head)
+-    end = _p(space, tgt.matrix_world @ tgt.pose.bones[end_name].head)
++    upper = space.world_position(tgt.matrix_world @ tgt.pose.bones[upper_name].head)
++    mid = space.world_position(tgt.matrix_world @ tgt.pose.bones[mid_name].head)
++    end = space.world_position(tgt.matrix_world @ tgt.pose.bones[end_name].head)
+     rest_reach = rest_end - rest_root

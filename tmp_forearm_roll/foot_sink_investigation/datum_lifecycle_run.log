@@ -1,0 +1,137 @@
+CANDIDATE_FILE ik.py 510331A44DF47D67DEB1CE5E88C0E214734B13ADEFBF5FC49790E81C48E135FB
+CANDIDATE_FILE foot_ik.py E10538A060FF90DB034C19A3B10323855BA8EB14B33D8F997C42943D5036A3CD
+CANDIDATE_FILE retarget.py 2BF90D021E475208675401E7366F2EE3BFE695016FCB5D791B72D17946DCB1CE
+CANDIDATE_FILE pipeline.py 404D58C2B0B118EB05277C3FD3C4D59C41F3B7D4F21295D4C0908A23104D8368
+CANDIDATE H:\Blender_Plugin\tmp_forearm_roll\floor_candidate_root\humanoid_retarget\__init__.py (1, 7, 5)
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+18:07:39 | INFO: Data are loaded, start creating Blender stuff
+18:07:39 | INFO: Blender create Mesh node 0
+18:07:41 | INFO: glTF import finished in 1.90s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE LTRANS a050_300000 floor 0.0 mode REST
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE LTRANS a050_300000 floor 0.0 mode REST plan 106
+BAKE_OK LTRANS
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+18:08:14 | INFO: Data are loaded, start creating Blender stuff
+18:08:14 | INFO: Blender create Mesh node 0
+18:08:16 | INFO: glTF import finished in 2.14s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE LYAW a050_300000 floor 0.0 mode REST
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE LYAW a050_300000 floor 0.0 mode REST plan 106
+BAKE_OK LYAW
+BAKE LYAWFM a050_300000 floor -0.05 mode REST
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE LYAWFM a050_300000 floor -0.05 mode REST plan 106
+BAKE_OK LYAWFM
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+18:09:18 | INFO: Data are loaded, start creating Blender stuff
+18:09:18 | INFO: Blender create Mesh node 0
+18:09:20 | INFO: glTF import finished in 1.66s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE LTILT a050_300000 floor 0.0 mode REST
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE LTILT a050_300000 floor 0.0 mode REST plan 106
+BAKE_OK LTILT
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+18:09:55 | INFO: Data are loaded, start creating Blender stuff
+18:09:55 | INFO: Blender create Mesh node 0
+18:09:57 | INFO: glTF import finished in 1.68s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE LSCALE a050_300000 floor 0.0 mode REST
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE LSCALE a050_300000 floor 0.0 mode REST plan 106
+BAKE_OK LSCALE
+BAKE LSCALEFM a050_300000 floor -0.05 mode REST
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE LSCALEFM a050_300000 floor -0.05 mode REST plan 106
+BAKE_OK LSCALEFM
+RECapture_AFTER_SCALE 1.0
+BAKE LSCALEFIX a050_300000 floor 0.0 mode REST
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 536.709 height_offsets_mm [-103.668, -103.668]
+DONE LSCALEFIX a050_300000 floor 0.0 mode REST plan 106
+BAKE_OK LSCALEFIX
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+18:11:34 | INFO: Data are loaded, start creating Blender stuff
+18:11:35 | INFO: Blender create Mesh node 0
+18:11:36 | INFO: glTF import finished in 1.76s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE LNONUNIFORM a050_300000 floor 0.0 mode REST
+BAKE_ERROR LNONUNIFORM RetargetError 脚 IK 空间构建失败: armature must have uniform scale
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+18:11:39 | INFO: Data are loaded, start creating Blender stuff
+18:11:40 | INFO: Blender create Mesh node 0
+18:11:41 | INFO: glTF import finished in 1.81s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE LCORRUPT1 a050_300000 floor -0.05 mode REST
+[HumanoidRetarget] 未找到地面 Datum（登记时捕获），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE LCORRUPT1 a050_300000 floor -0.05 mode REST plan 106
+BAKE_OK LCORRUPT1
+BAKE LCORRUPT2 a050_300000 floor -0.05 mode REST
+[HumanoidRetarget] 未找到地面 Datum（登记时捕获），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE LCORRUPT2 a050_300000 floor -0.05 mode REST plan 106
+BAKE_OK LCORRUPT2
+BAKE LCORRUPT3 a050_300000 floor -0.05 mode REST
+[HumanoidRetarget] 未找到地面 Datum（登记时捕获），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE LCORRUPT3 a050_300000 floor -0.05 mode REST plan 106
+BAKE_OK LCORRUPT3
+BAKE LCORRUPT4 a050_300000 floor -0.05 mode REST
+[HumanoidRetarget] 未找到地面 Datum（登记时捕获），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE LCORRUPT4 a050_300000 floor -0.05 mode REST plan 106
+BAKE_OK LCORRUPT4
+BAKE LWRONG a050_300000 floor -0.05 mode REST
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm -153.236 height_offsets_mm [-44500.906, -44500.914]
+DONE LWRONG a050_300000 floor -0.05 mode REST plan 106
+BAKE_OK LWRONG
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+18:14:26 | INFO: Data are loaded, start creating Blender stuff
+18:14:26 | INFO: Blender create Mesh node 0
+18:14:29 | INFO: glTF import finished in 3.39s
+FBX version: 7400
+DATUM_PROPS source True target True
+TRUE_NOSKIN_CAPTURE None False
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+18:14:35 | INFO: Data are loaded, start creating Blender stuff
+18:14:35 | INFO: Blender create Mesh node 0
+18:14:38 | INFO: glTF import finished in 3.72s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE CHAN0 a050_300000 floor 0.0 mode REST
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [-14.885, -14.885]
+DONE CHAN0 a050_300000 floor 0.0 mode REST plan 0
+BAKE_OK CHAN0
+BAKE CHANFM a050_300000 floor -0.05 mode REST
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE CHANFM a050_300000 floor -0.05 mode REST plan 0
+BAKE_OK CHANFM
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+18:15:53 | INFO: Data are loaded, start creating Blender stuff
+18:15:53 | INFO: Blender create Mesh node 0
+18:15:56 | INFO: glTF import finished in 3.41s
+FBX version: 7400
+DATUM_PROPS source True target True
+Reloading external rigs...
+Reloading external metarigs...
+[HumanoidRetarget] 未找到地面 Datum（登记时捕获），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [59.433, 59.433]
+RIGIFY_OK 已识别 19 个身体部位
+躯干和四肢主骨已对齐
+对应 19 根骨骼，身高比例 0.550
+根运动: 保留位移，参考姿势: Rest
+IK: 脚（地面约束+速度植步）
+烘焙 10 个动作: Bip01_HR_HumanMetarig_a050_300000, Bip01_HR_HumanMetarig_a050_300001, Bip01_HR_HumanMetarig_a050_300010, B
+ROWS 795 DONE
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+
+Blender quit

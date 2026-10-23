@@ -1,0 +1,231 @@
+--- official
++++ copy
+@@ -93,4 +93,4 @@
+         forearm_roll_cyclic=False,
+-        contact_min_knee_deg=15.0,
+-        correction_smoothing="height",
++        contact_min_knee_deg=0.0,
++        correction_smoothing="",
+     ):
+@@ -822,16 +822,9 @@
+ 
+-def _metric_position(space, world_point):
+-    if ik_module._CONTACT_STACK_ENABLED:
+-        return space.world_position(world_point)
+-    return space.position(world_point)
+-
+-
+-def _metric_rotation(space, world_matrix):
+-    if ik_module._CONTACT_STACK_ENABLED:
+-        return space.world_rotation(world_matrix)
+-    return space.rotation(world_matrix)
+-
+-
+ def _extract_foot_contact_local(tgt, foot_name):
+-    """Heel and forefoot low points in the foot bone rest-local frame."""
++    """Heel and forefoot low points from the foot vertex group, in foot-bone local space.
++
++    Forward is ankle-to-toe when a toe child exists, otherwise the foot bone tail.
++    Candidates are the lower half of the foot group in rest world height. The two
++    returned points are Vectors in the foot bone rest local frame.
++    """
+     bone = tgt.data.bones.get(foot_name)
+@@ -860,3 +853,4 @@
+                 continue
+-            candidates.append(to_armature @ (world_matrix @ vertex.co))
++            armature_point = to_armature @ (world_matrix @ vertex.co)
++            candidates.append(armature_point)
+     if len(candidates) < 2:
+@@ -875,3 +869,7 @@
+ def _extract_foot_skin_points(tgt, bone_names):
+-    """Foot-region bind vertices and weights, in armature space."""
++    """Foot-region bind vertices with their bone weights, for LBS feedback.
++
++    Returns ((bind_armature_point, ((bone_name, weight), ...)), ...). Bind points
++    are in armature space. Only vertices influenced by the leg bones are kept.
++    """
+     wanted = set(bone_names)
+@@ -892,3 +890,4 @@
+                 continue
+-            points.append((to_armature @ (world_matrix @ vertex.co), influences))
++            bind = to_armature @ (world_matrix @ vertex.co)
++            points.append((bind, influences))
+     return tuple(points)
+@@ -946,3 +945,3 @@
+             return space.position(matrix.translation)
+-        return _metric_position(space, arm.matrix_world @ matrix.translation)
++        return space.world_position(arm.matrix_world @ matrix.translation)
+ 
+@@ -1001,3 +1000,3 @@
+                 return space.position(arm.data.bones[name].head_local)
+-            return _metric_position(space, arm.matrix_world @ arm.data.bones[name].head_local)
++            return space.world_position(arm.matrix_world @ arm.data.bones[name].head_local)
+ 
+@@ -1019,4 +1018,4 @@
+             tgt_end_matrix = tgt.matrix_world @ tgt_mats[tgt_names[2]]
+-            source_end_rotation = _metric_rotation(source_space, src_end_matrix)
+-            target_end_rotation = _metric_rotation(target_space, tgt_end_matrix)
++            source_end_rotation = source_space.world_rotation(src_end_matrix)
++            target_end_rotation = target_space.world_rotation(tgt_end_matrix)
+ 
+@@ -1039,4 +1038,3 @@
+                 _extract_foot_contact_local(tgt, tgt_names[2])
+-                if ik_module._CONTACT_STACK_ENABLED and roles[2] in ("foot_l", "foot_r")
+-                else ()
++                if roles[2] in ("foot_l", "foot_r") else ()
+             ),
+@@ -1049,4 +1047,3 @@
+                 )
+-                if ik_module._CONTACT_STACK_ENABLED and roles[2] in ("foot_l", "foot_r")
+-                else ()
++                if roles[2] in ("foot_l", "foot_r") else ()
+             ),
+@@ -1068,3 +1065,3 @@
+     else:
+-        current = _metric_position(geometry.source_space, src.matrix_world @ src_pose.head)
++        current = geometry.source_space.world_position(src.matrix_world @ src_pose.head)
+ 
+@@ -1112,3 +1109,3 @@
+                 else:
+-                    hips_now = _metric_position(geometry.source_space, src.matrix_world @ src_pose_hips.head)
++                    hips_now = geometry.source_space.world_position(src.matrix_world @ src_pose_hips.head)
+             else:
+@@ -1124,3 +1121,3 @@
+                 else:
+-                    pos = _metric_position(geometry.source_space, src.matrix_world @ foot_pose.head)
++                    pos = geometry.source_space.world_position(src.matrix_world @ foot_pose.head)
+                 if in_place:
+@@ -1499,6 +1496,6 @@
+     world = tgt.matrix_world
+-    root = _metric_position(space, world @ tgt.pose.bones[upper_name].head)
+-    rest_root = _metric_position(space, world @ tgt.data.bones[upper_name].head_local)
+-    rest_mid = _metric_position(space, world @ tgt.data.bones[mid_name].head_local)
+-    rest_end = _metric_position(space, world @ tgt.data.bones[end_name].head_local)
++    root = space.world_position(world @ tgt.pose.bones[upper_name].head)
++    rest_root = space.world_position(world @ tgt.data.bones[upper_name].head_local)
++    rest_mid = space.world_position(world @ tgt.data.bones[mid_name].head_local)
++    rest_end = space.world_position(world @ tgt.data.bones[end_name].head_local)
+     end_role = limb.roles[2]
+@@ -1778,12 +1775,7 @@
+ 
+-def _reset_contact_stack():
+-    ik_module._CONTACT_STACK_ENABLED = False
+-    ik_module._CONTACT_MIN_KNEE_DEG = None
+-    ik_module._CORRECTION_PLAN = None
+-
+-
+ def _correction_plan_signature(src, tgt, action, frame_range, pairs, options, ik_settings, dt):
+-    """Hash every input that can change the correction plan.
+-
+-    Returns None when an input cannot be serialised; callers then rebuild.
++    """Hash every input that can change the correction-plan solve.
++
++    Returns None when anything cannot be serialised reliably; callers must
++    then rebuild the plan instead of reusing a cached one.
+     """
+@@ -1889,7 +1881,2 @@
+ 
+-    ik_module._CONTACT_STACK_ENABLED = (
+-        options.contact_min_knee_deg > 0.0 or options.correction_smoothing == "height"
+-    )
+-    if options.contact_min_knee_deg > 0.0:
+-        ik_module._CONTACT_MIN_KNEE_DEG = options.contact_min_knee_deg
+     ik_geometry = None
+@@ -1907,3 +1894,2 @@
+         except MotionSpaceError as exc:
+-            _reset_contact_stack()
+             raise RetargetError(f"姿势通道空间构建失败: {exc}")
+@@ -1913,3 +1899,2 @@
+         except MotionSpaceError as exc:
+-            _reset_contact_stack()
+             raise RetargetError(f"脚 IK 空间构建失败: {exc}")
+@@ -1976,3 +1961,3 @@
+ 
+-            def _pose_one_frame(frame, write_keys):
++            def _pose_one_frame(frame):
+                 scene.frame_set(frame)
+@@ -2038,11 +2023,7 @@
+                 bpy.context.view_layer.update()
+-                if write_keys:
+-                    for _role, _src_name, tgt_name in pairs:
+-                        pose_bone = tgt.pose.bones[tgt_name]
+-                        pose_bone.keyframe_insert(data_path="rotation_quaternion", frame=frame)
+-                        pose_bone.keyframe_insert(data_path="location", frame=frame)
+-                        if compensate_scale and tgt_name in preserved_scales:
+-                            pose_bone.keyframe_insert(data_path="scale", frame=frame)
+-
+-            use_height_plan = (
++
++            if options.contact_min_knee_deg > 0.0:
++                ik_module._CONTACT_MIN_KNEE_DEG = options.contact_min_knee_deg
++            plan_signature = None
++            if (
+                 options.correction_smoothing == "height"
+@@ -2051,4 +2032,3 @@
+                 and ik_geometry is not None
+-            )
+-            if use_height_plan:
++            ):
+                 plan_signature = _correction_plan_signature(
+@@ -2056,3 +2036,7 @@
+                 )
+-                plan = ik_module._PLAN_CACHE.get(plan_signature) if plan_signature else None
++                plan = (
++                    ik_module._PLAN_CACHE.get(plan_signature)
++                    if plan_signature is not None
++                    else None
++                )
+                 if plan is None:
+@@ -2062,5 +2046,8 @@
+                     def _recording_solve(tgt_, space_, reference_, goal_, pole_hint=None):
+-                        distance = original_solve(tgt_, space_, reference_, goal_, pole_hint=pole_hint)
++                        distance = original_solve(
++                            tgt_, space_, reference_, goal_, pole_hint=pole_hint
++                        )
+                         goal_calls.setdefault(
+-                            (bpy.context.scene.frame_current, reference_.roles[2]), []
++                            (bpy.context.scene.frame_current, reference_.roles[2]),
++                            [],
+                         ).append(goal_.position.copy())
+@@ -2073,3 +2060,3 @@
+                         for frame in range(start, end + 1):
+-                            _pose_one_frame(frame, False)
++                            _pose_one_frame(frame)
+                     finally:
+@@ -2080,3 +2067,5 @@
+                             raw_series[(frame, role)] = (
+-                                calls[-1] - calls[0] if len(calls) >= 2 else Vector((0.0, 0.0, 0.0))
++                                calls[-1] - calls[0]
++                                if len(calls) >= 2
++                                else Vector((0.0, 0.0, 0.0))
+                             )
+@@ -2093,2 +2082,3 @@
+                         ik_module._PLAN_CACHE[plan_signature] = plan
++                    # Planning consumed plant states; restart them for the bake.
+                     if planting_on:
+@@ -2102,10 +2092,14 @@
+                 ik_module._CORRECTION_PLAN = plan
+-                try:
+-                    for frame in range(start, end + 1):
+-                        _pose_one_frame(frame, True)
+-                finally:
++            try:
++                for frame in range(start, end + 1):
++                    _pose_one_frame(frame)
++                    for _role, _src_name, tgt_name in pairs:
++                        pose_bone = tgt.pose.bones[tgt_name]
++                        pose_bone.keyframe_insert(data_path="rotation_quaternion", frame=frame)
++                        pose_bone.keyframe_insert(data_path="location", frame=frame)
++                        if compensate_scale and tgt_name in preserved_scales:
++                            pose_bone.keyframe_insert(data_path="scale", frame=frame)
++            finally:
++                if plan_signature is not None or options.correction_smoothing:
+                     ik_module._CORRECTION_PLAN = None
+-            else:
+-                for frame in range(start, end + 1):
+-                    _pose_one_frame(frame, True)
+             target_action.use_fake_user = True
+@@ -2117,3 +2111,2 @@
+         scene.frame_set(original_frame)
+-        _reset_contact_stack()
+ 

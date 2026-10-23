@@ -56,6 +56,8 @@ class LimbReference:
     height_offset: float
     source_rest_end_height: float
     reference_pole: Vector
+    contact_local: tuple = ()
+    skin_points: tuple = ()
 
 
 @dataclass

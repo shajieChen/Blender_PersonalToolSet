@@ -1,0 +1,32 @@
+{
+  "collected": "2026-10-20, live Blender via MCP (read-only) plus fresh headless bakes of the independent copy",
+  "blender": "5.1.2",
+  "scene_file": "",
+  "scene_dirty": true,
+  "frame_at_start_and_end": 24,
+  "unit_system": "METRIC",
+  "scale_length": 1.0,
+  "source_object": {"name": "Armature", "location": [-2.06466, 0.0, 0.0], "rotation_euler": [0.0, 0.0, 0.0], "scale": [1.0, 1.0, 1.0], "action": "a050_300000"},
+  "target_object": {"name": "Bip01", "location": [1.42235, 0.0, 0.53855], "rotation_euler_z": -1.57079, "scale": [0.01, 0.01, 0.01], "action": "Bip01_a050_300000"},
+  "settings": {"use_foot_ik": false, "use_hand_ik": false, "root_motion": "KEEP", "foot_floor_enabled": true, "foot_floor_alpha": 1.0, "foot_floor_height_m": 0.0, "reference_pose": "REST", "autokey": false},
+  "constraints": [],
+  "drivers": 0,
+  "plugin": {
+    "path": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_retarget\\retarget.py",
+    "sha256": "5d679723197880212ac8ccf8b21ab79fb66afaa299c0d36a4573accad80ac06f",
+    "bl_info_version": [1, 7, 3]
+  },
+  "mapping_leg": {
+    "thigh_l": ["L_Thigh", "Bip01 L Thigh"], "shin_l": ["L_Calf", "Bip01 L Calf"], "foot_l": ["L_Foot", "Bip01 L Foot"],
+    "thigh_r": ["R_Thigh", "Bip01 R Thigh"], "shin_r": ["R_Calf", "Bip01 R Calf"], "foot_r": ["R_Foot", "Bip01 R Foot"],
+    "toe_mapped": false,
+    "toe_bones_present_unmapped": ["Bip01 L Toe0", "Bip01 R Toe0"]
+  },
+  "rest_chain_world_m": {
+    "source": {"thigh_to_knee": 0.4434, "knee_to_ankle": 0.4233, "hips_world_z": 0.97, "ankle_world_z": 0.1095},
+    "target": {"thigh_to_knee": 0.2542, "knee_to_ankle": 0.1907, "hips_world_z": 0.537, "ankle_world_z": 0.0946},
+    "leg_ratio_target_over_source": 0.5133,
+    "root_ratio_used_by_fk": 0.9476
+  },
+  "sampling": "Pose-bone heads through matrix_world; deformed mesh from evaluated depsgraph, vertices through evaluated matrix_world, temporary mesh cleared with to_mesh_clear(). No scene writes; frame restored to 24."
+}

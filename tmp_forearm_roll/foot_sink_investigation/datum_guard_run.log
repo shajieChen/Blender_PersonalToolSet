@@ -1,0 +1,123 @@
+CANDIDATE_FILE ik.py 510331A44DF47D67DEB1CE5E88C0E214734B13ADEFBF5FC49790E81C48E135FB
+CANDIDATE_FILE foot_ik.py E10538A060FF90DB034C19A3B10323855BA8EB14B33D8F997C42943D5036A3CD
+CANDIDATE_FILE retarget.py 40B95B68D864B66DB80E57083305F7A9CDA8F7B893336C265E659D277BC0F9DA
+CANDIDATE_FILE pipeline.py 404D58C2B0B118EB05277C3FD3C4D59C41F3B7D4F21295D4C0908A23104D8368
+CANDIDATE H:\Blender_Plugin\tmp_forearm_roll\floor_candidate_root\humanoid_retarget\__init__.py (1, 7, 5)
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+19:32:00 | INFO: Data are loaded, start creating Blender stuff
+19:32:00 | INFO: Blender create Mesh node 0
+19:32:02 | INFO: glTF import finished in 1.76s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE LEGAL_FP a050_300000 floor 0.05
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE LEGAL_FP a050_300000 floor 0.05 plan 106
+BAKE_OK LEGAL_FP
+BAKE LEGAL_FM a050_300000 floor -0.05
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE LEGAL_FM a050_300000 floor -0.05 plan 106
+BAKE_OK LEGAL_FM
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+19:33:02 | INFO: Data are loaded, start creating Blender stuff
+19:33:02 | INFO: Blender create Mesh node 0
+19:33:04 | INFO: glTF import finished in 1.73s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE MISSING_F0 a050_300000 floor 0.0
+[HumanoidRetarget] 地面 Datum 不可用（来源: 未捕获 Datum; 目标: 未捕获 Datum），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [-14.885, -14.885]
+DONE MISSING_F0 a050_300000 floor 0.0 plan 106
+BAKE_OK MISSING_F0
+BAKE MISSING_FM a050_300000 floor -0.05
+[HumanoidRetarget] 地面 Datum 不可用（来源: 未捕获 Datum; 目标: 未捕获 Datum），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE MISSING_FM a050_300000 floor -0.05 plan 106
+BAKE_OK MISSING_FM
+BAKE ONESIDE_FM a050_300000 floor -0.05
+[HumanoidRetarget] 地面 Datum 不可用（目标: 未捕获 Datum），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE ONESIDE_FM a050_300000 floor -0.05 plan 106
+BAKE_OK ONESIDE_FM
+BAKE GARBAGE_FM a050_300000 floor -0.05
+[HumanoidRetarget] 地面 Datum 不可用（目标: Datum 无法解析），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE GARBAGE_FM a050_300000 floor -0.05 plan 106
+BAKE_OK GARBAGE_FM
+BAKE EMPTY_FM a050_300000 floor -0.05
+[HumanoidRetarget] 地面 Datum 不可用（目标: Datum 结构或版本无效），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE EMPTY_FM a050_300000 floor -0.05 plan 106
+BAKE_OK EMPTY_FM
+BAKE RAGGED_FM a050_300000 floor -0.05
+[HumanoidRetarget] 地面 Datum 不可用（目标: Datum 结构或版本无效），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE RAGGED_FM a050_300000 floor -0.05 plan 106
+BAKE_OK RAGGED_FM
+BAKE STRSCALE_FM a050_300000 floor -0.05
+[HumanoidRetarget] 地面 Datum 不可用（目标: Datum 结构或版本无效），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE STRSCALE_FM a050_300000 floor -0.05 plan 106
+BAKE_OK STRSCALE_FM
+BAKE NAN_FM a050_300000 floor -0.05
+[HumanoidRetarget] 地面 Datum 不可用（目标: Datum 结构或版本无效），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE NAN_FM a050_300000 floor -0.05 plan 106
+BAKE_OK NAN_FM
+BAKE FORGED_TGT_FM a050_300000 floor -0.05
+[HumanoidRetarget] 地面 Datum 不可用（目标: Datum 结构或版本无效），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE FORGED_TGT_FM a050_300000 floor -0.05 plan 106
+BAKE_OK FORGED_TGT_FM
+BAKE FORGED_SRC_FM a050_300000 floor -0.05
+[HumanoidRetarget] 地面 Datum 不可用（来源: Datum 结构或版本无效），骨盆/踝高整体回退旧公式：非零地面接地与平移不变性不保证。
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [35.115, 35.115]
+DONE FORGED_SRC_FM a050_300000 floor -0.05 plan 106
+BAKE_OK FORGED_SRC_FM
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+19:37:51 | INFO: Data are loaded, start creating Blender stuff
+19:37:52 | INFO: Blender create Mesh node 0
+19:37:54 | INFO: glTF import finished in 2.63s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE TRANSL_F0 a050_300000 floor 0.0
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE TRANSL_F0 a050_300000 floor 0.0 plan 106
+BAKE_OK TRANSL_F0
+BAKE TRANSL_FM a050_300000 floor -0.05
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE TRANSL_FM a050_300000 floor -0.05 plan 106
+BAKE_OK TRANSL_FM
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+19:38:56 | INFO: Data are loaded, start creating Blender stuff
+19:38:56 | INFO: Blender create Mesh node 0
+19:38:57 | INFO: glTF import finished in 1.69s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE YAW_F0 a050_300000 floor 0.0
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE YAW_F0 a050_300000 floor 0.0 plan 106
+BAKE_OK YAW_F0
+BAKE YAW_FM a050_300000 floor -0.05
+GEOMETRY src_datum_mm 970.0 tgt_datum_mm 537.015 height_offsets_mm [-14.885, -14.885]
+DONE YAW_FM a050_300000 floor -0.05 plan 106
+BAKE_OK YAW_FM
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tmp_forearm_roll\\floor_candidate_root\\humanoid_retarget\\__init__.py'
+19:39:55 | INFO: Data are loaded, start creating Blender stuff
+19:39:55 | INFO: Blender create Mesh node 0
+19:39:57 | INFO: glTF import finished in 1.54s
+FBX version: 7400
+DATUM_PROPS source True target True
+BAKE CHAN0 a050_300000 floor 0.0
+GEOMETRY src_datum_mm None tgt_datum_mm None height_offsets_mm [-14.885, -14.885]
+DONE CHAN0 a050_300000 floor 0.0 plan 0
+BAKE_OK CHAN0
+BAKE CHANFP a050_300000 floor 0.05
+[HumanoidRetarget] 姿势通道（armature_coordinates）路径不支持非零地面高度（当前 floor_height_m=0.050）：该路径未接入地面 Datum，继续烘焙会静默使用旧公式。请将地面高度设为 0，或改用 DIRECT 路径。
+BAKE_ERROR CHANFP RetargetError 姿势通道（armature_coordinates）路径不支持非零地面高度（当前 floor_height_m=0.050）：该路径未接入地面 Datum，继续烘焙会静默使用旧公式。请将地面高度设为 0，或改用 DIRECT 路径。
+BAKE CHANFM a050_300000 floor -0.05
+[HumanoidRetarget] 姿势通道（armature_coordinates）路径不支持非零地面高度（当前 floor_height_m=-0.050）：该路径未接入地面 Datum，继续烘焙会静默使用旧公式。请将地面高度设为 0，或改用 DIRECT 路径。
+BAKE_ERROR CHANFM RetargetError 姿势通道（armature_coordinates）路径不支持非零地面高度（当前 floor_height_m=-0.050）：该路径未接入地面 Datum，继续烘焙会静默使用旧公式。请将地面高度设为 0，或改用 DIRECT 路径。
+ROWS 901 DONE
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+
+Blender quit

@@ -763,7 +763,7 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
     def head_world(arm, matrix, space):
         if armature_coordinates:
             return space.position(matrix.translation)
-        return space.position(arm.matrix_world @ matrix.translation)
+        return space.world_position(arm.matrix_world @ matrix.translation)
 
     source_hips_pos = head_world(src, hips_matrices[src_hips_name], source_space)
     target_hips_pos = head_world(tgt, tgt_hips_matrices[tgt_hips_name], target_space)
@@ -797,6 +797,9 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
             continue
         src_names = tuple(src_roles[role] for role in roles)
         tgt_names = tuple(tgt_roles[role] for role in roles)
+        if roles[2] in {"foot_l", "foot_r"} and settings.pelvis_ik_mode != "PIN_INPUT" and settings.pelvis_ik_alpha > 0.0:
+            if tgt.data.bones[tgt_hips_name] not in tgt.data.bones[tgt_names[0]].parent_recursive:
+                raise RetargetError(f"骨盆协调需要腿根属于髋骨子树: {tgt_names[0]}")
         src_mats = reference_matrices(src, src_roles, [src_names[0], src_names[2]])
         tgt_mats = reference_matrices(tgt, tgt_roles, list(tgt_names))
 
@@ -818,7 +821,7 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
         def rest_head_world(arm, name, space):
             if armature_coordinates:
                 return space.position(arm.data.bones[name].head_local)
-            return space.position(arm.matrix_world @ arm.data.bones[name].head_local)
+            return space.world_position(arm.matrix_world @ arm.data.bones[name].head_local)
 
         tgt_rest_start = rest_head_world(tgt, tgt_names[0], target_space)
         tgt_rest_mid = rest_head_world(tgt, tgt_names[1], target_space)
@@ -834,8 +837,12 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
         else:
             src_end_matrix = src.matrix_world @ src_mats[src_names[2]]
             tgt_end_matrix = tgt.matrix_world @ tgt_mats[tgt_names[2]]
-        source_end_rotation = source_space.rotation(src_end_matrix)
-        target_end_rotation = target_space.rotation(tgt_end_matrix)
+        if armature_coordinates:
+            source_end_rotation = source_space.rotation(src_end_matrix)
+            target_end_rotation = target_space.rotation(tgt_end_matrix)
+        else:
+            source_end_rotation = source_space.world_rotation(src_end_matrix)
+            target_end_rotation = target_space.world_rotation(tgt_end_matrix)
 
         src_rest_end = rest_head_world(src, src_names[2], source_space)
 
@@ -868,7 +875,7 @@ def _hips_translation_with_floor(src, tgt, geometry, settings, in_place, armatur
     if armature_coordinates:
         current = geometry.source_space.position(src_pose.head)
     else:
-        current = geometry.source_space.position(src.matrix_world @ src_pose.head)
+        current = geometry.source_space.world_position(src.matrix_world @ src_pose.head)
 
     position, pelvis_delta = retarget_pelvis_position(
         current, pelvis, settings, in_place
@@ -912,7 +919,7 @@ def _sample_foot_motion(src, action, frame_range, geometry, settings, in_place, 
                 if armature_coordinates:
                     hips_now = geometry.source_space.position(src_pose_hips.head)
                 else:
-                    hips_now = geometry.source_space.position(src.matrix_world @ src_pose_hips.head)
+                    hips_now = geometry.source_space.world_position(src.matrix_world @ src_pose_hips.head)
             else:
                 hips_now = geometry.pelvis.source_position.copy()
             for role in foot_roles:
@@ -924,7 +931,7 @@ def _sample_foot_motion(src, action, frame_range, geometry, settings, in_place, 
                 if armature_coordinates:
                     pos = geometry.source_space.position(foot_pose.head)
                 else:
-                    pos = geometry.source_space.position(src.matrix_world @ foot_pose.head)
+                    pos = geometry.source_space.world_position(src.matrix_world @ foot_pose.head)
                 if in_place:
                     pos = Vector((
                         pos.x - hips_now.x + hips_ref.x,
@@ -1299,10 +1306,10 @@ def _build_pose_channel_goals(
 def _solve_pose_channel_chain(tgt, space, limb, goal, pole_goal):
     upper_name, mid_name, end_name = limb.target_names
     world = tgt.matrix_world
-    root = space.position(world @ tgt.pose.bones[upper_name].head)
-    rest_root = space.position(world @ tgt.data.bones[upper_name].head_local)
-    rest_mid = space.position(world @ tgt.data.bones[mid_name].head_local)
-    rest_end = space.position(world @ tgt.data.bones[end_name].head_local)
+    root = space.world_position(world @ tgt.pose.bones[upper_name].head)
+    rest_root = space.world_position(world @ tgt.data.bones[upper_name].head_local)
+    rest_mid = space.world_position(world @ tgt.data.bones[mid_name].head_local)
+    rest_end = space.world_position(world @ tgt.data.bones[end_name].head_local)
     end_role = limb.roles[2]
     if end_role in ("hand_l", "hand_r"):
         preferred_side = Vector((0.0, -1.0, 0.0))

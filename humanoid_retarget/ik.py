@@ -96,6 +96,7 @@ def apply_contact_ik(
 
     constraints = prepare_pelvis_constraints(src, tgt, geometry, goals, settings)
     pelvis_matrix = tgt.pose.bones[geometry.pelvis.target_name].matrix.copy()
+    apply_pelvis_ik(tgt, geometry, settings, constraints, pelvis_matrix)
     _solve_limb_goals(src, tgt, geometry, goals)
     if not constraints or settings.pelvis_ik_mode == "PIN_INPUT" or settings.pelvis_ik_alpha == 0.0:
         return

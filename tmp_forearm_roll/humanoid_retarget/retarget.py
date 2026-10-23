@@ -34,6 +34,7 @@ from .foot_ik import (
     retarget_pelvis_position,
     validate_foot_ik_settings,
 )
+from . import ik as ik_module
 from .ik import apply_contact_ik
 from .joint_limits import (
     BoneAngleLimits,
@@ -90,6 +91,8 @@ class RetargetOptions:
         joint_limit_settings=None,
         forearm_chain_twist=True,
         forearm_roll_cyclic=False,
+        contact_min_knee_deg=0.0,
+        correction_smoothing="",
     ):
         self.pairs = pairs
         self.reference = reference if reference in {"REST", "CURRENT"} else "REST"
@@ -112,6 +115,10 @@ class RetargetOptions:
             field: getattr(foot_ik_settings, field) for field in foot_ik_settings.__dataclass_fields__
         })
         self.soft_repulsion = bool(soft_repulsion)
+        self.contact_min_knee_deg = float(contact_min_knee_deg)
+        if correction_smoothing not in {"", "height"}:
+            raise RetargetError("未知的地面修正平滑模式: " + str(correction_smoothing))
+        self.correction_smoothing = correction_smoothing
         self.joint_limits = bool(joint_limits)
         self.forearm_chain_twist = bool(forearm_chain_twist)
         self.forearm_roll_cyclic = bool(forearm_roll_cyclic)
@@ -813,6 +820,79 @@ _IK_CHAIN_ROLES = (
 )
 
 
+def _extract_foot_contact_local(tgt, foot_name):
+    """Heel and forefoot low points from the foot vertex group, in foot-bone local space.
+
+    Forward is ankle-to-toe when a toe child exists, otherwise the foot bone tail.
+    Candidates are the lower half of the foot group in rest world height. The two
+    returned points are Vectors in the foot bone rest local frame.
+    """
+    bone = tgt.data.bones.get(foot_name)
+    if bone is None:
+        return ()
+    toe = next((child for child in bone.children if "toe" in child.name.lower()), None)
+    forward_end = toe.head_local if toe is not None else bone.tail_local
+    forward = forward_end - bone.head_local
+    if forward.length < 1e-9:
+        return ()
+    forward.normalize()
+    to_armature = tgt.matrix_world.inverted()
+    candidates = []
+    for mesh in (obj for obj in bpy.data.objects if obj.type == "MESH" and obj.parent == tgt):
+        group = mesh.vertex_groups.get(foot_name)
+        if group is None:
+            continue
+        world_matrix = mesh.matrix_world
+        for vertex in mesh.data.vertices:
+            weight = 0.0
+            for item in vertex.groups:
+                if item.group == group.index:
+                    weight = item.weight
+                    break
+            if weight <= 0.5:
+                continue
+            armature_point = to_armature @ (world_matrix @ vertex.co)
+            candidates.append(armature_point)
+    if len(candidates) < 2:
+        return ()
+    heights = sorted(point.z for point in candidates)
+    cutoff = heights[len(heights) // 2]
+    low = [point for point in candidates if point.z <= cutoff]
+    heel = min(low, key=lambda point: (point - bone.head_local).dot(forward))
+    fore = max(low, key=lambda point: (point - bone.head_local).dot(forward))
+    if (fore - heel).length < 1e-9:
+        return ()
+    inverse = bone.matrix_local.inverted()
+    return (inverse @ heel, inverse @ fore)
+
+
+def _extract_foot_skin_points(tgt, bone_names):
+    """Foot-region bind vertices with their bone weights, for LBS feedback.
+
+    Returns ((bind_armature_point, ((bone_name, weight), ...)), ...). Bind points
+    are in armature space. Only vertices influenced by the leg bones are kept.
+    """
+    wanted = set(bone_names)
+    to_armature = tgt.matrix_world.inverted()
+    points = []
+    for mesh in (obj for obj in bpy.data.objects if obj.type == "MESH" and obj.parent == tgt):
+        name_by_index = {group.index: group.name for group in mesh.vertex_groups}
+        if not wanted.intersection(name_by_index.values()):
+            continue
+        world_matrix = mesh.matrix_world
+        for vertex in mesh.data.vertices:
+            influences = tuple(
+                (name_by_index[item.group], item.weight)
+                for item in vertex.groups
+                if name_by_index.get(item.group) in wanted and item.weight > 0.2
+            )
+            if not influences:
+                continue
+            bind = to_armature @ (world_matrix @ vertex.co)
+            points.append((bind, influences))
+    return tuple(points)
+
+
 def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coordinates=False, extra_arm_chains=False):
     src_roles = {role: name for role, name, _t in pairs}
     tgt_roles = {role: name for role, _s, name in pairs}
@@ -863,7 +943,7 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
     def head_world(arm, matrix, space):
         if armature_coordinates:
             return space.position(matrix.translation)
-        return space.position(arm.matrix_world @ matrix.translation)
+        return space.world_position(arm.matrix_world @ matrix.translation)
 
     source_hips_pos = head_world(src, hips_matrices[src_hips_name], source_space)
     target_hips_pos = head_world(tgt, tgt_hips_matrices[tgt_hips_name], target_space)
@@ -918,7 +998,7 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
         def rest_head_world(arm, name, space):
             if armature_coordinates:
                 return space.position(arm.data.bones[name].head_local)
-            return space.position(arm.matrix_world @ arm.data.bones[name].head_local)
+            return space.world_position(arm.matrix_world @ arm.data.bones[name].head_local)
 
         tgt_rest_start = rest_head_world(tgt, tgt_names[0], target_space)
         tgt_rest_mid = rest_head_world(tgt, tgt_names[1], target_space)
@@ -931,11 +1011,13 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
         if armature_coordinates:
             src_end_matrix = src_mats[src_names[2]]
             tgt_end_matrix = tgt_mats[tgt_names[2]]
+            source_end_rotation = source_space.rotation(src_end_matrix)
+            target_end_rotation = target_space.rotation(tgt_end_matrix)
         else:
             src_end_matrix = src.matrix_world @ src_mats[src_names[2]]
             tgt_end_matrix = tgt.matrix_world @ tgt_mats[tgt_names[2]]
-        source_end_rotation = source_space.rotation(src_end_matrix)
-        target_end_rotation = target_space.rotation(tgt_end_matrix)
+            source_end_rotation = source_space.world_rotation(src_end_matrix)
+            target_end_rotation = target_space.world_rotation(tgt_end_matrix)
 
         src_rest_end = rest_head_world(src, src_names[2], source_space)
 
@@ -952,6 +1034,19 @@ def _prepare_retarget_geometry(src, tgt, pairs, options, scene, *, armature_coor
             height_offset=tgt_end.z - src_end.z,
             source_rest_end_height=src_rest_end.z,
             reference_pole=tgt_mid,
+            contact_local=(
+                _extract_foot_contact_local(tgt, tgt_names[2])
+                if roles[2] in ("foot_l", "foot_r") else ()
+            ),
+            skin_points=(
+                _extract_foot_skin_points(
+                    tgt,
+                    (tgt_names[1], tgt_names[2]) + tuple(
+                        child.name for child in tgt.data.bones[tgt_names[2]].children
+                    ),
+                )
+                if roles[2] in ("foot_l", "foot_r") else ()
+            ),
         ))
 
     return RetargetGeometry(
@@ -968,7 +1063,7 @@ def _hips_translation_with_floor(src, tgt, geometry, settings, in_place, armatur
     if armature_coordinates:
         current = geometry.source_space.position(src_pose.head)
     else:
-        current = geometry.source_space.position(src.matrix_world @ src_pose.head)
+        current = geometry.source_space.world_position(src.matrix_world @ src_pose.head)
 
     position, pelvis_delta = retarget_pelvis_position(
         current, pelvis, settings, in_place
@@ -1012,7 +1107,7 @@ def _sample_foot_motion(src, action, frame_range, geometry, settings, in_place, 
                 if armature_coordinates:
                     hips_now = geometry.source_space.position(src_pose_hips.head)
                 else:
-                    hips_now = geometry.source_space.position(src.matrix_world @ src_pose_hips.head)
+                    hips_now = geometry.source_space.world_position(src.matrix_world @ src_pose_hips.head)
             else:
                 hips_now = geometry.pelvis.source_position.copy()
             for role in foot_roles:
@@ -1024,7 +1119,7 @@ def _sample_foot_motion(src, action, frame_range, geometry, settings, in_place, 
                 if armature_coordinates:
                     pos = geometry.source_space.position(foot_pose.head)
                 else:
-                    pos = geometry.source_space.position(src.matrix_world @ foot_pose.head)
+                    pos = geometry.source_space.world_position(src.matrix_world @ foot_pose.head)
                 if in_place:
                     pos = Vector((
                         pos.x - hips_now.x + hips_ref.x,
@@ -1399,10 +1494,10 @@ def _build_pose_channel_goals(
 def _solve_pose_channel_chain(tgt, space, limb, goal, pole_goal):
     upper_name, mid_name, end_name = limb.target_names
     world = tgt.matrix_world
-    root = space.position(world @ tgt.pose.bones[upper_name].head)
-    rest_root = space.position(world @ tgt.data.bones[upper_name].head_local)
-    rest_mid = space.position(world @ tgt.data.bones[mid_name].head_local)
-    rest_end = space.position(world @ tgt.data.bones[end_name].head_local)
+    root = space.world_position(world @ tgt.pose.bones[upper_name].head)
+    rest_root = space.world_position(world @ tgt.data.bones[upper_name].head_local)
+    rest_mid = space.world_position(world @ tgt.data.bones[mid_name].head_local)
+    rest_end = space.world_position(world @ tgt.data.bones[end_name].head_local)
     end_role = limb.roles[2]
     if end_role in ("hand_l", "hand_r"):
         preferred_side = Vector((0.0, -1.0, 0.0))
@@ -1678,6 +1773,75 @@ def bake_retarget(src, tgt, options=None):
         raise
 
 
+def _correction_plan_signature(src, tgt, action, frame_range, pairs, options, ik_settings, dt):
+    """Hash every input that can change the correction-plan solve.
+
+    Returns None when anything cannot be serialised reliably; callers must
+    then rebuild the plan instead of reusing a cached one.
+    """
+    import hashlib
+
+    def rounded(values, digits=5):
+        return tuple(round(float(value), digits) for value in values)
+
+    try:
+        parts = [
+            ik_module.CORRECTION_PLAN_VERSION,
+            options.correction_smoothing,
+            repr(options.contact_min_knee_deg),
+            repr(ik_module._CONTACT_KNEE_SMOOTH_DEG),
+            repr(ik_module._CONTACT_MAX_RAISE),
+            repr(tuple(frame_range)),
+            options.root_motion,
+            options.reference,
+            repr(float(dt)),
+            src.name,
+            tgt.name,
+        ]
+        action_data = [action.name]
+        for layer in action.layers:
+            for strip in layer.strips:
+                bag = getattr(strip, "channelbag", None)
+                if callable(bag):
+                    try:
+                        bag = bag(action.slots[0]) if action.slots else bag()
+                    except Exception:
+                        bag = None
+                fcurves = getattr(bag, "fcurves", []) if bag is not None else []
+                for curve in fcurves:
+                    action_data.append(curve.data_path)
+                    action_data.append(str(curve.array_index))
+                    for point in curve.keyframe_points:
+                        action_data.append(repr(rounded(point.co, 6)))
+                        action_data.append(repr(rounded(point.handle_left, 6)))
+                        action_data.append(repr(rounded(point.handle_right, 6)))
+        parts.append(repr(action_data))
+        for label, arm in (("src", src), ("tgt", tgt)):
+            bones = [
+                (
+                    bone.name,
+                    rounded(value for row in bone.matrix_local for value in row),
+                    rounded(bone.head_local),
+                    rounded(bone.tail_local),
+                )
+                for bone in arm.data.bones
+            ]
+            parts.append(label + repr(bones))
+            parts.append(label + "_world" + repr(rounded(
+                value for row in arm.matrix_world for value in row
+            )))
+        parts.append(repr([(role, s_name, t_name) for role, s_name, t_name in pairs]))
+        parts.append(repr({
+            field: getattr(ik_settings, field)
+            for field in ik_settings.__dataclass_fields__
+        }))
+        if options.reference_data:
+            parts.append(repr(options.reference_data)[:65536])
+        return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()
+    except Exception:
+        return None
+
+
 def _bake_retarget(src, tgt, options=None, channel_state=None):
     if src is None or src.type != "ARMATURE":
         raise RetargetError("请先导入带骨架和动画的来源模型。")
@@ -1794,7 +1958,8 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
             options._forearm_roll_range = (start, end)
             options._forearm_roll_cache = None
             _ensure_forearm_roll_cache(src, tgt, pairs, options)
-            for frame in range(start, end + 1):
+
+            def _pose_one_frame(frame):
                 scene.frame_set(frame)
                 if compensate_scale:
                     _write_pose_scales(tgt, preserved_scales, True)
@@ -1856,12 +2021,87 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
                 if compensate_scale:
                     _write_pose_scales(tgt, preserved_scales, False)
                 bpy.context.view_layer.update()
-                for _role, _src_name, tgt_name in pairs:
-                    pose_bone = tgt.pose.bones[tgt_name]
-                    pose_bone.keyframe_insert(data_path="rotation_quaternion", frame=frame)
-                    pose_bone.keyframe_insert(data_path="location", frame=frame)
-                    if compensate_scale and tgt_name in preserved_scales:
-                        pose_bone.keyframe_insert(data_path="scale", frame=frame)
+
+            if options.contact_min_knee_deg > 0.0:
+                ik_module._CONTACT_MIN_KNEE_DEG = options.contact_min_knee_deg
+            plan_signature = None
+            if (
+                options.correction_smoothing == "height"
+                and use_foot_ik
+                and not use_channels
+                and ik_geometry is not None
+            ):
+                plan_signature = _correction_plan_signature(
+                    src, tgt, action, (start, end), pairs, options, ik_settings, dt
+                )
+                plan = (
+                    ik_module._PLAN_CACHE.get(plan_signature)
+                    if plan_signature is not None
+                    else None
+                )
+                if plan is None:
+                    goal_calls = {}
+                    original_solve = ik_module._solve_chain
+
+                    def _recording_solve(tgt_, space_, reference_, goal_, pole_hint=None):
+                        distance = original_solve(
+                            tgt_, space_, reference_, goal_, pole_hint=pole_hint
+                        )
+                        goal_calls.setdefault(
+                            (bpy.context.scene.frame_current, reference_.roles[2]),
+                            [],
+                        ).append(goal_.position.copy())
+                        return distance
+
+                    ik_module._solve_chain = _recording_solve
+                    ik_module._CORRECTION_PLAN = None
+                    log_mark = len(ik_module.CONTACT_LOG)
+                    try:
+                        for frame in range(start, end + 1):
+                            _pose_one_frame(frame)
+                    finally:
+                        ik_module._solve_chain = original_solve
+                    raw_series = {}
+                    for (frame, role), calls in goal_calls.items():
+                        if role in ("foot_l", "foot_r"):
+                            raw_series[(frame, role)] = (
+                                calls[-1] - calls[0]
+                                if len(calls) >= 2
+                                else Vector((0.0, 0.0, 0.0))
+                            )
+                    lowest_series = {
+                        (entry[0], entry[1]): entry[3]
+                        for entry in ik_module.CONTACT_LOG[log_mark:]
+                    }
+                    del ik_module.CONTACT_LOG[log_mark:]
+                    plan = ik_module.build_height_plan(raw_series, lowest_series)
+                    ik_module._LAST_RAW_SERIES = raw_series
+                    ik_module._LAST_LOWEST_SERIES = lowest_series
+                    ik_module._LAST_PLAN = plan
+                    if plan_signature is not None:
+                        ik_module._PLAN_CACHE[plan_signature] = plan
+                    # Planning consumed plant states; restart them for the bake.
+                    if planting_on:
+                        plant_states.clear()
+                        for limb in ik_geometry.limbs:
+                            end_role = limb.roles[2]
+                            if end_role in ("foot_l", "foot_r"):
+                                plant_states[end_role] = LimbPlantState(
+                                    previous_goal=limb.reference_pole.copy()
+                                )
+                ik_module._CORRECTION_PLAN = plan
+            try:
+                for frame in range(start, end + 1):
+                    _pose_one_frame(frame)
+                    for _role, _src_name, tgt_name in pairs:
+                        pose_bone = tgt.pose.bones[tgt_name]
+                        pose_bone.keyframe_insert(data_path="rotation_quaternion", frame=frame)
+                        pose_bone.keyframe_insert(data_path="location", frame=frame)
+                        if compensate_scale and tgt_name in preserved_scales:
+                            pose_bone.keyframe_insert(data_path="scale", frame=frame)
+            finally:
+                if plan_signature is not None or options.correction_smoothing:
+                    ik_module._CORRECTION_PLAN = None
             target_action.use_fake_user = True
             baked.append((target_action, start, end))
             baked_sources.append(action)
