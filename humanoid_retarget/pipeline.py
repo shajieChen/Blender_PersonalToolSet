@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import os
+from contextlib import contextmanager
 
 import bpy
 
+from .apose_export import AposeExportError, apose_animation_actions, apose_export_objects
 from .autorig import AutoRigError, auto_rig_meshes
 from .classify import CORE_ROLES, classify_armature
-from .retarget import ACTION_SEP, RetargetError, RetargetOptions, bake_retarget, collect_actions
+from .retarget import ACTION_SEP, RetargetError, RetargetOptions, _assign_action, bake_retarget, collect_actions
 
 SOURCE_EXTS = {".fbx", ".glb", ".gltf", ".bvh"}
 TARGET_EXTS = {".fbx", ".glb", ".gltf", ".obj"}
@@ -79,7 +81,52 @@ def import_model(path, automatic_bone_orientation=False):
         raise PipelineError("不支持的文件格式: " + ext)
     objects = [obj for obj in bpy.data.objects if obj not in before_objects]
     actions = [action for action in bpy.data.actions if action not in before_actions]
+    if ext == ".fbx":
+        _restore_fbx_bone_translation(objects)
     return objects, actions
+
+
+def _translated_connected_bones(arm_obj):
+    paths = {bone.path_from_id("location"): bone.name
+             for bone in arm_obj.pose.bones if bone.bone.use_connect}
+    translated = set()
+    for action in collect_actions(arm_obj):
+        if getattr(action, "layers", None):
+            curves = (curve for layer in action.layers for strip in layer.strips
+                      for bag in strip.channelbags for curve in bag.fcurves)
+        else:
+            curves = getattr(action, "fcurves", ())
+        for curve in curves:
+            if curve.data_path in paths and any(abs(point.co[1]) > 1e-8 for point in curve.keyframe_points):
+                translated.add(paths[curve.data_path])
+    return translated
+
+
+def _restore_fbx_bone_translation(objects):
+    active = bpy.context.view_layer.objects.active
+    selected = list(bpy.context.selected_objects)
+    try:
+        for obj in objects:
+            if obj.type != "ARMATURE":
+                continue
+            names = _translated_connected_bones(obj)
+            if not names:
+                continue
+            for selected_obj in bpy.context.selected_objects:
+                selected_obj.select_set(False)
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            bpy.ops.object.mode_set(mode="EDIT")
+            for name in names:
+                obj.data.edit_bones[name].use_connect = False
+            bpy.ops.object.mode_set(mode="OBJECT")
+    finally:
+        ensure_object_mode()
+        for obj in bpy.context.selected_objects:
+            obj.select_set(False)
+        for obj in selected:
+            obj.select_set(True)
+        bpy.context.view_layer.objects.active = active
 
 
 def pick_armature(objects):
@@ -582,7 +629,101 @@ def _select_hierarchy(arm_obj):
     return revealed
 
 
-def _export_fbx_with_rest_bind(path):
+def _fbx_export_actions(arm_obj, export_all_actions):
+    anim = arm_obj.animation_data
+    current = anim.action if anim else None
+    actions = [current] if current is not None and not current.is_empty else []
+    if export_all_actions:
+        stored = arm_obj.get("hr_actions")
+        if stored:
+            owned = [bpy.data.actions.get(name) for name in str(stored).split(ACTION_SEP) if name]
+            if any(action is None for action in owned):
+                raise PipelineError("本轮动画清单中的动作已丢失，请重新烘焙。")
+        else:
+            owned = collect_actions(arm_obj)
+        actions.extend(action for action in owned if not action.is_empty and action not in actions)
+    elif not actions:
+        raise PipelineError("当前没有可导出的动画。")
+    return actions
+
+
+@contextmanager
+def _fbx_action_tracks(arm_obj, actions):
+    if not actions:
+        yield
+        return
+    scene = bpy.context.scene
+    frame, subframe = scene.frame_current, scene.frame_subframe
+    poses = [(bone, bone.matrix_basis.copy()) for bone in arm_obj.pose.bones]
+    states = []
+    strip_names = []
+    for obj in bpy.context.selected_objects:
+        anim = obj.animation_data
+        if anim is None:
+            continue
+        if anim.use_tweak_mode:
+            raise PipelineError("请先退出动画条带编辑模式，再导出。")
+        tracks = [(track, track.mute, track.is_solo) for track in anim.nla_tracks]
+        states.append((obj, anim.action, getattr(anim, "action_slot", None), anim.use_nla, tracks))
+        strip_names.extend((strip, strip.name) for track, _mute, _solo in tracks for strip in track.strips)
+    had_animation = arm_obj.animation_data is not None
+    anim = arm_obj.animation_data_create()
+    original_action = anim.action
+    original_slot = getattr(anim, "action_slot", None)
+    created = []
+    try:
+        original_names = {name for _strip, name in strip_names}
+        saved_index = 0
+        for strip, _name in strip_names:
+            while f"__hr_export_saved_{saved_index}" in original_names:
+                saved_index += 1
+            strip.name = f"__hr_export_saved_{saved_index}"
+            saved_index += 1
+        for obj, _action, _slot, _use_nla, tracks in states:
+            for track, _mute, _solo in tracks:
+                track.is_solo = False
+                track.mute = True
+        for action in actions:
+            _assign_action(arm_obj, action)
+            if action == original_action and original_slot is not None:
+                anim.action_slot = original_slot
+            previous = anim.nla_tracks[-1] if anim.nla_tracks else None
+            track = anim.nla_tracks.new(prev=previous)
+            created.append(track)
+            clip_name = str(action.get("hr_export_clip_name") or action.name)
+            track.name = clip_name
+            start, end = action.frame_range
+            strip = track.strips.new(clip_name, int(start), action)
+            if hasattr(strip, "action_slot"):
+                strip.action_slot = anim.action_slot
+            strip.frame_start = start
+            if end > start:
+                strip.frame_end = end
+            strip.extrapolation = "NOTHING"
+        anim.action = None
+        anim.use_nla = True
+        yield
+    finally:
+        for track in reversed(created):
+            anim.nla_tracks.remove(track)
+        for strip, name in strip_names:
+            strip.name = name
+        for obj, action, slot, use_nla, tracks in states:
+            obj.animation_data.action = action
+            if action is not None and slot is not None:
+                obj.animation_data.action_slot = slot
+            obj.animation_data.use_nla = use_nla
+            for track, mute, solo in tracks:
+                track.mute = mute
+                track.is_solo = solo
+        for bone, matrix in poses:
+            bone.matrix_basis = matrix
+        if not had_animation:
+            arm_obj.animation_data_clear()
+        scene.frame_set(frame, subframe=subframe)
+
+
+def _export_fbx_with_rest_bind(path, has_actions):
     """Blender writes the current pose into the FBX bone node.
 
     Animation curves are sampled earlier in the exporter. Switching to the
@@ -613,9 +754,10 @@ def _export_fbx_with_rest_bind(path):
             bpy.ops.export_scene.fbx,
             filepath=path,
             use_selection=True,
-            bake_anim=True,
-            bake_anim_use_all_actions=True,
-            bake_anim_use_nla_strips=False,
+            bake_anim=has_actions,
+            bake_anim_simplify_factor=0.0,
+            bake_anim_use_all_actions=False,
+            bake_anim_use_nla_strips=has_actions,
             add_leaf_bones=False,
             object_types={"ARMATURE", "MESH"},
         )
@@ -623,6 +765,34 @@ def _export_fbx_with_rest_bind(path):
         export_bin.fbx_data_object_elements = original
         for arm_obj, pose_position in touched:
             arm_obj.data.pose_position = pose_position
+
+
+def export_apose_animations(arm_obj, path, export_all_actions=True):
+    if arm_obj is None or arm_obj.type != "ARMATURE":
+        raise PipelineError("还没有可导出的目标骨架。")
+    if os.path.splitext(path)[1].lower() != ".fbx":
+        raise PipelineError("A-Pose 动画请导出为 .fbx。")
+    actions = _fbx_export_actions(arm_obj, export_all_actions)
+    if not actions:
+        raise PipelineError("当前没有已烘焙的重定向动画。")
+    try:
+        with apose_export_objects(arm_obj) as export_arm:
+            with apose_animation_actions(arm_obj, export_arm, actions):
+                return export_armature(export_arm, path)
+    except AposeExportError as exc:
+        raise PipelineError(str(exc)) from exc
+
+
+def export_apose(arm_obj, path):
+    if arm_obj is None or arm_obj.type != "ARMATURE":
+        raise PipelineError("还没有可导出的目标骨架。")
+    if os.path.splitext(path)[1].lower() != ".fbx":
+        raise PipelineError("A-Pose 请导出为 .fbx。")
+    try:
+        with apose_export_objects(arm_obj) as export_arm:
+            return export_armature(export_arm, path)
+    except AposeExportError as exc:
+        raise PipelineError(str(exc)) from exc
 
 
 def export_armature(arm_obj, path, export_all_actions=True):
@@ -653,7 +823,9 @@ def export_armature(arm_obj, path, export_all_actions=True):
 
 def _export_current_selection(arm_obj, path, ext, export_all_actions):
     if ext == ".fbx":
-        _export_fbx_with_rest_bind(path)
+        actions = _fbx_export_actions(arm_obj, export_all_actions)
+        with _fbx_action_tracks(arm_obj, actions):
+            _export_fbx_with_rest_bind(path, bool(actions))
     else:
         export_format = "GLB" if ext == ".glb" else "GLTF_SEPARATE"
         if not export_all_actions:

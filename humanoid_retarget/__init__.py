@@ -20,6 +20,8 @@ from .mapping import PresetError, build_pairs, list_preset_names, load_preset, m
 from .pipeline import (
     PipelineError,
     apply_stand_layout,
+    export_apose,
+    export_apose_animations,
     export_armature,
     initial_filepath,
     load_source,
@@ -931,6 +933,13 @@ class HR_OT_export(Operator):
     bl_description = "把目标角色和已经烘焙好的动画导出"
     bl_options = {"REGISTER"}
 
+    fbx_pose: EnumProperty(
+        name="FBX 内容",
+        items=(("A_POSE", "A-Pose（无动画）", "导出标准 A-Pose 骨架和蒙皮网格"),
+               ("ANIMATED", "A-Pose + 重定向动画", "包含 A-Pose 绑定模型和已烘焙的重定向动画")),
+        default="ANIMATED",
+    )
+
     export_all_actions: BoolProperty(
         name="全量动画",
         description="导出全部动画。取消勾选则只导出当前动画",
@@ -943,12 +952,16 @@ class HR_OT_export(Operator):
             self.report({"ERROR"}, "还没有重定向结果")
             return {"CANCELLED"}
         self.export_all_actions = True
-        if settings.export_format == "FBX":
-            return bpy.ops.hr.export_result_file("INVOKE_DEFAULT", export_all_actions=True)
-        return context.window_manager.invoke_props_dialog(self, title="导出 glTF 动画")
+        self.fbx_pose = "ANIMATED"
+        return context.window_manager.invoke_props_dialog(self, title="导出设置")
 
     def draw(self, context):
         column = self.layout.column()
+        if context.scene.hr_settings.export_format == "FBX":
+            column.prop(self, "fbx_pose")
+            if self.fbx_pose == "A_POSE":
+                column.label(text="双臂下斜 45°，不包含动画")
+                return
         column.prop(self, "export_all_actions")
         if self.export_all_actions:
             column.label(text="将导出全部动画")
@@ -956,7 +969,7 @@ class HR_OT_export(Operator):
             column.label(text="将只导出当前动画")
 
     def execute(self, context):
-        return bpy.ops.hr.export_result_file("INVOKE_DEFAULT", export_all_actions=self.export_all_actions)
+        return bpy.ops.hr.export_result_file("INVOKE_DEFAULT", export_all_actions=self.export_all_actions, fbx_pose=self.fbx_pose)
 
 
 class HR_OT_export_file(Operator):
@@ -968,6 +981,11 @@ class HR_OT_export_file(Operator):
     filepath: StringProperty(subtype="FILE_PATH")
     filter_glob: StringProperty(default="*.glb;*.gltf;*.fbx", options={"HIDDEN"})
     export_all_actions: BoolProperty(name="全量动画", default=True, options={"HIDDEN"})
+    fbx_pose: EnumProperty(
+        items=(("A_POSE", "A-Pose", ""), ("ANIMATED", "动画", "")),
+        default="ANIMATED",
+        options={"HIDDEN"},
+    )
 
     def invoke(self, context, event):
         settings = context.scene.hr_settings
@@ -975,7 +993,8 @@ class HR_OT_export_file(Operator):
             self.report({"ERROR"}, "还没有重定向结果")
             return {"CANCELLED"}
         ext = ".fbx" if settings.export_format == "FBX" else ".glb"
-        self.filepath = bpy.path.ensure_ext(settings.target.name + "_retarget" + ext, ext)
+        suffix = ("_APose" if self.fbx_pose == "A_POSE" else "_APose_retarget") if settings.export_format == "FBX" else "_retarget"
+        self.filepath = bpy.path.ensure_ext(settings.target.name + suffix + ext, ext)
         context.window_manager.fileselect_add(self)
         return {"RUNNING_MODAL"}
 
@@ -986,14 +1005,20 @@ class HR_OT_export_file(Operator):
             path = bpy.path.ensure_ext(path, ".fbx")
         if settings.export_format == "GLB" and not path.lower().endswith((".glb", ".gltf")):
             path = bpy.path.ensure_ext(path, ".glb")
-        export_all = True if settings.export_format == "FBX" else self.export_all_actions
+        export_all = self.export_all_actions
+        apose = settings.export_format == "FBX" and self.fbx_pose == "A_POSE"
         try:
-            export_armature(settings.target, path, export_all_actions=export_all)
+            if apose:
+                export_apose(settings.target, path)
+            elif settings.export_format == "FBX":
+                export_apose_animations(settings.target, path, export_all_actions=export_all)
+            else:
+                export_armature(settings.target, path, export_all_actions=export_all)
         except PipelineError as exc:
             self.report({"ERROR"}, str(exc))
             _set_status(context, str(exc))
             return {"CANCELLED"}
-        scope = "全量动画" if export_all else "当前动画"
+        scope = "A-Pose（无动画）" if apose else ("A-Pose + " if settings.export_format == "FBX" else "") + ("全量动画" if export_all else "当前动画")
         text = f"已导出{scope}: {path}"
         _set_status(context, settings.status + "\n" + text)
         self.report({"INFO"}, text)
