@@ -330,10 +330,22 @@ def _chain_vector(arm, roles, role, posed):
 
 
 def _anatomical_roles(arm, fallback):
-    """Body axes follow the real left arm, even if a mapping swaps left and right."""
-    found = classify_armature(arm)
+    """Body axes follow the mapping when it already names hips, head and both arms.
+
+    Auto classification is only used when that mapping is incomplete. A chibi
+    can satisfy the classifier with ears, bangs or the head, which flips the torso.
+    """
     needed = ("upperarm_l", "upperarm_r", "hips", "head")
-    if all(key in found and found[key] in arm.data.bones for key in needed):
+
+    def _complete(roles):
+        return bool(roles) and all(
+            key in roles and roles[key] in arm.data.bones for key in needed
+        )
+
+    if _complete(fallback):
+        return fallback
+    found = classify_armature(arm)
+    if _complete(found):
         return found
     return fallback
 

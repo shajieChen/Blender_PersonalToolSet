@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Humanoid Retarget",
     "author": "Blender Plugin",
-    "version": (1, 7, 6),
+    "version": (1, 7, 7),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 重定向",
     "description": "导入带动画的模型，自动绑定或映射到另一个人形，再导出",
@@ -16,7 +16,7 @@ from bpy.props import BoolProperty, CollectionProperty, EnumProperty, FloatPrope
 from bpy.types import Operator, Panel, PropertyGroup, UIList
 
 from .environment import EnvironmentError, load_environment, save_environment
-from .mapping import PresetError, build_pairs, load_preset, merge_preset, save_preset
+from .mapping import PresetError, build_pairs, list_preset_names, load_preset, merge_preset, safe_preset_name, save_preset
 from .pipeline import (
     PipelineError,
     apply_stand_layout,
@@ -530,6 +530,20 @@ class HR_OT_remove_joint_limit(Operator):
         return {"FINISHED"}
 
 
+_PRESET_ENUM_ITEMS = [("__none__", "（还没有预设）", "先保存一份映射")]
+
+
+def _preset_enum_items(self, context):
+    """Dropdown entries are the preset files on disk, not a built-in default name."""
+    names = list_preset_names()
+    if names:
+        items = [(name, name, "已保存的映射预设") for name in names]
+    else:
+        items = [("__none__", "（还没有预设）", "先保存一份映射")]
+    _PRESET_ENUM_ITEMS[:] = items
+    return _PRESET_ENUM_ITEMS
+
+
 class HRSettings(PropertyGroup):
     source: PointerProperty(name="动画来源", type=bpy.types.Object, poll=_armature_poll, update=_on_source_changed)
     source_action: EnumProperty(
@@ -571,7 +585,11 @@ class HRSettings(PropertyGroup):
     status: StringProperty(name="状态", default="先导入带动画的模型，再导入要接收动作的角色。")
     mappings: CollectionProperty(type=HRMapItem)
     mapping_index: IntProperty(default=0)
-    preset_name: StringProperty(name="预设", default="onimusha")
+    preset_name: EnumProperty(
+        name="预设",
+        description="选择已经保存的映射。保存时另起名字，之后会出现在这个下拉框里",
+        items=_preset_enum_items,
+    )
     reference_pose: EnumProperty(
         name="参考姿势",
         items=(
@@ -850,6 +868,25 @@ class HR_OT_import_target(Operator):
         return {"FINISHED"}
 
 
+def _retarget_current(operator, context):
+    """Bake the current mapping onto the target. Shared by the bake and load buttons."""
+    settings = context.scene.hr_settings
+    _ensure_default_joint_limits(settings)
+    had_mapping = bool(settings.mappings)
+    options = _options_from_settings(settings, use_mapping=True)
+    try:
+        summary, _baked = retarget_existing(settings.source, settings.target, options)
+    except PipelineError as exc:
+        operator.report({"ERROR"}, str(exc))
+        _set_status(context, str(exc))
+        return {"CANCELLED"}
+    _remember_generated_pairs(settings, options, had_mapping)
+    _sync_joint_limits_from_options(settings, options)
+    _set_status(context, summary)
+    operator.report({"INFO"}, "重定向完成")
+    return {"FINISHED"}
+
+
 class HR_OT_retarget_existing(Operator):
     bl_idname = "hr.retarget_existing"
     bl_label = "重定向到当前目标"
@@ -857,21 +894,7 @@ class HR_OT_retarget_existing(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        settings = context.scene.hr_settings
-        _ensure_default_joint_limits(settings)
-        had_mapping = bool(settings.mappings)
-        options = _options_from_settings(settings, use_mapping=True)
-        try:
-            summary, _baked = retarget_existing(settings.source, settings.target, options)
-        except PipelineError as exc:
-            self.report({"ERROR"}, str(exc))
-            _set_status(context, str(exc))
-            return {"CANCELLED"}
-        _remember_generated_pairs(settings, options, had_mapping)
-        _sync_joint_limits_from_options(settings, options)
-        _set_status(context, summary)
-        self.report({"INFO"}, "重定向完成")
-        return {"FINISHED"}
+        return _retarget_current(self, context)
 
 
 class HR_OT_retarget_selected_mesh(Operator):
@@ -1002,20 +1025,33 @@ class HR_OT_build_mapping(Operator):
 class HR_OT_save_preset(Operator):
     bl_idname = "hr.save_preset"
     bl_label = "保存预设"
-    bl_description = "把当前映射表存成可重复加载的预设"
+    bl_description = "给当前映射起一个名字并保存，之后可在下拉框里选中"
     bl_options = {"REGISTER"}
+
+    name: StringProperty(name="预设名", description="保存后会出现在下拉框里")
+
+    def invoke(self, context, event):
+        current = context.scene.hr_settings.preset_name
+        self.name = "" if current == "__none__" else current
+        return context.window_manager.invoke_props_dialog(self)
 
     def execute(self, context):
         settings = context.scene.hr_settings
+        chosen = (self.name or "").strip()
+        if not chosen or chosen == "__none__":
+            self.report({"ERROR"}, "请填写预设名")
+            return {"CANCELLED"}
         pairs = _pairs_from_settings(settings)
         if not pairs:
             self.report({"ERROR"}, "映射表是空的")
             return {"CANCELLED"}
         try:
-            path = save_preset(settings.preset_name, pairs)
+            path = save_preset(chosen, pairs)
+            saved = safe_preset_name(chosen)
         except PresetError as exc:
             self.report({"ERROR"}, str(exc))
             return {"CANCELLED"}
+        settings.preset_name = saved
         text = "已保存映射预设: " + path
         _set_status(context, text)
         self.report({"INFO"}, text)
@@ -1025,7 +1061,7 @@ class HR_OT_save_preset(Operator):
 class HR_OT_load_preset(Operator):
     bl_idname = "hr.load_preset"
     bl_label = "加载预设"
-    bl_description = "加载预设。当前骨架上不存在的骨骼会退回自动识别"
+    bl_description = "加载下拉框里选中的映射，并按这张表重定向到当前目标"
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
@@ -1033,16 +1069,21 @@ class HR_OT_load_preset(Operator):
         if settings.source is None or settings.target is None:
             self.report({"ERROR"}, "请先指定来源和目标骨架")
             return {"CANCELLED"}
+        chosen = settings.preset_name
+        if not chosen or chosen == "__none__":
+            self.report({"ERROR"}, "请先在下拉框里选择一个预设")
+            return {"CANCELLED"}
         try:
-            stored = load_preset(settings.preset_name)
+            stored = load_preset(chosen)
         except PresetError as exc:
             self.report({"ERROR"}, str(exc))
             return {"CANCELLED"}
         merged = merge_preset(build_pairs(settings.source, settings.target), stored, settings.source, settings.target)
         _fill_mapping(settings, merged)
-        text = f"已加载预设 {settings.preset_name}，共 {len(merged)} 行"
-        _set_status(context, text)
-        self.report({"INFO"}, text)
+        result = _retarget_current(self, context)
+        if "FINISHED" not in result:
+            return {"CANCELLED"}
+        self.report({"INFO"}, f"已加载预设 {chosen}，并完成重定向")
         return {"FINISHED"}
 
 

@@ -31,6 +31,19 @@ def preset_dir() -> str:
     return path
 
 
+def list_preset_names() -> list[str]:
+    """Saved preset names, newest first. The panel dropdown reads this list."""
+    found = []
+    for filename in os.listdir(preset_dir()):
+        if not filename.lower().endswith(".json"):
+            continue
+        path = os.path.join(preset_dir(), filename)
+        if os.path.isfile(path):
+            found.append((os.path.getmtime(path), filename[:-5]))
+    found.sort(key=lambda item: (-item[0], item[1].casefold()))
+    return [name for _mtime, name in found]
+
+
 def safe_preset_name(name: str) -> str:
     cleaned = _NAME_RE.sub("_", (name or "").strip()).strip("._")
     if not cleaned or cleaned in {".", ".."}:

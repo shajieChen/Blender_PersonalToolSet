@@ -347,8 +347,8 @@ def test_mapping_root_reference_and_ik():
             item.target_bone = target_names["upperarm_r"]
         elif item.role == "upperarm_r":
             item.target_bone = target_names["upperarm_l"]
-    settings.preset_name = "feature_swap"
-    check("FINISHED" in bpy.ops.hr.save_preset(), "save mapping preset")
+    check("FINISHED" in bpy.ops.hr.save_preset(name="feature_swap"), "save mapping preset")
+    check(settings.preset_name == "feature_swap", "saved preset is selected in the list")
     settings.mappings.clear()
     check("FINISHED" in bpy.ops.hr.load_preset(), "load mapping preset")
     loaded = {item.role: item.target_bone for item in settings.mappings}
