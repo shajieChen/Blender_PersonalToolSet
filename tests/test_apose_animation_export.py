@@ -102,6 +102,21 @@ class AposeAnimationExportTests(AposeExportTests):
         self.assertEqual(bpy.context.scene.frame_current, 2)
         self.assertEqual(bpy.context.mode, "POSE")
 
+    def test_partial_native_bake_restores_source_and_actions(self):
+        actions = self.make_clips()
+        before = self.data_ids()
+
+        def fail_bake(*args, **kwargs):
+            bpy.context.scene.frame_set(3)
+            raise RuntimeError("bake failed")
+
+        with patch("humanoid_retarget.apose_export.bake_action_objects", side_effect=fail_bake):
+            with self.assertRaisesRegex(RuntimeError, "bake failed"):
+                pipeline.export_apose_animations(self.arm, self.path())
+        self.assertEqual(self.data_ids(), before)
+        self.assertIs(self.arm.animation_data.action, actions[-1])
+        self.assertEqual(bpy.context.scene.frame_current, 2)
+
     def test_button_defaults_to_model_and_retargeted_animation(self):
         self.make_clips()
         settings = bpy.context.scene.hr_settings

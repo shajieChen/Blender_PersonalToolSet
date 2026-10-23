@@ -15,6 +15,15 @@ class AposeExportError(RuntimeError):
     pass
 
 
+def _restore_apose_source_channels(channels):
+    for obj, location, euler, quaternion, axis_angle, scale in channels:
+        obj.location = location
+        obj.rotation_euler = euler
+        obj.rotation_quaternion = quaternion
+        obj.rotation_axis_angle = axis_angle
+        obj.scale = scale
+
+
 @contextmanager
 def apose_animation_actions(source, target, actions):
     scene = bpy.context.scene
@@ -26,8 +35,8 @@ def apose_animation_actions(source, target, actions):
     original_action, original_slot = anim.action, anim.action_slot
     original_nla = anim.use_nla
     original_pose = source.data.pose_position
-    object_basis = source.matrix_basis.copy()
-    poses = [(bone, bone.matrix_basis.copy()) for bone in source.pose.bones]
+    channels = [(obj, obj.location.copy(), obj.rotation_euler.copy(), obj.rotation_quaternion.copy(),
+                 tuple(obj.rotation_axis_angle), obj.scale.copy()) for obj in [source, *source.pose.bones]]
     constraints = []
     created = []
     options = BakeOptions(only_selected=False, do_pose=True, do_object=False,
@@ -46,8 +55,7 @@ def apose_animation_actions(source, target, actions):
                 constraint.target_space = "POSE"
                 constraint.owner_space = "POSE"
             for action in actions:
-                for bone, matrix in poses:
-                    bone.matrix_basis = matrix
+                _restore_apose_source_channels(channels)
                 _assign_action(source, action)
                 if action == original_action:
                     anim.action_slot = original_slot
@@ -69,9 +77,7 @@ def apose_animation_actions(source, target, actions):
                 anim.action_slot = original_slot
             anim.use_nla = original_nla
             source.data.pose_position = original_pose
-            source.matrix_basis = object_basis
-            for bone, matrix in poses:
-                bone.matrix_basis = matrix
+            _restore_apose_source_channels(channels)
             if not had_animation:
                 source.animation_data_clear()
             scene.frame_set(frame, subframe=subframe)
