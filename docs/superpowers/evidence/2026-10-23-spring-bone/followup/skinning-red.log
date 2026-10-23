@@ -1,0 +1,52 @@
+test_capsule_includes_end_caps (test_spring_bone_gizmos.SpringBoneGizmos.test_capsule_includes_end_caps) ... ok
+test_degenerate_capsule_is_sphere (test_spring_bone_gizmos.SpringBoneGizmos.test_degenerate_capsule_is_sphere) ... ok
+test_depth_cues_remain_visible_through_meshes (test_spring_bone_gizmos.SpringBoneGizmos.test_depth_cues_remain_visible_through_meshes) ... ok
+test_depth_groups_distinguish_near_and_far (test_spring_bone_gizmos.SpringBoneGizmos.test_depth_groups_distinguish_near_and_far) ... ok
+test_disabled_drawing_does_not_evaluate (test_spring_bone_gizmos.SpringBoneGizmos.test_disabled_drawing_does_not_evaluate) ... ok
+test_geometry_rejects_invalid_radius (test_spring_bone_gizmos.SpringBoneGizmos.test_geometry_rejects_invalid_radius) ... ok
+test_properties_panels_and_unit_conversion (test_spring_bone_gizmos.SpringBoneGizmos.test_properties_panels_and_unit_conversion) ... ok
+test_register_remove_handlers_are_idempotent (test_spring_bone_gizmos.SpringBoneGizmos.test_register_remove_handlers_are_idempotent) ... ok
+test_sphere_matches_collision_radius (test_spring_bone_gizmos.SpringBoneGizmos.test_sphere_matches_collision_radius) ... ok
+test_bake_only_writes_selected_character (test_spring_bone_gizmos.SpringBoneTargets.test_bake_only_writes_selected_character) ... ok
+test_explicit_target_does_not_follow_active_rig (test_spring_bone_gizmos.SpringBoneTargets.test_explicit_target_does_not_follow_active_rig) ... ok
+test_mesh_uses_its_armature_when_no_target_selected (test_spring_bone_gizmos.SpringBoneTargets.test_mesh_uses_its_armature_when_no_target_selected) ... ok
+test_other_character_cannot_publish_existing_preview (test_spring_bone_gizmos.SpringBoneTargets.test_other_character_cannot_publish_existing_preview) ... ok
+test_trim_zero_weight_tip_preserves_skin_and_bones (test_spring_bone_gizmos.SpringBoneTargets.test_trim_zero_weight_tip_preserves_skin_and_bones) ... FAIL
+test_unbound_chain_is_not_deleted (test_spring_bone_gizmos.SpringBoneTargets.test_unbound_chain_is_not_deleted) ... FAIL
+test_weighted_tip_keeps_unweighted_parent_bones (test_spring_bone_gizmos.SpringBoneTargets.test_weighted_tip_keeps_unweighted_parent_bones) ... FAIL
+
+======================================================================
+FAIL: test_trim_zero_weight_tip_preserves_skin_and_bones (test_spring_bone_gizmos.SpringBoneTargets.test_trim_zero_weight_tip_preserves_skin_and_bones)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_gizmos.py", line 224, in test_trim_zero_weight_tip_preserves_skin_and_bones
+    self.assertTrue(hasattr(self.spring.operators, "trim_unweighted_tips"), "Skinning-aware chain repair is missing")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Skinning-aware chain repair is missing
+
+======================================================================
+FAIL: test_unbound_chain_is_not_deleted (test_spring_bone_gizmos.SpringBoneTargets.test_unbound_chain_is_not_deleted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_gizmos.py", line 245, in test_unbound_chain_is_not_deleted
+    self.assertTrue(hasattr(self.spring.operators, "trim_unweighted_tips"), "Skinning-aware chain repair is missing")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Skinning-aware chain repair is missing
+
+======================================================================
+FAIL: test_weighted_tip_keeps_unweighted_parent_bones (test_spring_bone_gizmos.SpringBoneTargets.test_weighted_tip_keeps_unweighted_parent_bones)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_gizmos.py", line 237, in test_weighted_tip_keeps_unweighted_parent_bones
+    self.assertTrue(hasattr(self.spring.operators, "trim_unweighted_tips"), "Skinning-aware chain repair is missing")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Skinning-aware chain repair is missing
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.178s
+
+FAILED (failures=3)
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SPRING_BONE_SELECTED 16

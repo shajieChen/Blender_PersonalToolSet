@@ -1,0 +1,155 @@
+{
+  "before": {
+    "action": "骨架_a050_302010.002_Spring",
+    "bones": 146,
+    "weights": "c88c22a27c4bbd13580eaad9531b345f60723762bad6273a27e0f4c4bc3e7703",
+    "chains": [
+      {
+        "name": "Q_QunZi.L",
+        "bones": [
+          "Q_QunZi.L",
+          "Q_QunZi.L.001",
+          "Q_QunZi.L.002",
+          "Q_QunZi.L.003"
+        ]
+      },
+      {
+        "name": "H_QunZi.L",
+        "bones": [
+          "H_QunZi.L",
+          "H_QunZi.L.001",
+          "H_QunZi.L.002",
+          "H_QunZi.L.003"
+        ]
+      },
+      {
+        "name": "QunZi.L",
+        "bones": [
+          "QunZi.L",
+          "QunZi.L.001",
+          "QunZi.L.002",
+          "QunZi.L.003"
+        ]
+      },
+      {
+        "name": "Q_QunZi.R",
+        "bones": [
+          "Q_QunZi.R",
+          "Q_QunZi.R.001",
+          "Q_QunZi.R.002",
+          "Q_QunZi.R.003"
+        ]
+      },
+      {
+        "name": "H_QunZi.R",
+        "bones": [
+          "H_QunZi.R",
+          "H_QunZi.R.001",
+          "H_QunZi.R.002",
+          "H_QunZi.R.003"
+        ]
+      },
+      {
+        "name": "QunZi.R",
+        "bones": [
+          "QunZi.R",
+          "QunZi.R.001",
+          "QunZi.R.002",
+          "QunZi.R.003"
+        ]
+      },
+      {
+        "name": "Z_QunZi",
+        "bones": [
+          "Z_QunZi",
+          "Z_QunZi.001",
+          "Z_QunZi.002",
+          "Z_QunZi.003"
+        ]
+      },
+      {
+        "name": "Z_HouQunZi",
+        "bones": [
+          "Z_HouQunZi",
+          "Z_HouQunZi.001",
+          "Z_HouQunZi.002",
+          "Z_HouQunZi.003"
+        ]
+      }
+    ]
+  },
+  "after": {
+    "action": "骨架_a050_302010.002_Spring",
+    "bones": 146,
+    "weights": "c88c22a27c4bbd13580eaad9531b345f60723762bad6273a27e0f4c4bc3e7703",
+    "chains": [
+      {
+        "name": "Q_QunZi.L",
+        "bones": [
+          "Q_QunZi.L",
+          "Q_QunZi.L.001",
+          "Q_QunZi.L.002"
+        ]
+      },
+      {
+        "name": "H_QunZi.L",
+        "bones": [
+          "H_QunZi.L",
+          "H_QunZi.L.001",
+          "H_QunZi.L.002"
+        ]
+      },
+      {
+        "name": "QunZi.L",
+        "bones": [
+          "QunZi.L",
+          "QunZi.L.001",
+          "QunZi.L.002"
+        ]
+      },
+      {
+        "name": "Q_QunZi.R",
+        "bones": [
+          "Q_QunZi.R",
+          "Q_QunZi.R.001",
+          "Q_QunZi.R.002"
+        ]
+      },
+      {
+        "name": "H_QunZi.R",
+        "bones": [
+          "H_QunZi.R",
+          "H_QunZi.R.001",
+          "H_QunZi.R.002"
+        ]
+      },
+      {
+        "name": "QunZi.R",
+        "bones": [
+          "QunZi.R",
+          "QunZi.R.001",
+          "QunZi.R.002"
+        ]
+      },
+      {
+        "name": "Z_QunZi",
+        "bones": [
+          "Z_QunZi",
+          "Z_QunZi.001",
+          "Z_QunZi.002"
+        ]
+      },
+      {
+        "name": "Z_HouQunZi",
+        "bones": [
+          "Z_HouQunZi",
+          "Z_HouQunZi.001",
+          "Z_HouQunZi.002"
+        ]
+      }
+    ]
+  },
+  "weights_preserved": true,
+  "bone_count_preserved": true,
+  "action_preserved": true
+}

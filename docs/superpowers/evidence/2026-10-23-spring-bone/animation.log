@@ -1,0 +1,17 @@
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SPRING_BONE_SELECTED 7
+SPRING_BONE_TEST_OK
+test_distant_sphere_has_no_penetration_and_cone_limits_direction (test_spring_bone_animation.SpringBoneAnimation.test_distant_sphere_has_no_penetration_and_cone_limits_direction) ... ok
+test_endpoint_step_does_not_replace_grid_state (test_spring_bone_animation.SpringBoneAnimation.test_endpoint_step_does_not_replace_grid_state) ... ok
+test_euler_stays_continuous_near_gimbal (test_spring_bone_animation.SpringBoneAnimation.test_euler_stays_continuous_near_gimbal) ... ok
+test_same_tick_matches_across_frame_rates (test_spring_bone_animation.SpringBoneAnimation.test_same_tick_matches_across_frame_rates) ... ok
+test_sample_does_not_write_and_bake_keeps_source (test_spring_bone_animation.SpringBoneAnimation.test_sample_does_not_write_and_bake_keeps_source) ... ok
+test_weight_zero_keeps_local_rotation (test_spring_bone_animation.SpringBoneAnimation.test_weight_zero_keeps_local_rotation) ... ok
+test_workspace_file_is_this_repo (test_spring_bone_animation.SpringBoneAnimation.test_workspace_file_is_this_repo) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.148s
+
+OK

@@ -1,0 +1,15 @@
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+test_center_has_zero_force (test_soft_repulsion.SoftRepulsionTests.test_center_has_zero_force) ... ok
+test_cubic_midpoint (test_soft_repulsion.SoftRepulsionTests.test_cubic_midpoint) ... ok
+test_degenerate_segment (test_soft_repulsion.SoftRepulsionTests.test_degenerate_segment) ... ok
+test_equal_range_uses_strict_boundary (test_soft_repulsion.SoftRepulsionTests.test_equal_range_uses_strict_boundary) ... ok
+test_inside_keeps_raw_direction (test_soft_repulsion.SoftRepulsionTests.test_inside_keeps_raw_direction) ... ok
+test_inverted_far_field (test_soft_repulsion.SoftRepulsionTests.test_inverted_far_field) ... ok
+test_verlet_formula (test_soft_repulsion.SoftRepulsionTests.test_verlet_formula) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+POSE_CHANNEL_SELECTED 7
+POSE_CHANNEL_TEST_OK

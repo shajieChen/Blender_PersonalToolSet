@@ -1,0 +1,36 @@
+{
+  "frames": [
+    {
+      "frame": 8,
+      "maximum_mesh_change_m": 0.011077327758618208,
+      "outside_band_change_m": 0.0
+    },
+    {
+      "frame": 20,
+      "maximum_mesh_change_m": 0.009499797813261397,
+      "outside_band_change_m": 0.0
+    },
+    {
+      "frame": 36,
+      "maximum_mesh_change_m": 0.007806297069207668,
+      "outside_band_change_m": 0.0
+    },
+    {
+      "frame": 48,
+      "maximum_mesh_change_m": 0.006470092298352377,
+      "outside_band_change_m": 0.0
+    }
+  ],
+  "active_mesh": "tripo_mesh_910755f7_SkirtHem",
+  "restored_frame": 0,
+  "chains": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ]
+}

@@ -1,0 +1,6 @@
+FRAME 1 DIR (0.0, 1.0, 0.0) PARENT (1.0, 0.0, 0.0, 0.0)
+FRAME 25 DIR (0.0, 1.0, 0.0) PARENT (0.98473, 0.0, 0.0, 0.17411)
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit
+

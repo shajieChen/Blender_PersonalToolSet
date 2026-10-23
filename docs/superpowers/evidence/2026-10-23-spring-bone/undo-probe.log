@@ -1,0 +1,11 @@
+00:01.766  blend            | Read blend: "H:\Blender_Plugin\docs\superpowers\evidence\2026-10-23-spring-bone\undo_fixture.blend"
+Info: Saved as "undo_fixture.blend"
+00:02.157  operator         | done 100%
+00:03.157  blend            | Saved session recovery to "C:\Users\CHENSH~2\AppData\Local\Temp\quit.blend"
+UNDO_INVOKE {'RUNNING_MODAL'} UndoArmAction
+UNDO_POLL True
+UNDO_AFTER True
+UNDO_ACTION UndoArmAction SOURCE UndoArmAction
+UNDO_RESTORED
+
+Blender quit

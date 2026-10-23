@@ -1,0 +1,254 @@
+{
+  "armature": "骨架",
+  "frame": 23,
+  "action": "骨架_a050_302010.002_Spring",
+  "bones": [
+    {
+      "name": "lower_leg.L",
+      "parent": "upper_leg.L",
+      "deform": true,
+      "head": [
+        0.090058833360672,
+        -0.0028422640170902014,
+        0.11029518395662308
+      ],
+      "tail": [
+        0.08601251244544983,
+        2.514570951461792e-08,
+        0.0558648481965065
+      ],
+      "pose_head": [
+        0.8490811586380005,
+        0.09902004897594452,
+        0.09648271650075912
+      ],
+      "constraints": []
+    },
+    {
+      "name": "foot.L",
+      "parent": "lower_leg.L",
+      "deform": true,
+      "head": [
+        0.08601251244544983,
+        2.5307501871907334e-08,
+        0.0558648481965065
+      ],
+      "tail": [
+        0.07910417765378952,
+        -0.011115627363324165,
+        0.003741886466741562
+      ],
+      "pose_head": [
+        0.8209590911865234,
+        0.1311720311641693,
+        0.06238722801208496
+      ],
+      "constraints": []
+    },
+    {
+      "name": "toes.L",
+      "parent": "foot.L",
+      "deform": true,
+      "head": [
+        0.07910417765378952,
+        -0.011115627363324165,
+        0.003741886466741562
+      ],
+      "tail": [
+        0.07910417765378952,
+        -0.06485653668642044,
+        0.003741928841918707
+      ],
+      "pose_head": [
+        0.8293048739433289,
+        0.14529728889465332,
+        0.011214013211429119
+      ],
+      "constraints": []
+    },
+    {
+      "name": "lower_leg.R",
+      "parent": "upper_leg.R",
+      "deform": true,
+      "head": [
+        -0.0900588259100914,
+        -0.0028422637842595577,
+        0.11029516905546188
+      ],
+      "tail": [
+        -0.08601250499486923,
+        2.468004822731018e-08,
+        0.0558648407459259
+      ],
+      "pose_head": [
+        0.7219031453132629,
+        -0.1628185659646988,
+        0.11547683924436569
+      ],
+      "constraints": []
+    },
+    {
+      "name": "foot.R",
+      "parent": "lower_leg.R",
+      "deform": true,
+      "head": [
+        -0.08601252734661102,
+        2.4729715164539812e-08,
+        0.0558648407459259
+      ],
+      "tail": [
+        -0.07910419255495071,
+        -0.011115627363324165,
+        0.0037418752908706665
+      ],
+      "pose_head": [
+        0.7102615833282471,
+        -0.1407836228609085,
+        0.06683612614870071
+      ],
+      "constraints": []
+    },
+    {
+      "name": "toes.R",
+      "parent": "foot.R",
+      "deform": true,
+      "head": [
+        -0.07910419255495071,
+        -0.011115627363324165,
+        0.0037418752908706665
+      ],
+      "tail": [
+        -0.07910419255495071,
+        -0.06485654413700104,
+        0.003741916036233306
+      ],
+      "pose_head": [
+        0.7101434469223022,
+        -0.14806661009788513,
+        0.013593079522252083
+      ],
+      "constraints": []
+    }
+  ],
+  "meshes": [
+    {
+      "name": "body",
+      "vertices": 2880,
+      "foot_weights": {
+        "lower_leg.L": 301,
+        "foot.L": 563,
+        "toes.L": 315,
+        "lower_leg.R": 268,
+        "foot.R": 603,
+        "toes.R": 335
+      },
+      "modifiers": [
+        {
+          "name": "骨架",
+          "viewport": true,
+          "vertex_groups": true,
+          "envelopes": false
+        }
+      ]
+    },
+    {
+      "name": "clothing",
+      "vertices": 11798,
+      "foot_weights": {},
+      "modifiers": [
+        {
+          "name": "骨架",
+          "viewport": true,
+          "vertex_groups": true,
+          "envelopes": false
+        }
+      ]
+    },
+    {
+      "name": "clothing.001",
+      "vertices": 1007,
+      "foot_weights": {},
+      "modifiers": [
+        {
+          "name": "骨架",
+          "viewport": true,
+          "vertex_groups": true,
+          "envelopes": false
+        }
+      ]
+    },
+    {
+      "name": "hair",
+      "vertices": 8780,
+      "foot_weights": {},
+      "modifiers": [
+        {
+          "name": "骨架",
+          "viewport": true,
+          "vertex_groups": true,
+          "envelopes": false
+        }
+      ]
+    },
+    {
+      "name": "hair.001",
+      "vertices": 6080,
+      "foot_weights": {},
+      "modifiers": [
+        {
+          "name": "骨架",
+          "viewport": true,
+          "vertex_groups": true,
+          "envelopes": false
+        }
+      ]
+    },
+    {
+      "name": "head.001",
+      "vertices": 4328,
+      "foot_weights": {},
+      "modifiers": [
+        {
+          "name": "骨架",
+          "viewport": true,
+          "vertex_groups": true,
+          "envelopes": false
+        }
+      ]
+    }
+  ],
+  "mapping": [
+    {
+      "role": "thigh_l",
+      "source": "L_Thigh",
+      "target": "upper_leg.L"
+    },
+    {
+      "role": "shin_l",
+      "source": "L_Calf",
+      "target": "lower_leg.L"
+    },
+    {
+      "role": "foot_l",
+      "source": "L_Foot",
+      "target": "foot.L"
+    },
+    {
+      "role": "thigh_r",
+      "source": "R_Thigh",
+      "target": "upper_leg.R"
+    },
+    {
+      "role": "shin_r",
+      "source": "R_Calf",
+      "target": "lower_leg.R"
+    },
+    {
+      "role": "foot_r",
+      "source": "R_Foot",
+      "target": "foot.R"
+    }
+  ],
+  "retarget_source": "Armature",
+  "retarget_target": "骨架"
+}

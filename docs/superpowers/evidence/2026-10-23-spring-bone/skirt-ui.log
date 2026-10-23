@@ -1,0 +1,16 @@
+SKIRT_UI_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SKIRT_UI_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SKIRT_UI_REOPEN session=False arm=True chains=8
+SKIRT_UI_SOURCE_COPY
+SKIRT_UI_INVOKE {'RUNNING_MODAL'} undo_poll=False
+SKIRT_UI_PROGRESS 0.506 sample sample 47%
+SKIRT_UI_HWND 24916198 2578x1408 GHOST_WindowClass skirt_demo [H:\Blender_Plugin\docs\superpowers\evidence\2026-10-23-spring-bone\skirt_demo.blend] - Blender 5.2.1 LTS
+SKIRT_UI_FOCUS True attached=True
+SKIRT_UI_KEY_ESC
+SKIRT_UI_POST_ESC True
+SKIRT_UI_AFTER_ESC action=SkirtArmAction source=SkirtArmAction message=预览已取消 session=False
+SKIRT_UI_ESC_RESTORED
+SKIRT_UI_UNDO_INVOKE {'RUNNING_MODAL'} undo_poll=False
+SKIRT_UI_UNDO_POLL False progress=0.651
+SKIRT_UI_UNDO_POLL_FALSE
+SKIRT_UI_DONE

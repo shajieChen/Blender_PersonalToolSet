@@ -1,0 +1,21 @@
+test_capsule_includes_end_caps (test_spring_bone_gizmos.SpringBoneGizmos.test_capsule_includes_end_caps) ... ok
+test_degenerate_capsule_is_sphere (test_spring_bone_gizmos.SpringBoneGizmos.test_degenerate_capsule_is_sphere) ... ok
+test_disabled_drawing_does_not_evaluate (test_spring_bone_gizmos.SpringBoneGizmos.test_disabled_drawing_does_not_evaluate) ... ok
+test_geometry_rejects_invalid_radius (test_spring_bone_gizmos.SpringBoneGizmos.test_geometry_rejects_invalid_radius) ... ok
+test_properties_panels_and_unit_conversion (test_spring_bone_gizmos.SpringBoneGizmos.test_properties_panels_and_unit_conversion) ... ok
+test_register_remove_handlers_are_idempotent (test_spring_bone_gizmos.SpringBoneGizmos.test_register_remove_handlers_are_idempotent) ... ok
+test_sphere_matches_collision_radius (test_spring_bone_gizmos.SpringBoneGizmos.test_sphere_matches_collision_radius) ... ok
+test_bake_only_writes_selected_character (test_spring_bone_gizmos.SpringBoneTargets.test_bake_only_writes_selected_character) ... ok
+test_explicit_target_does_not_follow_active_rig (test_spring_bone_gizmos.SpringBoneTargets.test_explicit_target_does_not_follow_active_rig) ... ok
+test_mesh_uses_its_armature_when_no_target_selected (test_spring_bone_gizmos.SpringBoneTargets.test_mesh_uses_its_armature_when_no_target_selected) ... ok
+test_other_character_cannot_publish_existing_preview (test_spring_bone_gizmos.SpringBoneTargets.test_other_character_cannot_publish_existing_preview) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.097s
+
+OK
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SPRING_BONE_SELECTED 11
+SPRING_BONE_TEST_OK

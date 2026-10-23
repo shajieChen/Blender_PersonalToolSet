@@ -1,0 +1,56 @@
+00:03.734  blend            | Read blend: "H:\Blender_Plugin\docs\superpowers\evidence\2026-10-23-spring-bone\lifecycle_reopen.blend"
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+Error: 请改用基础动作
+Info: Saved as "lifecycle_reopen.blend"
+SPRING_BONE_SELECTED 13
+test_bake_keeps_result_and_rejects_it_as_input (test_spring_bone_lifecycle.SpringBoneLifecycle.test_bake_keeps_result_and_rejects_it_as_input) ... ok
+test_escape_cancels_session (test_spring_bone_lifecycle.SpringBoneLifecycle.test_escape_cancels_session) ... ok
+test_faults_restore_and_repeat_cancel (test_spring_bone_lifecycle.SpringBoneLifecycle.test_faults_restore_and_repeat_cancel) ... ok
+test_identity_change_does_not_overwrite_new_action (test_spring_bone_lifecycle.SpringBoneLifecycle.test_identity_change_does_not_overwrite_new_action) ... ok
+test_one_undo_restores_preview (test_spring_bone_lifecycle.SpringBoneLifecycle.test_one_undo_restores_preview) ... ERROR
+test_preflight_rejects_constraint_driver_scale_inherit_and_axis (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_constraint_driver_scale_inherit_and_axis) ... ok
+test_preflight_rejects_unsupported_inputs (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_unsupported_inputs) ... ok
+test_preview_stop_and_second_preview (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preview_stop_and_second_preview) ... ok
+test_register_exposes_settings_and_panel (test_spring_bone_lifecycle.SpringBoneLifecycle.test_register_exposes_settings_and_panel) ... ok
+test_reregister_and_retarget_coexist (test_spring_bone_lifecycle.SpringBoneLifecycle.test_reregister_and_retarget_coexist) ... ok
+test_save_reopen_does_not_autostart (test_spring_bone_lifecycle.SpringBoneLifecycle.test_save_reopen_does_not_autostart) ... ok
+test_second_chain_fault_restores (test_spring_bone_lifecycle.SpringBoneLifecycle.test_second_chain_fault_restores) ... ERROR
+test_success_cancel_keeps_delivered_action (test_spring_bone_lifecycle.SpringBoneLifecycle.test_success_cancel_keeps_delivered_action) ... ERROR
+
+======================================================================
+ERROR: test_one_undo_restores_preview (test_spring_bone_lifecycle.SpringBoneLifecycle.test_one_undo_restores_preview)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_lifecycle.py", line 219, in test_one_undo_restores_preview
+    self.assertEqual(arm.animation_data.action, source)
+                     ^^^^^^^^^^^^^^^^^^
+ReferenceError: StructRNA of type Object has been removed
+
+======================================================================
+ERROR: test_second_chain_fault_restores (test_spring_bone_lifecycle.SpringBoneLifecycle.test_second_chain_fault_restores)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_lifecycle.py", line 116, in test_second_chain_fault_restores
+    arm, source = self._armed()
+                  ~~~~~~~~~~~^^
+  File "H:\Blender_Plugin\tests\test_spring_bone_lifecycle.py", line 257, in _armed
+    bpy.ops.object.mode_set(mode="EDIT")
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+RuntimeError: Operator bpy.ops.object.mode_set.poll() Context missing active object
+
+======================================================================
+ERROR: test_success_cancel_keeps_delivered_action (test_spring_bone_lifecycle.SpringBoneLifecycle.test_success_cancel_keeps_delivered_action)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_lifecycle.py", line 126, in test_success_cancel_keeps_delivered_action
+    arm, _source = self._armed()
+                   ~~~~~~~~~~~^^
+  File "H:\Blender_Plugin\tests\test_spring_bone_lifecycle.py", line 257, in _armed
+    bpy.ops.object.mode_set(mode="EDIT")
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+RuntimeError: Operator bpy.ops.object.mode_set.poll() Context missing active object
+
+----------------------------------------------------------------------
+Ran 13 tests in 1.521s
+
+FAILED (errors=3)

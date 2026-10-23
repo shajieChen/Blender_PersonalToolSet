@@ -1,0 +1,26 @@
+00:04.031  render           | Saved: 'H:\Blender_Plugin\docs\superpowers\evidence\2026-10-23-spring-bone\skirt_walk.png'
+00:04.109  render           | Saved: 'H:\Blender_Plugin\docs\superpowers\evidence\2026-10-23-spring-bone\skirt_turn.png'
+00:04.172  render           | Saved: 'H:\Blender_Plugin\docs\superpowers\evidence\2026-10-23-spring-bone\skirt_squat.png'
+00:04.234  render           | Saved: 'H:\Blender_Plugin\docs\superpowers\evidence\2026-10-23-spring-bone\skirt_raise.png'
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_DEMO_SECONDS 2.035
+SPRING_BONE_DEMO_STAGES {'prepare': 0.001, 'sample': 0.693, 'simulate': 0.766, 'write': 0.562, 'publish': 0.003}
+SPRING_BONE_DEMO_LONGEST_UNIT 0.0862
+SPRING_BONE_DEMO_P95_SLICE 0.0171
+SPRING_BONE_DEMO_SLICES 119
+SPRING_BONE_DEMO_PENETRATION 0.002084090591978033
+SPRING_BONE_DEMO_SECTION walk 3e-06 0.0
+SPRING_BONE_DEMO_SECTION turn 0.000481 0.0
+SPRING_BONE_DEMO_SECTION squat 0.000434 0.0
+SPRING_BONE_DEMO_SECTION raise 0.0 0.0
+SPRING_BONE_DEMO_FRAME walk 40 (0.0, 0.32, 0.9) (0.09, 0.53, 0.5572) (0.2741, 0.3092, 0.3477)
+SPRING_BONE_DEMO_FRAME turn 110 (0.0, 0.6, 0.9) (0.3895, 0.6993, 0.99) (0.557, 0.6, 0.9927)
+SPRING_BONE_DEMO_FRAME squat 190 (0.0, 0.6, 0.64) (-0.09, 0.9815, 0.7669) (-0.3979, 0.6, 1.1463)
+SPRING_BONE_DEMO_FRAME raise 250 (0.0, 0.6, 0.9) (-0.09, 1.0018, 0.8884) (-0.3986, 0.6, 1.4059)
+SPRING_BONE_DEMO_ACTIONS SkirtArmAction SkirtArmAction_Spring
+Info: Saved as "skirt_demo.blend"
+SPRING_BONE_DEMO_OK
+H:\Blender_Plugin\tests\run_spring_bone_demo.py:188: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  material.use_nodes = True

@@ -1,0 +1,26 @@
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SPRING_BONE_SELECTED 16
+SPRING_BONE_TEST_OK
+test_antiparallel_swing_is_deterministic (test_spring_bone_solver.SpringBoneSolverContract.test_antiparallel_swing_is_deterministic) ... ok
+test_capsule_mid_end_and_degenerate (test_spring_bone_solver.SpringBoneSolverContract.test_capsule_mid_end_and_degenerate) ... ok
+test_child_uses_solved_parent (test_spring_bone_solver.SpringBoneSolverContract.test_child_uses_solved_parent) ... ok
+test_cone_boundary_and_clamp (test_spring_bone_solver.SpringBoneSolverContract.test_cone_boundary_and_clamp) ... ok
+test_drag_keeps_inertia_displacement (test_spring_bone_solver.SpringBoneSolverContract.test_drag_keeps_inertia_displacement) ... ok
+test_follow_translation_cancels_shared_delta_only (test_spring_bone_solver.SpringBoneSolverContract.test_follow_translation_cancels_shared_delta_only) ... ok
+test_hand_calculated_tail (test_spring_bone_solver.SpringBoneSolverContract.test_hand_calculated_tail) ... ok
+test_parameter_and_mirror_errors_are_explicit (test_spring_bone_solver.SpringBoneSolverContract.test_parameter_and_mirror_errors_are_explicit) ... ok
+test_quaternion_norm_after_swing (test_spring_bone_solver.SpringBoneSolverContract.test_quaternion_norm_after_swing) ... ok
+test_solver_module_exposes_step_chain (test_spring_bone_solver.SpringBoneSolverContract.test_solver_module_exposes_step_chain) ... ok
+test_sphere_center_uses_last_radial (test_spring_bone_solver.SpringBoneSolverContract.test_sphere_center_uses_last_radial) ... ok
+test_sphere_push_then_length (test_spring_bone_solver.SpringBoneSolverContract.test_sphere_push_then_length) ... ok
+test_tangent_sphere_does_not_push (test_spring_bone_solver.SpringBoneSolverContract.test_tangent_sphere_does_not_push) ... ok
+test_tick_grid_is_independent_of_display_fps (test_spring_bone_solver.SpringBoneSolverContract.test_tick_grid_is_independent_of_display_fps) ... ok
+test_weight_zero_bypasses_and_weight_one_matches (test_spring_bone_solver.SpringBoneSolverContract.test_weight_zero_bypasses_and_weight_one_matches) ... ok
+test_zero_direction_falls_back (test_spring_bone_solver.SpringBoneSolverContract.test_zero_direction_falls_back) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.001s
+
+OK

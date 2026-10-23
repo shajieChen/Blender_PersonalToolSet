@@ -1,0 +1,17 @@
+imation.test_distant_sphere_has_no_penetration_and_cone_limits_direction) ... ok
++ CategoryInfo          : NotSpecified: (test_distant_sp...rection) ... ok:String) [], RemoteException
++ FullyQualifiedErrorId : NativeCommandError
+not_replace_grid_state) ... ok
+r_gimbal) ... ok
+_frame_rates) ... FAIL
+rite_and_bake_keeps_source) ... ok
+tion) ... ok
+ok
+FAIL: test_same_tick_matches_across_frame_rates (test_spring_bone_animation.SpringBoneAnimation.test_same_tick_matches_
+Traceback (most recent call last):
+AssertionError: 1.1208653424294161e-15 not greater than 0.001
+Ran 7 tests in 0.129s
+FAILED (failures=1)
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SPRING_BONE_SELECTED 7

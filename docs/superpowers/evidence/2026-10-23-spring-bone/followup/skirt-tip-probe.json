@@ -1,0 +1,15 @@
+{
+  "Q_QunZi.L.003": {
+    "max_mesh_motion_m": 0.0,
+    "vertices_moving": 0,
+    "children": []
+  },
+  "Q_QunZi.L.002": {
+    "max_mesh_motion_m": 0.020976975768795297,
+    "vertices_moving": 1256,
+    "children": [
+      "Q_QunZi.L.003"
+    ]
+  },
+  "restore_max_delta": 2.9802322387695312e-08
+}
