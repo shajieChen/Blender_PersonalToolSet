@@ -4,6 +4,7 @@ from bpy.types import Operator
 from mathutils import Matrix
 
 from .animation import SpringBoneBakeJob, specs_from_settings
+from .contact_bake import SkirtContactBakeJob
 from .solver import SpringBoneError
 from .targets import target_armature
 
@@ -79,7 +80,8 @@ def config_token(obj):
             )
         )
     target = target_armature(bpy.context)
-    return (int(scene.frame_start), int(scene.frame_end), tuple(chains), tuple(colliders), target)
+    contact = (settings.contact_garment, settings.contact_body, float(settings.contact_margin_m), float(settings.contact_frame_step), float(settings.contact_root_offset_m))
+    return (int(scene.frame_start), int(scene.frame_end), tuple(chains), tuple(colliders), target, contact)
 
 
 class _Session:
@@ -87,16 +89,20 @@ class _Session:
         self.job = job
         self.bake = bake
         self.timer = None
+        self.window_manager = bpy.context.window_manager
         self.message = ""
         self.last_report = 0.0
 
     def remove_timer(self):
         if self.timer is None:
             return
-        window_manager = bpy.context.window_manager
-        if window_manager is not None:
-            window_manager.event_timer_remove(self.timer)
+        timer = self.timer
         self.timer = None
+        try:
+            if self.window_manager is not None:
+                self.window_manager.event_timer_remove(timer)
+        except (ReferenceError, RuntimeError):
+            pass
 
     def run_slice(self):
         self.job.run_slice()
@@ -108,9 +114,11 @@ def stop_active_session():
     _session = None
     if session is None:
         return
-    session.remove_timer()
-    if session.job is not None and not session.job.delivered:
-        session.job.cancel()
+    try:
+        session.remove_timer()
+    finally:
+        if session.job is not None and not session.job.delivered:
+            session.job.cancel()
 
 
 def release_session_keep_result():
@@ -168,6 +176,24 @@ def start_bake(context):
     if _session is not None:
         stop_active_session()
     return begin_session(context, True)
+
+
+def start_contact_bake(context):
+    global _session
+    if job_running():
+        raise SpringBoneError("请先结束当前动态骨骼任务")
+    obj = target_armature(context)
+    if obj is None:
+        raise SpringBoneError("请选择场景中的目标骨架")
+    if _session is not None:
+        if _session.job.armature != obj:
+            raise SpringBoneError("请先停止其他角色的预览")
+        if _session.job.preview_still_valid():
+            _session.job.publish_from_preview()
+        release_session_keep_result()
+    job = SkirtContactBakeJob(obj, context.scene.frame_start, context.scene.frame_end, identity_token=lambda: config_token(obj))
+    _session = _Session(job, True)
+    return _session
 
 
 def consume_modal_event(event_type):
@@ -646,3 +672,61 @@ class SPRING_BONE_OT_bake(Operator):
         if outcome == "CANCELLED":
             return {"CANCELLED"}
         return {"RUNNING_MODAL"}
+
+
+class SPRING_BONE_OT_contact_bake(Operator):
+    bl_idname = "spring_bone.contact_bake"
+    bl_label = "修正裙面穿模（新骨骼动作）"
+    bl_options = {"REGISTER", "UNDO"}
+
+    @classmethod
+    def poll(cls, context):
+        obj = target_armature(context)
+        return obj is not None and obj.mode != "EDIT" and not job_running()
+
+    def execute(self, context):
+        try:
+            session = start_contact_bake(context)
+            session.job.run_budgeted()
+            release_session_keep_result()
+        except Exception as exc:
+            stop_active_session()
+            set_message(str(exc))
+            self.report({"ERROR"}, str(exc))
+            return {"CANCELLED"}
+        set_message("裙面已修正并保存为骨骼动作，可随 FBX 导出")
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        if context.window is None:
+            return self.execute(context)
+        try:
+            session = start_contact_bake(context)
+        except Exception as exc:
+            set_message(str(exc))
+            self.report({"ERROR"}, str(exc))
+            return {"CANCELLED"}
+        session.timer = context.window_manager.event_timer_add(.016, window=context.window)
+        context.window_manager.modal_handler_add(self)
+        return {"RUNNING_MODAL"}
+
+    def modal(self, context, event):
+        session = active_session()
+        if session is None:
+            return {"CANCELLED"}
+        if event.type == "TIMER" and event.timer != session.timer:
+            return {"PASS_THROUGH"}
+        try:
+            outcome = consume_modal_event(event.type)
+        except Exception as exc:
+            stop_active_session()
+            set_message(str(exc))
+            self.report({"ERROR"}, str(exc))
+            return {"CANCELLED"}
+        if outcome == "FINISHED":
+            set_message("裙面已修正并保存为骨骼动作，可随 FBX 导出")
+        elif outcome == "CANCELLED":
+            set_message("裙面修正已取消")
+        else:
+            _report_progress(self, session)
+        return {outcome}

@@ -1,0 +1,8 @@
+{
+  "integer_frames": 53,
+  "maximum_body_key_pose_delta_m": 0.0,
+  "source_action": "骨架_a050_302010.002_Spring",
+  "result_action": "骨架_a050_302010.002_Spring_SkirtContact_SkirtContact",
+  "transferred_curves": 188,
+  "json_bytes": 7749848
+}

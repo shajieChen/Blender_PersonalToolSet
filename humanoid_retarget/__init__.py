@@ -936,7 +936,7 @@ class HR_OT_export(Operator):
     fbx_pose: EnumProperty(
         name="FBX 内容",
         items=(("A_POSE", "A-Pose（无动画）", "导出标准 A-Pose 骨架和蒙皮网格"),
-               ("ANIMATED", "A-Pose + 重定向动画", "包含 A-Pose 绑定模型和已烘焙的重定向动画")),
+               ("ANIMATED", "重定向动画（A-Pose参考）", "保留原绑定，包含 A-Pose 参考姿态和重定向动画")),
         default="ANIMATED",
     )
 

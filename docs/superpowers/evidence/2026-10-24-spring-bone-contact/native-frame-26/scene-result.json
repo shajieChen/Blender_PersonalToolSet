@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "blender": "5.2.1 LTS",
+  "input_action": "骨架_a050_302010.002_Spring",
+  "output_action": "骨架_a050_302010.002_Spring_SkirtContact",
+  "frames": [
+    {
+      "frame": 26.0,
+      "triangle_pairs": 0
+    }
+  ],
+  "corrections": [
+    {
+      "frame": 26.0,
+      "initial_triangle_pairs": 368,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 9.725128726678778e-08,
+      "maximum_rotation_delta_deg": 7.376877511180571,
+      "maximum_root_offset_m": 0.03182315081357956
+    }
+  ],
+  "source_digest_before": "d1431af3c38e8c6bde2ab6df9a610e67abf427facc2b765f5e9fb31d6f6ba24c",
+  "source_digest_after": "d1431af3c38e8c6bde2ab6df9a610e67abf427facc2b765f5e9fb31d6f6ba24c",
+  "rest_vertices_unchanged": true,
+  "chain_lengths": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "elapsed_seconds": 12.579843499988783
+}

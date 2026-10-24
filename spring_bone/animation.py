@@ -110,6 +110,50 @@ def iter_channelbags(action, slot):
                 yield bag
 
 
+def align_quaternion_key_signs(action, slot):
+    repairs = {}
+    for bag in iter_channelbags(action, slot):
+        paths = {}
+        for curve in bag.fcurves:
+            if curve.data_path.endswith("rotation_quaternion"):
+                paths.setdefault(curve.data_path, {})[curve.array_index] = curve
+        for path, components in paths.items():
+            if set(components) != {0, 1, 2, 3}:
+                continue
+            curves = [components[index] for index in range(4)]
+            frames = [tuple(point.co.x for point in curve.keyframe_points) for curve in curves]
+            if any(frame != frames[0] for frame in frames[1:]):
+                raise SpringBoneError("四元数关键帧时间不一致，请先重采样动作")
+            previous = None
+            previous_flipped = False
+            flipped_keys = 0
+            for index in range(len(frames[0])):
+                rotation = Quaternion(tuple(curve.keyframe_points[index].co.y for curve in curves))
+                if rotation.magnitude <= 1e-8:
+                    raise SpringBoneError("动作含有零四元数关键帧")
+                flipped = previous is not None and previous.dot(rotation) < 0.0
+                if flipped:
+                    if any(curve.modifiers for curve in curves):
+                        raise SpringBoneError("含曲线修改器的四元数无法安全修正")
+                    rotation.negate()
+                    for curve in curves:
+                        point = curve.keyframe_points[index]
+                        point.co.y = -point.co.y
+                        point.handle_left.y = -point.handle_left.y
+                        point.handle_right.y = -point.handle_right.y
+                    flipped_keys += 1
+                if previous is not None and flipped != previous_flipped:
+                    for curve in curves:
+                        curve.keyframe_points[index - 1].interpolation = "LINEAR"
+                previous = rotation.normalized()
+                previous_flipped = flipped
+            if flipped_keys:
+                repairs[path] = flipped_keys
+                for curve in curves:
+                    curve.update()
+    return repairs
+
+
 def bone_name_from_path(data_path):
     marker = 'pose.bones["'
     if not data_path.startswith(marker):
@@ -159,7 +203,8 @@ def foreign_modal_active(context):
     if window is None:
         return False
     for operator in getattr(window, "modal_operators", ()):
-        if getattr(operator, "bl_idname", "") in {"spring_bone.preview", "spring_bone.bake"}:
+        identifier = str(getattr(operator, "bl_idname", "")).lower().replace("_ot_", ".", 1)
+        if identifier in {"spring_bone.preview", "spring_bone.bake", "spring_bone.contact_bake"}:
             continue
         return True
     return False

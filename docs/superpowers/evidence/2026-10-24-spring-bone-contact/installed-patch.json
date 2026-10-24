@@ -1,0 +1,14 @@
+[
+  {
+    "file": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_retarget\\pipeline.py",
+    "before_sha256": "bc6afab655f21ac3536862fd1827893a72531e7bb0e74cb8005341ef958bf198",
+    "after_sha256": "8a63e870c8c1316e3e2d04fda748a08863210aa02ef1671a13ee147d51651e63",
+    "backup": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\installed-before\\pipeline.py.before"
+  },
+  {
+    "file": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_retarget\\retarget.py",
+    "before_sha256": "d5131238886e49810f0e7925394830ef703b4f2f01094a949c3099623b7c82a4",
+    "after_sha256": "5c8ac084921248c0724ebf11049ab2fd111d98b07d700db293d7744853b27d56",
+    "backup": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\installed-before\\retarget.py.before"
+  }
+]

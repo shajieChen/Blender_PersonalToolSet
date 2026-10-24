@@ -1,0 +1,22 @@
+{
+  "status": "CompletedWithRecordedLimitations",
+  "live_checked_frames": 209,
+  "fbx_checked_frames": 209,
+  "fbx_maximum_skin_error_m": 1.4246008876224898e-06,
+  "source_tests_5_1": 86,
+  "source_tests_5_2": 86,
+  "installed_targeted_tests": 19,
+  "retarget_baseline_failure": "the final hop removes horizontal root travel",
+  "goal_characters": 1573,
+  "cleanup_completed": true,
+  "user_visual_confirmed": true,
+  "temporary_files_removed": 76,
+  "post_cleanup_tests": {
+    "spring-5_1": 86,
+    "spring-5_2": 86,
+    "quaternion": 1,
+    "apose": 23
+  },
+  "post_cleanup_live_checked_frames": 209,
+  "post_cleanup_fbx_checked_frames": 209
+}

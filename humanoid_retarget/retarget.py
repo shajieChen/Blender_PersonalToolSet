@@ -1702,6 +1702,7 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
                             previous_goal=limb.reference_pole.copy()
                         )
 
+            previous_keyed_rotations = {}
             for frame in range(start, end + 1):
                 scene.frame_set(frame)
                 if compensate_scale:
@@ -1766,6 +1767,10 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
                 bpy.context.view_layer.update()
                 for _role, _src_name, tgt_name in pairs:
                     pose_bone = tgt.pose.bones[tgt_name]
+                    previous_rotation = previous_keyed_rotations.get(tgt_name)
+                    if previous_rotation is not None and previous_rotation.dot(pose_bone.rotation_quaternion) < 0.0:
+                        pose_bone.rotation_quaternion.negate()
+                    previous_keyed_rotations[tgt_name] = pose_bone.rotation_quaternion.copy()
                     pose_bone.keyframe_insert(data_path="rotation_quaternion", frame=frame)
                     pose_bone.keyframe_insert(data_path="location", frame=frame)
                     if compensate_scale and tgt_name in preserved_scales:

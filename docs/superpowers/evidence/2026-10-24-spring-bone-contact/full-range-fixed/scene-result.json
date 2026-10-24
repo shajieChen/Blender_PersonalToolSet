@@ -1,0 +1,68 @@
+{
+  "status": "failed",
+  "error": "第 3.5 帧仍有 13 对裙面穿插，未生成结果；请调整碰撞部位、权重或动作",
+  "frame_results": [
+    {
+      "frame": 0.0,
+      "initial_triangle_pairs": 159,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 8.543417320800899e-08,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.02381250075995922
+    },
+    {
+      "frame": 0.5,
+      "initial_triangle_pairs": 155,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 9.192353204375482e-08,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.03483593836426735
+    },
+    {
+      "frame": 1.0,
+      "initial_triangle_pairs": 137,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.0434962935906506e-07,
+      "maximum_rotation_delta_deg": 6.947116885961492,
+      "maximum_root_offset_m": 0.029714977368712425
+    },
+    {
+      "frame": 1.5,
+      "initial_triangle_pairs": 166,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.0140934643545198e-07,
+      "maximum_rotation_delta_deg": 6.838382408809005,
+      "maximum_root_offset_m": 0.036426737904548645
+    },
+    {
+      "frame": 2.0,
+      "initial_triangle_pairs": 259,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.0238706806874015e-07,
+      "maximum_rotation_delta_deg": 6.67812226521841,
+      "maximum_root_offset_m": 0.03812394663691521
+    },
+    {
+      "frame": 2.5,
+      "initial_triangle_pairs": 292,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 9.650647445449818e-08,
+      "maximum_rotation_delta_deg": 4.8521604099615345,
+      "maximum_root_offset_m": 0.0247196052223444
+    },
+    {
+      "frame": 3.0,
+      "initial_triangle_pairs": 113,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.1466410551911547e-07,
+      "maximum_rotation_delta_deg": 4.586738405041193,
+      "maximum_root_offset_m": 0.03247033432126045
+    },
+    {
+      "frame": 3.5,
+      "initial_triangle_pairs": 345,
+      "triangle_pairs": 13
+    }
+  ],
+  "elapsed_seconds": 91.27231949998531
+}

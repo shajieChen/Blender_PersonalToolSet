@@ -1,0 +1,60 @@
+{
+  "status": "passed",
+  "blender": "5.2.1 LTS",
+  "input_action": "骨架_a050_302010.002_Spring",
+  "output_action": "骨架_a050_302010.002_Spring_SkirtContact",
+  "frames": [
+    {
+      "frame": 7.0,
+      "triangle_pairs": 0
+    },
+    {
+      "frame": 7.5,
+      "triangle_pairs": 0
+    },
+    {
+      "frame": 8.0,
+      "triangle_pairs": 0
+    }
+  ],
+  "corrections": [
+    {
+      "frame": 7.0,
+      "initial_triangle_pairs": 181,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.1650414038794186e-07,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.026875004172325134
+    },
+    {
+      "frame": 7.5,
+      "initial_triangle_pairs": 200,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.2327117561429264e-07,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.023095708340406418
+    },
+    {
+      "frame": 8.0,
+      "initial_triangle_pairs": 237,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.1922204955610077e-07,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.03437500074505806
+    }
+  ],
+  "source_digest_before": "d1431af3c38e8c6bde2ab6df9a610e67abf427facc2b765f5e9fb31d6f6ba24c",
+  "source_digest_after": "d1431af3c38e8c6bde2ab6df9a610e67abf427facc2b765f5e9fb31d6f6ba24c",
+  "rest_vertices_unchanged": true,
+  "chain_lengths": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "elapsed_seconds": 5.176522099995054
+}

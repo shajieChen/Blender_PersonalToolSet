@@ -1,0 +1,132 @@
+{
+  "status": "failed",
+  "error": "第 7.5 帧仍有 196 对裙面穿插，未生成结果；请调整碰撞部位、权重或动作",
+  "frame_results": [
+    {
+      "frame": 0.0,
+      "initial_triangle_pairs": 165,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 8.13972068954829e-08,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.02394043281674385
+    },
+    {
+      "frame": 0.5,
+      "initial_triangle_pairs": 128,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 8.943446734529239e-08,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.025125721469521523
+    },
+    {
+      "frame": 1.0,
+      "initial_triangle_pairs": 129,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 9.883467882952376e-08,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.03999999910593033
+    },
+    {
+      "frame": 1.5,
+      "initial_triangle_pairs": 164,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.0104946618443114e-07,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.039687495678663254
+    },
+    {
+      "frame": 2.0,
+      "initial_triangle_pairs": 273,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.0274926940419147e-07,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.03503662347793579
+    },
+    {
+      "frame": 2.5,
+      "initial_triangle_pairs": 316,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 8.569239511204741e-08,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.03343749791383743
+    },
+    {
+      "frame": 3.0,
+      "initial_triangle_pairs": 94,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.2721680856261947e-07,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.03004150278866291
+    },
+    {
+      "frame": 3.5,
+      "initial_triangle_pairs": 266,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.2093391493584154e-07,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.030625000596046448
+    },
+    {
+      "frame": 4.0,
+      "initial_triangle_pairs": 449,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.1485294571112908e-07,
+      "maximum_rotation_delta_deg": 9.024033124816153,
+      "maximum_root_offset_m": 0.039374999701976776
+    },
+    {
+      "frame": 4.5,
+      "initial_triangle_pairs": 409,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.1227809591678944e-07,
+      "maximum_rotation_delta_deg": 12.153793142150661,
+      "maximum_root_offset_m": 0.03776756301522255
+    },
+    {
+      "frame": 5.0,
+      "initial_triangle_pairs": 295,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.2211418412902002e-07,
+      "maximum_rotation_delta_deg": 11.394168530965816,
+      "maximum_root_offset_m": 0.03749999776482582
+    },
+    {
+      "frame": 5.5,
+      "initial_triangle_pairs": 95,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.2442081564077316e-07,
+      "maximum_rotation_delta_deg": 5.073958423539828,
+      "maximum_root_offset_m": 0.01669921912252903
+    },
+    {
+      "frame": 6.0,
+      "initial_triangle_pairs": 12,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.1549404642114507e-07,
+      "maximum_rotation_delta_deg": 1.2290609515188833,
+      "maximum_root_offset_m": 0.00404434185475111
+    },
+    {
+      "frame": 6.5,
+      "initial_triangle_pairs": 309,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.0546176670002566e-07,
+      "maximum_rotation_delta_deg": 22.91830019391134,
+      "maximum_root_offset_m": 0.03999999910593033
+    },
+    {
+      "frame": 7.0,
+      "initial_triangle_pairs": 181,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.5141158894855593e-07,
+      "maximum_rotation_delta_deg": 15.398174832815384,
+      "maximum_root_offset_m": 0.026875004172325134
+    },
+    {
+      "frame": 7.5,
+      "initial_triangle_pairs": 597,
+      "triangle_pairs": 196
+    }
+  ],
+  "elapsed_seconds": 325.99672880000435
+}

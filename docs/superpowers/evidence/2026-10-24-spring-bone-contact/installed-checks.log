@@ -1,0 +1,35 @@
+test_baked_quaternion_keys_keep_the_same_hemisphere (test_retarget_quaternion_keys.RetargetQuaternionKeys.test_baked_quaternion_keys_keep_the_same_hemisphere) ... ok
+test_antipodal_body_keys_are_repaired_in_result_only (test_spring_bone_skin_collision.SpringBoneContactBake.test_antipodal_body_keys_are_repaired_in_result_only) ... ok
+test_cancel_during_write_removes_owned_action (test_spring_bone_skin_collision.SpringBoneContactBake.test_cancel_during_write_removes_owned_action) ... ok
+test_contact_bake_preserves_source_rest_weights_and_body_channels (test_spring_bone_skin_collision.SpringBoneContactBake.test_contact_bake_preserves_source_rest_weights_and_body_channels) ... ok
+test_contact_operator_releases_session (test_spring_bone_skin_collision.SpringBoneContactBake.test_contact_operator_releases_session) ... ok
+test_deleted_target_can_be_cancelled (test_spring_bone_skin_collision.SpringBoneContactBake.test_deleted_target_can_be_cancelled) ... ok
+test_external_action_switch_is_preserved (test_spring_bone_skin_collision.SpringBoneContactBake.test_external_action_switch_is_preserved) ... ok
+test_failed_native_validation_keeps_original_action (test_spring_bone_skin_collision.SpringBoneContactBake.test_failed_native_validation_keeps_original_action) ... ok
+test_fbx_roundtrip_keeps_corrected_bone_animation (test_spring_bone_skin_collision.SpringBoneContactBake.test_fbx_roundtrip_keeps_corrected_bone_animation) ... ok
+test_foreign_modal_is_rejected (test_spring_bone_skin_collision.SpringBoneContactBake.test_foreign_modal_is_rejected) ... ok
+test_mesh_weight_edit_cancels_without_overwriting_edit (test_spring_bone_skin_collision.SpringBoneContactBake.test_mesh_weight_edit_cancels_without_overwriting_edit) ... ok
+test_nla_change_cancels_and_preserves_new_state (test_spring_bone_skin_collision.SpringBoneContactBake.test_nla_change_cancels_and_preserves_new_state) ... ok
+test_other_character_mesh_is_rejected (test_spring_bone_skin_collision.SpringBoneContactBake.test_other_character_mesh_is_rejected) ... ok
+test_rotation_mode_change_is_preserved (test_spring_bone_skin_collision.SpringBoneContactBake.test_rotation_mode_change_is_preserved) ... ok
+test_source_curve_edit_cancels_without_overwriting_edit (test_spring_bone_skin_collision.SpringBoneContactBake.test_source_curve_edit_cancels_without_overwriting_edit) ... ok
+test_owned_modal_operator_identifiers_are_allowed (test_spring_bone_skin_collision.SpringBoneSkinCollision.test_owned_modal_operator_identifiers_are_allowed) ... ok
+test_skin_search_corrects_bones_without_moving_rest_vertices (test_spring_bone_skin_collision.SpringBoneSkinCollision.test_skin_search_corrects_bones_without_moving_rest_vertices) ... ok
+test_triangle_interiors_collide_without_inside_vertices (test_spring_bone_skin_collision.SpringBoneSkinCollision.test_triangle_interiors_collide_without_inside_vertices) ... ok
+test_unsolvable_mesh_returns_residual (test_spring_bone_skin_collision.SpringBoneSkinCollision.test_unsolvable_mesh_returns_residual) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.749s
+
+OK
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+INSTALLED_PIPELINE C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_retarget\pipeline.py
+INSTALLED_RETARGET C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_retarget\retarget.py
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\spring-contact-zgcl8mxk\\corrected.fbx'
+(bpy.data.armatures['ContactRig.001'], 'POSE')
+(bpy.data.armatures['ContactRig.001'], 'POSE')
+export finished in 0.0100 sec.
+FBX version: 7400
+INSTALLED_SELECTED 19
+INSTALLED_CHECKS_OK

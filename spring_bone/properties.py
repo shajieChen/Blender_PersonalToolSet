@@ -66,3 +66,8 @@ class SpringBoneSettings(PropertyGroup):
     result_end: IntProperty(name="结果终点", default=1)
     result_penetration_m: FloatProperty(name="残余穿深米", default=0.0)
     source_action: PointerProperty(name="基础动作", type=bpy.types.Action)
+    contact_garment: PointerProperty(name="裙面网格", type=bpy.types.Object, poll=lambda self, obj: obj.type == "MESH")
+    contact_body: PointerProperty(name="身体网格", type=bpy.types.Object, poll=lambda self, obj: obj.type == "MESH")
+    contact_margin_m: FloatProperty(name="安全间隙米", default=0.002, min=0.0, max=0.05, precision=5)
+    contact_frame_step: FloatProperty(name="采样步长帧", default=0.5, min=0.125, max=1.0)
+    contact_root_offset_m: FloatProperty(name="根部位移上限米", default=0.04, min=0.0, max=0.1, description="限制链首的骨骼动画位移，不修改骨长或静态裙长；设为零则仅修正旋转")

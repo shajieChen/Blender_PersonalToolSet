@@ -1,0 +1,15 @@
+{
+  "start": [
+    "RUNNING_MODAL"
+  ],
+  "initial_modals": [],
+  "modals_during": [],
+  "phase": "prepare",
+  "captured": false,
+  "message_during": "裙面已修正：四分之一帧采样，骨骼动画可导出 FBX",
+  "source_restored": true,
+  "frame_restored": true,
+  "active_session": false,
+  "modals_after": [],
+  "passed": false
+}

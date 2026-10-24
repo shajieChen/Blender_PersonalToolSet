@@ -1,0 +1,61 @@
+{
+  "current_crossings": 315,
+  "original_weight_crossings": 320,
+  "collider_surface_samples": [
+    {
+      "bone": "upper_leg.L",
+      "current_radius_m": 0.029999999329447746,
+      "sample_vertices": 50,
+      "skin_radial_percentiles_m": [
+        0.06738182365615178,
+        0.07969044703595717,
+        0.08054537037115256,
+        0.08249036443481497
+      ]
+    },
+    {
+      "bone": "lower_leg.L",
+      "current_radius_m": 0.02199999988079071,
+      "sample_vertices": 37,
+      "skin_radial_percentiles_m": [
+        0.04683856833585919,
+        0.0517513927711254,
+        0.05543070826439143,
+        0.06822823223612846
+      ]
+    },
+    {
+      "bone": "upper_leg.R",
+      "current_radius_m": 0.029999999329447746,
+      "sample_vertices": 36,
+      "skin_radial_percentiles_m": [
+        0.06363214742002213,
+        0.07804585843683515,
+        0.08032421869542275,
+        0.08113289720139882
+      ]
+    },
+    {
+      "bone": "lower_leg.R",
+      "current_radius_m": 0.02199999988079071,
+      "sample_vertices": 38,
+      "skin_radial_percentiles_m": [
+        0.05440989797082586,
+        0.059990916708879356,
+        0.06051975277538029,
+        0.06187450351451787
+      ]
+    }
+  ],
+  "crossing_z_range_m": [
+    0.06419941782951355,
+    0.1831788569688797
+  ],
+  "crossings_by_body_bone": {
+    "lower_leg.R": 109,
+    "lower_leg.L": 77,
+    "upper_leg.L": 55,
+    "upper_leg.R": 32,
+    "foot.R": 42
+  }
+}

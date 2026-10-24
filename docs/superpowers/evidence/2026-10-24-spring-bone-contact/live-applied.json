@@ -1,0 +1,23 @@
+{
+  "blender": "5.1.2",
+  "binary": "C:\\Program Files\\Blender Foundation\\Blender 5.1\\blender.exe",
+  "source_action": "骨架_a050_302010.002_Spring",
+  "result_action": "骨架_a050_302010.002_Spring_SkirtContact",
+  "source_digest_unchanged": true,
+  "chain_lengths": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "colliders": 4,
+  "version": [
+    1,
+    0,
+    5
+  ]
+}

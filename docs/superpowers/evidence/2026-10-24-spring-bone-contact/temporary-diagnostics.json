@@ -1,0 +1,407 @@
+{
+  "status": "Completed",
+  "allowed_roots": [
+    "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact",
+    "C:\\Users\\chenshajie1\\AppData\\Local\\Temp"
+  ],
+  "temporary_files": [
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-check.py",
+      "sha256": "4c36a087da512e3169e3a27100e277d8ef3b72f3b2812f6e3d0f8e3ec310efac",
+      "bytes": 1995
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-coarse75.py",
+      "sha256": "17cf1e30de294fa5a90e8ca75bd487a665c94233d48d68409c5a65969235b7f1",
+      "bytes": 949
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-coordinate-dynamic.py",
+      "sha256": "49defb1faa08fedb7279d344d1fc2a85236e5171b33d5c1621fbce3780482d69",
+      "bytes": 5519
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-coordinate-full.py",
+      "sha256": "ff66cd7f9978923665062728d1a64e8e8b7e88f5155e51b1695b2755b613e494",
+      "bytes": 5530
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-derivative.py",
+      "sha256": "1a660f9d4bada33837a884c083b77a61b22bc4fc0db0849a2d9c485fb4cc2f50",
+      "bytes": 3315
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-fbx-keys.py",
+      "sha256": "d7279fd4796c842a1c1663355af47a45f008ffc0ee97d31c1ae9a6bc1ec5fb3f",
+      "bytes": 625
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-frame3-capture.py",
+      "sha256": "32ca9cd435fcd42055b569f5cba738d01e01413723fb5df01f62a68f2ab7225a",
+      "bytes": 2986
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-global-uniform75.py",
+      "sha256": "426a2345a0c55d5760dda89ba15bf6b2a11ec8197a37ef3569de10df2ef90524",
+      "bytes": 3861
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-leg.py",
+      "sha256": "fe1fbefd7a6db696a9a2a057d53cc7ac1269ae1cb27c7aa1df1352ff221d294a",
+      "bytes": 4481
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-preview-opengl.py",
+      "sha256": "8f3584c413e53ad11496efa717088901d09ab3da97aee6fd009daa9d0f760f5f",
+      "bytes": 2065
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-preview.py",
+      "sha256": "78685c184d1377e7314aab0168fdd16fc48dd69fdede423dd98087a840e2d1d2",
+      "bytes": 1373
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-projection-frame45.py",
+      "sha256": "2497d0d720a394639d65b31ed54905fbb2dc1ce2ff4d3aaec9eea542ae060aea",
+      "bytes": 1000
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-projection-large.py",
+      "sha256": "d87f50024342c3e6186aafc7d4911a33e21d9d5987ee8072047d3f5bcfbddf2f",
+      "bytes": 990
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-projection-trace.py",
+      "sha256": "866fd6f0f6959ee0c8abf14a37a51401395ad1eedb56067fcbb8a616f019451e",
+      "bytes": 1454
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-projection.py",
+      "sha256": "2710b886695ee80e96af3f0dc40c18e392025b5561bc8abd5c7e46e19ca5da9e",
+      "bytes": 939
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-projection75-measure.py",
+      "sha256": "2f7827ed094e95c829731b04a6ddee52da0781c0a4cc9e6ed093f2598a4c15c1",
+      "bytes": 1296
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-projection75.py",
+      "sha256": "e6be0ad2cd5a6a467ef8874bed78e1d2c536feb16617031b04c41b184421d78e",
+      "bytes": 996
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-residual.py",
+      "sha256": "ee9f8833587a7c418b7758bbf9dd305e164ae6bfe49ee4f7d38ce15a85c43152",
+      "bytes": 979
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-residual45.py",
+      "sha256": "0d6184b3668dd888651a4a5bc06c294e84c353aceb8fa425bf326a2bcf15ba36",
+      "bytes": 989
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-residual75.py",
+      "sha256": "91c2da5023cd4ed28541d6d2fae575bd5a57867e121204b1733b27841aa09c37",
+      "bytes": 1022
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-strong.py",
+      "sha256": "2dbd50fc1dfa5b9550233f4831410c5a574651e6e2dda4c1759bcfed65b29147",
+      "bytes": 4501
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-summary.py",
+      "sha256": "ae218a4d6b1e5f2e8bf33f65636de3976c73713281dadfe3afec4fdcf6440907",
+      "bytes": 372
+    },
+    {
+      "path": "C:\\Users\\chenshajie1\\AppData\\Local\\Temp\\sb-translation.py",
+      "sha256": "dd6e7b19abbec66eeb95d5bf7d70fd1753e8ac33166dfd33e06de7c8ee38d63f",
+      "bytes": 1804
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\antipodal-verified\\corrected-character.blend",
+      "sha256": "0b072b6e3e572c8ad753b48b6efa372d8f32b7d556c6caf9daa52989dce4b6c8",
+      "bytes": 13524400
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\apply_live_action.py",
+      "sha256": "d36f2f757376db04ec7f561a29d706cbcb943632e1e4fdf983a1fc89f93f7f88",
+      "bytes": 6726
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\capture_live_result.py",
+      "sha256": "6feb5f3ec1e2c85ecee309ee7e35cfd55c6c403b6a31c0316c661d4dd806dc33",
+      "bytes": 2458
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\check_candidate.py",
+      "sha256": "5f2d28ab243a1c84ce9b65f892333dcf81cb8ab8a5e8c6889056206f12328da9",
+      "bytes": 2050
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\contact_prototype.py",
+      "sha256": "52f0fde7665522616e8e89287f83e59db5a09ab9eb65c2bf0befc545a29a9776",
+      "bytes": 4058
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\continuous-range\\failed-pose.npz",
+      "sha256": "00c00ae1fdadea06961cff694849a39f17166aedf240d369ef5e9ea62b696f69",
+      "bytes": 364250
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\coordinate-contact-result.npz",
+      "sha256": "3f12e7a4e217e2e69fa291093b98a05dde1e4d8463a25f162c47b63cfc189cc7",
+      "bytes": 123496
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\coordinate-dynamic-result.npz",
+      "sha256": "11d5f6018ce559146de8a85ae8a105a022c5fc84b4c6d3726a2127d6f5875f4a",
+      "bytes": 114106
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\coordinate-full-result.npz",
+      "sha256": "ba57eb6776024af94b0c8c86ef4ce2914d91534802cf3ec5d0fb571f796a80b7",
+      "bytes": 124303
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\coordinate_contact_search.py",
+      "sha256": "7aab74a8f4660b1985d05b4a58ecc087e029db38beced5edc1e7d39e3e7bf130",
+      "bytes": 5523
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\edge-contact-result.npz",
+      "sha256": "520e6c8e63de66262f5498a5940f92c348e08558484ed9b98e49334aefdfbf5f",
+      "bytes": 124193
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\edge_contact_search.py",
+      "sha256": "4c312349f8cc0f3e31f3b997ebf369b795eea76553a7010c27cb93822d7c8ecf",
+      "bytes": 6309
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\envelope-contact-result.npz",
+      "sha256": "7229158c610ede5977893e77402403d831bab490107520284f6879f5eb893aec",
+      "bytes": 104282
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\envelope_contact_search.py",
+      "sha256": "441a6b2f96a18527b07b55ebfd1d555827757d5f4f5dbd7e0fb19a471c83f13a",
+      "bytes": 5149
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\fine-range\\corrected-character.fbx",
+      "sha256": "722a42c6fde98a87a487522c63fa8b9eec603510f40e160acd59e8a828bb1f20",
+      "bytes": 3787772
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\frame-3\\frame3.npz",
+      "sha256": "0e715733da2733e91edea80c454c13f45016b3b9a690cfe74206381ecb2cf142",
+      "bytes": 364682
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\frame-3\\translation-result.npz",
+      "sha256": "6f88192ae393b60eaafc27bc25d5ba241ff93b581c0051789e63f2c7520c02b5",
+      "bytes": 91810
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\frame-3-fixed\\corrected-character.blend",
+      "sha256": "67fb2b4973d99c59d66a1516188af896928286b37b4a2da6f04c78c91fd44c49",
+      "bytes": 13501556
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\frame-31.npz",
+      "sha256": "b4171452bfd694e43ad9f157cc1450941aebc9210bae58737d169df3788c25f1",
+      "bytes": 330115
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\frame-7_5-before.png",
+      "sha256": "4b31e40028ec1fbd423dbad65870de429b812aed5ae1e5893bd5e16ee7cd9edf",
+      "bytes": 922887
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\frame-7_5-large-offset.png",
+      "sha256": "106cb6710095ba68fdda42f4f9dc1b5fd2b7c0d2a902d9b065121788523c2a35",
+      "bytes": 926173
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\frames-3-4\\failed-pose.npz",
+      "sha256": "71d4dac397d697ee162bf17ba8ce698a4799467573d7c1f2a2ec62811926b57d",
+      "bytes": 365459
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\frames-3-4\\projected-pose.npz",
+      "sha256": "a4d52087e9f70471ab9e37dc6fadcc8d17676dd783ab1ece7b19fb15ccc42858",
+      "bytes": 1229
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\full-range-final\\coarse-pose.npz",
+      "sha256": "c7456c6e58dd6263b446e9cccafa8826fe9735cb57ef95499fb4df54d8220470",
+      "bytes": 1233
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\full-range-final\\failed-pose.npz",
+      "sha256": "5147559c2b4b4fc05e47eed7b4190a0306bf0aa9d530cd7b8fd077d3b2619b81",
+      "bytes": 364460
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\full-range-final\\global-pose.npz",
+      "sha256": "d9487e4facc9093bda3fbefe5e3f83bf763bc738cc7eb51ad5066419c535fe1a",
+      "bytes": 1233
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\full-range-final\\projected-pose.npz",
+      "sha256": "f24dfd5821cbdc4c00926aff86099d5e97a7ce9bf9470e95df6f9e7a4b7f0a57",
+      "bytes": 1233
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\full-range-projected\\failed-pose.npz",
+      "sha256": "285503296c593e95dc098c54068c2a2ea5c14063fe2f09bf4af8365bb409885c",
+      "bytes": 365364
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\full-range-projected\\projected-pose.npz",
+      "sha256": "b18d0e2f87ec20daa528e2afdf60cee75bf6458b5df6ec068b88e4456b410bae",
+      "bytes": 1228
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\global_skin_projection.py",
+      "sha256": "8a11c515b4d38fed53a14b26db44779f575c142cc214d2b25254c7621fe44a45",
+      "bytes": 3592
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\joint-contact-result.npz",
+      "sha256": "ba26216c794a19e520d6b2c517f170339b23a1d8bafae74900aaf7b210993472",
+      "bytes": 104053
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\joint_contact_search.py",
+      "sha256": "13d4bac60f5984ef05b2e82e736852733ed3eaddbc372296b58055dff2495daa",
+      "bytes": 4754
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\live-action.json",
+      "sha256": "c7de9a9d0fd5a6f18bc057fca10e9c90c6dc040a4febb2c9f2a55a6eab5397be",
+      "bytes": 7749848
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\native-frame-26\\corrected-character.blend",
+      "sha256": "8af8f1638f3c389a39b334cb6090e8f1dfc0c60274e358f38e81dc30b8123aa5",
+      "bytes": 13502512
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\position-contact-result.npz",
+      "sha256": "a8ff5715f9a4d18b7873692cbe9b167485078a2c7e6344dcb1a23f010cd576d7",
+      "bytes": 104121
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\position-leg-result.npz",
+      "sha256": "5f60f731975309dfd25962f61492bf7d72e8f03ac47164a9d1d129bc0eb0817b",
+      "bytes": 103965
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\position-strong-result.npz",
+      "sha256": "b1202d405446add46e3ea928ab6cbdcb8047e9653e12a869ff5497a26106a372",
+      "bytes": 104282
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\position_contact_search.py",
+      "sha256": "d9b9a8e574bf16a7c75ac958b82a62b5b8c9bd6594b1e8c7375ae9cc7248cfe4",
+      "bytes": 4499
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\prepare_live_action.py",
+      "sha256": "ff6b10e24e6bc98087ce29dd2f6724602e816656d8623b8c5d887dddec4e892b",
+      "bytes": 3673
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\probe_live_modal.py",
+      "sha256": "81752621fb267418eb13fc70168e323971093c77e87f9e6f062f044bb65cbf3e",
+      "bytes": 2125
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\prototype-result.npz",
+      "sha256": "6ae1a9ecfd0812da8969c6e96e007fd492b8dec1a4f6e64b0cd1bbe3a934e145",
+      "bytes": 70785
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\rest-contact-result.npz",
+      "sha256": "0ede23dc745a8943f046f104233a22813cb1785c575000afd1baa679f0bc32e7",
+      "bytes": 104267
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\rest_contact_search.py",
+      "sha256": "a81fa5c2d45ae3637cb68a87842f8927b75ec6166c9423f3183af8c180755fe9",
+      "bytes": 4870
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\review_live_scene.py",
+      "sha256": "46857dc59f165f25b75d74bcd2320bd642877acb02ef58cc5c6354498390736b",
+      "bytes": 3129
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\run_contact_performance.py",
+      "sha256": "8cefe9cfa4d12ba73b4d20e39f121a4562743939434c72ba123f3c1378803138",
+      "bytes": 2700
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\run_installed_checks.py",
+      "sha256": "daef6dc34e623a8289a821718a9281020b4219bce9df92f50e57a19812db6ccc",
+      "bytes": 993
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\run_retarget_baseline.py",
+      "sha256": "0d8d1adfaea3479549905c7c0738236e28fb239c0124c5ce63b810cc8513235a",
+      "bytes": 971
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\seam-gap-check\\corrected-character.blend",
+      "sha256": "49393c90bec8a4e971ee53001a07aab60faa85c8f7f9055e11844df1ef8a4348",
+      "bytes": 13523444
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\single-frame\\corrected-character.blend",
+      "sha256": "6189be6ab8c630fbfc81a220456157cbb0894bad36adb5e1caad183a509be743",
+      "bytes": 13493483
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\surface-contact-result.npz",
+      "sha256": "2cb0670852837b2f6e1aecef67dab07f988036af14989161056334588d422e77",
+      "bytes": 104078
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\surface_contact_search.py",
+      "sha256": "b13475500e92026d2bd240142848c9a704e5ca33e0af0db0b69e343f9f1b0d37",
+      "bytes": 5375
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\verified-range\\corrected-character.blend",
+      "sha256": "c9055e4ec4a67a362d93d616599fc0b17a6ac2492fc38495deec3871d06749cc",
+      "bytes": 14640688
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\verified-range\\corrected-character.fbx",
+      "sha256": "6aab36718ece301a7ef21c14624b134a341ef667263fa77c88df630871f35f51",
+      "bytes": 2942108
+    }
+  ],
+  "retain": [
+    "character-skin-contact.fbx",
+    "contact-scene.blend",
+    "fine-range/corrected-character.blend",
+    "live-expected.npz",
+    "result.md",
+    "before-frame-31.png",
+    "after-frame-31.png",
+    "before-frame-7_5.png",
+    "after-frame-7_5.png",
+    "installed-before/*",
+    "test logs and result JSON",
+    "formal tests under tests/"
+  ],
+  "production_temporary_diagnostics": [],
+  "cleanup_completed": true,
+  "user_visual_confirmed": true,
+  "post_cleanup_verification": "Passed"
+}

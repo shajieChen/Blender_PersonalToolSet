@@ -60,7 +60,7 @@ class SpringBoneLifecycle(unittest.TestCase):
         self.assertTrue(hasattr(bpy.types.Object, "sb_settings"))
         self.assertIn(self.spring._load_pre, bpy.app.handlers.load_pre)
         self.assertIn(self.spring._load_pre, bpy.app.handlers.undo_pre)
-        self.assertEqual(self.spring.bl_info["blender"], (5, 2, 0))
+        self.assertEqual(self.spring.bl_info["blender"], (5, 1, 2))
 
     def test_preview_stop_and_second_preview(self):
         arm, source = self._armed()

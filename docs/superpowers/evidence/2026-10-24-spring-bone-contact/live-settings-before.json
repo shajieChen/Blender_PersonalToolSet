@@ -1,0 +1,306 @@
+{
+  "rigs": {
+    "Armature": {
+      "settings": {
+        "schema_version": 1,
+        "show_gizmos": false,
+        "active_chain": 0,
+        "active_collider": 0,
+        "result_action_name": "",
+        "result_start": 1,
+        "result_end": 1,
+        "result_penetration_m": 0.0,
+        "source_action": null
+      },
+      "chains": [],
+      "colliders": []
+    },
+    "骨架": {
+      "settings": {
+        "schema_version": 1,
+        "show_gizmos": true,
+        "active_chain": 0,
+        "active_collider": 0,
+        "result_action_name": "骨架_a050_302010.002_Spring",
+        "result_start": 0,
+        "result_end": 52,
+        "result_penetration_m": 0.012716641649603844,
+        "source_action": {
+          "id": "骨架_a050_302010.002",
+          "kind": "ACTION"
+        }
+      },
+      "chains": [
+        {
+          "name": "Q_QunZi.L",
+          "stiffness": 6.0,
+          "drag_force": 0.44999998807907104,
+          "gravity_power": 2.200000047683716,
+          "gravity_dir": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "hit_radius_m": 0.012000000104308128,
+          "weight": 1.0,
+          "cone_enabled": true,
+          "cone_angle_deg": 70.0,
+          "inertia_space": "WORLD",
+          "ancestor_name": "",
+          "warmup_seconds": 0.25,
+          "bones": [
+            "Q_QunZi.L",
+            "Q_QunZi.L.001",
+            "Q_QunZi.L.002",
+            "Q_QunZi.L.003"
+          ]
+        },
+        {
+          "name": "H_QunZi.L",
+          "stiffness": 6.0,
+          "drag_force": 0.44999998807907104,
+          "gravity_power": 2.200000047683716,
+          "gravity_dir": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "hit_radius_m": 0.012000000104308128,
+          "weight": 1.0,
+          "cone_enabled": true,
+          "cone_angle_deg": 70.0,
+          "inertia_space": "WORLD",
+          "ancestor_name": "",
+          "warmup_seconds": 0.25,
+          "bones": [
+            "H_QunZi.L",
+            "H_QunZi.L.001",
+            "H_QunZi.L.002",
+            "H_QunZi.L.003"
+          ]
+        },
+        {
+          "name": "QunZi.L",
+          "stiffness": 6.0,
+          "drag_force": 0.44999998807907104,
+          "gravity_power": 2.200000047683716,
+          "gravity_dir": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "hit_radius_m": 0.012000000104308128,
+          "weight": 1.0,
+          "cone_enabled": true,
+          "cone_angle_deg": 70.0,
+          "inertia_space": "WORLD",
+          "ancestor_name": "",
+          "warmup_seconds": 0.25,
+          "bones": [
+            "QunZi.L",
+            "QunZi.L.001",
+            "QunZi.L.002",
+            "QunZi.L.003"
+          ]
+        },
+        {
+          "name": "Q_QunZi.R",
+          "stiffness": 6.0,
+          "drag_force": 0.44999998807907104,
+          "gravity_power": 2.200000047683716,
+          "gravity_dir": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "hit_radius_m": 0.012000000104308128,
+          "weight": 1.0,
+          "cone_enabled": true,
+          "cone_angle_deg": 70.0,
+          "inertia_space": "WORLD",
+          "ancestor_name": "",
+          "warmup_seconds": 0.25,
+          "bones": [
+            "Q_QunZi.R",
+            "Q_QunZi.R.001",
+            "Q_QunZi.R.002",
+            "Q_QunZi.R.003"
+          ]
+        },
+        {
+          "name": "H_QunZi.R",
+          "stiffness": 6.0,
+          "drag_force": 0.44999998807907104,
+          "gravity_power": 2.200000047683716,
+          "gravity_dir": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "hit_radius_m": 0.012000000104308128,
+          "weight": 1.0,
+          "cone_enabled": true,
+          "cone_angle_deg": 70.0,
+          "inertia_space": "WORLD",
+          "ancestor_name": "",
+          "warmup_seconds": 0.25,
+          "bones": [
+            "H_QunZi.R",
+            "H_QunZi.R.001",
+            "H_QunZi.R.002",
+            "H_QunZi.R.003"
+          ]
+        },
+        {
+          "name": "QunZi.R",
+          "stiffness": 6.0,
+          "drag_force": 0.44999998807907104,
+          "gravity_power": 2.200000047683716,
+          "gravity_dir": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "hit_radius_m": 0.012000000104308128,
+          "weight": 1.0,
+          "cone_enabled": true,
+          "cone_angle_deg": 70.0,
+          "inertia_space": "WORLD",
+          "ancestor_name": "",
+          "warmup_seconds": 0.25,
+          "bones": [
+            "QunZi.R",
+            "QunZi.R.001",
+            "QunZi.R.002",
+            "QunZi.R.003"
+          ]
+        },
+        {
+          "name": "Z_QunZi",
+          "stiffness": 6.0,
+          "drag_force": 0.44999998807907104,
+          "gravity_power": 2.200000047683716,
+          "gravity_dir": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "hit_radius_m": 0.012000000104308128,
+          "weight": 1.0,
+          "cone_enabled": true,
+          "cone_angle_deg": 70.0,
+          "inertia_space": "WORLD",
+          "ancestor_name": "",
+          "warmup_seconds": 0.25,
+          "bones": [
+            "Z_QunZi",
+            "Z_QunZi.001",
+            "Z_QunZi.002",
+            "Z_QunZi.003"
+          ]
+        },
+        {
+          "name": "Z_HouQunZi",
+          "stiffness": 6.0,
+          "drag_force": 0.44999998807907104,
+          "gravity_power": 2.200000047683716,
+          "gravity_dir": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "hit_radius_m": 0.012000000104308128,
+          "weight": 1.0,
+          "cone_enabled": true,
+          "cone_angle_deg": 70.0,
+          "inertia_space": "WORLD",
+          "ancestor_name": "",
+          "warmup_seconds": 0.25,
+          "bones": [
+            "Z_HouQunZi",
+            "Z_HouQunZi.001",
+            "Z_HouQunZi.002",
+            "Z_HouQunZi.003"
+          ]
+        }
+      ],
+      "colliders": [
+        {
+          "name": "upper_leg.L",
+          "shape": "CAPSULE",
+          "bone_name": "upper_leg.L",
+          "radius_m": 0.029999999329447746,
+          "head_offset_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.0788450762629509,
+            0.0
+          ],
+          "display_object": null,
+          "display_tail": null
+        },
+        {
+          "name": "lower_leg.L",
+          "shape": "CAPSULE",
+          "bone_name": "lower_leg.L",
+          "radius_m": 0.02199999988079071,
+          "head_offset_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.05465449392795563,
+            0.0
+          ],
+          "display_object": null,
+          "display_tail": null
+        },
+        {
+          "name": "upper_leg.R",
+          "shape": "CAPSULE",
+          "bone_name": "upper_leg.R",
+          "radius_m": 0.029999999329447746,
+          "head_offset_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.0788450613617897,
+            0.0
+          ],
+          "display_object": null,
+          "display_tail": null
+        },
+        {
+          "name": "lower_leg.R",
+          "shape": "CAPSULE",
+          "bone_name": "lower_leg.R",
+          "radius_m": 0.02199999988079071,
+          "head_offset_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.054654479026794434,
+            0.0
+          ],
+          "display_object": null,
+          "display_tail": null
+        }
+      ]
+    }
+  },
+  "targets": {
+    "Scene": "骨架"
+  }
+}

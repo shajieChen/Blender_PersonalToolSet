@@ -10,6 +10,14 @@ def _load_solver():
 
 
 class SpringBoneSolverContract(unittest.TestCase):
+    def test_capsule_endcap_push_uses_spherical_normal(self):
+        solver = _load_solver()
+        collider = solver.CapsuleCollider(Vector((0.0, 0.0, 0.0)), Vector((0.0, 0.0, 2.0)), 0.2)
+        for point in (Vector((0.0, 0.0, 2.1)), Vector((0.04, 0.0, -0.1))):
+            pushed, signed = solver.push_collider(point, collider, 0.01, Vector((0.0, 1.0, 0.0)), Vector((1.0, 0.0, 0.0)))
+            self.assertLess(signed, 0.0)
+            self.assertGreaterEqual(solver.signed_collider_distance(pushed, collider, 0.01), -1e-7)
+
     def test_solver_module_exposes_step_chain(self):
         solver = _load_solver()
         self.assertTrue(hasattr(solver, "step_chain"))

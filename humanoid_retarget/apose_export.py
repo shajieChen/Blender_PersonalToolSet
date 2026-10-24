@@ -15,6 +15,37 @@ class AposeExportError(RuntimeError):
     pass
 
 
+@contextmanager
+def apose_model_reference(arm):
+    reference = arm.get("hr_fbx_default_pose")
+    anim = arm.animation_data_create()
+    action, slot, use_nla = anim.action, anim.action_slot, anim.use_nla
+    pose_position = arm.data.pose_position
+    channels = _apose_source_channels(arm)
+    try:
+        anim.action = None
+        anim.use_nla = False
+        arm.data.pose_position = "POSE"
+        for name, values in reference.items():
+            bone = arm.pose.bones[name]
+            for field, value in values.items():
+                setattr(bone, field, value)
+        bpy.context.view_layer.update()
+        yield
+    finally:
+        anim.action = action
+        if action is not None:
+            anim.action_slot = slot
+        anim.use_nla = use_nla
+        arm.data.pose_position = pose_position
+        _restore_apose_source_channels(channels)
+
+
+def _apose_source_channels(source):
+    return [(obj, obj.location.copy(), obj.rotation_euler.copy(), obj.rotation_quaternion.copy(),
+             tuple(obj.rotation_axis_angle), obj.scale.copy()) for obj in [source, *source.pose.bones]]
+
+
 def _restore_apose_source_channels(channels):
     for obj, location, euler, quaternion, axis_angle, scale in channels:
         obj.location = location
@@ -35,8 +66,7 @@ def apose_animation_actions(source, target, actions):
     original_action, original_slot = anim.action, anim.action_slot
     original_nla = anim.use_nla
     original_pose = source.data.pose_position
-    channels = [(obj, obj.location.copy(), obj.rotation_euler.copy(), obj.rotation_quaternion.copy(),
-                 tuple(obj.rotation_axis_angle), obj.scale.copy()) for obj in [source, *source.pose.bones]]
+    channels = _apose_source_channels(source)
     constraints = []
     created = []
     options = BakeOptions(only_selected=False, do_pose=True, do_object=False,
@@ -199,7 +229,7 @@ def _bake_apose_mesh(obj):
 
 
 @contextmanager
-def apose_export_objects(source):
+def apose_export_objects(source, bind_apose=True):
     roles = classify_armature(source)
     roles.update(classify_by_name(source))
     directions = _apose_arm_directions(source, roles)
@@ -210,6 +240,7 @@ def apose_export_objects(source):
     active = bpy.context.view_layer.objects.active
     mode = active.mode if active else "OBJECT"
     selected = list(bpy.context.selected_objects)
+    channels = _apose_source_channels(source)
     created = []
     try:
         if active is not None and mode != "OBJECT":
@@ -227,7 +258,14 @@ def apose_export_objects(source):
         if "hr_actions" in arm:
             del arm["hr_actions"]
         bpy.context.scene.collection.objects.link(arm)
+        original_channels = _apose_source_channels(arm)
         _pose_apose_arms(arm, roles, directions)
+        if not bind_apose:
+            arm["hr_fbx_default_pose"] = {
+                bone.name: {field: list(getattr(bone, field)) for field in
+                            ("location", "rotation_euler", "rotation_quaternion", "rotation_axis_angle", "scale")}
+                for bone in arm.pose.bones}
+            _restore_apose_source_channels(original_channels)
         for source_mesh in meshes:
             obj = source_mesh.copy()
             created.append(obj)
@@ -249,21 +287,23 @@ def apose_export_objects(source):
                 elif modifier.type == "ARMATURE":
                     raise AposeExportError("A-Pose 暂不支持多个骨架共同蒙皮: " + source_mesh.name)
             bpy.context.scene.collection.objects.link(obj)
-            _bake_apose_mesh(obj)
-        for obj in bpy.context.selected_objects:
-            obj.select_set(False)
-        arm.select_set(True)
-        bpy.context.view_layer.objects.active = arm
-        bpy.ops.object.mode_set(mode="POSE")
-        bpy.ops.pose.armature_apply(selected=False)
-        bpy.ops.object.mode_set(mode="OBJECT")
-        bpy.context.view_layer.update()
-        for side, direction in directions.items():
-            for role in ("upperarm", "forearm", "hand"):
-                bone = arm.data.bones[roles[f"{role}_{side}"]]
-                actual = (bone.tail_local - bone.head_local).normalized()
-                if actual.dot(direction) < 1.0 - 1e-5:
-                    raise AposeExportError("A-Pose 静止姿态未通过校验: " + bone.name)
+            if bind_apose:
+                _bake_apose_mesh(obj)
+        if bind_apose:
+            for obj in bpy.context.selected_objects:
+                obj.select_set(False)
+            arm.select_set(True)
+            bpy.context.view_layer.objects.active = arm
+            bpy.ops.object.mode_set(mode="POSE")
+            bpy.ops.pose.armature_apply(selected=False)
+            bpy.ops.object.mode_set(mode="OBJECT")
+            bpy.context.view_layer.update()
+            for side, direction in directions.items():
+                for role in ("upperarm", "forearm", "hand"):
+                    bone = arm.data.bones[roles[f"{role}_{side}"]]
+                    actual = (bone.tail_local - bone.head_local).normalized()
+                    if actual.dot(direction) < 1.0 - 1e-5:
+                        raise AposeExportError("A-Pose 静止姿态未通过校验: " + bone.name)
         yield arm
     finally:
         current = bpy.context.view_layer.objects.active
@@ -278,3 +318,4 @@ def apose_export_objects(source):
         bpy.context.view_layer.objects.active = active
         if active is not None and mode != "OBJECT":
             bpy.ops.object.mode_set(mode=mode)
+        _restore_apose_source_channels(channels)

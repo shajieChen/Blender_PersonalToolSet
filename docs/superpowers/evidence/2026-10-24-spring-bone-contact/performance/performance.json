@@ -1,0 +1,15 @@
+{
+  "frame_start": 26,
+  "frame_end": 26,
+  "units": 586,
+  "maximum_unit_ms": 499.01949998456985,
+  "p95_unit_ms": 53.491850034333766,
+  "phase_maximum_ms": {
+    "prepare": 499.01949998456985,
+    "contact": 488.8298999867402,
+    "write": 346.8309000018053,
+    "publish": 350.39929999038577
+  },
+  "elapsed_seconds": 13.542086599976756,
+  "delivered": true
+}

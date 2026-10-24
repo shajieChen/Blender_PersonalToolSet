@@ -79,6 +79,8 @@ def perpendicular_axis(direction):
 
 
 def collision_direction(delta, reference_direction, last_radial, axis=None):
+    if delta is not None and delta.length > LENGTH_EPSILON_M:
+        return delta.normalized()
     if axis is not None and axis.length > DIRECTION_EPSILON:
         axis_normal = axis.normalized()
 
@@ -95,8 +97,6 @@ def collision_direction(delta, reference_direction, last_radial, axis=None):
             if chosen is not None:
                 return chosen
         return perpendicular_axis(axis_normal)
-    if delta is not None and delta.length > LENGTH_EPSILON_M:
-        return delta.normalized()
     if last_radial is not None and last_radial.length > DIRECTION_EPSILON:
         return last_radial.normalized()
     if reference_direction is not None and reference_direction.length > DIRECTION_EPSILON:

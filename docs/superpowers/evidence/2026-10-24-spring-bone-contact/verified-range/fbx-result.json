@@ -1,0 +1,62 @@
+{
+  "blender": "5.2.1 LTS",
+  "action": "骨架_a050_302010.002_Spring_SkirtContact",
+  "fbx_sample_step": 0.5,
+  "quaternion_sign_repairs": 367,
+  "import_frame_offset": 1.0,
+  "checked_frames": 105,
+  "maximum_skin_error_m": 9.287452985951216e-07,
+  "fbx_contacts": [],
+  "quarter_frame_contacts_before_export": [
+    {
+      "frame": 0.75,
+      "triangle_pairs": 12
+    },
+    {
+      "frame": 3.75,
+      "triangle_pairs": 4
+    },
+    {
+      "frame": 4.25,
+      "triangle_pairs": 9
+    },
+    {
+      "frame": 4.75,
+      "triangle_pairs": 3
+    },
+    {
+      "frame": 7.25,
+      "triangle_pairs": 5
+    },
+    {
+      "frame": 10.25,
+      "triangle_pairs": 7
+    },
+    {
+      "frame": 13.25,
+      "triangle_pairs": 16
+    },
+    {
+      "frame": 13.75,
+      "triangle_pairs": 12
+    },
+    {
+      "frame": 15.25,
+      "triangle_pairs": 8
+    },
+    {
+      "frame": 18.25,
+      "triangle_pairs": 17
+    },
+    {
+      "frame": 31.75,
+      "triangle_pairs": 4
+    },
+    {
+      "frame": 39.25,
+      "triangle_pairs": 3
+    }
+  ],
+  "exported_file": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\verified-range\\corrected-character.fbx",
+  "status": "passed"
+}

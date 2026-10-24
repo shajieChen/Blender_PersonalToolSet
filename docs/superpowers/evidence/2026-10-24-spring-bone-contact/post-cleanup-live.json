@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "blender": "5.1.2",
+  "action": "骨架_a050_302010.002_Spring_SkirtContact",
+  "checked_frames": 209,
+  "contacts": [],
+  "chain_lengths": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "source_action_preserved": true,
+  "session_inactive": true,
+  "working_action_residue": [],
+  "frame_restored": true,
+  "selection_preserved": true
+}

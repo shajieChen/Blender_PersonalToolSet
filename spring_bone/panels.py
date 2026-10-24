@@ -147,7 +147,7 @@ class SPRING_BONE_PT_playback(Panel):
     bl_region_type = "UI"
     bl_parent_id = "SPRING_BONE_PT_main"
     bl_label = "预览与烘焙"
-    bl_order = 2
+    bl_order = 3
 
     @classmethod
     def poll(cls, context):
@@ -175,7 +175,7 @@ class SPRING_BONE_PT_result(Panel):
     bl_parent_id = "SPRING_BONE_PT_main"
     bl_label = "结果信息"
     bl_options = {"DEFAULT_CLOSED"}
-    bl_order = 3
+    bl_order = 4
 
     @classmethod
     def poll(cls, context):
@@ -189,4 +189,38 @@ class SPRING_BONE_PT_result(Panel):
             return
         layout.label(text=settings.result_action_name, icon="ACTION")
         layout.label(text=f"范围：{settings.result_start} - {settings.result_end}")
-        layout.label(text=f"残余穿深：{settings.result_penetration_m:.6f} m")
+        action = bpy.data.actions.get(settings.result_action_name)
+        if action is not None and action.get("sb_skin_contact"):
+            layout.label(text=f"采样裙面穿插：{action.get('sb_contact_triangle_pairs', 0)} 对")
+            layout.label(text="修正已写入骨骼关键帧，可随 FBX 导出")
+            repaired = action.get("sb_quaternion_sign_repairs", 0)
+            if repaired:
+                layout.label(text=f"已修复 {repaired} 个旋转符号键，原动作保留")
+        else:
+            layout.label(text=f"骨尖代理残余：{settings.result_penetration_m:.6f} m")
+
+
+class SPRING_BONE_PT_contact(Panel):
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_parent_id = "SPRING_BONE_PT_main"
+    bl_label = "裙面防穿"
+    bl_options = {"DEFAULT_CLOSED"}
+    bl_order = 2
+
+    @classmethod
+    def poll(cls, context):
+        return target_armature(context) is not None
+
+    def draw(self, context):
+        layout = self.layout
+        layout.enabled = not _running()
+        settings = target_armature(context).sb_settings
+        layout.prop(settings, "contact_garment")
+        layout.prop(settings, "contact_body")
+        layout.prop(settings, "contact_margin_m")
+        layout.prop(settings, "contact_frame_step")
+        layout.prop(settings, "contact_root_offset_m")
+        layout.label(text="检查碰撞骨及其子骨的身体蒙皮")
+        layout.label(text="保留裙长，将活动动作修正为新骨骼动作")
+        layout.operator("spring_bone.contact_bake")

@@ -1,0 +1,84 @@
+{
+  "status": "failed",
+  "error": "第 4.5 帧仍有 8 对裙面穿插，未生成结果；请调整碰撞部位、权重或动作",
+  "frame_results": [
+    {
+      "frame": 0.0,
+      "initial_triangle_pairs": 159,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 9.508485425349366e-08,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.022654473781585693
+    },
+    {
+      "frame": 0.5,
+      "initial_triangle_pairs": 155,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 9.335202299777882e-08,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.026270408183336258
+    },
+    {
+      "frame": 1.0,
+      "initial_triangle_pairs": 137,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 9.446223486607695e-08,
+      "maximum_rotation_delta_deg": 6.374175005171435,
+      "maximum_root_offset_m": 0.027812499552965164
+    },
+    {
+      "frame": 1.5,
+      "initial_triangle_pairs": 166,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.0717440830237601e-07,
+      "maximum_rotation_delta_deg": 5.8760988278738875,
+      "maximum_root_offset_m": 0.02860361523926258
+    },
+    {
+      "frame": 2.0,
+      "initial_triangle_pairs": 259,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 9.748668529089495e-08,
+      "maximum_rotation_delta_deg": 5.508695695342908,
+      "maximum_root_offset_m": 0.030523592606186867
+    },
+    {
+      "frame": 2.5,
+      "initial_triangle_pairs": 292,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.1991938710551932e-07,
+      "maximum_rotation_delta_deg": 3.44293891837499,
+      "maximum_root_offset_m": 0.024520456790924072
+    },
+    {
+      "frame": 3.0,
+      "initial_triangle_pairs": 113,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 8.629745173013887e-08,
+      "maximum_rotation_delta_deg": 2.4473067253738745,
+      "maximum_root_offset_m": 0.028437498956918716
+    },
+    {
+      "frame": 3.5,
+      "initial_triangle_pairs": 345,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 9.837835929595457e-08,
+      "maximum_rotation_delta_deg": 2.1416465819491064,
+      "maximum_root_offset_m": 0.03500000387430191
+    },
+    {
+      "frame": 4.0,
+      "initial_triangle_pairs": 455,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.12370310255341e-07,
+      "maximum_rotation_delta_deg": 17.761684955470134,
+      "maximum_root_offset_m": 0.038750000298023224
+    },
+    {
+      "frame": 4.5,
+      "initial_triangle_pairs": 420,
+      "triangle_pairs": 8
+    }
+  ],
+  "elapsed_seconds": 285.56971579999663
+}

@@ -1,0 +1,170 @@
+test_animated_export_failure_removes_temp_actions (test_apose_animation_export.AposeAnimationExportTests.test_animated_export_failure_removes_temp_actions) ... ok
+test_animated_export_restores_source_and_removes_temp_actions (test_apose_animation_export.AposeAnimationExportTests.test_animated_export_restores_source_and_removes_temp_actions) ... ok
+test_apose_rest_skin_and_shape_keys_roundtrip (test_apose_animation_export.AposeAnimationExportTests.test_apose_rest_skin_and_shape_keys_roundtrip) ... ok
+test_button_defaults_to_apose_export (test_apose_animation_export.AposeAnimationExportTests.test_button_defaults_to_apose_export) ... ok
+test_button_defaults_to_model_and_retargeted_animation (test_apose_animation_export.AposeAnimationExportTests.test_button_defaults_to_model_and_retargeted_animation) ... ok
+test_button_defaults_to_retargeted_animation (test_apose_animation_export.AposeAnimationExportTests.test_button_defaults_to_retargeted_animation) ... ok
+test_current_animation_only_omits_other_clips (test_apose_animation_export.AposeAnimationExportTests.test_current_animation_only_omits_other_clips) ... ok
+test_custom_normals_follow_the_apose_arm (test_apose_animation_export.AposeAnimationExportTests.test_custom_normals_follow_the_apose_arm) ... ok
+test_failed_export_removes_all_copies (test_apose_animation_export.AposeAnimationExportTests.test_failed_export_removes_all_copies) ... ok
+test_mixed_shoulder_weights_preserve_retargeted_vertices (test_apose_animation_export.AposeAnimationExportTests.test_mixed_shoulder_weights_preserve_retargeted_vertices) ... ok
+test_modifier_bound_mesh_without_parent_is_included (test_apose_animation_export.AposeAnimationExportTests.test_modifier_bound_mesh_without_parent_is_included) ... ok
+test_partial_native_bake_restores_source_and_actions (test_apose_animation_export.AposeAnimationExportTests.test_partial_native_bake_restores_source_and_actions) ... ok
+test_reference_node_failure_restores_source_and_copies (test_apose_animation_export.AposeAnimationExportTests.test_reference_node_failure_restores_source_and_copies) ... Traceback (most recent call last):
+  File "H:\Blender\5.2.1\5.2\scripts\addons_core\io_scene_fbx\__init__.py", line 622, in execute
+    return export_fbx_bin.save(self, context, **keywords)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3754, in save
+    ret = save_single(operator, context.scene, depsgraph, filepath, **kwargs_mod)
+  File "H:\Blender\5.2.1\5.2\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3623, in save_single
+    fbx_objects_elements(root, scene_data)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3425, in fbx_objects_elements
+    fbx_data_object_elements(objects, ob_obj, scene_data)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_retarget\pipeline.py", line 755, in wrapped
+    return original(root, ob_obj, scene_data)
+00:02.313  bpy.rna          | ERROR Python script error in EXPORT_SCENE_OT_fbx.execute
+  File "H:\Blender\5.2.1\5.2\python\Lib\unittest\mock.py", line 1169, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\unittest\mock.py", line 1173, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\unittest\mock.py", line 1234, in _execute_mock_call
+    raise effect
+RuntimeError: node failed
+ok
+test_retarget_motion_and_apose_reference_are_both_exported (test_apose_animation_export.AposeAnimationExportTests.test_retarget_motion_and_apose_reference_are_both_exported) ... ok
+test_source_and_temporary_data_are_unchanged (test_apose_animation_export.AposeAnimationExportTests.test_source_and_temporary_data_are_unchanged) ... ok
+test_unkeyed_preview_edit_on_animated_bone_is_preserved (test_apose_animation_export.AposeAnimationExportTests.test_unkeyed_preview_edit_on_animated_bone_is_preserved) ... ok
+test_apose_rest_skin_and_shape_keys_roundtrip (test_apose_export.AposeExportTests.test_apose_rest_skin_and_shape_keys_roundtrip) ... ok
+test_button_defaults_to_apose_export (test_apose_export.AposeExportTests.test_button_defaults_to_apose_export) ... ok
+test_button_defaults_to_retargeted_animation (test_apose_export.AposeExportTests.test_button_defaults_to_retargeted_animation) ... ok
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-yxhikzqd\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0493 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-np9p5jxd\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0087 sec.
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+[HumanoidRetarget]
+先导入带动画的模型，再导入要接收动作的角色。
+已导出A-Pose（无动画）: C:\Users\CHENSH~2\AppData\Local\Temp\codex-apose-test-b9eun8nm\character_APose.fbx
+Info: 已导出A-Pose（无动画）: C:\Users\CHENSH~2\AppData\Local\Temp\codex-apose-test-b9eun8nm\character_APose.fbx
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+[HumanoidRetarget]
+先导入带动画的模型，再导入要接收动作的角色。
+已导出A-Pose + 全量动画: C:\Users\CHENSH~2\AppData\Local\Temp\codex-apose-test-w_lz6h2i\character_APose.fbx
+Info: 已导出A-Pose + 全量动画: C:\Users\CHENSH~2\AppData\Local\Temp\codex-apose-test-w_lz6h2i\character_APose.fbx
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-cmhbyks1\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0307 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-7f0204e5\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0087 sec.
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-kuf2ai5c\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0305 sec.
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-0srwiczj\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0087 sec.
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-2_9kbkl8\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+Error: Python: Traceback (most recent call last):
+  File "H:\Blender\5.2.1\5.2\scripts\addons_core\io_scene_fbx\__init__.py", line 622, in execute
+    return export_fbx_bin.save(self, context, **keywords)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3754, in save
+    ret = save_single(operator, context.scene, depsgraph, filepath, **kwargs_mod)
+  File "H:\Blender\5.2.1\5.2\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3623, in save_single
+    fbx_objects_elements(root, scene_data)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3425, in fbx_objects_elements
+    fbx_data_object_elements(objects, ob_obj, scene_data)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_retarget\pipeline.py", line 755, in wrapped
+    return original(root, ob_obj, scene_data)
+  ... truncatedWarning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-pz8pjbw9\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0471 sec.
+FBX version: 7400
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-70mv4xy4\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0088 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-h3zrypmg\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0481 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-546202b8\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0087 sec.
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+[HumanoidRetarget]
+先导入带动画的模型，再导入要接收动作的角色。
+已导出A-Pose（无动画）: C:\Users\CHENSH~2\AppData\Local\Temp\codex-apose-test-toad_aol\character_APose.fbx
+Info: 已导出A-Pose（无动画）: C:\Users\CHENSH~2\AppData\Local\Temp\codex-apose-test-toad_aol\character_APose.fbx
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-2ro3jqb1\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0138 sec.
+test_custom_normals_follow_the_apose_arm (test_apose_export.AposeExportTests.test_custom_normals_follow_the_apose_arm) ... ok
+test_failed_export_removes_all_copies (test_apose_export.AposeExportTests.test_failed_export_removes_all_copies) ... ok
+test_modifier_bound_mesh_without_parent_is_included (test_apose_export.AposeExportTests.test_modifier_bound_mesh_without_parent_is_included) ... ok
+test_source_and_temporary_data_are_unchanged (test_apose_export.AposeExportTests.test_source_and_temporary_data_are_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 2.037s
+
+OK
+FBX version: 7400Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-0nbwfx7g\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0089 sec.
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-apose-test-vk2c3_ds\\character_APose.fbx'
+(bpy.data.armatures['AposeRig.001'], 'POSE')
+export finished in 0.0086 sec.
+SPRING_BONE_SELECTED 23
+SPRING_BONE_TEST_OK

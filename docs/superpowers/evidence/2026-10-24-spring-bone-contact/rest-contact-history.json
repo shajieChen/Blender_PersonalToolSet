@@ -1,0 +1,502 @@
+[
+  {
+    "iteration": 0,
+    "contacts": 129,
+    "maximum_depth": 0.035
+  },
+  {
+    "iteration": 1,
+    "contacts": 146,
+    "maximum_depth": 0.035
+  },
+  {
+    "iteration": 2,
+    "contacts": 155,
+    "maximum_depth": 0.035
+  },
+  {
+    "iteration": 3,
+    "contacts": 167,
+    "maximum_depth": 0.035
+  },
+  {
+    "iteration": 4,
+    "contacts": 183,
+    "maximum_depth": 0.035
+  },
+  {
+    "iteration": 5,
+    "contacts": 224,
+    "maximum_depth": 0.035
+  },
+  {
+    "iteration": 6,
+    "contacts": 262,
+    "maximum_depth": 0.035
+  },
+  {
+    "iteration": 7,
+    "contacts": 271,
+    "maximum_depth": 0.03382829672005028
+  },
+  {
+    "iteration": 8,
+    "contacts": 269,
+    "maximum_depth": 0.027842319941148164
+  },
+  {
+    "iteration": 9,
+    "contacts": 249,
+    "maximum_depth": 0.02465323098981753
+  },
+  {
+    "iteration": 10,
+    "contacts": 205,
+    "maximum_depth": 0.024244271356612446
+  },
+  {
+    "iteration": 11,
+    "contacts": 140,
+    "maximum_depth": 0.023882936882320793
+  },
+  {
+    "iteration": 12,
+    "contacts": 109,
+    "maximum_depth": 0.023726278529968114
+  },
+  {
+    "iteration": 13,
+    "contacts": 76,
+    "maximum_depth": 0.02359002865664661
+  },
+  {
+    "iteration": 14,
+    "contacts": 53,
+    "maximum_depth": 0.02328010810702108
+  },
+  {
+    "iteration": 15,
+    "contacts": 60,
+    "maximum_depth": 0.023172199398279192
+  },
+  {
+    "iteration": 16,
+    "contacts": 59,
+    "maximum_depth": 0.02295378749072552
+  },
+  {
+    "iteration": 17,
+    "contacts": 80,
+    "maximum_depth": 0.022345813711173834
+  },
+  {
+    "iteration": 18,
+    "contacts": 120,
+    "maximum_depth": 0.022624379947548734
+  },
+  {
+    "iteration": 19,
+    "contacts": 139,
+    "maximum_depth": 0.02312049813149497
+  },
+  {
+    "iteration": 20,
+    "contacts": 122,
+    "maximum_depth": 0.023492495143320413
+  },
+  {
+    "iteration": 21,
+    "contacts": 94,
+    "maximum_depth": 0.023416274597868325
+  },
+  {
+    "iteration": 22,
+    "contacts": 67,
+    "maximum_depth": 0.023129806031240152
+  },
+  {
+    "iteration": 23,
+    "contacts": 49,
+    "maximum_depth": 0.022346176519524308
+  },
+  {
+    "iteration": 24,
+    "contacts": 75,
+    "maximum_depth": 0.021843668444082143
+  },
+  {
+    "iteration": 25,
+    "contacts": 63,
+    "maximum_depth": 0.021578170933527874
+  },
+  {
+    "iteration": 26,
+    "contacts": 55,
+    "maximum_depth": 0.020896152527304368
+  },
+  {
+    "iteration": 27,
+    "contacts": 52,
+    "maximum_depth": 0.020280939460964875
+  },
+  {
+    "iteration": 28,
+    "contacts": 49,
+    "maximum_depth": 0.01989672422455624
+  },
+  {
+    "iteration": 29,
+    "contacts": 109,
+    "maximum_depth": 0.019502427042927595
+  },
+  {
+    "iteration": 30,
+    "contacts": 131,
+    "maximum_depth": 0.02029392550280318
+  },
+  {
+    "iteration": 31,
+    "contacts": 156,
+    "maximum_depth": 0.021112652604235338
+  },
+  {
+    "iteration": 32,
+    "contacts": 182,
+    "maximum_depth": 0.02189342406159267
+  },
+  {
+    "iteration": 33,
+    "contacts": 149,
+    "maximum_depth": 0.022382467278977858
+  },
+  {
+    "iteration": 34,
+    "contacts": 104,
+    "maximum_depth": 0.022322414609836416
+  },
+  {
+    "iteration": 35,
+    "contacts": 71,
+    "maximum_depth": 0.02167931343824603
+  },
+  {
+    "iteration": 36,
+    "contacts": 46,
+    "maximum_depth": 0.02099655623128638
+  },
+  {
+    "iteration": 37,
+    "contacts": 47,
+    "maximum_depth": 0.02061460623331368
+  },
+  {
+    "iteration": 38,
+    "contacts": 87,
+    "maximum_depth": 0.020189533468103038
+  },
+  {
+    "iteration": 39,
+    "contacts": 83,
+    "maximum_depth": 0.020835633120033892
+  },
+  {
+    "iteration": 40,
+    "contacts": 72,
+    "maximum_depth": 0.021126489525660874
+  },
+  {
+    "iteration": 41,
+    "contacts": 62,
+    "maximum_depth": 0.020813219765434043
+  },
+  {
+    "iteration": 42,
+    "contacts": 58,
+    "maximum_depth": 0.020444350571371617
+  },
+  {
+    "iteration": 43,
+    "contacts": 57,
+    "maximum_depth": 0.020006046593654903
+  },
+  {
+    "iteration": 44,
+    "contacts": 55,
+    "maximum_depth": 0.01966702168970369
+  },
+  {
+    "iteration": 45,
+    "contacts": 58,
+    "maximum_depth": 0.01925021953461692
+  },
+  {
+    "iteration": 46,
+    "contacts": 61,
+    "maximum_depth": 0.019092483845772223
+  },
+  {
+    "iteration": 47,
+    "contacts": 63,
+    "maximum_depth": 0.019041865910869094
+  },
+  {
+    "iteration": 48,
+    "contacts": 62,
+    "maximum_depth": 0.018933037171838807
+  },
+  {
+    "iteration": 49,
+    "contacts": 64,
+    "maximum_depth": 0.018737520985770972
+  },
+  {
+    "iteration": 50,
+    "contacts": 61,
+    "maximum_depth": 0.018788014705525713
+  },
+  {
+    "iteration": 51,
+    "contacts": 65,
+    "maximum_depth": 0.01844633122486994
+  },
+  {
+    "iteration": 52,
+    "contacts": 62,
+    "maximum_depth": 0.01845441184518859
+  },
+  {
+    "iteration": 53,
+    "contacts": 64,
+    "maximum_depth": 0.01822520439559594
+  },
+  {
+    "iteration": 54,
+    "contacts": 63,
+    "maximum_depth": 0.018164964312338272
+  },
+  {
+    "iteration": 55,
+    "contacts": 67,
+    "maximum_depth": 0.01790684714028612
+  },
+  {
+    "iteration": 56,
+    "contacts": 62,
+    "maximum_depth": 0.018034918371587993
+  },
+  {
+    "iteration": 57,
+    "contacts": 61,
+    "maximum_depth": 0.017793518032296562
+  },
+  {
+    "iteration": 58,
+    "contacts": 61,
+    "maximum_depth": 0.0176292937026592
+  },
+  {
+    "iteration": 59,
+    "contacts": 61,
+    "maximum_depth": 0.01737395763443783
+  },
+  {
+    "iteration": 60,
+    "contacts": 63,
+    "maximum_depth": 0.017240782537148336
+  },
+  {
+    "iteration": 61,
+    "contacts": 63,
+    "maximum_depth": 0.017055915559059942
+  },
+  {
+    "iteration": 62,
+    "contacts": 62,
+    "maximum_depth": 0.017000249986769633
+  },
+  {
+    "iteration": 63,
+    "contacts": 58,
+    "maximum_depth": 0.016767583284992726
+  },
+  {
+    "iteration": 64,
+    "contacts": 58,
+    "maximum_depth": 0.0164743089331314
+  },
+  {
+    "iteration": 65,
+    "contacts": 55,
+    "maximum_depth": 0.016271217019995676
+  },
+  {
+    "iteration": 66,
+    "contacts": 63,
+    "maximum_depth": 0.015945706697995776
+  },
+  {
+    "iteration": 67,
+    "contacts": 59,
+    "maximum_depth": 0.016075451661483386
+  },
+  {
+    "iteration": 68,
+    "contacts": 60,
+    "maximum_depth": 0.015833379794959912
+  },
+  {
+    "iteration": 69,
+    "contacts": 56,
+    "maximum_depth": 0.01566909504577052
+  },
+  {
+    "iteration": 70,
+    "contacts": 70,
+    "maximum_depth": 0.015404759563854896
+  },
+  {
+    "iteration": 71,
+    "contacts": 60,
+    "maximum_depth": 0.015790932600386443
+  },
+  {
+    "iteration": 72,
+    "contacts": 59,
+    "maximum_depth": 0.015491394041921012
+  },
+  {
+    "iteration": 73,
+    "contacts": 54,
+    "maximum_depth": 0.015317883465788327
+  },
+  {
+    "iteration": 74,
+    "contacts": 57,
+    "maximum_depth": 0.015094187073875219
+  },
+  {
+    "iteration": 75,
+    "contacts": 60,
+    "maximum_depth": 0.0150669273348758
+  },
+  {
+    "iteration": 76,
+    "contacts": 62,
+    "maximum_depth": 0.015008162248297595
+  },
+  {
+    "iteration": 77,
+    "contacts": 60,
+    "maximum_depth": 0.014998004007386044
+  },
+  {
+    "iteration": 78,
+    "contacts": 61,
+    "maximum_depth": 0.01502271566237323
+  },
+  {
+    "iteration": 79,
+    "contacts": 59,
+    "maximum_depth": 0.014994974036701024
+  },
+  {
+    "iteration": 80,
+    "contacts": 59,
+    "maximum_depth": 0.015003392843529582
+  },
+  {
+    "iteration": 81,
+    "contacts": 60,
+    "maximum_depth": 0.014995486264117062
+  },
+  {
+    "iteration": 82,
+    "contacts": 59,
+    "maximum_depth": 0.014972988683031872
+  },
+  {
+    "iteration": 83,
+    "contacts": 59,
+    "maximum_depth": 0.014999593498534523
+  },
+  {
+    "iteration": 84,
+    "contacts": 60,
+    "maximum_depth": 0.014971761068911292
+  },
+  {
+    "iteration": 85,
+    "contacts": 59,
+    "maximum_depth": 0.014974240758921951
+  },
+  {
+    "iteration": 86,
+    "contacts": 60,
+    "maximum_depth": 0.01497950852313079
+  },
+  {
+    "iteration": 87,
+    "contacts": 59,
+    "maximum_depth": 0.014982267187908292
+  },
+  {
+    "iteration": 88,
+    "contacts": 60,
+    "maximum_depth": 0.014975280376849696
+  },
+  {
+    "iteration": 89,
+    "contacts": 59,
+    "maximum_depth": 0.014976599726243876
+  },
+  {
+    "iteration": 90,
+    "contacts": 60,
+    "maximum_depth": 0.014969801435247064
+  },
+  {
+    "iteration": 91,
+    "contacts": 59,
+    "maximum_depth": 0.014971172604011372
+  },
+  {
+    "iteration": 92,
+    "contacts": 60,
+    "maximum_depth": 0.014964691180968657
+  },
+  {
+    "iteration": 93,
+    "contacts": 59,
+    "maximum_depth": 0.014966190799488686
+  },
+  {
+    "iteration": 94,
+    "contacts": 60,
+    "maximum_depth": 0.014959936342667788
+  },
+  {
+    "iteration": 95,
+    "contacts": 59,
+    "maximum_depth": 0.014961563130374998
+  },
+  {
+    "iteration": 96,
+    "contacts": 60,
+    "maximum_depth": 0.014955527010490187
+  },
+  {
+    "iteration": 97,
+    "contacts": 59,
+    "maximum_depth": 0.014957244951394387
+  },
+  {
+    "iteration": 98,
+    "contacts": 60,
+    "maximum_depth": 0.014951455602888018
+  },
+  {
+    "iteration": 99,
+    "contacts": 59,
+    "maximum_depth": 0.01495329537242651
+  }
+]

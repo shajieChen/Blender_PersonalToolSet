@@ -1,0 +1,13 @@
+{
+  "blender": "5.2.1 LTS",
+  "action": "骨架_a050_302010.002_Spring_SkirtContact_SkirtContact",
+  "fbx_sample_step": 0.25,
+  "quaternion_sign_repairs": 367,
+  "import_frame_offset": 1.0,
+  "checked_frames": 209,
+  "maximum_skin_error_m": 1.5132017304834653e-06,
+  "fbx_contacts": [],
+  "quarter_frame_contacts_before_export": [],
+  "exported_file": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\fine-range\\corrected-character.fbx",
+  "status": "passed"
+}

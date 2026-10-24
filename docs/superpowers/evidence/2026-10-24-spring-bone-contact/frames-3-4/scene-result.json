@@ -1,0 +1,20 @@
+{
+  "status": "failed",
+  "error": "第 3.5 帧仍有 13 对裙面穿插，未生成结果；请调整碰撞部位、权重或动作",
+  "frame_results": [
+    {
+      "frame": 3.0,
+      "initial_triangle_pairs": 113,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.1163625357270657e-07,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.03298484534025192
+    },
+    {
+      "frame": 3.5,
+      "initial_triangle_pairs": 345,
+      "triangle_pairs": 13
+    }
+  ],
+  "elapsed_seconds": 171.5618854999775
+}

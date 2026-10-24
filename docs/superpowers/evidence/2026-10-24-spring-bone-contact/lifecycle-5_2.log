@@ -1,0 +1,46 @@
+test_add_chain_rejects_gap_branch_and_duplicate (test_spring_bone_lifecycle.SpringBoneLifecycle.test_add_chain_rejects_gap_branch_and_duplicate) ... ok
+test_bake_keeps_result_and_rejects_it_as_input (test_spring_bone_lifecycle.SpringBoneLifecycle.test_bake_keeps_result_and_rejects_it_as_input) ... ok
+test_child_chain_runs_after_parent_chain (test_spring_bone_lifecycle.SpringBoneLifecycle.test_child_chain_runs_after_parent_chain) ... ok
+test_collider_rejects_dynamic_bone_and_removes_display (test_spring_bone_lifecycle.SpringBoneLifecycle.test_collider_rejects_dynamic_bone_and_removes_display) ... ok
+test_escape_cancels_session (test_spring_bone_lifecycle.SpringBoneLifecycle.test_escape_cancels_session) ... ok
+test_faults_restore_and_repeat_cancel (test_spring_bone_lifecycle.SpringBoneLifecycle.test_faults_restore_and_repeat_cancel) ... ok
+test_identity_change_does_not_overwrite_new_action (test_spring_bone_lifecycle.SpringBoneLifecycle.test_identity_change_does_not_overwrite_new_action) ... ok
+test_modal_blocks_edit_and_passes_view (test_spring_bone_lifecycle.SpringBoneLifecycle.test_modal_blocks_edit_and_passes_view) ... ok
+test_one_undo_restores_preview (test_spring_bone_lifecycle.SpringBoneLifecycle.test_one_undo_restores_preview) ... ok
+test_preflight_rejects_constraint_driver_scale_inherit_and_axis (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_constraint_driver_scale_inherit_and_axis) ... ok
+test_preflight_rejects_driver_data_path (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_driver_data_path) ... ok
+test_preflight_rejects_ik_chain_through_sim_bone (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_ik_chain_through_sim_bone) ... ok
+test_preflight_rejects_nonuniform_ancestor_scale (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_nonuniform_ancestor_scale) ... ok
+test_preflight_rejects_other_modal (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_other_modal) ... ok
+test_preflight_rejects_pole_and_armature_targets (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_pole_and_armature_targets) ... ok
+test_preflight_rejects_unsupported_inputs (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_unsupported_inputs) ... ok
+test_preview_stop_and_second_preview (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preview_stop_and_second_preview) ... ok
+test_register_exposes_settings_and_panel (test_spring_bone_lifecycle.SpringBoneLifecycle.test_register_exposes_settings_and_panel) ... ok
+test_removed_armature_cancels_cleanly (test_spring_bone_lifecycle.SpringBoneLifecycle.test_removed_armature_cancels_cleanly) ... ok
+test_reregister_and_retarget_coexist (test_spring_bone_lifecycle.SpringBoneLifecycle.test_reregister_and_retarget_coexist) ... ok
+test_rest_edit_invalidates_job (test_spring_bone_lifecycle.SpringBoneLifecycle.test_rest_edit_invalidates_job) ... ok
+test_running_job_disables_preview_and_bake (test_spring_bone_lifecycle.SpringBoneLifecycle.test_running_job_disables_preview_and_bake) ... ok
+00:00.968  blend            | Read blend: "H:\Blender_Plugin\docs\superpowers\evidence\2026-10-23-spring-bone\lifecycle_reopen.blend"
+test_save_reopen_does_not_autostart (test_spring_bone_lifecycle.SpringBoneLifecycle.test_save_reopen_does_not_autostart) ... ok
+test_scene_change_invalidates_job (test_spring_bone_lifecycle.SpringBoneLifecycle.test_scene_change_invalidates_job) ... ok
+test_second_chain_fault_restores (test_spring_bone_lifecycle.SpringBoneLifecycle.test_second_chain_fault_restores) ... ok
+test_success_cancel_keeps_delivered_action (test_spring_bone_lifecycle.SpringBoneLifecycle.test_success_cancel_keeps_delivered_action) ... ok
+test_unregister_keeps_chains_and_display_empties (test_spring_bone_lifecycle.SpringBoneLifecycle.test_unregister_keeps_chains_and_display_empties) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.316s
+
+OK
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+Error: 请选择连续骨骼
+Error: 选择必须是一条连续链
+Error: 链条不能分支
+Error: BoneA 已在其他链中
+Error: 请改用基础动作
+Error: 碰撞骨不能是动态骨
+SPRING_BONE_UNDO_POLL_FALSE
+Info: Saved as "lifecycle_reopen.blend"
+SPRING_BONE_SELECTED 27
+SPRING_BONE_TEST_OK

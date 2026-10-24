@@ -1,0 +1,11 @@
+test_baked_quaternion_keys_keep_the_same_hemisphere (test_retarget_quaternion_keys.RetargetQuaternionKeys.test_baked_quaternion_keys_keep_the_same_hemisphere) ... ok
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+----------------------------------------------------------------------
+Ran 1 test in 0.006s
+
+OK
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SPRING_BONE_SELECTED 1
+SPRING_BONE_TEST_OK

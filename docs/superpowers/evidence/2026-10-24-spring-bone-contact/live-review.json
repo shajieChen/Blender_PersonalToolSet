@@ -1,0 +1,23 @@
+{
+  "blender": "5.1.2",
+  "action": "骨架_a050_302010.002_Spring_SkirtContact",
+  "checked_frames": 209,
+  "first": 0.0,
+  "last": 52.0,
+  "step": 0.25,
+  "contacts": [],
+  "source_digest_unchanged": true,
+  "geometry_and_weights_unchanged": true,
+  "chain_lengths": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "exported_file": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-24-spring-bone-contact\\character-skin-contact.fbx",
+  "frame_restored": true
+}

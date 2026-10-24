@@ -1,0 +1,26 @@
+{
+  "status": "Passed",
+  "ast_files": [
+    "spring_bone/__init__.py",
+    "spring_bone/animation.py",
+    "spring_bone/solver.py",
+    "spring_bone/operators.py",
+    "spring_bone/panels.py",
+    "spring_bone/properties.py",
+    "spring_bone/contact_bake.py",
+    "spring_bone/skin_collision.py",
+    "humanoid_retarget/retarget.py",
+    "humanoid_retarget/pipeline.py",
+    "tests/test_spring_bone_solver.py",
+    "tests/test_spring_bone_lifecycle.py",
+    "tests/test_spring_bone_skin_collision.py",
+    "tests/test_retarget_quaternion_keys.py",
+    "tests/run_spring_bone_contact_scene.py",
+    "tests/run_spring_bone_contact_fbx.py"
+  ],
+  "goal_characters": 1573,
+  "lifecycle_fixture_bytes_restored": true,
+  "scoped_diff_check": "Passed",
+  "cpp_gates": "NotApplicable",
+  "temporary_diagnostics_remaining": 0
+}

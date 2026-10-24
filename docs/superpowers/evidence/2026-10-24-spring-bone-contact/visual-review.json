@@ -1,0 +1,26 @@
+[
+  {
+    "frame": 31.0,
+    "action": "骨架_a050_302010.002_Spring",
+    "image": "before-frame-31.png",
+    "upper_leg_L_quaternion_length": 1.0
+  },
+  {
+    "frame": 31.0,
+    "action": "骨架_a050_302010.002_Spring_SkirtContact",
+    "image": "after-frame-31.png",
+    "upper_leg_L_quaternion_length": 1.0
+  },
+  {
+    "frame": 7.5,
+    "action": "骨架_a050_302010.002_Spring",
+    "image": "before-frame-7_5.png",
+    "upper_leg_L_quaternion_length": 0.08478766679763794
+  },
+  {
+    "frame": 7.5,
+    "action": "骨架_a050_302010.002_Spring_SkirtContact",
+    "image": "after-frame-7_5.png",
+    "upper_leg_L_quaternion_length": 0.9936984181404114
+  }
+]

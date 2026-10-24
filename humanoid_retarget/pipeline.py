@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import os
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 
 import bpy
 
-from .apose_export import AposeExportError, apose_animation_actions, apose_export_objects
+from .apose_export import AposeExportError, apose_animation_actions, apose_export_objects, apose_model_reference
 from .autorig import AutoRigError, auto_rig_meshes
 from .classify import CORE_ROLES, classify_armature
 from .retarget import ACTION_SEP, RetargetError, RetargetOptions, _assign_action, bake_retarget, collect_actions
@@ -723,7 +723,7 @@ def _fbx_action_tracks(arm_obj, actions):
         scene.frame_set(frame, subframe=subframe)
 
 
-def _export_fbx_with_rest_bind(path, has_actions):
+def _export_fbx_with_rest_bind(path, has_actions, sample_step=1.0):
     """Blender writes the current pose into the FBX bone node.
 
     Animation curves are sampled earlier in the exporter. Switching to the
@@ -734,6 +734,8 @@ def _export_fbx_with_rest_bind(path, has_actions):
 
     original = export_bin.fbx_data_object_elements
     touched = []
+    reference_poses = ExitStack()
+    reference_arms = set()
 
     def wrapped(root, ob_obj, scene_data):
         arm_obj = None
@@ -742,7 +744,11 @@ def _export_fbx_with_rest_bind(path, has_actions):
         elif getattr(ob_obj, "type", None) == "ARMATURE":
             arm_obj = ob_obj.bdata
         if arm_obj is not None and getattr(arm_obj, "type", None) == "ARMATURE":
-            if arm_obj.data.pose_position != "REST":
+            if arm_obj.get("hr_fbx_default_pose"):
+                if arm_obj not in reference_arms:
+                    reference_poses.enter_context(apose_model_reference(arm_obj))
+                    reference_arms.add(arm_obj)
+            elif arm_obj.data.pose_position != "REST":
                 touched.append((arm_obj, arm_obj.data.pose_position))
                 arm_obj.data.pose_position = "REST"
                 bpy.context.view_layer.update()
@@ -755,6 +761,7 @@ def _export_fbx_with_rest_bind(path, has_actions):
             filepath=path,
             use_selection=True,
             bake_anim=has_actions,
+            bake_anim_step=sample_step,
             bake_anim_simplify_factor=0.0,
             bake_anim_use_all_actions=False,
             bake_anim_use_nla_strips=has_actions,
@@ -763,6 +770,7 @@ def _export_fbx_with_rest_bind(path, has_actions):
         )
     finally:
         export_bin.fbx_data_object_elements = original
+        reference_poses.close()
         for arm_obj, pose_position in touched:
             arm_obj.data.pose_position = pose_position
 
@@ -776,7 +784,7 @@ def export_apose_animations(arm_obj, path, export_all_actions=True):
     if not actions:
         raise PipelineError("当前没有已烘焙的重定向动画。")
     try:
-        with apose_export_objects(arm_obj) as export_arm:
+        with apose_export_objects(arm_obj, bind_apose=False) as export_arm:
             with apose_animation_actions(arm_obj, export_arm, actions):
                 return export_armature(export_arm, path)
     except AposeExportError as exc:
@@ -824,8 +832,13 @@ def export_armature(arm_obj, path, export_all_actions=True):
 def _export_current_selection(arm_obj, path, ext, export_all_actions):
     if ext == ".fbx":
         actions = _fbx_export_actions(arm_obj, export_all_actions)
+        sample_step = 1.0
+        for action in actions:
+            step = action.get("fbx_sample_step", 1.0)
+            if isinstance(step, (int, float)) and 0.01 <= step < sample_step:
+                sample_step = float(step)
         with _fbx_action_tracks(arm_obj, actions):
-            _export_fbx_with_rest_bind(path, bool(actions))
+            _export_fbx_with_rest_bind(path, bool(actions), sample_step=sample_step)
     else:
         export_format = "GLB" if ext == ".glb" else "GLTF_SEPARATE"
         if not export_all_actions:
