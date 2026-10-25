@@ -1,0 +1,19 @@
+CONTACT_SCENE_PROGRESS 0 1
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\run_spring_bone_contact_scene.py", line 62, in <module>
+    job.run_slice()
+    ~~~~~~~~~~~~~^^
+  File "H:\Blender_Plugin\spring_bone\contact_bake.py", line 147, in run_slice
+    self.advance()
+    ~~~~~~~~~~~~^^
+  File "H:\Blender_Plugin\spring_bone\contact_bake.py", line 164, in advance
+    self._contact_unit()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "H:\Blender_Plugin\spring_bone\contact_bake.py", line 363, in _contact_unit
+    raise SpringBoneError(f"第 {frame:g} 帧仍有 {residual} 对裙面穿插，未生成结果；请调整碰撞部位、权重或动作")
+spring_bone.solver.SpringBoneError: 第 16 帧仍有 11 对裙面穿插，未生成结果；请调整碰撞部位、权重或动作
+
+Error: script failed, file: 'tests/run_spring_bone_contact_scene.py', exiting.
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

@@ -1,0 +1,32 @@
+{
+  "rest_geometry": {
+    "clothing": {
+      "maximum_vertex_delta": 0.0,
+      "topology_unchanged": true,
+      "changed_weight_vertices": 1088
+    },
+    "body": {
+      "maximum_vertex_delta": 0.0,
+      "topology_unchanged": true,
+      "changed_weight_vertices": 0
+    },
+    "clothing.001": {
+      "maximum_vertex_delta": 0.0,
+      "topology_unchanged": true,
+      "changed_weight_vertices": 0
+    }
+  },
+  "expected_weight_vertices": 1088,
+  "maximum_rest_bone_matrix_delta": 0.0,
+  "chain_lengths": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "status": "passed"
+}

@@ -1,0 +1,12 @@
+{
+  "status": "failed",
+  "error": "第 16 帧仍有 18 对裙面穿插，未生成结果；请调整碰撞部位、权重或动作",
+  "frame_results": [
+    {
+      "frame": 16.0,
+      "initial_triangle_pairs": 26,
+      "triangle_pairs": 18
+    }
+  ],
+  "elapsed_seconds": 48.064438199973665
+}

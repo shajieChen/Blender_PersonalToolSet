@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "blender": "5.1.2",
+  "action": "骨架_a050_302011.002_SkirtContact",
+  "checked_frames": 833,
+  "garments": [
+    "clothing",
+    "clothing.001"
+  ],
+  "contacts": [],
+  "frame_preserved": true,
+  "selection_preserved": true,
+  "geometry_unchanged": true,
+  "session_inactive": true,
+  "working_action_residue": [],
+  "temporary_sys_path_removed": true
+}

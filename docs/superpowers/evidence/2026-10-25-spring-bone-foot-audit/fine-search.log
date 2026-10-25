@@ -1,0 +1,9 @@
+frame-12 {"attempt": 0, "pairs": 1, "actual": null, "seconds": 42.5094315999886}
+frame-12 {"attempt": 1, "pairs": 1, "actual": null, "seconds": 38.27185170003213}
+frame-12 {"attempt": 2, "pairs": 1, "actual": null, "seconds": 37.793386599980295}
+old-frame-16 {"attempt": 0, "pairs": 18, "actual": [18, 0.055494039], "seconds": 61.66016970004421}
+old-frame-16 {"attempt": 1, "pairs": 18, "actual": [18, 0.055494044], "seconds": 58.163582899956964}
+old-frame-16 {"attempt": 2, "pairs": 18, "actual": [18, 0.055494043], "seconds": 59.54310229991097}
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

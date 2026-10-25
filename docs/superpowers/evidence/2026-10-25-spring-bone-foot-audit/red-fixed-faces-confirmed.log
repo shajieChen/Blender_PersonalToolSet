@@ -1,0 +1,36 @@
+test_fixed_faces_of_selected_garment_are_not_silently_dropped (test_spring_bone_skin_collision.SpringBoneContactBake.test_fixed_faces_of_selected_garment_are_not_silently_dropped) ... FAIL
+
+======================================================================
+FAIL: test_fixed_faces_of_selected_garment_are_not_silently_dropped (test_spring_bone_skin_collision.SpringBoneContactBake.test_fixed_faces_of_selected_garment_are_not_silently_dropped)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin/tests\test_spring_bone_skin_collision.py", line 180, in test_fixed_faces_of_selected_garment_are_not_silently_dropped
+    self.assertEqual(len(job.triangles), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2
+
+----------------------------------------------------------------------
+Ran 1 test in 0.009s
+
+FAILED (failures=1)
+Traceback (most recent call last):
+  File "<string>", line 13, in <module>
+AssertionError
+
+Error: script failed, expr: 'import sys,unittest,inspect,textwrap
+sys.path.insert(0,'H:/Blender_Plugin')
+sys.path.insert(0,'H:/Blender_Plugin/tests')
+import spring_bone.contact_bake as contact
+source=textwrap.dedent(inspect.getsource(contact.SkirtContactBakeJob._sample_frame))
+source=source.replace('self.triangles = triangles','self.triangles = triangles[(self.weights.sum(axis=1)[triangles] > 1e-8).any(axis=1)]')
+namespace=dict(vars(contact))
+exec(compile(source,'legacy-garment-filter','exec'),namespace)
+contact.SkirtContactBakeJob._sample_frame=namespace['_sample_frame']
+suite=unittest.defaultTestLoader.loadTestsFromName('test_spring_bone_skin_collision.SpringBoneContactBake.test_fixed_faces_of_selected_garment_are_not_silently_dropped')
+r=unittest.TextTestRunner(verbosity=2).run(suite)
+print('SELECTED',r.testsRun)
+assert r.wasSuccessful()', exiting.
+SELECTED 1
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

@@ -1,0 +1,49 @@
+test_all_related_skinned_garment_objects_are_checked (test_spring_bone_skin_collision.SpringBoneContactBake.test_all_related_skinned_garment_objects_are_checked) ... ok
+test_antipodal_body_keys_are_repaired_in_result_only (test_spring_bone_skin_collision.SpringBoneContactBake.test_antipodal_body_keys_are_repaired_in_result_only) ... ok
+test_approved_seam_weights_can_be_restored_exactly (test_spring_bone_skin_collision.SpringBoneContactBake.test_approved_seam_weights_can_be_restored_exactly) ... ok
+test_body_boundary_triangle_with_one_weighted_vertex_is_checked (test_spring_bone_skin_collision.SpringBoneContactBake.test_body_boundary_triangle_with_one_weighted_vertex_is_checked) ... ok
+test_cancel_during_write_removes_owned_action (test_spring_bone_skin_collision.SpringBoneContactBake.test_cancel_during_write_removes_owned_action) ... ok
+test_contact_bake_preserves_source_rest_weights_and_body_channels (test_spring_bone_skin_collision.SpringBoneContactBake.test_contact_bake_preserves_source_rest_weights_and_body_channels) ... ok
+test_contact_operator_releases_session (test_spring_bone_skin_collision.SpringBoneContactBake.test_contact_operator_releases_session) ... ok
+test_deleted_target_can_be_cancelled (test_spring_bone_skin_collision.SpringBoneContactBake.test_deleted_target_can_be_cancelled) ... ok
+test_external_action_switch_is_preserved (test_spring_bone_skin_collision.SpringBoneContactBake.test_external_action_switch_is_preserved) ... ok
+test_failed_native_validation_keeps_original_action (test_spring_bone_skin_collision.SpringBoneContactBake.test_failed_native_validation_keeps_original_action) ... ok
+test_fbx_roundtrip_keeps_corrected_bone_animation (test_spring_bone_skin_collision.SpringBoneContactBake.test_fbx_roundtrip_keeps_corrected_bone_animation) ... ok
+test_fixed_faces_of_selected_garment_are_not_silently_dropped (test_spring_bone_skin_collision.SpringBoneContactBake.test_fixed_faces_of_selected_garment_are_not_silently_dropped) ... ERROR
+test_foreign_modal_is_rejected (test_spring_bone_skin_collision.SpringBoneContactBake.test_foreign_modal_is_rejected) ... ok
+test_garment_triangle_with_one_low_weight_vertex_is_checked (test_spring_bone_skin_collision.SpringBoneContactBake.test_garment_triangle_with_one_low_weight_vertex_is_checked) ... ok
+test_mesh_weight_edit_cancels_without_overwriting_edit (test_spring_bone_skin_collision.SpringBoneContactBake.test_mesh_weight_edit_cancels_without_overwriting_edit) ... ok
+test_nla_change_cancels_and_preserves_new_state (test_spring_bone_skin_collision.SpringBoneContactBake.test_nla_change_cancels_and_preserves_new_state) ... ok
+test_other_character_mesh_is_rejected (test_spring_bone_skin_collision.SpringBoneContactBake.test_other_character_mesh_is_rejected) ... ok
+test_output_interpolation_is_verified_before_publish (test_spring_bone_skin_collision.SpringBoneContactBake.test_output_interpolation_is_verified_before_publish) ... ok
+test_result_panel_does_not_report_previous_action_as_current (test_spring_bone_skin_collision.SpringBoneContactBake.test_result_panel_does_not_report_previous_action_as_current) ... ok
+test_rotation_mode_change_is_preserved (test_spring_bone_skin_collision.SpringBoneContactBake.test_rotation_mode_change_is_preserved) ... ok
+test_source_curve_edit_cancels_without_overwriting_edit (test_spring_bone_skin_collision.SpringBoneContactBake.test_source_curve_edit_cancels_without_overwriting_edit) ... ok
+test_owned_modal_operator_identifiers_are_allowed (test_spring_bone_skin_collision.SpringBoneSkinCollision.test_owned_modal_operator_identifiers_are_allowed) ... ok
+test_skin_search_corrects_bones_without_moving_rest_vertices (test_spring_bone_skin_collision.SpringBoneSkinCollision.test_skin_search_corrects_bones_without_moving_rest_vertices) ... ok
+test_triangle_interiors_collide_without_inside_vertices (test_spring_bone_skin_collision.SpringBoneSkinCollision.test_triangle_interiors_collide_without_inside_vertices) ... ok
+test_unsolvable_mesh_returns_residual (test_spring_bone_skin_collision.SpringBoneSkinCollision.test_unsolvable_mesh_returns_residual) ... ok
+
+======================================================================
+ERROR: test_fixed_faces_of_selected_garment_are_not_silently_dropped (test_spring_bone_skin_collision.SpringBoneContactBake.test_fixed_faces_of_selected_garment_are_not_silently_dropped)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_skin_collision.py", line 175, in test_fixed_faces_of_selected_garment_are_not_silently_dropped
+    self.garment.vertex_groups[0].add([0, 1, 2], 1., "REPLACE")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: bpy_prop_collection[index]: index 0 out of range, size 0
+
+----------------------------------------------------------------------
+Ran 25 tests in 1.754s
+
+FAILED (errors=1)
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\spring-contact-1bdr7zeo\\corrected.fbx'
+(bpy.data.armatures['ContactRig.001'], 'POSE')
+(bpy.data.armatures['ContactRig.001'], 'POSE')
+export finished in 0.0252 sec.
+FBX version: 7400
+SPRING_BONE_SELECTED 25

@@ -1,0 +1,25 @@
+{
+  "status": "Passed",
+  "user_confirmation": "认可数值结果，清理并收尾",
+  "removed_count": 7,
+  "removed_bytes": 67790665.0,
+  "removed": [
+    "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\weighted-input.blend",
+    "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\weighted-complete-input.blend",
+    "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\weighted-full-faces-input.blend",
+    "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\complete-frame-12\\corrected-character.blend",
+    "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\full-faces-current\\corrected-character.fbx",
+    "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\seam-weights-before.json",
+    "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\seam-weights-approved.json"
+  ],
+  "recursive_deletion": false,
+  "production_temporary_diagnostics": [],
+  "post_cleanup_tests": {
+    "blender_5_1_2": 95,
+    "blender_5_2_1": 95
+  },
+  "post_cleanup_live_frames": 833,
+  "post_cleanup_fbx_frames": 833,
+  "temporary_sys_path_removed": true,
+  "temporary_files_remaining": 0
+}

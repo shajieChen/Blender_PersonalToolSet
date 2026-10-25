@@ -1,0 +1,21 @@
+{
+  "blender": "5.1.2",
+  "input_action": "骨架_a050_302011.002",
+  "output_action": "骨架_a050_302011.002_SkirtContact",
+  "changed_weight_vertices": 1088,
+  "mesh_before": "d2a72a310e2fa421bbb6cd83ceec8bfe6f6949b173809b7fa487fd3e4dbc6602",
+  "mesh_after": "3c95e3e11959e116988b39db1186c17ccc6c16dba073c8232131b58c77e2ff0e",
+  "frame_preserved": true,
+  "selection_preserved": true,
+  "chain_lengths": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "source_preserved": true
+}

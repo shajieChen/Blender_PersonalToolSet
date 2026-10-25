@@ -1,0 +1,21 @@
+{
+  "status": "Passed",
+  "ast_files": [
+    "spring_bone/__init__.py",
+    "spring_bone/contact_bake.py",
+    "spring_bone/panels.py",
+    "tests/test_spring_bone_skin_collision.py",
+    "tests/test_spring_bone_contact_audit.py",
+    "tests/run_spring_bone_contact_audit.py",
+    "tests/run_spring_bone_seam_weights.py",
+    "tests/run_spring_bone_contact_scene.py",
+    "tests/run_spring_bone_contact_fbx.py"
+  ],
+  "code_comments": 0,
+  "encoding": "UTF-8 without BOM, CRLF",
+  "dependency_direction": "operators -> contact_bake -> animation/skin_collision; no Retarget dependency",
+  "retarget_source_modified": false,
+  "production_temporary_diagnostics": [],
+  "cpp_gates": "NotApplicable",
+  "fixture_bytes_restored": true
+}

@@ -1,0 +1,11 @@
+
+FBX export starting... 'H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\full-faces-current\\corrected-character.fbx'
+(bpy.data.armatures['骨架'], 'POSE')
+(bpy.data.armatures['骨架'], 'POSE')
+(bpy.data.armatures['骨架'], 'POSE')
+export finished in 2.9095 sec.
+FBX version: 7400
+CONTACT_FBX_RESULT {"blender": "5.2.1 LTS", "action": "\u9aa8\u67b6_a050_302011.002_SkirtContact", "fbx_sample_step": 0.0625, "validation_step": 0.0625, "garments": ["clothing", "clothing.001"], "quaternion_sign_repairs": 360, "import_frame_offset": 1.0, "checked_frames": 833, "reference_fixture_to_live_delta_m": 0.0, "maximum_skin_error_m": 7.566008652417327e-07, "fbx_contacts": [], "quarter_frame_contacts_before_export": [], "exported_file": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\full-faces-current\\corrected-character.fbx", "status": "passed"}
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

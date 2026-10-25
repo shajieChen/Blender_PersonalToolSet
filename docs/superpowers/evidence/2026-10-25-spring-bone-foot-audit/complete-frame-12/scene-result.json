@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "blender": "5.2.1 LTS",
+  "input_action": "骨架_a050_302011.002",
+  "output_action": "骨架_a050_302011.002_SkirtContact",
+  "frames": [
+    {
+      "frame": 12.0,
+      "triangle_pairs": 0
+    }
+  ],
+  "corrections": [
+    {
+      "frame": 12.0,
+      "initial_triangle_pairs": 471,
+      "triangle_pairs": 0,
+      "skin_prediction_error_m": 1.2473860946915863e-07,
+      "maximum_rotation_delta_deg": 0.0,
+      "maximum_root_offset_m": 0.03531249612569809
+    }
+  ],
+  "validation": [
+    {
+      "frame": 12.0,
+      "triangle_pairs": 0
+    }
+  ],
+  "garments": [
+    "clothing",
+    "clothing.001"
+  ],
+  "source_digest_before": "8cd85534fdf9497a00d4a30dfe0526176db446c32e2c2a542c58b0540e976289",
+  "source_digest_after": "8cd85534fdf9497a00d4a30dfe0526176db446c32e2c2a542c58b0540e976289",
+  "rest_vertices_unchanged": true,
+  "chain_lengths": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "elapsed_seconds": 1.915907600079663
+}

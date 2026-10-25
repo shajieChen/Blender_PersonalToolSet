@@ -1,0 +1,60 @@
+{
+  "status": "Completed",
+  "allowed_roots": [
+    "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit"
+  ],
+  "temporary_files": [
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\weighted-input.blend",
+      "sha256": "34241b521deed90d84e38216fe6cbe34a249289d544f83b91de9c196ad8e0438",
+      "bytes": 13092597
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\weighted-complete-input.blend",
+      "sha256": "0f2a2a0462bc552cbf3784998820ceda15472db19a0e122daecaaa92785355ee",
+      "bytes": 15973002
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\weighted-full-faces-input.blend",
+      "sha256": "43fa9e1c88264a741aa6bfca4453422d0b6fa2648fae7de89215da1f88a30963",
+      "bytes": 15977354
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\complete-frame-12\\corrected-character.blend",
+      "sha256": "5dae769797e1d5622a93f20195adf2fe065ac998335196256541181e73a24c4e",
+      "bytes": 13697448
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\full-faces-current\\corrected-character.fbx",
+      "sha256": "9bc65b6504ec8a1a5ec33379e751297f08a0ce3c37d73cfea643f3b803939366",
+      "bytes": 8806076
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\seam-weights-before.json",
+      "sha256": "e6d877a59d66174d783b85fa5a77b7905f1447fd6cde2b1b85e8dfa7fbb9598d",
+      "bytes": 52817
+    },
+    {
+      "path": "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-25-spring-bone-foot-audit\\seam-weights-approved.json",
+      "sha256": "ac2f7d3f662e5d4e1ec90bc2fb2a4f3293331d58c94e535a3407e7e77928afd3",
+      "bytes": 191371
+    }
+  ],
+  "production_temporary_diagnostics": [],
+  "runtime_cleanup": [
+    "Remove exactly the one tests sys.path entry inserted by this audit, if still first"
+  ],
+  "retain": [
+    "audit-input.blend",
+    "applied-character.blend",
+    "full-faces-current/corrected-character.blend",
+    "character-302011-skin-contact.fbx",
+    "seam-weights-full-faces.json",
+    "all numeric audit JSON and failure geometry NPZ",
+    "test logs",
+    "formal tests and docs"
+  ],
+  "cleanup_completed": true,
+  "user_result_confirmed": true,
+  "post_cleanup_verification": "Passed"
+}

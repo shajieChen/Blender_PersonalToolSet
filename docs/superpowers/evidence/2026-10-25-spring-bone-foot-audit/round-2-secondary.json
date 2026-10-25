@@ -1,0 +1,2243 @@
+{
+  "label": "round-2-secondary",
+  "blender": "5.1.2",
+  "entry_action": "骨架_a050_302011.002",
+  "scene_range": [
+    0,
+    52
+  ],
+  "step": 0.25,
+  "units_m": 1.0,
+  "inventory": [
+    {
+      "object": "body",
+      "vertices": 2880,
+      "triangles": 4068,
+      "spring_vertices": 0,
+      "region_vertices": 1349,
+      "foot_vertices": 1200,
+      "materials": [
+        "body"
+      ],
+      "region_triangles": 2047
+    },
+    {
+      "object": "clothing",
+      "vertices": 11798,
+      "triangles": 10884,
+      "spring_vertices": 8021,
+      "region_vertices": 0,
+      "foot_vertices": 0,
+      "materials": [
+        "clothing"
+      ],
+      "region_triangles": 0
+    },
+    {
+      "object": "clothing.001",
+      "vertices": 1007,
+      "triangles": 1124,
+      "spring_vertices": 1007,
+      "region_vertices": 0,
+      "foot_vertices": 0,
+      "materials": [
+        "clothing"
+      ],
+      "region_triangles": 0
+    },
+    {
+      "object": "hair",
+      "vertices": 8780,
+      "triangles": 14028,
+      "spring_vertices": 0,
+      "region_vertices": 0,
+      "foot_vertices": 0,
+      "materials": [
+        "hair",
+        "head",
+        "TiePen"
+      ],
+      "region_triangles": 0
+    },
+    {
+      "object": "hair.001",
+      "vertices": 6080,
+      "triangles": 9997,
+      "spring_vertices": 0,
+      "region_vertices": 0,
+      "foot_vertices": 0,
+      "materials": [
+        "hair"
+      ],
+      "region_triangles": 0
+    },
+    {
+      "object": "head.001",
+      "vertices": 4328,
+      "triangles": 5562,
+      "spring_vertices": 0,
+      "region_vertices": 0,
+      "foot_vertices": 0,
+      "materials": [
+        "head",
+        "expression"
+      ],
+      "region_triangles": 0
+    }
+  ],
+  "garment_triangles": {
+    "legacy": 1064,
+    "expanded": 1124
+  },
+  "region_bones": [
+    "foot.L",
+    "foot.R",
+    "lower_leg.L",
+    "lower_leg.R",
+    "toes.L",
+    "toes.R",
+    "upper_leg.L",
+    "upper_leg.R"
+  ],
+  "foot_bones": [
+    "foot.L",
+    "foot.R",
+    "toes.L",
+    "toes.R"
+  ],
+  "actions": [
+    {
+      "action": "骨架_a050_302011.002",
+      "meta": {},
+      "range": [
+        0.0,
+        52.0
+      ],
+      "checked_frames": 209,
+      "legacy_hit_frames": 0,
+      "expanded_hit_frames": 0,
+      "maximum_pairs": 0,
+      "rows": [
+        {
+          "frame": 0.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 0.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 0.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 0.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 1.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 1.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 1.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 1.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 2.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 2.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 2.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 2.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 3.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 3.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 3.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 3.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 4.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 4.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 4.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 4.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 5.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 5.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 5.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 5.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 6.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 6.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 6.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 6.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 7.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 7.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 7.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 7.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 8.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 8.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 8.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 8.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 9.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 9.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 9.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 9.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 10.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 10.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 10.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 10.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 11.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 11.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 11.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 11.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 12.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 12.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 12.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 12.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 13.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 13.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 13.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 13.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 14.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 14.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 14.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 14.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 15.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 15.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 15.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 15.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 16.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 16.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 16.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 16.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 17.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 17.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 17.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 17.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 18.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 18.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 18.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 18.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 19.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 19.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 19.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 19.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 20.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 20.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 20.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 20.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 21.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 21.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 21.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 21.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 22.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 22.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 22.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 22.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 23.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 23.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 23.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 23.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 24.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 24.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 24.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 24.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 25.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 25.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 25.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 25.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 26.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 26.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 26.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 26.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 27.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 27.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 27.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 27.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 28.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 28.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 28.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 28.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 29.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 29.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 29.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 29.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 30.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 30.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 30.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 30.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 31.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 31.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 31.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 31.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 32.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 32.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 32.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 32.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 33.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 33.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 33.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 33.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 34.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 34.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 34.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 34.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 35.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 35.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 35.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 35.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 36.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 36.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 36.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 36.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 37.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 37.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 37.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 37.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 38.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 38.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 38.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 38.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 39.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 39.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 39.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 39.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 40.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 40.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 40.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 40.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 41.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 41.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 41.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 41.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 42.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 42.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 42.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 42.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 43.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 43.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 43.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 43.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 44.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 44.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 44.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 44.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 45.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 45.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 45.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 45.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 46.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 46.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 46.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 46.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 47.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 47.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 47.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 47.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 48.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 48.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 48.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 48.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 49.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 49.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 49.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 49.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 50.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 50.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 50.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 50.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 51.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 51.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 51.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 51.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 52.0,
+          "legacy_pairs": 0,
+          "hits": []
+        }
+      ]
+    },
+    {
+      "action": "骨架_a050_302010.002_Spring_SkirtContact",
+      "meta": {
+        "sb_generated": "1",
+        "sb_frame_start": "0",
+        "sb_frame_end": "52",
+        "sb_penetration_m": "0.012716641473307016",
+        "sb_skin_contact": "1",
+        "sb_contact_triangle_pairs": "0",
+        "sb_contact_frame_step": "0.25",
+        "fbx_sample_step": "0.25",
+        "sb_quaternion_sign_repairs": "367",
+        "sb_quaternion_repaired_paths": "'pose.bones[\"foot.L\"].rotation_quaternion\\npose.bones[\"foot.R\"].rotation_quaternion\\npose.bones[\"hips\"].rotation_quaternion\\npose.bones[\"lower_arm.L\"].rotation_quaternion\\npose.bones[\"shoulder.R\"].rotation_quaternion\\npose.bones[\"upper_arm.L\"].rotation_quaternion\\npose.bones[\"upper_arm.R\"].rotation_quaternion\\npose.bones[\"upper_leg.L\"].rotation_quaternion\\npose.bones[\"upper_leg.R\"].rotation_quaternion'",
+        "sb_contact_input": "'骨架_a050_302010.002_Spring'"
+      },
+      "range": [
+        0.0,
+        52.0
+      ],
+      "checked_frames": 209,
+      "legacy_hit_frames": 0,
+      "expanded_hit_frames": 0,
+      "maximum_pairs": 0,
+      "rows": [
+        {
+          "frame": 0.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 0.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 0.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 0.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 1.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 1.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 1.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 1.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 2.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 2.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 2.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 2.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 3.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 3.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 3.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 3.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 4.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 4.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 4.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 4.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 5.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 5.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 5.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 5.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 6.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 6.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 6.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 6.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 7.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 7.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 7.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 7.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 8.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 8.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 8.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 8.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 9.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 9.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 9.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 9.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 10.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 10.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 10.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 10.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 11.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 11.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 11.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 11.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 12.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 12.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 12.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 12.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 13.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 13.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 13.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 13.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 14.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 14.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 14.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 14.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 15.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 15.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 15.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 15.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 16.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 16.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 16.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 16.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 17.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 17.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 17.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 17.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 18.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 18.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 18.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 18.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 19.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 19.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 19.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 19.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 20.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 20.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 20.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 20.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 21.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 21.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 21.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 21.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 22.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 22.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 22.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 22.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 23.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 23.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 23.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 23.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 24.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 24.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 24.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 24.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 25.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 25.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 25.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 25.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 26.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 26.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 26.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 26.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 27.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 27.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 27.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 27.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 28.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 28.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 28.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 28.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 29.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 29.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 29.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 29.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 30.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 30.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 30.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 30.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 31.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 31.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 31.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 31.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 32.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 32.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 32.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 32.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 33.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 33.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 33.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 33.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 34.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 34.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 34.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 34.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 35.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 35.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 35.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 35.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 36.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 36.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 36.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 36.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 37.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 37.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 37.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 37.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 38.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 38.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 38.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 38.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 39.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 39.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 39.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 39.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 40.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 40.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 40.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 40.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 41.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 41.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 41.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 41.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 42.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 42.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 42.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 42.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 43.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 43.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 43.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 43.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 44.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 44.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 44.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 44.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 45.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 45.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 45.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 45.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 46.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 46.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 46.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 46.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 47.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 47.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 47.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 47.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 48.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 48.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 48.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 48.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 49.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 49.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 49.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 49.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 50.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 50.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 50.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 50.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 51.0,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 51.25,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 51.5,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 51.75,
+          "legacy_pairs": 0,
+          "hits": []
+        },
+        {
+          "frame": 52.0,
+          "legacy_pairs": 0,
+          "hits": []
+        }
+      ]
+    }
+  ],
+  "geometry_unchanged": true,
+  "actions_unchanged": true,
+  "entry_restored": true
+}

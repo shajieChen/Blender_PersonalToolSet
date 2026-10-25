@@ -1,0 +1,37 @@
+{
+  "status": "CompletedWithDocumentedScope",
+  "user_result_confirmed": true,
+  "diagnostic_rounds": 4,
+  "screenshots_used": false,
+  "live_dense_step": 0.03125,
+  "live_dense_frames_per_garment": 1665,
+  "garments": [
+    "clothing",
+    "clothing.001"
+  ],
+  "live_contacts": 0,
+  "post_cleanup_live_frames": 833,
+  "fbx_frames": 833,
+  "fbx_contacts": 0,
+  "fbx_maximum_skin_error_m": 7.284919241547106e-07,
+  "weights_changed_vertices": 1088,
+  "rest_vertex_delta": 0.0,
+  "rest_bone_matrix_delta": 0.0,
+  "chain_lengths": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "tests_5_1": 95,
+  "tests_5_2": 95,
+  "cleanup_removed_files": 7,
+  "cleanup_completed": true,
+  "continuous_time_guarantee": false,
+  "retarget_modified": false,
+  "commit_or_push": false
+}
