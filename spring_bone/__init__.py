@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Spring Bone",
     "author": "Blender Plugin",
-    "version": (1, 0, 5),
+    "version": (1, 0, 6),
     "blender": (5, 1, 2),
     "location": "View3D > Sidebar > 动态骨骼",
     "description": "为已有骨骼的裙摆、发束和饰物生成预览并烘焙二次运动",

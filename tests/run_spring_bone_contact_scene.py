@@ -14,7 +14,7 @@ sys.dont_write_bytecode = True
 
 import spring_bone
 from spring_bone.animation import iter_channelbags
-from spring_bone.contact_bake import SkirtContactBakeJob, _mesh_arrays
+from spring_bone.contact_bake import SkirtContactBakeJob, _garment_arrays, _mesh_arrays
 from spring_bone.skin_collision import triangle_crossings
 
 
@@ -25,7 +25,9 @@ first, last = int(arguments[1]), int(arguments[2])
 folder = (ROOT / arguments[3]).resolve()
 folder.mkdir(parents=True, exist_ok=True)
 with bpy.data.libraries.load(str(source_file)) as (available, loaded):
-    loaded.objects = [name for name in available.objects if name in {"骨架", "body", "clothing"}]
+    loaded.objects = available.objects
+    if len(arguments) > 6:
+        loaded.actions = [arguments[6]]
 for obj in loaded.objects:
     bpy.context.collection.objects.link(obj)
 arm = bpy.data.objects["骨架"]
@@ -38,6 +40,10 @@ arm.sb_settings.contact_garment, arm.sb_settings.contact_body = cloth, body
 arm.sb_settings.contact_margin_m = float(arguments[4]) if len(arguments)>4 else .002
 arm.sb_settings.contact_frame_step = float(arguments[5]) if len(arguments) > 5 else .5
 source = arm.animation_data.action
+if len(arguments) > 6:
+    source = bpy.data.actions[arguments[6]]
+    arm.animation_data.action = source
+    arm.animation_data.action_slot = source.slots[0]
 arm.animation_data.use_nla = False
 
 
@@ -64,19 +70,19 @@ try:
     for frame, rotations, locations in job.solutions:
         whole = int(frame)
         scene.frame_set(whole, subframe=frame - whole)
-        points, _, triangles = _mesh_arrays(cloth)
+        points, _, triangles = _garment_arrays(job.garments)
         body_points, _, body_triangles = _mesh_arrays(body)
         count = triangle_crossings(points, job.triangles, body_points, job.body_triangles)
         assert count == 0, (frame, count)
         rows.append({"frame": frame, "triangle_pairs": count})
-    result = {"status": "passed", "blender": bpy.app.version_string, "input_action": source.name, "output_action": job.result_action.name, "frames": rows, "corrections": job.frame_results, "source_digest_before": before_digest, "source_digest_after": action_digest(source), "rest_vertices_unchanged": True, "chain_lengths": [len(chain.bone_names) for chain in arm.sb_settings.chains], "elapsed_seconds": time.perf_counter() - started}
-    bpy.data.libraries.write(str(folder / "corrected-character.blend"), {arm, cloth, body}, fake_user=True)
+    result = {"status": "passed", "blender": bpy.app.version_string, "input_action": source.name, "output_action": job.result_action.name, "frames": rows, "corrections": job.frame_results, "validation": job.validation_rows, "garments": [obj.name for obj in job.garments], "source_digest_before": before_digest, "source_digest_after": action_digest(source), "rest_vertices_unchanged": True, "chain_lengths": [len(chain.bone_names) for chain in arm.sb_settings.chains], "elapsed_seconds": time.perf_counter() - started}
+    bpy.data.libraries.write(str(folder / "corrected-character.blend"), {arm, body, *job.garments}, fake_user=True)
 except Exception as exc:
     result = {"status": "failed", "error": str(exc), "frame_results": job.frame_results, "elapsed_seconds": time.perf_counter() - started}
     if getattr(job, "sample", None) is not None and job.candidate is not None:
         sample = job.sample
-        np.savez_compressed(folder / "failed-pose.npz", parents=sample.parents, relative=sample.relative_rest, inverse_rest=sample.inverse_rest, rest=sample.rest_points, weights=sample.weights, world=sample.armature_world, parent_fixed=sample.fixed_parents, locations=sample.locations, rotations=np.array([tuple(value) for value in sample.rotations]), scales=sample.scales, points=sample.evaluated_points, body_points=job.body_points, body_triangles=job.body_triangles, triangles=job.triangles, candidate_rotations=np.array([tuple(value) for value in job.candidate.rotations]), candidate_locations=job.candidate.locations)
+        np.savez_compressed(folder / "failed-pose.npz", parents=sample.parents, relative=sample.relative_rest, inverse_rest=sample.inverse_rest, rest=sample.rest_points, weights=sample.weights, world=sample.armature_world, parent_fixed=sample.fixed_parents, locations=sample.locations, rotations=np.array([tuple(value) for value in sample.rotations]), scales=sample.scales, points=sample.evaluated_points, body_points=job.body_points, actual_body_points=job.sample_body_points, body_triangles=job.body_triangles, triangles=job.triangles, candidate_rotations=np.array([tuple(value) for value in job.candidate.rotations]), candidate_locations=job.candidate.locations)
     (folder / "scene-result.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     raise
 (folder / "scene-result.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-print("CONTACT_SCENE_RESULT", json.dumps({key: value for key, value in result.items() if key not in {"frames", "corrections"}}, ensure_ascii=True), flush=True)
+print("CONTACT_SCENE_RESULT", json.dumps({key: value for key, value in result.items() if key not in {"frames", "corrections", "validation"}}, ensure_ascii=True), flush=True)

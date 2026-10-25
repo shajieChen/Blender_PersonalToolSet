@@ -85,6 +85,32 @@ def _validate_mesh(obj, armature):
         raise SpringBoneError("防穿修正暂不支持形态键网格")
 
 
+def garment_meshes(armature, primary):
+    names = [item.name for chain in armature.sb_settings.chains for item in chain.bone_names]
+    result = [primary]
+    for obj in bpy.context.scene.objects:
+        if obj == primary or obj.type != "MESH" or obj.hide_get():
+            continue
+        if not any(mod.type == "ARMATURE" and mod.object == armature and mod.show_viewport for mod in obj.modifiers):
+            continue
+        if _skin_weights(obj, armature, names).sum() > 1e-8:
+            _validate_mesh(obj, armature)
+            result.append(obj)
+    return result
+
+
+def _garment_arrays(objects):
+    points, normals, triangles = [], [], []
+    offset = 0
+    for obj in objects:
+        positions, directions, indices = _mesh_arrays(obj)
+        points.append(positions)
+        normals.append(directions)
+        triangles.append(indices + offset)
+        offset += len(positions)
+    return np.concatenate(points), np.concatenate(normals), np.concatenate(triangles)
+
+
 class SkirtContactBakeJob:
     def __init__(self, armature, frame_start, frame_end, identity_token=None):
         self.armature = armature
@@ -107,6 +133,8 @@ class SkirtContactBakeJob:
         self.previous_corrections = None
         self.previous_world_offsets = None
         self.previous_rotations = {}
+        self.refinement_pass = 0
+        self.validation_rows = []
 
     @property
     def progress(self):
@@ -138,6 +166,8 @@ class SkirtContactBakeJob:
                     self._write_unit()
                 elif self.phase == "publish":
                     self._publish()
+                elif self.phase == "verify":
+                    self._verify_unit()
         except Exception:
             self.cancel()
             raise
@@ -187,12 +217,13 @@ class SkirtContactBakeJob:
         region_names = sorted({bone.name for name in collider_names for bone in (armature.data.bones[name], *armature.data.bones[name].children_recursive)})
         if set(region_names) & set(self.names):
             raise SpringBoneError("碰撞部位不能包含动态链")
-        self.weights = _skin_weights(self.garment, armature, self.names)
+        self.garments = garment_meshes(armature, self.garment)
+        self.weights = np.concatenate([_skin_weights(obj, armature, self.names) for obj in self.garments])
         if self.weights.sum() <= 1e-8:
             raise SpringBoneError("裙面网格没有动态链权重")
         if _skin_weights(self.body, armature, self.names).sum() > 1e-8:
             raise SpringBoneError("身体网格不能受本次动态链驱动")
-        self.body_region = _skin_weights(self.body, armature, region_names).sum(axis=1) > .05
+        self.body_region = _skin_weights(self.body, armature, region_names).sum(axis=1) > 1e-8
         units = float(self.scene.unit_settings.scale_length)
         if not math.isfinite(units) or units <= 0.0:
             raise SpringBoneError("场景单位比例无效")
@@ -204,6 +235,9 @@ class SkirtContactBakeJob:
             raise SpringBoneError("防穿修正的范围或采样无效")
         count = int(math.ceil((self.frame_end - self.frame_start) / step))
         self.frames = [min(float(self.frame_end), self.frame_start + index * step) for index in range(count + 1)]
+        self.validation_step = min(step / 4.0, .0625)
+        validation_count = int(math.ceil((self.frame_end - self.frame_start) / self.validation_step))
+        self.validation_frames = [min(float(self.frame_end), self.frame_start + index * self.validation_step) for index in range(validation_count + 1)]
         self.entry_action, self.entry_slot = action, anim.action_slot or action.slots[0]
         self.evaluation_value = (anim.use_nla, anim.action_blend_type, float(anim.action_influence), armature.data.pose_position)
         if anim.action_slot != self.entry_slot:
@@ -215,7 +249,7 @@ class SkirtContactBakeJob:
         if any(armature.data.bones[name].use_connect for name in self.root_names) and self.max_root_offset > 0.0:
             raise SpringBoneError("相连的链首不能独立移动，请将根部修正上限设为零")
         self.action_value = _action_token(action, self.entry_slot)
-        self.geometry_values = (_mesh_token(self.garment), _mesh_token(self.body))
+        self.geometry_values = tuple(_mesh_token(obj) for obj in (*self.garments, self.body))
         self.rest_value = _rest_token(armature)
         self.sample_frame_value = None
         self.identity_value = self.identity_token() if self.identity_token else None
@@ -258,7 +292,7 @@ class SkirtContactBakeJob:
         if self.phase != "contact" and _action_token(self.entry_action, self.entry_slot) != self.action_value:
             self.restore_entry = False
             raise SpringBoneError("源动作已编辑，已取消防穿修正")
-        if self.phase != "contact" and ((_mesh_token(self.garment), _mesh_token(self.body)) != self.geometry_values or _rest_token(self.armature) != self.rest_value):
+        if self.phase != "contact" and (tuple(_mesh_token(obj) for obj in (*self.garments, self.body)) != self.geometry_values or _rest_token(self.armature) != self.rest_value):
             self.restore_entry = False
             raise SpringBoneError("蒙皮或静态骨架已编辑，已取消防穿修正")
 
@@ -266,20 +300,20 @@ class SkirtContactBakeJob:
         if _action_token(self.entry_action, self.entry_slot) != self.action_value:
             self.restore_entry = False
             raise SpringBoneError("源动作已编辑，已取消防穿修正")
-        if (_mesh_token(self.garment), _mesh_token(self.body)) != self.geometry_values or _rest_token(self.armature) != self.rest_value:
+        if tuple(_mesh_token(obj) for obj in (*self.garments, self.body)) != self.geometry_values or _rest_token(self.armature) != self.rest_value:
             self.restore_entry = False
             raise SpringBoneError("蒙皮或静态骨架已编辑，已取消防穿修正")
-        for obj in (self.garment, self.body):
+        for obj in (*self.garments, self.body):
             _validate_mesh(obj, self.armature)
         frame = self.frames[self.frame_index]
         whole = math.floor(frame)
         self.scene.frame_set(whole, subframe=frame - whole)
         self.sample_frame_value = frame
         bpy.context.view_layer.update()
-        points, _normals, triangles = _mesh_arrays(self.garment)
+        points, _normals, triangles = _garment_arrays(self.garments)
         body_points, body_normals, body_triangles = _mesh_arrays(self.body)
-        self.triangles = triangles[(self.weights.sum(axis=1)[triangles] > .05).sum(axis=1) >= 2]
-        self.body_triangles = body_triangles[self.body_region[body_triangles].sum(axis=1) >= 2]
+        self.triangles = triangles
+        self.body_triangles = body_triangles[self.body_region[body_triangles].any(axis=1)]
         if len(self.triangles) == 0 or len(self.body_triangles) == 0:
             raise SpringBoneError("裙面或碰撞部位没有可检查的三角形")
         self.body_points = body_points + body_normals * self.margin
@@ -297,8 +331,11 @@ class SkirtContactBakeJob:
             locations.append(location)
             rotations.append(rotation)
             scales.append(scale)
-        mesh_to_arm = armature.matrix_world.inverted() @ self.garment.matrix_world
-        rest = np.array([mesh_to_arm @ vertex.co for vertex in self.garment.data.vertices], dtype=np.float64)
+        rest = []
+        for obj in self.garments:
+            mesh_to_arm = armature.matrix_world.inverted() @ obj.matrix_world
+            rest.extend(mesh_to_arm @ vertex.co for vertex in obj.data.vertices)
+        rest = np.array(rest, dtype=np.float64)
         self.sample = SkinCollisionFrame(np.array(parents), np.array(relative), np.array(inverse), rest, self.weights, np.asarray(armature.matrix_world), np.array(fixed), np.array(locations), rotations, np.array(scales), points)
         predicted = self.sample.poses(rotations)
         if max(float(np.abs(predicted[index] - np.asarray(pose.matrix)).max()) for index, pose in enumerate(bones)) > 1e-5:
@@ -333,7 +370,7 @@ class SkirtContactBakeJob:
             for index, pose in enumerate(poses):
                 pose.matrix_basis = Matrix.LocRotScale(Vector(locations[index]), rotations[index], Vector(self.sample.scales[index]))
             bpy.context.view_layer.update()
-            actual, _normals, _triangles = _mesh_arrays(self.garment)
+            actual, _normals, _triangles = _garment_arrays(self.garments)
             actual_body, _normals, _triangles = _mesh_arrays(self.body)
             if float(np.linalg.norm(actual_body - self.sample_body_points, axis=1).max()) * self.scene.unit_settings.scale_length > 1e-6:
                 raise SpringBoneError("身体依赖动态链，请先隔离并烘焙身体动作")
@@ -359,6 +396,9 @@ class SkirtContactBakeJob:
         self.search = None
 
     def _create_result(self):
+        if self.result_action is not None:
+            bpy.data.actions.remove(self.result_action)
+        self.solutions.sort(key=lambda item: item[0])
         self.result_action = self.working_action.copy()
         self.result_action.name = self.entry_action.name + "_SkirtContact"
         self.result_action.use_fake_user = False
@@ -389,7 +429,10 @@ class SkirtContactBakeJob:
             for curves in (*self.curves.values(), *self.location_curves.values()):
                 for curve in curves:
                     curve.update()
-            self.phase = "publish"
+            self.phase = "verify"
+            self.validation_index = 0
+            self.validation_failures = []
+            self.validation_rows = []
             return
         frame, rotations, locations = self.solutions[self.write_index]
         for index, (name, rotation) in enumerate(zip(self.names, rotations)):
@@ -410,13 +453,57 @@ class SkirtContactBakeJob:
                 point.interpolation = "LINEAR"
         self.write_index += 1
 
+    def _verify_unit(self):
+        if self.validation_index >= len(self.validation_frames):
+            if not self.validation_failures:
+                self.phase = "publish"
+                return
+            if self.refinement_pass >= 3:
+                frame, pairs = self.validation_failures[0]
+                raise SpringBoneError(f"第 {frame:g} 帧输出动作仍有 {pairs} 对穿插，未提交结果")
+            self.refinement_pass += 1
+            self.frames = [frame for frame, _pairs in self.validation_failures]
+            replaced = set(self.frames)
+            self.solutions = [item for item in self.solutions if item[0] not in replaced]
+            self.frame_index = self.write_index = 0
+            self.previous_corrections = self.previous_world_offsets = None
+            self.previous_rotations = {}
+            self.search = None
+            self.phase = "contact"
+            return
+        frame = self.validation_frames[self.validation_index]
+        anim = self.armature.animation_data
+        try:
+            anim.action = self.result_action
+            anim.action_slot = self.result_action.slots[0]
+            self.scene.frame_set(math.floor(frame), subframe=frame - math.floor(frame))
+            bpy.context.view_layer.update()
+            points = _garment_arrays(self.garments)[0]
+            body_points = _mesh_arrays(self.body)[0]
+            pairs = triangle_crossings(points, self.triangles, body_points, self.body_triangles)
+            self.validation_rows.append({"frame": frame, "triangle_pairs": pairs})
+            if pairs:
+                self.validation_failures.append((frame, pairs))
+        finally:
+            anim.action = self.working_action
+            anim.action_slot = self.working_action.slots[0]
+            self.scene.frame_set(math.floor(frame), subframe=frame - math.floor(frame))
+            self.sample_frame_value = frame
+            bpy.context.view_layer.update()
+        self.validation_index += 1
+
     def _publish(self):
         action = self.result_action
         action["sb_generated"] = 1
         action["sb_skin_contact"] = 1
         action["sb_contact_triangle_pairs"] = 0
         action["sb_contact_frame_step"] = float(self.armature.sb_settings.contact_frame_step)
-        action["fbx_sample_step"] = float(self.armature.sb_settings.contact_frame_step)
+        action["fbx_sample_step"] = self.validation_step
+        action["sb_contact_validation_step"] = self.validation_step
+        action["sb_contact_validation_frames"] = len(self.validation_frames)
+        action["sb_contact_coverage"] = "all_garment_faces"
+        action["sb_contact_garments"] = "\n".join(obj.name for obj in self.garments)
+        action["sb_contact_refinement_passes"] = self.refinement_pass
         action["sb_quaternion_sign_repairs"] = int(self.entry_action.get("sb_quaternion_sign_repairs", 0)) + sum(self.continuity_repairs.values())
         repaired_paths = set(str(self.entry_action.get("sb_quaternion_repaired_paths", "")).splitlines()) | set(self.continuity_repairs)
         action["sb_quaternion_repaired_paths"] = "\n".join(sorted(repaired_paths))

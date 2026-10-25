@@ -130,6 +130,93 @@ class SpringBoneContactBake(unittest.TestCase):
         from spring_bone.animation import iter_channelbags
         return tuple((curve.data_path, curve.array_index, tuple(tuple(point.co) for point in curve.keyframe_points)) for bag in iter_channelbags(action, action.slots[0]) for curve in bag.fcurves)
 
+    def test_body_boundary_triangle_with_one_weighted_vertex_is_checked(self):
+        from spring_bone.contact_bake import SkirtContactBakeJob
+        self.body.vertex_groups[0].remove([1, 2])
+        job = SkirtContactBakeJob(self.arm, 1, 1)
+        try:
+            job.advance()
+            job.advance()
+            self.assertEqual(len(job.body_triangles), 1)
+        finally:
+            job.cancel()
+
+    def test_garment_triangle_with_one_low_weight_vertex_is_checked(self):
+        from spring_bone.contact_bake import SkirtContactBakeJob
+        self.garment.vertex_groups[0].remove([1, 2])
+        self.garment.vertex_groups[0].add([0], .01, "REPLACE")
+        self.garment.vertex_groups.new(name="Leg").add([0], .99, "REPLACE")
+        job = SkirtContactBakeJob(self.arm, 1, 1)
+        try:
+            job.advance()
+            job.advance()
+            self.assertEqual(len(job.triangles), 1)
+        finally:
+            job.cancel()
+
+    def test_all_related_skinned_garment_objects_are_checked(self):
+        from spring_bone.contact_bake import SkirtContactBakeJob
+        second = self._mesh("ContactHem", [(3., 1., 0.), (3., 2., 0.), (4., 1., 0.)], "Skirt")
+        job = SkirtContactBakeJob(self.arm, 1, 1)
+        try:
+            job.advance()
+            job.advance()
+            self.assertIn(second, job.garments)
+            self.assertEqual(len(job.sample.rest_points), 6)
+            self.assertEqual(len(job.triangles), 2)
+        finally:
+            job.cancel()
+
+    def test_fixed_faces_of_selected_garment_are_not_silently_dropped(self):
+        from spring_bone.contact_bake import SkirtContactBakeJob
+        mesh = self.garment.data
+        mesh.clear_geometry()
+        mesh.from_pydata([(0., 1., 0.), (0., 2., 0.), (1., 1., 0.), (3., 1., 0.), (3., 2., 0.), (4., 1., 0.)], [], [(0, 1, 2), (3, 4, 5)])
+        self.garment.vertex_groups.new(name="Skirt").add([0, 1, 2], 1., "REPLACE")
+        job = SkirtContactBakeJob(self.arm, 1, 1)
+        try:
+            job.advance()
+            job.advance()
+            self.assertEqual(len(job.triangles), 2)
+        finally:
+            job.cancel()
+
+    def test_output_interpolation_is_verified_before_publish(self):
+        from spring_bone.contact_bake import SkirtContactBakeJob
+        from spring_bone.solver import SpringBoneError
+        job = SkirtContactBakeJob(self.arm, 1, 2)
+        while job.phase != "write":
+            job.advance()
+        with patch("spring_bone.contact_bake.triangle_crossings", return_value=1):
+            with self.assertRaises(SpringBoneError):
+                job.run_budgeted()
+        self.assertTrue(job.cancelled)
+        self.assertIs(self.arm.animation_data.action, self.source)
+        self.assertFalse(any(action.name.endswith("_ContactInput") for action in bpy.data.actions))
+
+    def test_approved_seam_weights_can_be_restored_exactly(self):
+        from run_spring_bone_seam_weights import repair_seam_weights, restore_seam_weights
+        from spring_bone.contact_bake import _mesh_token, _skin_weights
+        self.garment.vertex_groups[0].add([0], .01, "REPLACE")
+        self.garment.vertex_groups.new(name="Leg").add([0], .99, "REPLACE")
+        before = _mesh_token(self.garment)
+        with tempfile.TemporaryDirectory(prefix="spring-seam-") as folder:
+            backup = repair_seam_weights(self.arm, self.garment, [0], pathlib.Path(folder) / "weights.json")
+            self.assertEqual([row["index"] for row in backup["vertices"]], [0])
+            self.assertAlmostEqual(float(_skin_weights(self.garment, self.arm, ["Skirt"])[0, 0]), .65, places=6)
+            restore_seam_weights(self.garment, backup)
+        self.assertEqual(_mesh_token(self.garment), before)
+
+    def test_result_panel_does_not_report_previous_action_as_current(self):
+        from spring_bone.panels import SPRING_BONE_PT_result
+        self.arm.sb_settings.result_action_name = "Previous_SkirtContact"
+        labels = []
+        panel = SimpleNamespace(layout=SimpleNamespace(label=lambda **values: labels.append(values["text"])))
+        SPRING_BONE_PT_result.draw(panel, bpy.context)
+        self.assertIn("当前动作没有动态骨骼结果", labels)
+        self.assertTrue(any("未启用" in text for text in labels))
+        self.assertFalse(any("0 对" in text for text in labels))
+
     def test_contact_bake_preserves_source_rest_weights_and_body_channels(self):
         from spring_bone.contact_bake import SkirtContactBakeJob
         before = self._rows(self.source)

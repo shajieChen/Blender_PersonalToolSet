@@ -45,6 +45,15 @@ class SPRING_BONE_PT_main(Panel):
         if context.scene.sb_target_armature is None:
             layout.label(text=f"当前目标：{target.name}")
         settings = target.sb_settings
+        if target.animation_data is not None:
+            action_row = layout.row()
+            action_row.enabled = not _running()
+            action_row.prop(target.animation_data, "action", text="当前动作")
+            action = target.animation_data.action
+            if action is not None and not action.get("sb_skin_contact"):
+                layout.label(text="当前动作未进行裙面防穿修正", icon="ERROR")
+            elif action is not None and action.get("sb_contact_coverage") != "all_garment_faces":
+                layout.label(text="旧检测范围，请重新修正当前动作", icon="ERROR")
         if settings.schema_version != 1:
             layout.label(text="配置版本无法读取", icon="ERROR")
             return
@@ -182,16 +191,23 @@ class SPRING_BONE_PT_result(Panel):
         return target_armature(context) is not None
 
     def draw(self, context):
-        settings = target_armature(context).sb_settings
+        target = target_armature(context)
+        settings = target.sb_settings
         layout = self.layout
-        if not settings.result_action_name:
-            layout.label(text="尚未生成结果")
+        action = target.animation_data.action if target.animation_data else None
+        if action is None or not action.get("sb_generated"):
+            layout.label(text="当前动作没有动态骨骼结果", icon="ERROR")
+            if settings.result_action_name:
+                layout.label(text=f"上次结果（未启用）：{settings.result_action_name}")
             return
-        layout.label(text=settings.result_action_name, icon="ACTION")
-        layout.label(text=f"范围：{settings.result_start} - {settings.result_end}")
-        action = bpy.data.actions.get(settings.result_action_name)
+        layout.label(text=action.name, icon="ACTION")
+        layout.label(text=f"范围：{action.get('sb_frame_start', settings.result_start)} - {action.get('sb_frame_end', settings.result_end)}")
         if action is not None and action.get("sb_skin_contact"):
+            if action.get("sb_contact_coverage") != "all_garment_faces":
+                layout.label(text="旧结果未检查完整边界与帧间，请重新修正", icon="ERROR")
+                return
             layout.label(text=f"采样裙面穿插：{action.get('sb_contact_triangle_pairs', 0)} 对")
+            layout.label(text=f"复核步长：{action.get('sb_contact_validation_step', 0):g} 帧")
             layout.label(text="修正已写入骨骼关键帧，可随 FBX 导出")
             repaired = action.get("sb_quaternion_sign_repairs", 0)
             if repaired:
@@ -222,5 +238,7 @@ class SPRING_BONE_PT_contact(Panel):
         layout.prop(settings, "contact_frame_step")
         layout.prop(settings, "contact_root_offset_m")
         layout.label(text="检查碰撞骨及其子骨的身体蒙皮")
+        layout.label(text="包含同角色所有受动态链驱动的网格")
+        layout.label(text="生成后细分复核，穿插时加密关键帧")
         layout.label(text="保留裙长，将活动动作修正为新骨骼动作")
         layout.operator("spring_bone.contact_bake")
