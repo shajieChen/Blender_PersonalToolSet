@@ -1,4 +1,6 @@
 import math
+import pathlib
+import sys
 import unittest
 
 import bpy
@@ -68,10 +70,9 @@ class SpringBoneAnimation(unittest.TestCase):
             if action.name in bpy.data.actions:
                 bpy.data.actions.remove(action, do_unlink=True)
 
-    def test_workspace_file_is_this_repo(self):
-        path = self.spring.__file__.replace("\\", "/")
-        self.assertIn("Blender_Plugin/spring_bone/", path)
-        self.assertNotIn("/humanoid_retarget/", path)
+    def test_package_file_matches_requested_source(self):
+        package_root = pathlib.Path(bpy.utils.user_resource("SCRIPTS")) / "addons" if "--installed" in sys.argv else pathlib.Path(__file__).resolve().parents[1]
+        self.assertEqual(pathlib.Path(self.spring.__file__).resolve().parent, (package_root / "spring_bone").resolve())
         print("SPRING_BONE_FILE", self.spring.__file__)
 
     def test_sample_does_not_write_and_bake_keeps_source(self):

@@ -1,0 +1,601 @@
+{
+  "schema_version": 1,
+  "presets": [
+    {
+      "schema_version": 1,
+      "id": "skirt_balanced",
+      "label": "裙摆 · 稳定",
+      "kind": "chain",
+      "match_tokens": [
+        "skirt",
+        "qunzi",
+        "裙"
+      ],
+      "hit_radius_ratio": 0.06,
+      "parameters": {
+        "stiffness": 6.0,
+        "drag_force": 0.45,
+        "gravity_power": 2.2,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 70.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      }
+    },
+    {
+      "schema_version": 1,
+      "id": "skirt_soft",
+      "label": "裙摆 · 柔软",
+      "kind": "chain",
+      "match_tokens": [
+        "skirt",
+        "qunzi",
+        "裙"
+      ],
+      "hit_radius_ratio": 0.06,
+      "parameters": {
+        "stiffness": 2.0,
+        "drag_force": 0.5,
+        "gravity_power": 1.0,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 85.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      }
+    },
+    {
+      "schema_version": 1,
+      "id": "hair",
+      "label": "头发 · 柔顺",
+      "kind": "chain",
+      "match_tokens": [
+        "hair",
+        "kami",
+        "头发",
+        "髪",
+        "liuhai",
+        "toufa",
+        "houfa"
+      ],
+      "hit_radius_ratio": 0.06,
+      "parameters": {
+        "stiffness": 1.5,
+        "drag_force": 0.45,
+        "gravity_power": 0.3,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 75.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      }
+    },
+    {
+      "schema_version": 1,
+      "id": "tail",
+      "label": "尾巴 · 弹性",
+      "kind": "chain",
+      "match_tokens": [
+        "tail",
+        "weiba",
+        "尾"
+      ],
+      "hit_radius_ratio": 0.06,
+      "parameters": {
+        "stiffness": 2.5,
+        "drag_force": 0.3,
+        "gravity_power": 0.8,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 65.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      }
+    },
+    {
+      "schema_version": 1,
+      "id": "humanoid_lower",
+      "label": "人形 · 下身（裙摆）",
+      "kind": "collider",
+      "colliders": [
+        {
+          "role": "hips",
+          "shape": "SPHERE",
+          "radius_ratio": 0.55,
+          "head_fraction": [
+            0.0,
+            0.25,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "radius_span": [
+            "thigh_l",
+            "thigh_r"
+          ]
+        },
+        {
+          "role": "thigh_l",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.2,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "shin_l",
+          "bone_aliases": [
+            "upper_leg.L",
+            "UpperLeg_L",
+            "LeftUpperLeg"
+          ]
+        },
+        {
+          "role": "thigh_r",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.2,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "shin_r",
+          "bone_aliases": [
+            "upper_leg.R",
+            "UpperLeg_R",
+            "RightUpperLeg"
+          ]
+        },
+        {
+          "role": "shin_l",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.15,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "foot_l",
+          "bone_aliases": [
+            "lower_leg.L",
+            "LowerLeg_L",
+            "LeftLowerLeg"
+          ]
+        },
+        {
+          "role": "shin_r",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.15,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "foot_r",
+          "bone_aliases": [
+            "lower_leg.R",
+            "LowerLeg_R",
+            "RightLowerLeg"
+          ]
+        },
+        {
+          "role": "foot_l",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.3,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "toe_l"
+        },
+        {
+          "role": "foot_r",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.3,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "toe_r"
+        }
+      ]
+    },
+    {
+      "schema_version": 1,
+      "id": "humanoid_upper",
+      "label": "人形 · 头肩（头发）",
+      "kind": "collider",
+      "colliders": [
+        {
+          "role": "head",
+          "shape": "SPHERE",
+          "radius_ratio": 0.65,
+          "head_fraction": [
+            0.0,
+            0.25,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ]
+        },
+        {
+          "role": "chest",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.45,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "radius_span": [
+            "upperarm_l",
+            "upperarm_r"
+          ],
+          "end_role": "neck"
+        },
+        {
+          "role": "upperarm_l",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.22,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "forearm_l"
+        },
+        {
+          "role": "upperarm_r",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.22,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "forearm_r"
+        }
+      ]
+    },
+    {
+      "schema_version": 1,
+      "id": "humanoid_full",
+      "label": "人形 · 全身",
+      "kind": "collider",
+      "colliders": [
+        {
+          "role": "hips",
+          "shape": "SPHERE",
+          "radius_ratio": 0.55,
+          "head_fraction": [
+            0.0,
+            0.25,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "radius_span": [
+            "thigh_l",
+            "thigh_r"
+          ]
+        },
+        {
+          "role": "thigh_l",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.2,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "shin_l",
+          "bone_aliases": [
+            "upper_leg.L",
+            "UpperLeg_L",
+            "LeftUpperLeg"
+          ]
+        },
+        {
+          "role": "thigh_r",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.2,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "shin_r",
+          "bone_aliases": [
+            "upper_leg.R",
+            "UpperLeg_R",
+            "RightUpperLeg"
+          ]
+        },
+        {
+          "role": "shin_l",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.15,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "foot_l",
+          "bone_aliases": [
+            "lower_leg.L",
+            "LowerLeg_L",
+            "LeftLowerLeg"
+          ]
+        },
+        {
+          "role": "shin_r",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.15,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "foot_r",
+          "bone_aliases": [
+            "lower_leg.R",
+            "LowerLeg_R",
+            "RightLowerLeg"
+          ]
+        },
+        {
+          "role": "foot_l",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.3,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "toe_l"
+        },
+        {
+          "role": "foot_r",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.3,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "toe_r"
+        },
+        {
+          "role": "head",
+          "shape": "SPHERE",
+          "radius_ratio": 0.65,
+          "head_fraction": [
+            0.0,
+            0.25,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ]
+        },
+        {
+          "role": "chest",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.45,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "radius_span": [
+            "upperarm_l",
+            "upperarm_r"
+          ],
+          "end_role": "neck"
+        },
+        {
+          "role": "upperarm_l",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.22,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "forearm_l"
+        },
+        {
+          "role": "upperarm_r",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.22,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "forearm_r"
+        },
+        {
+          "role": "spine",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.5,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "radius_span": [
+            "thigh_l",
+            "thigh_r"
+          ],
+          "end_role": "chest"
+        },
+        {
+          "role": "forearm_l",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.18,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "hand_l"
+        },
+        {
+          "role": "forearm_r",
+          "shape": "CAPSULE",
+          "radius_ratio": 0.18,
+          "head_fraction": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "tail_fraction": [
+            0.0,
+            0.9,
+            0.0
+          ],
+          "end_role": "hand_r"
+        }
+      ]
+    }
+  ]
+}

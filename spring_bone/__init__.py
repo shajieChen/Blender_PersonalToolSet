@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Spring Bone",
     "author": "Blender Plugin",
-    "version": (1, 0, 7),
+    "version": (1, 0, 8),
     "blender": (5, 1, 2),
     "location": "View3D > Sidebar > 动态骨骼",
     "description": "为已有骨骼的裙摆、发束和饰物生成预览并烘焙二次运动",
@@ -10,10 +10,10 @@ bl_info = {
 
 import bpy
 
-from . import gizmos, operators, panels, properties
+from . import gizmos, operators, panels, preset_operators, properties
 from .targets import scene_armature
 
-_CLASSES = (
+_CLASSES = preset_operators.CLASSES + (
     properties.SpringBoneBoneName,
     properties.SpringBoneChain,
     properties.SpringBoneCollider,
@@ -31,6 +31,7 @@ _CLASSES = (
     panels.SPRING_BONE_UL_chains,
     panels.SPRING_BONE_UL_colliders,
     panels.SPRING_BONE_PT_main,
+    panels.SPRING_BONE_PT_presets,
     panels.SPRING_BONE_PT_chains,
     panels.SPRING_BONE_PT_colliders,
     panels.SPRING_BONE_PT_contact,

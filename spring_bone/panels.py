@@ -79,6 +79,39 @@ class SPRING_BONE_PT_main(Panel):
             layout.label(text=message)
 
 
+class SPRING_BONE_PT_presets(Panel):
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_parent_id = "SPRING_BONE_PT_main"
+    bl_label = "预设与自动匹配"
+    bl_order = -1
+
+    @classmethod
+    def poll(cls, context):
+        return target_armature(context) is not None
+
+    def draw(self, context):
+        layout = self.layout
+        layout.enabled = active_session() is None
+        settings = target_armature(context).sb_settings
+        box = layout.box()
+        box.prop(settings, "chain_preset")
+        box.operator("spring_bone.apply_preset", text="识别匹配骨骼链").operation = "CHAINS"
+        row = box.row()
+        row.enabled = bool(settings.chains)
+        row.operator("spring_bone.apply_preset", text="仅应用当前链参数").operation = "PARAMETERS"
+        box = layout.box()
+        box.prop(settings, "collider_preset")
+        box.operator("spring_bone.apply_preset", text="匹配人形碰撞体").operation = "COLLIDERS"
+        box.label(text="复用人形识别；尺寸按骨长估算")
+        box = layout.box()
+        box.prop(settings, "character_preset")
+        box.operator("spring_bone.apply_preset", text="应用已保存角色配置").operation = "CHARACTER"
+        box.operator("spring_bone.save_preset", text="保存当前配置为预设")
+        box.operator("spring_bone.refresh_presets", text="刷新预设列表", icon="FILE_REFRESH")
+        layout.label(text="先核对目标骨架；匹配后可逐项取消")
+
+
 class SPRING_BONE_PT_chains(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"

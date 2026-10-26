@@ -11,6 +11,8 @@ from bpy.props import (
 )
 from bpy.types import PropertyGroup
 
+from .presets import preset_items
+
 
 class SpringBoneBoneName(PropertyGroup):
     name: StringProperty(name="骨骼", default="")
@@ -56,6 +58,9 @@ class SpringBoneCollider(PropertyGroup):
 
 class SpringBoneSettings(PropertyGroup):
     schema_version: IntProperty(name="版本", default=1)
+    chain_preset: EnumProperty(name="链预设", items=lambda self, context: preset_items("chain"))
+    collider_preset: EnumProperty(name="碰撞体预设", items=lambda self, context: preset_items("collider"))
+    character_preset: EnumProperty(name="角色配置", items=lambda self, context: preset_items("character"))
     show_gizmos: BoolProperty(name="显示动态骨骼与碰撞体", default=False, description="青色显示动态链，黄色显示当前链，粉色显示碰撞范围")
     chains: CollectionProperty(type=SpringBoneChain)
     colliders: CollectionProperty(type=SpringBoneCollider)
