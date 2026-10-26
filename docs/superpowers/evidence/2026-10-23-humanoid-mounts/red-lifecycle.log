@@ -1,0 +1,144 @@
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+test_bone_rename_is_native_and_missing_bone_can_detach (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_bone_rename_is_native_and_missing_bone_can_detach) ... --------------------------------------------------------------------
+Failed to add relation "Bone Parent"
+Could not find op_from: ComponentKey(OBHuman, BONE, 'RenamedHand')
+
+Trace:
+
+Depth    Type                     Name
+-----    ----                     ----
+1        Object                   Mount_hand_r
+
+00:00.688  object           | WARNING Parent Bone: 'RenamedHand' for Object: 'Mount_hand_r' doesn't exist
+ERROR
+test_copy_and_rename_do_not_copy_attachments (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_copy_and_rename_do_not_copy_attachments) ... FAIL
+test_delete_keeps_weapons_and_foreign_objects (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_delete_keeps_weapons_and_foreign_objects) ... FAIL
+test_delete_preflight_does_not_partially_detach (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_delete_preflight_does_not_partially_detach) ... FAIL
+test_failed_reanchor_keeps_native_parent_and_transform (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_failed_reanchor_keeps_native_parent_and_transform) ... FAIL
+test_five_parts_and_two_owners_are_isolated (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_five_parts_and_two_owners_are_isolated) ... FAIL
+test_mark_existing_grip_is_explicit (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_mark_existing_grip_is_explicit) ... FAIL
+test_partial_grip_preparation_restores_all_parts (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_partial_grip_preparation_restores_all_parts) ... ok
+test_partial_registration_failure_restores_registered_classes (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_partial_registration_failure_restores_registered_classes) ... ok
+test_reanchor_preserves_mount_and_attachment_world_pose (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_reanchor_preserves_mount_and_attachment_world_pose) ... FAIL
+test_repeated_registration_and_disable_keep_binding (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_repeated_registration_and_disable_keep_binding) ... ERROR
+test_unknown_schema_and_name_prefix_do_not_claim_user_data (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_unknown_schema_and_name_prefix_do_not_claim_user_data) ... ok
+
+======================================================================
+ERROR: test_bone_rename_is_native_and_missing_bone_can_detach (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_bone_rename_is_native_and_missing_bone_can_detach)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 109, in test_bone_rename_is_native_and_missing_bone_can_detach
+    self.weapons.detach_weapon(root)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\weapons.py", line 75, in detach_weapon
+    validate_grip(root)
+    ~~~~~~~~~~~~~^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\weapons.py", line 27, in validate_grip
+    validate_mount(obj.parent)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\mounts.py", line 132, in validate_mount
+    raise HumanoidMountError("挂点对应骨骼已不存在")
+humanoid_mounts.mounts.HumanoidMountError: 挂点对应骨骼已不存在
+
+======================================================================
+ERROR: test_repeated_registration_and_disable_keep_binding (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_repeated_registration_and_disable_keep_binding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 167, in test_repeated_registration_and_disable_keep_binding
+    self.package.register()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "H:\Blender_Plugin\humanoid_mounts\__init__.py", line 22, in register
+    bpy.utils.register_class(cls)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+ValueError: register_class(...): already registered as a subclass 'HumanoidMountSettings'
+
+======================================================================
+FAIL: test_copy_and_rename_do_not_copy_attachments (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_copy_and_rename_do_not_copy_attachments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 41, in test_copy_and_rename_do_not_copy_attachments
+    self.require_api("copy_mount")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 24, in require_api
+    self.assertTrue(callable(getattr(self.mounts, name, None)), "Missing mount management contract: " + name)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Missing mount management contract: copy_mount
+
+======================================================================
+FAIL: test_delete_keeps_weapons_and_foreign_objects (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_delete_keeps_weapons_and_foreign_objects)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 69, in test_delete_keeps_weapons_and_foreign_objects
+    self.require_api("delete_mount")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 24, in require_api
+    self.assertTrue(callable(getattr(self.mounts, name, None)), "Missing mount management contract: " + name)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Missing mount management contract: delete_mount
+
+======================================================================
+FAIL: test_delete_preflight_does_not_partially_detach (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_delete_preflight_does_not_partially_detach)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 84, in test_delete_preflight_does_not_partially_detach
+    self.require_api("delete_mount")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 24, in require_api
+    self.assertTrue(callable(getattr(self.mounts, name, None)), "Missing mount management contract: " + name)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Missing mount management contract: delete_mount
+
+======================================================================
+FAIL: test_failed_reanchor_keeps_native_parent_and_transform (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_failed_reanchor_keeps_native_parent_and_transform)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 177, in test_failed_reanchor_keeps_native_parent_and_transform
+    self.require_api("reanchor_mount")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 24, in require_api
+    self.assertTrue(callable(getattr(self.mounts, name, None)), "Missing mount management contract: " + name)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Missing mount management contract: reanchor_mount
+
+======================================================================
+FAIL: test_five_parts_and_two_owners_are_isolated (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_five_parts_and_two_owners_are_isolated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 27, in test_five_parts_and_two_owners_are_isolated
+    self.require_api("mounts_for_armature")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 24, in require_api
+    self.assertTrue(callable(getattr(self.mounts, name, None)), "Missing mount management contract: " + name)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Missing mount management contract: mounts_for_armature
+
+======================================================================
+FAIL: test_mark_existing_grip_is_explicit (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_mark_existing_grip_is_explicit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 187, in test_mark_existing_grip_is_explicit
+    self.assertTrue(callable(getattr(self.weapons, "register_grip_root", None)))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_reanchor_preserves_mount_and_attachment_world_pose (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_reanchor_preserves_mount_and_attachment_world_pose)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 58, in test_reanchor_preserves_mount_and_attachment_world_pose
+    self.require_api("reanchor_mount")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_lifecycle.py", line 24, in require_api
+    self.assertTrue(callable(getattr(self.mounts, name, None)), "Missing mount management contract: " + name)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Missing mount management contract: reanchor_mount
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.130s
+
+FAILED (failures=7, errors=2)
+HUMANOID_MOUNTS_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_lifecycle.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_SELECTED 12
+HUMANOID_MOUNTS_TEST_FAIL

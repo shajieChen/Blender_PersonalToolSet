@@ -1,0 +1,9 @@
+HUMANOID_MOUNTS_STATIC_OK 11
+Info: Saved as "humanoid-mounts-preview.blend"
+HUMANOID_MOUNTS_DEMO H:\Blender_Plugin\tests\out\humanoid_mounts\humanoid-mounts-preview.blend
+HUMANOID_MOUNTS_IDENTITY 79084 5.2.1 LTS H:\Blender\5.2.1\portable\scripts\addons\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_UNDO_REDO_OK
+HUMANOID_MOUNTS_UI_DONE 0 0 [] ['AttributeError(\'bpy_struct: attribute "active_panel_category" from "Region" is read-only\')']
+00:06.782  blend            | Saved session recovery to "H:\Blender_Plugin\tests\out\humanoid_mounts\runtime-temp\quit.blend"
+
+Blender quit

@@ -1,0 +1,8 @@
+HUMANOID_MOUNTS_SIDEBAR_RNA [('HEADER', ['active_panel_category']), ('TOOL_HEADER', ['active_panel_category']), ('ASSET_SHELF', ['active_panel_category']), ('ASSET_SHELF_HEADER', ['active_panel_category']), ('TOOLS', ['active_panel_category']), ('UI', ['active_panel_category']), ('HUD', ['active_panel_category']), ('WINDOW', ['active_panel_category'])]
+Info: Saved as "right-hand-preview.blend"
+HUMANOID_MOUNTS_DEMO H:\Blender_Plugin\tests\out\humanoid_mounts\right-hand-preview.blend
+HUMANOID_MOUNTS_IDENTITY 79920 5.2.1 LTS H:\Blender_Plugin\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_UI_DONE 16 2 []
+00:14.000  blend            | Saved session recovery to "C:\Users\CHENSH~2\AppData\Local\Temp\quit.blend"
+
+Blender quit

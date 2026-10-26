@@ -1,0 +1,13 @@
+HUMANOID_MOUNTS_STATIC_OK 11
+Info: Saved as "humanoid-mounts-preview.blend"
+HUMANOID_MOUNTS_DEMO H:\Blender_Plugin\tests\out\humanoid_mounts\humanoid-mounts-preview.blend
+HUMANOID_MOUNTS_IDENTITY 24448 5.2.1 LTS H:\Blender\5.2.1\portable\scripts\addons\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_UNDO_REDO_OK
+Warning: 1 × Draw window and swap: 8.0301 ms, average: 8.03010003 ms
+Info: Saved as "humanoid-mounts-preview.blend"
+Warning: 1 × Draw window and swap: 6.2861 ms, average: 6.28610002 ms
+Warning: 1 × Draw window and swap: 6.1425 ms, average: 6.14250003 ms
+HUMANOID_MOUNTS_UI_DONE 21 2 ['Undo/Redo'] []
+00:10.359  blend            | Saved session recovery to "H:\Blender_Plugin\tests\out\humanoid_mounts\runtime-temp\quit.blend"
+
+Blender quit

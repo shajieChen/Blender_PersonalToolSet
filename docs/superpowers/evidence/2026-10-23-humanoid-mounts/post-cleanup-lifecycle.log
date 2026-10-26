@@ -1,0 +1,54 @@
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+test_bone_rename_is_native_and_missing_bone_can_detach (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_bone_rename_is_native_and_missing_bone_can_detach) ... --------------------------------------------------------------------
+Failed to add relation "Bone Parent"
+Could not find op_from: ComponentKey(OBHuman, BONE, 'RenamedHand')
+
+Trace:
+
+Depth    Type                     Name
+-----    ----                     ----
+1        Object                   Mount_hand_r
+
+00:00.750  object           | WARNING Parent Bone: 'RenamedHand' for Object: 'Mount_hand_r' doesn't exist
+--------------------------------------------------------------------
+Failed to add relation "Bone Parent"
+Could not find op_from: ComponentKey(OBHuman, BONE, 'RenamedHand')
+
+Trace:
+
+Depth    Type                     Name
+-----    ----                     ----
+1        Object                   Mount_hand_r
+
+ok
+test_copy_and_rename_do_not_copy_attachments (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_copy_and_rename_do_not_copy_attachments) ... ok
+test_create_failure_after_allocation_removes_only_new_mount (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_create_failure_after_allocation_removes_only_new_mount) ... ok
+test_delete_keeps_weapons_and_foreign_objects (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_delete_keeps_weapons_and_foreign_objects) ... ok
+test_delete_midway_fault_restores_every_child (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_delete_midway_fault_restores_every_child) ... ok
+test_delete_preflight_does_not_partially_detach (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_delete_preflight_does_not_partially_detach) ... ok
+test_failed_reanchor_keeps_native_parent_and_transform (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_failed_reanchor_keeps_native_parent_and_transform) ... ok
+test_five_parts_and_two_owners_are_isolated (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_five_parts_and_two_owners_are_isolated) ... ok
+test_mark_existing_grip_is_explicit (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_mark_existing_grip_is_explicit) ... ok
+test_operator_right_hand_workflow_uses_cursor_without_switching_human (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_operator_right_hand_workflow_uses_cursor_without_switching_human) ... ok
+test_operators_manage_mounts_through_current_human (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_operators_manage_mounts_through_current_human) ... ok
+test_parent_cycle_is_rejected_before_native_mutation (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_parent_cycle_is_rejected_before_native_mutation) ... ok
+test_partial_grip_preparation_restores_all_parts (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_partial_grip_preparation_restores_all_parts) ... ok
+test_partial_registration_failure_restores_registered_classes (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_partial_registration_failure_restores_registered_classes) ... ok
+test_reanchor_midway_failure_restores_parent_channels (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_reanchor_midway_failure_restores_parent_channels) ... ok
+test_reanchor_preserves_mount_and_attachment_world_pose (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_reanchor_preserves_mount_and_attachment_world_pose) ... ok
+test_repeated_registration_and_disable_keep_binding (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_repeated_registration_and_disable_keep_binding) ... ok
+test_ui_cannot_detach_another_humans_bound_weapon (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_ui_cannot_detach_another_humans_bound_weapon) ... ok
+test_ui_offset_poll_rejects_other_human_and_part (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_ui_offset_poll_rejects_other_human_and_part) ... ok
+test_ui_rejects_a_mount_from_another_selected_human (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_ui_rejects_a_mount_from_another_selected_human) ... ok
+test_unknown_schema_and_name_prefix_do_not_claim_user_data (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_unknown_schema_and_name_prefix_do_not_claim_user_data) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.161s
+
+OK
+HUMANOID_MOUNTS_STATIC_OK 11
+HUMANOID_MOUNTS_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_lifecycle.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_SELECTED 21
+HUMANOID_MOUNTS_TEST_OK

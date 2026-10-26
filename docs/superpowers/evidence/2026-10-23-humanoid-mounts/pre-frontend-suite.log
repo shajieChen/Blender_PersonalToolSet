@@ -1,0 +1,61 @@
+test_binding_does_not_write_pose_action_or_mesh_data (test_humanoid_mounts_coexistence.MountCoexistenceTests.test_binding_does_not_write_pose_action_or_mesh_data) ... ok
+test_final_bone_constraint_output_drives_mount (test_humanoid_mounts_coexistence.MountCoexistenceTests.test_final_bone_constraint_output_drives_mount) ... ok
+test_no_mount_callbacks_or_animation_state_are_added (test_humanoid_mounts_coexistence.MountCoexistenceTests.test_no_mount_callbacks_or_animation_state_are_added) ... ok
+test_other_plugins_can_be_enabled_without_shared_state (test_humanoid_mounts_coexistence.MountCoexistenceTests.test_other_plugins_can_be_enabled_without_shared_state) ... ok
+test_save_and_reopen_in_a_new_process_preserves_native_bindings (test_humanoid_mounts_coexistence.MountCoexistenceTests.test_save_and_reopen_in_a_new_process_preserves_native_bindings) ... ok
+test_weapon_collection_append_has_no_old_character_reference (test_humanoid_mounts_coexistence.MountCoexistenceTests.test_weapon_collection_append_has_no_old_character_reference) ... ok
+test_bone_rename_is_native_and_missing_bone_can_detach (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_bone_rename_is_native_and_missing_bone_can_detach) ... --------------------------------------------------------------------
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+Failed to add relation "Bone Parent"
+Could not find op_from: ComponentKey(OBHuman, BONE, 'RenamedHand')
+
+Trace:
+
+Depth    Type                     Name
+-----    ----                     ----
+1        Object                   Mount_hand_r
+
+00:01.735  object           | WARNING Parent Bone: 'RenamedHand' for Object: 'Mount_hand_r' doesn't exist
+--------------------------------------------------------------------
+Failed to add relation "Bone Parent"
+Could not find op_from: ComponentKey(OBHuman, BONE, 'RenamedHand')
+
+Trace:
+
+Depth    Type                     Name
+-----    ----                     ----
+1        Object                   Mount_hand_r
+
+ok
+test_copy_and_rename_do_not_copy_attachments (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_copy_and_rename_do_not_copy_attachments) ... ok
+test_delete_keeps_weapons_and_foreign_objects (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_delete_keeps_weapons_and_foreign_objects) ... ok
+test_delete_midway_fault_restores_every_child (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_delete_midway_fault_restores_every_child) ... ok
+test_delete_preflight_does_not_partially_detach (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_delete_preflight_does_not_partially_detach) ... ok
+test_failed_reanchor_keeps_native_parent_and_transform (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_failed_reanchor_keeps_native_parent_and_transform) ... ok
+test_five_parts_and_two_owners_are_isolated (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_five_parts_and_two_owners_are_isolated) ... ok
+test_mark_existing_grip_is_explicit (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_mark_existing_grip_is_explicit) ... ok
+test_operators_manage_mounts_through_current_human (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_operators_manage_mounts_through_current_human) ... ok
+test_partial_grip_preparation_restores_all_parts (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_partial_grip_preparation_restores_all_parts) ... ok
+test_partial_registration_failure_restores_registered_classes (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_partial_registration_failure_restores_registered_classes) ... ok
+test_reanchor_preserves_mount_and_attachment_world_pose (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_reanchor_preserves_mount_and_attachment_world_pose) ... ok
+test_repeated_registration_and_disable_keep_binding (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_repeated_registration_and_disable_keep_binding) ... ok
+test_ui_rejects_a_mount_from_another_selected_human (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_ui_rejects_a_mount_from_another_selected_human) ... ok
+test_unknown_schema_and_name_prefix_do_not_claim_user_data (test_humanoid_mounts_lifecycle.MountLifecycleTests.test_unknown_schema_and_name_prefix_do_not_claim_user_data) ... ok
+test_create_at_final_bone_origin_preserves_relative_parenting (test_humanoid_mounts_transform.MountTransformTests.test_create_at_final_bone_origin_preserves_relative_parenting) ... ok
+test_grip_preparation_preserves_parts_and_source_data (test_humanoid_mounts_transform.MountTransformTests.test_grip_preparation_preserves_parts_and_source_data) ... ok
+test_invalid_bone_and_singular_input_do_not_create_objects (test_humanoid_mounts_transform.MountTransformTests.test_invalid_bone_and_singular_input_do_not_create_objects) ... ok
+test_keep_world_and_detach_preserve_current_pose_and_delta (test_humanoid_mounts_transform.MountTransformTests.test_keep_world_and_detach_preserve_current_pose_and_delta) ... ok
+test_snap_preserves_grip_calibration_and_follows_animation (test_humanoid_mounts_transform.MountTransformTests.test_snap_preserves_grip_calibration_and_follows_animation) ... ok
+test_unsupported_weapon_state_is_rejected_without_mutation (test_humanoid_mounts_transform.MountTransformTests.test_unsupported_weapon_state_is_rejected_without_mutation) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 1.178s
+
+OK
+HUMANOID_MOUNTS_STATIC_OK 11
+HUMANOID_MOUNTS_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_*.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+Info: Saved as "persistence.blend"
+HUMANOID_MOUNTS_SELECTED 27
+HUMANOID_MOUNTS_TEST_OK

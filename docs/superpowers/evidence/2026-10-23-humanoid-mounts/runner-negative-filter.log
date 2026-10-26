@@ -1,0 +1,12 @@
+
+----------------------------------------------------------------------
+Ran 0 tests in 0.000s
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+NO TESTS RAN
+HUMANOID_MOUNTS_STATIC_OK 11
+HUMANOID_MOUNTS_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+HUMANOID_MOUNTS_FILTER no_such_humanoid_mount_case.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_SELECTED 0
+HUMANOID_MOUNTS_TEST_FAIL

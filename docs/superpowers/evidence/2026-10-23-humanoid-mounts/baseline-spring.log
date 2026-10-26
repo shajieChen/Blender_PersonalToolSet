@@ -1,0 +1,88 @@
+test_distant_sphere_has_no_penetration_and_cone_limits_direction (test_spring_bone_animation.SpringBoneAnimation.test_distant_sphere_has_no_penetration_and_cone_limits_direction) ... ok
+test_endpoint_step_does_not_replace_grid_state (test_spring_bone_animation.SpringBoneAnimation.test_endpoint_step_does_not_replace_grid_state) ... ok
+test_euler_stays_continuous_near_gimbal (test_spring_bone_animation.SpringBoneAnimation.test_euler_stays_continuous_near_gimbal) ... ok
+test_same_tick_matches_across_frame_rates (test_spring_bone_animation.SpringBoneAnimation.test_same_tick_matches_across_frame_rates) ... ok
+test_sample_does_not_write_and_bake_keeps_source (test_spring_bone_animation.SpringBoneAnimation.test_sample_does_not_write_and_bake_keeps_source) ... ok
+test_sample_restores_unkeyed_basis (test_spring_bone_animation.SpringBoneAnimation.test_sample_restores_unkeyed_basis) ... ok
+test_weight_zero_keeps_local_rotation (test_spring_bone_animation.SpringBoneAnimation.test_weight_zero_keeps_local_rotation) ... ok
+test_workspace_file_is_this_repo (test_spring_bone_animation.SpringBoneAnimation.test_workspace_file_is_this_repo) ... ok
+test_capsule_includes_end_caps (test_spring_bone_gizmos.SpringBoneGizmos.test_capsule_includes_end_caps) ... ok
+test_degenerate_capsule_is_sphere (test_spring_bone_gizmos.SpringBoneGizmos.test_degenerate_capsule_is_sphere) ... ok
+test_depth_cues_remain_visible_through_meshes (test_spring_bone_gizmos.SpringBoneGizmos.test_depth_cues_remain_visible_through_meshes) ... ok
+test_depth_groups_distinguish_near_and_far (test_spring_bone_gizmos.SpringBoneGizmos.test_depth_groups_distinguish_near_and_far) ... ok
+test_disabled_drawing_does_not_evaluate (test_spring_bone_gizmos.SpringBoneGizmos.test_disabled_drawing_does_not_evaluate) ... ok
+test_geometry_rejects_invalid_radius (test_spring_bone_gizmos.SpringBoneGizmos.test_geometry_rejects_invalid_radius) ... ok
+test_properties_panels_and_unit_conversion (test_spring_bone_gizmos.SpringBoneGizmos.test_properties_panels_and_unit_conversion) ... ok
+test_register_remove_handlers_are_idempotent (test_spring_bone_gizmos.SpringBoneGizmos.test_register_remove_handlers_are_idempotent) ... ok
+test_sphere_matches_collision_radius (test_spring_bone_gizmos.SpringBoneGizmos.test_sphere_matches_collision_radius) ... ok
+test_bake_only_writes_selected_character (test_spring_bone_gizmos.SpringBoneTargets.test_bake_only_writes_selected_character) ... ok
+test_explicit_target_does_not_follow_active_rig (test_spring_bone_gizmos.SpringBoneTargets.test_explicit_target_does_not_follow_active_rig) ... ok
+test_mesh_uses_its_armature_when_no_target_selected (test_spring_bone_gizmos.SpringBoneTargets.test_mesh_uses_its_armature_when_no_target_selected) ... ok
+test_other_character_cannot_publish_existing_preview (test_spring_bone_gizmos.SpringBoneTargets.test_other_character_cannot_publish_existing_preview) ... ok
+test_trim_zero_weight_tip_preserves_skin_and_bones (test_spring_bone_gizmos.SpringBoneTargets.test_trim_zero_weight_tip_preserves_skin_and_bones) ... ok
+test_unbound_chain_is_not_deleted (test_spring_bone_gizmos.SpringBoneTargets.test_unbound_chain_is_not_deleted) ... ok
+test_weighted_tip_keeps_unweighted_parent_bones (test_spring_bone_gizmos.SpringBoneTargets.test_weighted_tip_keeps_unweighted_parent_bones) ... ok
+test_add_chain_rejects_gap_branch_and_duplicate (test_spring_bone_lifecycle.SpringBoneLifecycle.test_add_chain_rejects_gap_branch_and_duplicate) ... ok
+test_bake_keeps_result_and_rejects_it_as_input (test_spring_bone_lifecycle.SpringBoneLifecycle.test_bake_keeps_result_and_rejects_it_as_input) ... ok
+test_child_chain_runs_after_parent_chain (test_spring_bone_lifecycle.SpringBoneLifecycle.test_child_chain_runs_after_parent_chain) ... ok
+test_collider_rejects_dynamic_bone_and_removes_display (test_spring_bone_lifecycle.SpringBoneLifecycle.test_collider_rejects_dynamic_bone_and_removes_display) ... ok
+test_escape_cancels_session (test_spring_bone_lifecycle.SpringBoneLifecycle.test_escape_cancels_session) ... ok
+test_faults_restore_and_repeat_cancel (test_spring_bone_lifecycle.SpringBoneLifecycle.test_faults_restore_and_repeat_cancel) ... ok
+test_identity_change_does_not_overwrite_new_action (test_spring_bone_lifecycle.SpringBoneLifecycle.test_identity_change_does_not_overwrite_new_action) ... ok
+test_modal_blocks_edit_and_passes_view (test_spring_bone_lifecycle.SpringBoneLifecycle.test_modal_blocks_edit_and_passes_view) ... ok
+test_one_undo_restores_preview (test_spring_bone_lifecycle.SpringBoneLifecycle.test_one_undo_restores_preview) ... ok
+test_preflight_rejects_constraint_driver_scale_inherit_and_axis (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_constraint_driver_scale_inherit_and_axis) ... ok
+test_preflight_rejects_driver_data_path (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_driver_data_path) ... ok
+test_preflight_rejects_ik_chain_through_sim_bone (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_ik_chain_through_sim_bone) ... ok
+test_preflight_rejects_nonuniform_ancestor_scale (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_nonuniform_ancestor_scale) ... ok
+test_preflight_rejects_other_modal (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_other_modal) ... ok
+test_preflight_rejects_pole_and_armature_targets (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_pole_and_armature_targets) ... ok
+test_preflight_rejects_unsupported_inputs (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preflight_rejects_unsupported_inputs) ... ok
+test_preview_stop_and_second_preview (test_spring_bone_lifecycle.SpringBoneLifecycle.test_preview_stop_and_second_preview) ... ok
+test_register_exposes_settings_and_panel (test_spring_bone_lifecycle.SpringBoneLifecycle.test_register_exposes_settings_and_panel) ... ok
+test_removed_armature_cancels_cleanly (test_spring_bone_lifecycle.SpringBoneLifecycle.test_removed_armature_cancels_cleanly) ... ok
+test_reregister_and_retarget_coexist (test_spring_bone_lifecycle.SpringBoneLifecycle.test_reregister_and_retarget_coexist) ... ok
+test_rest_edit_invalidates_job (test_spring_bone_lifecycle.SpringBoneLifecycle.test_rest_edit_invalidates_job) ... ok
+test_running_job_disables_preview_and_bake (test_spring_bone_lifecycle.SpringBoneLifecycle.test_running_job_disables_preview_and_bake) ... ok
+00:01.937  blend            | Read blend: "H:\Blender_Plugin\tests\out\humanoid_mounts\baseline_spring\lifecycle_reopen.blend"
+test_save_reopen_does_not_autostart (test_spring_bone_lifecycle.SpringBoneLifecycle.test_save_reopen_does_not_autostart) ... ok
+test_scene_change_invalidates_job (test_spring_bone_lifecycle.SpringBoneLifecycle.test_scene_change_invalidates_job) ... ok
+test_second_chain_fault_restores (test_spring_bone_lifecycle.SpringBoneLifecycle.test_second_chain_fault_restores) ... ok
+test_success_cancel_keeps_delivered_action (test_spring_bone_lifecycle.SpringBoneLifecycle.test_success_cancel_keeps_delivered_action) ... ok
+test_unregister_keeps_chains_and_display_empties (test_spring_bone_lifecycle.SpringBoneLifecycle.test_unregister_keeps_chains_and_display_empties) ... ok
+test_antiparallel_swing_is_deterministic (test_spring_bone_solver.SpringBoneSolverContract.test_antiparallel_swing_is_deterministic) ... ok
+test_capsule_mid_end_and_degenerate (test_spring_bone_solver.SpringBoneSolverContract.test_capsule_mid_end_and_degenerate) ... ok
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+test_child_uses_solved_parent (test_spring_bone_solver.SpringBoneSolverContract.test_child_uses_solved_parent) ... ok
+test_cone_boundary_and_clamp (test_spring_bone_solver.SpringBoneSolverContract.test_cone_boundary_and_clamp) ... ok
+test_drag_keeps_inertia_displacement (test_spring_bone_solver.SpringBoneSolverContract.test_drag_keeps_inertia_displacement) ... ok
+test_follow_translation_cancels_shared_delta_only (test_spring_bone_solver.SpringBoneSolverContract.test_follow_translation_cancels_shared_delta_only) ... ok
+test_hand_calculated_tail (test_spring_bone_solver.SpringBoneSolverContract.test_hand_calculated_tail) ... ok
+test_parameter_and_mirror_errors_are_explicit (test_spring_bone_solver.SpringBoneSolverContract.test_parameter_and_mirror_errors_are_explicit) ... ok
+test_quaternion_norm_after_swing (test_spring_bone_solver.SpringBoneSolverContract.test_quaternion_norm_after_swing) ... ok
+test_solver_module_exposes_step_chain (test_spring_bone_solver.SpringBoneSolverContract.test_solver_module_exposes_step_chain) ... ok
+test_sphere_center_uses_last_radial (test_spring_bone_solver.SpringBoneSolverContract.test_sphere_center_uses_last_radial) ... ok
+test_sphere_push_then_length (test_spring_bone_solver.SpringBoneSolverContract.test_sphere_push_then_length) ... ok
+test_tangent_sphere_does_not_push (test_spring_bone_solver.SpringBoneSolverContract.test_tangent_sphere_does_not_push) ... ok
+test_tick_grid_is_independent_of_display_fps (test_spring_bone_solver.SpringBoneSolverContract.test_tick_grid_is_independent_of_display_fps) ... ok
+test_weight_zero_bypasses_and_weight_one_matches (test_spring_bone_solver.SpringBoneSolverContract.test_weight_zero_bypasses_and_weight_one_matches) ... ok
+test_zero_direction_falls_back (test_spring_bone_solver.SpringBoneSolverContract.test_zero_direction_falls_back) ... ok
+
+----------------------------------------------------------------------
+Ran 67 tests in 1.027s
+
+OK
+HUMANOID_MOUNTS_BASELINE_ARTIFACTS H:\Blender_Plugin\tests\out\humanoid_mounts\baseline_spring
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+Error: 请选择连续骨骼
+Error: 选择必须是一条连续链
+Error: 链条不能分支
+Error: BoneA 已在其他链中
+Error: 请改用基础动作
+Error: 碰撞骨不能是动态骨
+SPRING_BONE_UNDO_POLL_FALSE
+Info: Saved as "lifecycle_reopen.blend"
+SPRING_BONE_SELECTED 67
+SPRING_BONE_TEST_OK

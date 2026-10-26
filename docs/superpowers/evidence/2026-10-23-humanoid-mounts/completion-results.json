@@ -1,0 +1,55 @@
+{
+  "status": "Passed",
+  "user_confirmation": "符合目标，继续清理复验",
+  "post_cleanup_tests": [
+    {
+      "name": "transform",
+      "selected": 7,
+      "success_marker": true,
+      "process_exit": 0,
+      "log_sha256": "2df33ee45e010e01a1b5ca45630e1c4a9deaa9004c5550f90eb97947bce30924"
+    },
+    {
+      "name": "lifecycle",
+      "selected": 21,
+      "success_marker": true,
+      "process_exit": 0,
+      "log_sha256": "80f924e95f289627ddd2cbb1f14f989aa1b8be0a40148a1fc16b3397f7956b2d"
+    },
+    {
+      "name": "suite",
+      "selected": 34,
+      "success_marker": true,
+      "process_exit": 0,
+      "log_sha256": "abba40076de5cd377fcaddbb52ddea402f4c413eee7cba6e37b02667803b61fc"
+    },
+    {
+      "name": "pose",
+      "selected": 13,
+      "success_marker": true,
+      "process_exit": 0,
+      "log_sha256": "b4009c09809307f78c0477b722412cc522a4d25a32f6311f8ce81be1af0a7cd9"
+    },
+    {
+      "name": "spring",
+      "selected": 68,
+      "success_marker": true,
+      "process_exit": 0,
+      "log_sha256": "25d6d25ae8f6b44514346cdd3c5059037af55f29533c73dd2966686adff5c2e1"
+    }
+  ],
+  "installed_reopen_objects": 7,
+  "installed_process_exit": 0,
+  "frontend_pid": 51780,
+  "frontend_process_exit": 0,
+  "distinct_played_frames": 16,
+  "screenshots_actually_reviewed": [
+    19,
+    37
+  ],
+  "cleanup_complete": true,
+  "unchanged_product_since_tests": true,
+  "formal_scope": "Blender 5.2.1 LTS; humanoid fixture; rigid attachments",
+  "user_rig": "NotRun",
+  "other_versions": "NotRun"
+}

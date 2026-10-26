@@ -5,11 +5,28 @@
 保存证据 -> 用户核对 -> 清理临时诊断 -> 清理后复验 -> 最终报告
 ```
 
-日期：2026-10-23。状态：待实施。本次只交付实施文档，不创建插件、不安装、不修改 Blender 场景。
+日期：2026-10-23；实施持续至 2026-10-24。状态：已完成实施、用户核对、精确清理及清理后复验。结论限本次 Blender 5.2.1 和程序化人形夹具。
 
-依据：[人形挂点与武器挂载调研](../../design/research_attachment_points.md)。以下文件、符号和命令属于后续实施范围，不代表已存在或已验证。
+依据：[人形挂点与武器挂载调研](../../design/research_attachment_points.md)。以下保留实施步骤与验收要求；实际完成证据见进度表和 final-report.md。
 
 ## 目标
+
+### 当前实施进度
+
+| 项目 | 当前事实与收据 |
+|---|---|
+| 原始基线 | Pose 13 / Spring Bone 67，退出 0；`baseline-pose.log`、`baseline-spring.log` |
+| RED/GREEN | 已取得存在性、骨骼父空间、管理入口、人形归属和空动画容器的可归因 RED，再最小修正；各 `red-*.log` 与后续 GREEN |
+| 功能与合同 | 清理后 34 项通过，无 skip；`post-cleanup-suite.log`；包括五部位新进程重开、Collection Append、按钮闭环、故障恢复和插件共存 |
+| 既有回归 | 清理后 Spring Bone 68 / Pose 13，退出 0；`post-cleanup-spring.log`、`post-cleanup-pose.log`；其他工作更新 Spring 后新增 1 项，原修改保留，输出隔离 |
+| 安装 | 六个源文件精确复制到 5.2.1 portable 的本包目录，哈希匹配；BAT 仅增两行 ASCII，原字节保留；`install-manifest.json` |
+| 安装运行 | 已从安装目录加载、重开及独立启停；`post-cleanup-installed.log` |
+| 前台 | 已验证自然播放和 Undo/Redo，查看两帧五部位/剑盾/折叠面板截图；进程身份、帧变化、退出见 UI 收据与 `visual.md` |
+| 正式收尾 | 用户已确认“符合目标，继续清理复验”；精确清理后聚焦/整套/回归/安装/前台复验全部通过；见 `cleanup.md`、`final-report.md` |
+
+证据目录：`H:\Blender_Plugin\docs\superpowers\evidence\2026-10-23-humanoid-mounts`。兼容结论仅覆盖本次 5.2.1 及程序化人形夹具，用户具体 Rig 未验证。
+
+实施效率补记：前台测试先后暴露工厂设置重置后的上下文、Undo 后重绘、隔离配置首次启动弹窗差异，均保留失败收据后定向修复。后续演示使用独立 Scene、显式重绘、区域上下文和已准备的隔离配置；不原样重跑未修正命令。未新增探子批次。
 
 新增独立的 `humanoid_mounts` 插件。用户选择人形角色及实际骨骼，创建右手、左手、背部、腰部、头部挂点，绑定刚性武器或道具；支持偏移编辑、解除、复制、重命名、删除、Undo、保存重开及原生动画跟随。
 
@@ -225,19 +242,19 @@ fixture 复用 `run_retarget_test.build_biped`，只导入定义、不执行 `ma
 |---|---|---|
 | 文档 | 六段结构、首批闭环、精确文件、读取/探子/编译前计划、用户核对与清理顺序齐全 | Passed，仅文档静态核对 |
 | 环境 | 当前路径 `--version` 退出 0，5.2.1 LTS，hash `9e2066aef7ef` | Passed，仅环境 |
-| Static | 业务命名、无注释、单向依赖、原编码/行尾、无无关 diff，全部入口预检通过 | NotRun |
-| Contract | 可归因 RED 与 GREEN；三个矩阵合同误差不超过 `1e-5`；bone roll、Relative Parenting、原点偏移及统一缩放覆盖 | NotRun |
-| 人形功能 | 五部位创建/编辑/复制/改名/换骨骼/删除，武器根准备、SNAP/KEEP_WORLD、解除、两把武器复用 | NotRun |
-| 数据与失败 | 非支持输入不变；失败回滚精确；正常解除保留当前姿势；用户 Action/slot/权重/rest pose 不变 | NotRun |
-| 生命周期 | 首次注册、部分注册失败、注销后重启、Undo/Redo、删除与加载均无残留或误删 | NotRun |
-| Process | 新旧适用 runner 自然退出 0、选择数大于 0、正确加载路径和成功标记 | NotRun |
-| Runtime | 原生播放跟随、暂停/倒放/跳帧、前台操作、保存重开、独立及共存均通过 | NotRun |
-| Visual | 亲自查看可见人形与武器，掌心校准、手腕旋转、五部位和两把武器无错误跳位；记录限制 | NotRun |
-| 资产与安装 | 无旧角色引用的武器 Collection 可复用；单包安装后真实身份核对通过 | NotRun |
-| 兼容 | 5.2.1 按上述层级验证；未测版本不声明支持 | NotRun |
+| Static | 业务命名、无注释、单向依赖、原编码/行尾、无无关 diff，全部入口预检通过 | Passed，见 static-review.md |
+| Contract | 可归因 RED 与 GREEN；三个矩阵合同误差不超过 `1e-5`；bone roll、Relative Parenting、原点偏移及统一缩放覆盖 | Passed，34 项 |
+| 人形功能 | 五部位创建/编辑/复制/改名/换骨骼/删除，武器根准备、SNAP/KEEP_WORLD、解除、两把武器复用 | Passed，夹具范围 |
+| 数据与失败 | 非支持输入不变；失败回滚精确；正常解除保留当前姿势；用户 Action/slot/权重/rest pose 不变 | Passed，覆盖见测试与生命周期收据 |
+| 生命周期 | 首次注册、部分注册失败、注销后重启、Undo/Redo、删除与加载均无残留或误删 | Passed，后台及前台分别核验 |
+| Process | 新旧适用 runner 自然退出 0、选择数大于 0、正确加载路径和成功标记 | Passed，零选择负控退出 1，不计业务 RED |
+| Runtime | 原生播放跟随、暂停/倒放/跳帧、前台操作、保存重开、独立及共存均通过 | Passed，5.2.1 夹具范围 |
+| Visual | 亲自查看可见人形与武器，掌心校准、手腕旋转、五部位和两把武器无错误跳位；记录限制 | Passed，程序化演示；用户具体资产 NotRun |
+| 资产与安装 | 无旧角色引用的武器 Collection 可复用；单包安装后真实身份核对通过 | Passed，本包六文件 |
+| 兼容 | 5.2.1 按上述层级验证；未测版本不声明支持 | 5.2.1 Passed，其他 NotRun |
 | Build/C/C++/Generated | 纯 Python；无 C/C++ 编译、代码生成、allocator、unique_ptr、raw pointer、namespace/成员/参数格式形态 | NotApplicable |
 | RealTransport/Apply/Resim | 无网络、引擎预测或回滚目标 | NotApplicable |
-| 正式完成 | 目标结果经用户核对，临时诊断清理，清理后必要验证通过，证据可追溯 | NotRun |
+| 正式完成 | 目标结果经用户核对，临时诊断清理，清理后必要验证通过，证据可追溯 | Passed，见 completion-audit.md |
 
 独立新进程才证明保存重开与安装加载；源码和 API 存在只证明 Static。测试夹具通过不等于任意人形 Rig 兼容。任一必要验收仍为 `NotRun`、`Concern` 或 `Blocked` 时，不宣告插件实施最终完成。
 

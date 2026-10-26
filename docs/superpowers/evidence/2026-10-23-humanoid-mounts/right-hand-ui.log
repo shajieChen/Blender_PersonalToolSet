@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+register_class(...):
+Info: Registering key-config preferences class: 'Prefs', bl_idname 'Blender' has been registered before, unregistering previous
+  File "H:\Blender_Plugin\tests\run_humanoid_mounts_demo.py", line 162, in <module>
+    path = build_scene()
+  File "H:\Blender_Plugin\tests\run_humanoid_mounts_demo.py", line 74, in build_scene
+    armature, names = make_human("HeroRig", roll=0.15)
+                      ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_transform.py", line 23, in make_human
+    obj = build_biped(name, names, arm_roll=roll)
+  File "H:\Blender_Plugin\tests\run_retarget_test.py", line 44, in build_biped
+    bpy.ops.object.mode_set(mode="EDIT")
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+RuntimeError: Operator bpy.ops.object.mode_set.poll() Context missing active object
+
+Error: script failed, file: 'H:\Blender_Plugin\tests\run_humanoid_mounts_demo.py', exiting.
+
+Blender quit

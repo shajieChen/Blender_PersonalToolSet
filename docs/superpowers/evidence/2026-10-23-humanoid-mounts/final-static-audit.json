@@ -1,0 +1,43 @@
+{
+  "status": "Passed",
+  "product_and_test_files": {
+    "humanoid_mounts\\__init__.py": "ad37ed74dc50830a2c8433635d9c98a76de0668220b61dba422fdc0df17326c7",
+    "humanoid_mounts\\mounts.py": "62a2187ebbc600ea87aa8dcea8ab724a818345edad18e8c532cce7eb2aa60b19",
+    "humanoid_mounts\\operators.py": "b31cd2cf85625eea81cd1c567fa8100e6aa3cf168293c549f8d0eb7ef8f8e816",
+    "humanoid_mounts\\panels.py": "5ee5975b0d80d88ca5e6b5a1c55c62aa85d89534c31dfbf94c8f245ef5340f9f",
+    "humanoid_mounts\\properties.py": "bfdbc65e4d47be0ebb2176019d53156b2de878db65a55cc324468a0e95939f7f",
+    "humanoid_mounts\\weapons.py": "59858e6b07fa3f1234fb63ec12ab08e40948e54aeb7457231b4db8afbfe3ecd6",
+    "tests\\test_humanoid_mounts_transform.py": "123647787797be5ab10ef605fb14f8b4438fec01ad15143bd43222a7e3d18f52",
+    "tests\\test_humanoid_mounts_lifecycle.py": "6ac96486a9803b2b3e6ee87ea98c279df1376af93753dee66d2bbb2e0998a4ea",
+    "tests\\test_humanoid_mounts_coexistence.py": "6cafa9a057404f2842fc90462703f3ca043bee652a5783489a85126515d48238",
+    "tests\\run_humanoid_mounts_tests.py": "4fa03c54984cc3473635669e4d7bcee74238b0b55c46f6c9298fa8e8a1291641",
+    "tests\\run_humanoid_mounts_demo.py": "d1e57ab3a099f299881397c5eca12172710d4066bb8ca6579719c3397a31dc01"
+  },
+  "dependency_graph": {
+    "__init__": [],
+    "mounts": [
+      "properties"
+    ],
+    "operators": [],
+    "panels": [
+      "mounts",
+      "properties"
+    ],
+    "properties": [],
+    "weapons": [
+      "mounts",
+      "properties"
+    ]
+  },
+  "installed_files_match": 6,
+  "installer_exact_original_plus_two_lines": true,
+  "outside_scope_changes_observed_preserved": [
+    "spring_bone/solver.py",
+    "tests/test_spring_bone_solver.py"
+  ],
+  "outside_scope_changes_by_this_task": [],
+  "initial_dirty_hashes_preserved": true,
+  "user_confirmation": "符合目标，继续清理复验",
+  "cleanup_complete": true,
+  "preview_sha256": "2fa129c6bcc0032c377c107d14538de5d03e8e93715c7c7bf2cccdc9ab493055"
+}

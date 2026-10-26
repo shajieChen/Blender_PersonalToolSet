@@ -1,0 +1,10 @@
+00:00.578  blend            | Read blend: "H:\Blender_Plugin\tests\out\humanoid_mounts\persistence.blend"
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+HUMANOID_MOUNTS_STATIC_OK 11
+HUMANOID_MOUNTS_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+HUMANOID_MOUNTS_FILTER --installed
+HUMANOID_MOUNTS_FILE H:\Blender\5.2.1\portable\scripts\addons\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_INSTALLED_FILE H:\Blender\5.2.1\portable\scripts\addons\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_REOPEN_FILE H:\Blender_Plugin\tests\out\humanoid_mounts\persistence.blend
+HUMANOID_MOUNTS_REOPEN_OK 7
+HUMANOID_MOUNTS_INSTALLED_OK

@@ -1,0 +1,35 @@
+test_create_at_final_bone_origin_preserves_relative_parenting (test_humanoid_mounts_transform.MountTransformTests.test_create_at_final_bone_origin_preserves_relative_parenting) ... ok
+test_empty_animation_container_is_not_treated_as_an_animated_weapon (test_humanoid_mounts_transform.MountTransformTests.test_empty_animation_container_is_not_treated_as_an_animated_weapon) ... ERROR
+test_grip_preparation_preserves_parts_and_source_data (test_humanoid_mounts_transform.MountTransformTests.test_grip_preparation_preserves_parts_and_source_data) ... ok
+test_invalid_bone_and_singular_input_do_not_create_objects (test_humanoid_mounts_transform.MountTransformTests.test_invalid_bone_and_singular_input_do_not_create_objects) ... ok
+test_keep_world_and_detach_preserve_current_pose_and_delta (test_humanoid_mounts_transform.MountTransformTests.test_keep_world_and_detach_preserve_current_pose_and_delta) ... ok
+test_snap_preserves_grip_calibration_and_follows_animation (test_humanoid_mounts_transform.MountTransformTests.test_snap_preserves_grip_calibration_and_follows_animation) ... ok
+test_unsupported_weapon_state_is_rejected_without_mutation (test_humanoid_mounts_transform.MountTransformTests.test_unsupported_weapon_state_is_rejected_without_mutation) ... ok
+
+======================================================================
+ERROR: test_empty_animation_container_is_not_treated_as_an_animated_weapon (test_humanoid_mounts_transform.MountTransformTests.test_empty_animation_container_is_not_treated_as_an_animated_weapon)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_transform.py", line 161, in test_empty_animation_container_is_not_treated_as_an_animated_weapon
+    root = self.weapons.prepare_grip_root([part], Matrix.Identity(4))
+  File "H:\Blender_Plugin\humanoid_mounts\weapons.py", line 45, in prepare_grip_root
+    validate_rigid(part)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\weapons.py", line 9, in validate_rigid
+    validate_parent_change(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\mounts.py", line 40, in validate_parent_change
+    raise HumanoidMountError("对象含动画、驱动、约束或刚体，首批不迁移")
+humanoid_mounts.mounts.HumanoidMountError: 对象含动画、驱动、约束或刚体，首批不迁移
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.076s
+
+FAILED (errors=1)
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+HUMANOID_MOUNTS_STATIC_OK 11
+HUMANOID_MOUNTS_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_transform.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_SELECTED 7
+HUMANOID_MOUNTS_TEST_FAIL

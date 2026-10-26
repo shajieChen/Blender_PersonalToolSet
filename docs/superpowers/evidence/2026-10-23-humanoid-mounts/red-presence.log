@@ -1,0 +1,71 @@
+test_create_at_final_bone_origin_preserves_relative_parenting (test_humanoid_mounts_transform.MountTransformTests.test_create_at_final_bone_origin_preserves_relative_parenting) ... FAIL
+test_grip_preparation_preserves_parts_and_source_data (test_humanoid_mounts_transform.MountTransformTests.test_grip_preparation_preserves_parts_and_source_data) ... FAIL
+test_invalid_bone_and_singular_input_do_not_create_objects (test_humanoid_mounts_transform.MountTransformTests.test_invalid_bone_and_singular_input_do_not_create_objects) ... FAIL
+test_keep_world_and_detach_preserve_current_pose_and_delta (test_humanoid_mounts_transform.MountTransformTests.test_keep_world_and_detach_preserve_current_pose_and_delta) ... FAIL
+test_snap_preserves_grip_calibration_and_follows_animation (test_humanoid_mounts_transform.MountTransformTests.test_snap_preserves_grip_calibration_and_follows_animation) ... FAIL
+test_unsupported_weapon_state_is_rejected_without_mutation (test_humanoid_mounts_transform.MountTransformTests.test_unsupported_weapon_state_is_rejected_without_mutation) ... FAIL
+
+======================================================================
+FAIL: test_create_at_final_bone_origin_preserves_relative_parenting (test_humanoid_mounts_transform.MountTransformTests.test_create_at_final_bone_origin_preserves_relative_parenting)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_transform.py", line 41, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts"), "humanoid_mounts must implement the mount contract")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : humanoid_mounts must implement the mount contract
+
+======================================================================
+FAIL: test_grip_preparation_preserves_parts_and_source_data (test_humanoid_mounts_transform.MountTransformTests.test_grip_preparation_preserves_parts_and_source_data)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_transform.py", line 41, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts"), "humanoid_mounts must implement the mount contract")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : humanoid_mounts must implement the mount contract
+
+======================================================================
+FAIL: test_invalid_bone_and_singular_input_do_not_create_objects (test_humanoid_mounts_transform.MountTransformTests.test_invalid_bone_and_singular_input_do_not_create_objects)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_transform.py", line 41, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts"), "humanoid_mounts must implement the mount contract")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : humanoid_mounts must implement the mount contract
+
+======================================================================
+FAIL: test_keep_world_and_detach_preserve_current_pose_and_delta (test_humanoid_mounts_transform.MountTransformTests.test_keep_world_and_detach_preserve_current_pose_and_delta)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_transform.py", line 41, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts"), "humanoid_mounts must implement the mount contract")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : humanoid_mounts must implement the mount contract
+
+======================================================================
+FAIL: test_snap_preserves_grip_calibration_and_follows_animation (test_humanoid_mounts_transform.MountTransformTests.test_snap_preserves_grip_calibration_and_follows_animation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_transform.py", line 41, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts"), "humanoid_mounts must implement the mount contract")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : humanoid_mounts must implement the mount contract
+
+======================================================================
+FAIL: test_unsupported_weapon_state_is_rejected_without_mutation (test_humanoid_mounts_transform.MountTransformTests.test_unsupported_weapon_state_is_rejected_without_mutation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_transform.py", line 41, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts"), "humanoid_mounts must implement the mount contract")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : humanoid_mounts must implement the mount contract
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.006s
+
+FAILED (failures=6)
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+HUMANOID_MOUNTS_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_transform.py
+HUMANOID_MOUNTS_FILE MISSING
+HUMANOID_MOUNTS_SELECTED 6
+HUMANOID_MOUNTS_TEST_FAIL

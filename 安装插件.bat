@@ -5,6 +5,7 @@ set "COUNT=0"
 
 call :install_one humanoid_retarget "Humanoid Retarget"
 call :install_one shortcut_hint "Shortcut Hint"
+call :install_one humanoid_mounts "Humanoid Mounts"
 
 if "%COUNT%"=="0" (
   echo 没有找到 Blender。
@@ -20,6 +21,7 @@ echo 请先完全退出 Blender，然后重新打开。
 echo 菜单：编辑 - 偏好设置 - 插件，搜索并勾选：
 echo   Humanoid Retarget
 echo   Shortcut Hint
+echo   Humanoid Mounts
 echo Humanoid Retarget：3D 视图按 N，侧栏打开「重定向」。
 echo Shortcut Hint：鼠标停在视图右上角的导航按钮上，彩色快捷键显示在按钮下方。
 goto :end
