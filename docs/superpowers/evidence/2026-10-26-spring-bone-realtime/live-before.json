@@ -1,0 +1,138 @@
+{
+  "action": "骨架_a050_300011.002",
+  "frame": 41,
+  "subframe": 0.0,
+  "active": "Armature",
+  "selected": [
+    "body",
+    "clothing",
+    "clothing.001",
+    "hair",
+    "hair.001",
+    "head.001"
+  ],
+  "chains": [
+    [
+      "Q_QunZi.L",
+      "Q_QunZi.L.001",
+      "Q_QunZi.L.002",
+      "Q_QunZi.L.003"
+    ],
+    [
+      "H_QunZi.L",
+      "H_QunZi.L.001",
+      "H_QunZi.L.002",
+      "H_QunZi.L.003"
+    ],
+    [
+      "QunZi.L",
+      "QunZi.L.001",
+      "QunZi.L.002",
+      "QunZi.L.003"
+    ],
+    [
+      "Q_QunZi.R",
+      "Q_QunZi.R.001",
+      "Q_QunZi.R.002",
+      "Q_QunZi.R.003"
+    ],
+    [
+      "H_QunZi.R",
+      "H_QunZi.R.001",
+      "H_QunZi.R.002",
+      "H_QunZi.R.003"
+    ],
+    [
+      "QunZi.R",
+      "QunZi.R.001",
+      "QunZi.R.002",
+      "QunZi.R.003"
+    ],
+    [
+      "Z_QunZi",
+      "Z_QunZi.001",
+      "Z_QunZi.002",
+      "Z_QunZi.003"
+    ],
+    [
+      "Z_HouQunZi",
+      "Z_HouQunZi.001",
+      "Z_HouQunZi.002",
+      "Z_HouQunZi.003"
+    ]
+  ],
+  "gravity": [
+    {
+      "power": 4.180000305175781,
+      "direction": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "warmup": 0.25
+    },
+    {
+      "power": 2.200000047683716,
+      "direction": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "warmup": 0.25
+    },
+    {
+      "power": 2.200000047683716,
+      "direction": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "warmup": 0.25
+    },
+    {
+      "power": 2.200000047683716,
+      "direction": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "warmup": 0.25
+    },
+    {
+      "power": 2.200000047683716,
+      "direction": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "warmup": 0.25
+    },
+    {
+      "power": 2.200000047683716,
+      "direction": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "warmup": 0.25
+    },
+    {
+      "power": 2.200000047683716,
+      "direction": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "warmup": 0.25
+    },
+    {
+      "power": 2.200000047683716,
+      "direction": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "warmup": 0.25
+    }
+  ]
+}

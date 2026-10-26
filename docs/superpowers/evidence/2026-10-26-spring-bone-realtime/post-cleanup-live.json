@@ -1,0 +1,288 @@
+{
+  "status": "passed",
+  "checked_frames": 53,
+  "rows": [
+    {
+      "frame": 0,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 1,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 2,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 3,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 4,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 5,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 6,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 7,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 8,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 9,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 10,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 11,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 12,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 13,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 14,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 15,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 16,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 17,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 18,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 19,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 20,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 21,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 22,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 23,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 24,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 25,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 26,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 27,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 28,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 29,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 30,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 31,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 32,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 33,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 34,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 35,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 36,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 37,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 38,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 39,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 40,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 41,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 42,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 43,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 44,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 45,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 46,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 47,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 48,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 49,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 50,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 51,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    },
+    {
+      "frame": 52,
+      "segments": 32,
+      "hand_pose_matrix_error": 0.0
+    }
+  ],
+  "maximum_hand_pose_matrix_error": 0.0,
+  "hand_weight_overlap": {
+    "body": {
+      "protected_vertices": 372,
+      "maximum_spring_weight": 0.0
+    },
+    "clothing": {
+      "protected_vertices": 441,
+      "maximum_spring_weight": 0.0
+    }
+  },
+  "all_segments_per_frame": true,
+  "frame_preserved": true,
+  "selection_preserved": true,
+  "diagnostics_disabled": true,
+  "clothing_hash": "d2a72a310e2fa421bbb6cd83ceec8bfe6f6949b173809b7fa487fd3e4dbc6602",
+  "realtime_enabled": true
+}

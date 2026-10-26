@@ -1,0 +1,44 @@
+{
+  "status": "Completed",
+  "allowed_roots": [
+    "H:\\Blender_Plugin\\docs\\superpowers\\evidence\\2026-10-26-spring-bone-realtime"
+  ],
+  "temporary_files": [],
+  "runtime_probes": [
+    {
+      "name": "capture_frame",
+      "cleanup": "removed after native playback probe"
+    },
+    {
+      "name": "finish_probe",
+      "cleanup": "one-shot app timer returned None"
+    },
+    {
+      "name": "finish_paused_probe",
+      "cleanup": "one-shot app timer returned None"
+    }
+  ],
+  "formal_diagnostics": {
+    "tick_counter": "explicit user-requested reusable quantification",
+    "default_enabled": false
+  },
+  "functional_resources_to_retain_while_enabled": [
+    "one frame_change_post callback",
+    "one paused app timer",
+    "one hidden sampling Object",
+    "one owned Action copy"
+  ],
+  "retain": [
+    "all result JSON and test logs",
+    "tests/test_spring_bone_realtime.py",
+    "tests/run_spring_bone_realtime_audit.py",
+    "tests/run_spring_bone_realtime_file_lifecycle.py",
+    "formal documentation",
+    "before-realtime.blend (historical incorrect-weight regression fixture only)",
+    "after-hand-rollback.blend (corrected character fixture)"
+  ],
+  "cleanup_completed": true,
+  "user_confirmed": true,
+  "user_confirmation": "手部正常，可以清理并收尾",
+  "post_cleanup_verified": true
+}

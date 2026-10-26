@@ -1,0 +1,36 @@
+test_active_nla_is_rejected (test_spring_bone_realtime.SpringBoneRealtime.test_active_nla_is_rejected) ... ok
+test_backward_jump_resets_to_same_initial_state (test_spring_bone_realtime.SpringBoneRealtime.test_backward_jump_resets_to_same_initial_state) ... ok
+test_checkbox_starts_and_stops_realtime (test_spring_bone_realtime.SpringBoneRealtime.test_checkbox_starts_and_stops_realtime) ... ok
+test_deleted_target_releases_owned_objects (test_spring_bone_realtime.SpringBoneRealtime.test_deleted_target_releases_owned_objects) ... ok
+test_disabled_nla_tracks_also_allow_existing_offline_bake (test_spring_bone_realtime.SpringBoneRealtime.test_disabled_nla_tracks_also_allow_existing_offline_bake) ... ok
+test_disabled_nla_with_existing_tracks_is_allowed (test_spring_bone_realtime.SpringBoneRealtime.test_disabled_nla_with_existing_tracks_is_allowed) ... ok
+test_external_action_switch_is_not_overwritten (test_spring_bone_realtime.SpringBoneRealtime.test_external_action_switch_is_not_overwritten) ... ok
+test_fixed_step_moving_anchor_matches_24_and_60_fps (test_spring_bone_realtime.SpringBoneRealtime.test_fixed_step_moving_anchor_matches_24_and_60_fps) ... ok
+test_frame_events_apply_gravity_to_every_segment (test_spring_bone_realtime.SpringBoneRealtime.test_frame_events_apply_gravity_to_every_segment) ... ok
+test_generated_entry_uses_base_and_restores_generated_action (test_spring_bone_realtime.SpringBoneRealtime.test_generated_entry_uses_base_and_restores_generated_action) ... ok
+test_load_undo_save_render_hooks_stop_active_realtime (test_spring_bone_realtime.SpringBoneRealtime.test_load_undo_save_render_hooks_stop_active_realtime) ... ok
+test_non_simulated_hand_pose_matches_base_while_skirt_moves (test_spring_bone_realtime.SpringBoneRealtime.test_non_simulated_hand_pose_matches_base_while_skirt_moves) ... ok
+test_nonuniform_pose_scale_fails_without_resource_leaks (test_spring_bone_realtime.SpringBoneRealtime.test_nonuniform_pose_scale_fails_without_resource_leaks) ... ok
+test_paused_parameter_changes_take_effect_without_new_action (test_spring_bone_realtime.SpringBoneRealtime.test_paused_parameter_changes_take_effect_without_new_action) ... ok
+test_realtime_overlay_draws_chain_labels (test_spring_bone_realtime.SpringBoneRealtime.test_realtime_overlay_draws_chain_labels) ... ok
+test_realtime_overlay_tracks_simulated_pose_and_colliders (test_spring_bone_realtime.SpringBoneRealtime.test_realtime_overlay_tracks_simulated_pose_and_colliders) ... ok
+test_repeated_frame_does_not_feed_simulated_pose_back_as_input (test_spring_bone_realtime.SpringBoneRealtime.test_repeated_frame_does_not_feed_simulated_pose_back_as_input) ... ok
+test_rotation_mode_change_is_preserved (test_spring_bone_realtime.SpringBoneRealtime.test_rotation_mode_change_is_preserved) ... ok
+test_second_character_cannot_start_parallel_session (test_spring_bone_realtime.SpringBoneRealtime.test_second_character_cannot_start_parallel_session) ... ok
+test_source_curves_are_unchanged (test_spring_bone_realtime.SpringBoneRealtime.test_source_curves_are_unchanged) ... ok
+test_sphere_and_capsule_colliders_affect_realtime_motion (test_spring_bone_realtime.SpringBoneRealtime.test_sphere_and_capsule_colliders_affect_realtime_motion) ... ok
+test_stop_removes_frame_callback_and_paused_timer (test_spring_bone_realtime.SpringBoneRealtime.test_stop_removes_frame_callback_and_paused_timer) ... ok
+test_stopping_restores_action_and_releases_runtime_resources (test_spring_bone_realtime.SpringBoneRealtime.test_stopping_restores_action_and_releases_runtime_resources) ... ok
+test_unconfigured_hand_quaternion_animation_is_not_repaired (test_spring_bone_realtime.SpringBoneRealtime.test_unconfigured_hand_quaternion_animation_is_not_repaired) ... ok
+test_unregister_stops_realtime_before_removing_properties (test_spring_bone_realtime.SpringBoneRealtime.test_unregister_stops_realtime_before_removing_properties) ... ok
+test_weight_zero_keeps_base_rotation (test_spring_bone_realtime.SpringBoneRealtime.test_weight_zero_keeps_base_rotation) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.505s
+
+OK
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SPRING_BONE_SELECTED 26
+SPRING_BONE_TEST_OK

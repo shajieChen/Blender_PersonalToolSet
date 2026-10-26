@@ -1,0 +1,8 @@
+00:00.813  reports          | WARNING Path 'H:\Blender\5.2.1\5.2\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Dots Stroke'
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+00:00.813  reports          | WARNING Path 'H:\Blender\5.2.1\5.2\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Material'
+00:00.813  blend            | Read blend: "C:\Users\CHENSH~2\AppData\Local\Temp\spring-realtime-lifecycle-8_gomitk\realtime-lifecycle.blend"
+Info: Saved as "realtime-lifecycle.blend"
+REALTIME_FILE_LIFECYCLE {"status": "passed", "blender": "5.2.1 LTS", "actual_save_clean": true, "actual_load_clean": true}
+
+Blender quit

@@ -1,0 +1,18 @@
+{
+  "user_confirmation": "显示正常，可以收尾",
+  "status": "Passed",
+  "temporary_probe_namespace_absent": true,
+  "temporary_frame_callbacks_absent": true,
+  "formal_draw_handlers_present": true,
+  "show_gizmos": true,
+  "realtime_enabled": true,
+  "diagnostics_disabled": true,
+  "segments": 32,
+  "drawing_vertices": 3904,
+  "collider_vertices": 800,
+  "post_cleanup_tests": {
+    "Blender5.1.2": 123,
+    "Blender5.2.1": 123
+  },
+  "code_commit": "51066b8199b1b8913e72dfaec38df7f33101a342"
+}

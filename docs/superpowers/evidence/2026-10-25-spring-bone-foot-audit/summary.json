@@ -1,5 +1,5 @@
 {
-  "status": "CompletedWithDocumentedScope",
+  "status": "InvalidatedDueToIncorrectGarmentRegion",
   "user_result_confirmed": true,
   "diagnostic_rounds": 4,
   "screenshots_used": false,
@@ -33,5 +33,8 @@
   "cleanup_completed": true,
   "continuous_time_guarantee": false,
   "retarget_modified": false,
-  "commit_or_push": false
+  "commit_or_push": false,
+  "historical_status": "CompletedWithDocumentedScope",
+  "invalidated_on": "2026-10-26",
+  "invalidation_reason": "Prior 1088-vertex reassignment included shoulder/arm/hand clothing; restored exactly from backup; historical zero intersections do not validate skinning correctness"
 }

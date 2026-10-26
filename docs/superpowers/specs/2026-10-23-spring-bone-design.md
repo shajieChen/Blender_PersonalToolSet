@@ -221,3 +221,17 @@ Retarget 仅有两处必要修订：未来烘焙写键时保持相邻四元数�
 本次用户单独授权修订已量化证实的问题接缝权重，因此第10节“现有权重不变”的约束仅在这一明确范围内放宽：备份每个指定顶点的前后权重，保留网格位置、裙长、Rest和四节链。配重工具独立按需运行，不由防穿作业隐式修改权重。原Action保留；旧权重生成的结果须重新验收。
 
 正式量化能力在`tests/run_spring_bone_contact_audit.py`，包含独立几何算法；[方法文档](../../spring-bone-contact-audit.md)记录指标、重复运行、失败证据和边界。只按需调用，无播放开销。实施与收尾见[本次实施档](../plans/2026-10-25-spring-bone-foot-audit.md)。
+
+## 12 2026-10-26 实时预览扩展
+
+用户明确要求新增实时预览，本节覆盖首版“实时修改参数即模拟”的排除边界。保留离线Action与裙面防穿两条既有路径，新增独立实时会话，不将离线求解伪装成实时。
+
+`operators → realtime → animation/solver`，继续复用唯一Session。现有链状态初始化、排序、单链求解及球/胶囊转换提取为共同函数，不复制物理公式。临时隐藏Object共享只读Armature data、读取基础Action副本；目标只写临时Pose，源Action不改。每条配置链的每节（含末节）参与重力，weight=0旁路。
+
+frame_change_post读取当前基础姿势，禁止在该回调内frame_set采样；暂停timer按墙钟固定步更新，播放期间不重复积分。60Hz、最多16步追帧，倒放/循环/大跳帧重置。同帧重复求值不增加积分。正统一的基础缩放和动画平移按实时姿势更新段长，不改Rest，不放宽旧离线的缩放/骨长检查。
+
+WindowManager复选框不保存启动状态。实时作业拥有临时Object与Action副本；Session拥有回调/timer，关闭、load/undo/save/render/unregister释放并恢复原Action。外部换Action保留新选择，目标/模式/结构失效停止。实时期间可以改力学参数，离线任务互斥。
+
+实时只承诺骨骼代理体碰撞；完整裙面修正仍离线，FBX仍走烘焙Action。统计能力默认关闭，仅正式量化脚本按需启用并恢复。三种后续变化的边界：增加风只改变求解输入；增加同时多角色须先变更当前单Session约束；实时录制Action须新增明确录制/提交所有权，当前不提前实现。
+
+验证与使用见[实时预览文档](../../spring-bone-realtime-preview.md)、[实施档](../plans/2026-10-26-spring-bone-realtime-preview.md)和[运行证据](../evidence/2026-10-26-spring-bone-realtime/result.md)。

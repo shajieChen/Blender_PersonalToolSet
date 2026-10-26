@@ -1,0 +1,34 @@
+{
+  "session_existed": true,
+  "non_simulated_pose_differences": [],
+  "frame": 14.0,
+  "source": "骨架_a050_300011.002",
+  "restored_action": "骨架_a050_300011.002",
+  "mesh_change_after_stop": {
+    "body": {
+      "moved_vertices": 0,
+      "max_m": 1.2310379476739693e-07
+    },
+    "clothing": {
+      "moved_vertices": 8618,
+      "max_m": 0.058907924186319745
+    },
+    "clothing.001": {
+      "moved_vertices": 1007,
+      "max_m": 0.010231857686675682
+    },
+    "hair": {
+      "moved_vertices": 0,
+      "max_m": 0.0
+    },
+    "hair.001": {
+      "moved_vertices": 0,
+      "max_m": 0.0
+    },
+    "head.001": {
+      "moved_vertices": 0,
+      "max_m": 0.0
+    }
+  },
+  "realtime_stopped": true
+}

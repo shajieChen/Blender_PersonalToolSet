@@ -1,0 +1,10 @@
+{
+  "reason": "Undo previous erroneous whole-clothing seam reassignment",
+  "vertices_restored": 1088,
+  "before": "3c95e3e11959e116988b39db1186c17ccc6c16dba073c8232131b58c77e2ff0e",
+  "after": "d2a72a310e2fa421bbb6cd83ceec8bfe6f6949b173809b7fa487fd3e4dbc6602",
+  "expected_original": "d2a72a310e2fa421bbb6cd83ceec8bfe6f6949b173809b7fa487fd3e4dbc6602",
+  "exact_restore": true,
+  "frame": 14,
+  "restored_action": "骨架_a050_300011.002"
+}

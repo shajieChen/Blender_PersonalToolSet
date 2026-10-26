@@ -1,0 +1,26 @@
+{
+  "user_confirmation": "手部正常，可以清理并收尾",
+  "temporary_files_removed": 0,
+  "no_temporary_files_to_delete": true,
+  "entry_realtime_enabled": true,
+  "source_action_restored": true,
+  "sampler_removed": true,
+  "input_action_removed": true,
+  "frame_callback_removed": true,
+  "timer_removed": true,
+  "status": "Passed",
+  "diagnostics_disabled": true,
+  "functional_realtime_resources_retained": true,
+  "temporary_probe_callbacks_present": [],
+  "cleanup_completed": true,
+  "post_cleanup_tests": {
+    "Blender5.1.2": 121,
+    "Blender5.2.1": 121
+  },
+  "post_cleanup_file_save_load": "Passed on both versions",
+  "test_generated_fixtures_restored": [
+    "docs/superpowers/evidence/2026-10-23-spring-bone/lifecycle_reopen.blend",
+    "docs/superpowers/evidence/2026-10-23-spring-bone/lifecycle_reopen.blend1"
+  ],
+  "temporary_probe_absence_verified": true
+}

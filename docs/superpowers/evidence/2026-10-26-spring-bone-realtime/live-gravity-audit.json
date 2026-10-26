@@ -1,0 +1,267 @@
+{
+  "blender": "5.1.2",
+  "source_action": "骨架_a050_300011.002",
+  "frame": 35.0,
+  "segments": 32,
+  "native_paused_tick_count_before_probe": 0,
+  "segment_results": [
+    {
+      "bone": "Q_QunZi.L",
+      "down_vs_zero_deg": 13.706580300892407,
+      "down_vs_up_deg": 83.70629054282406,
+      "down_z": -0.997469425201416,
+      "up_z": -0.03867964446544647
+    },
+    {
+      "bone": "Q_QunZi.L.001",
+      "down_vs_zero_deg": 18.516113500243893,
+      "down_vs_up_deg": 157.53369599846516,
+      "down_z": -0.999375581741333,
+      "up_z": 0.9334346055984497
+    },
+    {
+      "bone": "Q_QunZi.L.002",
+      "down_vs_zero_deg": 21.457268088932253,
+      "down_vs_up_deg": 174.4206147212697,
+      "down_z": -0.9997441172599792,
+      "up_z": 0.996679961681366
+    },
+    {
+      "bone": "Q_QunZi.L.003",
+      "down_vs_zero_deg": 23.518689189881094,
+      "down_vs_up_deg": 173.3899255151364,
+      "down_z": -0.9980154633522034,
+      "up_z": 0.9972889423370361
+    },
+    {
+      "bone": "H_QunZi.L",
+      "down_vs_zero_deg": 15.908183350592942,
+      "down_vs_up_deg": 85.90886945580228,
+      "down_z": -0.9966148734092712,
+      "up_z": 0.010901491157710552
+    },
+    {
+      "bone": "H_QunZi.L.001",
+      "down_vs_zero_deg": 15.24547229354141,
+      "down_vs_up_deg": 148.83356495824302,
+      "down_z": -0.9975720047950745,
+      "up_z": 0.850723147392273
+    },
+    {
+      "bone": "H_QunZi.L.002",
+      "down_vs_zero_deg": 21.604970929733778,
+      "down_vs_up_deg": 170.8818663915294,
+      "down_z": -0.9983222484588623,
+      "up_z": 0.9891332387924194
+    },
+    {
+      "bone": "H_QunZi.L.003",
+      "down_vs_zero_deg": 36.550172739435794,
+      "down_vs_up_deg": 170.14100943263645,
+      "down_z": -0.9961163401603699,
+      "up_z": 0.9952381253242493
+    },
+    {
+      "bone": "QunZi.L",
+      "down_vs_zero_deg": 5.577208042246837,
+      "down_vs_up_deg": 75.57639150583876,
+      "down_z": -0.999574601650238,
+      "up_z": -0.2207372933626175
+    },
+    {
+      "bone": "QunZi.L.001",
+      "down_vs_zero_deg": 6.082797000744575,
+      "down_vs_up_deg": 135.1684328065552,
+      "down_z": -0.998355507850647,
+      "up_z": 0.6720227599143982
+    },
+    {
+      "bone": "QunZi.L.002",
+      "down_vs_zero_deg": 13.472457637843648,
+      "down_vs_up_deg": 170.05330980369348,
+      "down_z": -0.9992530345916748,
+      "up_z": 0.980191171169281
+    },
+    {
+      "bone": "QunZi.L.003",
+      "down_vs_zero_deg": 21.701281719672835,
+      "down_vs_up_deg": 176.26167855166827,
+      "down_z": -0.9979519248008728,
+      "up_z": 0.9950402975082397
+    },
+    {
+      "bone": "Q_QunZi.R",
+      "down_vs_zero_deg": 26.019475869569344,
+      "down_vs_up_deg": 96.01784995574462,
+      "down_z": -0.9913018345832825,
+      "up_z": 0.23480930924415588
+    },
+    {
+      "bone": "Q_QunZi.R.001",
+      "down_vs_zero_deg": 28.001217691208108,
+      "down_vs_up_deg": 163.54933046844053,
+      "down_z": -0.9999338388442993,
+      "up_z": 0.9619717001914978
+    },
+    {
+      "bone": "Q_QunZi.R.002",
+      "down_vs_zero_deg": 26.014797189987885,
+      "down_vs_up_deg": 176.16012729908851,
+      "down_z": -0.9999180436134338,
+      "up_z": 0.9970667958259583
+    },
+    {
+      "bone": "Q_QunZi.R.003",
+      "down_vs_zero_deg": 15.822274938759815,
+      "down_vs_up_deg": 176.63651933331857,
+      "down_z": -0.9981154799461365,
+      "up_z": 0.9971925616264343
+    },
+    {
+      "bone": "H_QunZi.R",
+      "down_vs_zero_deg": 31.818726531544126,
+      "down_vs_up_deg": 101.81724746678655,
+      "down_z": -0.9874132871627808,
+      "up_z": 0.35702237486839294
+    },
+    {
+      "bone": "H_QunZi.R.001",
+      "down_vs_zero_deg": 30.680335487483514,
+      "down_vs_up_deg": 163.65148277766724,
+      "down_z": -0.9981724619865417,
+      "up_z": 0.9615775942802429
+    },
+    {
+      "bone": "H_QunZi.R.002",
+      "down_vs_zero_deg": 28.865345904241444,
+      "down_vs_up_deg": 174.05208503441247,
+      "down_z": -0.998654842376709,
+      "up_z": 0.9953917264938354
+    },
+    {
+      "bone": "H_QunZi.R.003",
+      "down_vs_zero_deg": 29.415254679602924,
+      "down_vs_up_deg": 174.48846582048458,
+      "down_z": -0.9965314269065857,
+      "up_z": 0.9955694079399109
+    },
+    {
+      "bone": "QunZi.R",
+      "down_vs_zero_deg": 38.40147502340024,
+      "down_vs_up_deg": 108.39854454344405,
+      "down_z": -0.9824833869934082,
+      "up_z": 0.4869210124015808
+    },
+    {
+      "bone": "QunZi.R.001",
+      "down_vs_zero_deg": 20.697532487173394,
+      "down_vs_up_deg": 145.84569870582092,
+      "down_z": -0.9365018606185913,
+      "up_z": 0.9668938517570496
+    },
+    {
+      "bone": "QunZi.R.002",
+      "down_vs_zero_deg": 30.33619299105784,
+      "down_vs_up_deg": 168.01654739319568,
+      "down_z": -0.9891178607940674,
+      "up_z": 0.9971314072608948
+    },
+    {
+      "bone": "QunZi.R.003",
+      "down_vs_zero_deg": 25.414170844944476,
+      "down_vs_up_deg": 177.87210055417387,
+      "down_z": -0.999596893787384,
+      "up_z": 0.9979997873306274
+    },
+    {
+      "bone": "Z_QunZi",
+      "down_vs_zero_deg": 17.77424738090108,
+      "down_vs_up_deg": 87.77404385397101,
+      "down_z": -0.9957972764968872,
+      "up_z": 0.0528380386531353
+    },
+    {
+      "bone": "Z_QunZi.001",
+      "down_vs_zero_deg": 22.304682829066564,
+      "down_vs_up_deg": 162.1874590498317,
+      "down_z": -0.9996750950813293,
+      "up_z": 0.9590867757797241
+    },
+    {
+      "bone": "Z_QunZi.002",
+      "down_vs_zero_deg": 23.138312539908497,
+      "down_vs_up_deg": 175.882821618786,
+      "down_z": -0.9999788403511047,
+      "up_z": 0.9977284669876099
+    },
+    {
+      "bone": "Z_QunZi.003",
+      "down_vs_zero_deg": 22.182538556139228,
+      "down_vs_up_deg": 174.77156350120327,
+      "down_z": -0.9988258481025696,
+      "up_z": 0.998408317565918
+    },
+    {
+      "bone": "Z_HouQunZi",
+      "down_vs_zero_deg": 29.471777910079364,
+      "down_vs_up_deg": 99.47092039253627,
+      "down_z": -0.9890497326850891,
+      "up_z": 0.308316171169281
+    },
+    {
+      "bone": "Z_HouQunZi.001",
+      "down_vs_zero_deg": 25.706934950886023,
+      "down_vs_up_deg": 160.7703450612158,
+      "down_z": -0.9970483183860779,
+      "up_z": 0.9426530599594116
+    },
+    {
+      "bone": "Z_HouQunZi.002",
+      "down_vs_zero_deg": 25.394165220865506,
+      "down_vs_up_deg": 172.5517110398141,
+      "down_z": -0.9976034760475159,
+      "up_z": 0.99272221326828
+    },
+    {
+      "bone": "Z_HouQunZi.003",
+      "down_vs_zero_deg": 32.27678292294728,
+      "down_vs_up_deg": 172.04984239997992,
+      "down_z": -0.9962432980537415,
+      "up_z": 0.9953962564468384
+    }
+  ],
+  "all_segments_responded_to_gravity_direction": true,
+  "source_unchanged": true,
+  "rest_unchanged": true,
+  "mesh_weights_unchanged": true,
+  "same_preview_action": true,
+  "parameters_restored": true,
+  "update_ms": {
+    "median": 3.6056999815627933,
+    "p95": 4.330100025981665,
+    "maximum": 5.0342000322416425
+  },
+  "skin_motion": {
+    "clothing": {
+      "moved_vertices": 8021,
+      "maximum_displacement_m": 0.34988231430420663
+    },
+    "clothing.001": {
+      "moved_vertices": 1007,
+      "maximum_displacement_m": 0.10830534970960394
+    }
+  },
+  "skin_motion_verified": true,
+  "protected_hand_skin": {
+    "body": {
+      "vertices": 372,
+      "maximum_displacement_m": 0.0
+    },
+    "clothing": {
+      "vertices": 441,
+      "maximum_displacement_m": 0.0
+    }
+  },
+  "hand_skin_unchanged": true,
+  "status": "passed"
+}

@@ -1,0 +1,12 @@
+{
+  "status": "Completed",
+  "core_implementation": "Passed",
+  "tests_each_version": 123,
+  "runtime": "Passed",
+  "temporary_probes": "AutoReleased",
+  "formal_diagnostics_enabled": false,
+  "final_closeout": "Passed",
+  "user_confirmed": true,
+  "post_cleanup_tests_each_version": 123,
+  "cleanup_evidence": "overlay-cleanup-final.json"
+}

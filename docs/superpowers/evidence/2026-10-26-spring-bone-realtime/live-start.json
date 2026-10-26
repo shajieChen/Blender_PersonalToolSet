@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "message": "实时预览：逐节重力、惯性与球/胶囊碰撞",
+  "startup_ms": 92.33040001709014,
+  "segments": 32,
+  "source": "骨架_a050_300011.002",
+  "temporary_action": "骨架_a050_300011.002_RealtimeInput",
+  "frame_handler": true,
+  "paused_timer": true
+}

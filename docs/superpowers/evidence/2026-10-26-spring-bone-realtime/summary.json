@@ -1,0 +1,36 @@
+{
+  "status": "Completed",
+  "user_confirmed": true,
+  "user_confirmation": "手部正常，可以清理并收尾",
+  "configured_segments": 32,
+  "post_cleanup_frames": 53,
+  "maximum_hand_pose_matrix_error": 0.0,
+  "protected_hand_vertices": 813,
+  "protected_hand_stress_displacement_m": 0.0,
+  "protected_hand_maximum_spring_weight": 0.0,
+  "restored_seam_vertices": 1088,
+  "clothing_hash": "d2a72a310e2fa421bbb6cd83ceec8bfe6f6949b173809b7fa487fd3e4dbc6602",
+  "previous_contact_artifacts_invalidated": true,
+  "post_cleanup_tests": {
+    "Blender5.1.2": 123,
+    "Blender5.2.1": 123
+  },
+  "actual_save_load_both_versions": "Passed",
+  "cleanup_completed": true,
+  "diagnostics_enabled": false,
+  "realtime_enabled_after_validation": true,
+  "retarget_source_changed": false,
+  "committed": true,
+  "limitations": [
+    "Realtime sphere/capsule bone collision only; no full garment no-penetration claim",
+    "Previous incorrect-weight FBX/Blend are historical evidence, not accepted outputs",
+    "Occasional measured updates above 16 ms remain performance Concern"
+  ],
+  "overlay_status": "Completed",
+  "publication": {
+    "latest_user_request": "Push to remote main",
+    "target": "origin/main",
+    "code_commit": "51066b8199b1b8913e72dfaec38df7f33101a342",
+    "push_result": "Verify remote main against final HEAD after push"
+  }
+}

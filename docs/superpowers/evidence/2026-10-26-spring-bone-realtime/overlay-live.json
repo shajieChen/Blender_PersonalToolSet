@@ -1,0 +1,34 @@
+{
+  "status": "Passed",
+  "realtime_enabled": true,
+  "show_gizmos": true,
+  "ancestor_configuration": {
+    "chain": "Q_QunZi.L",
+    "before": "",
+    "after": "spine"
+  },
+  "segments": 32,
+  "bone_line_vertices": 3416,
+  "active_line_vertices": 488,
+  "collider_line_vertices": 800,
+  "active_root_endpoint_error": 0.0,
+  "line_callback": {
+    "calls": 18,
+    "nonempty_calls": 18
+  },
+  "label_callback": {
+    "calls": 16,
+    "labels": [
+      "H_QunZi.L",
+      "H_QunZi.R",
+      "Q_QunZi.L",
+      "Q_QunZi.R",
+      "QunZi.L",
+      "QunZi.R",
+      "Z_HouQunZi",
+      "Z_QunZi"
+    ]
+  },
+  "temporary_draw_handlers_removed": true,
+  "diagnostics_disabled": true
+}

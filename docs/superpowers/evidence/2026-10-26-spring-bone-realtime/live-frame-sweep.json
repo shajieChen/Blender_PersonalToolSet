@@ -1,0 +1,278 @@
+{
+  "status": "passed",
+  "checked_frames": 53,
+  "rows": [
+    {
+      "frame": 0,
+      "segments": 32,
+      "ticks": 13568
+    },
+    {
+      "frame": 1,
+      "segments": 32,
+      "ticks": 13570
+    },
+    {
+      "frame": 2,
+      "segments": 32,
+      "ticks": 13573
+    },
+    {
+      "frame": 3,
+      "segments": 32,
+      "ticks": 13575
+    },
+    {
+      "frame": 4,
+      "segments": 32,
+      "ticks": 13578
+    },
+    {
+      "frame": 5,
+      "segments": 32,
+      "ticks": 13580
+    },
+    {
+      "frame": 6,
+      "segments": 32,
+      "ticks": 13583
+    },
+    {
+      "frame": 7,
+      "segments": 32,
+      "ticks": 13585
+    },
+    {
+      "frame": 8,
+      "segments": 32,
+      "ticks": 13588
+    },
+    {
+      "frame": 9,
+      "segments": 32,
+      "ticks": 13590
+    },
+    {
+      "frame": 10,
+      "segments": 32,
+      "ticks": 13593
+    },
+    {
+      "frame": 11,
+      "segments": 32,
+      "ticks": 13595
+    },
+    {
+      "frame": 12,
+      "segments": 32,
+      "ticks": 13598
+    },
+    {
+      "frame": 13,
+      "segments": 32,
+      "ticks": 13600
+    },
+    {
+      "frame": 14,
+      "segments": 32,
+      "ticks": 13603
+    },
+    {
+      "frame": 15,
+      "segments": 32,
+      "ticks": 13605
+    },
+    {
+      "frame": 16,
+      "segments": 32,
+      "ticks": 13608
+    },
+    {
+      "frame": 17,
+      "segments": 32,
+      "ticks": 13610
+    },
+    {
+      "frame": 18,
+      "segments": 32,
+      "ticks": 13613
+    },
+    {
+      "frame": 19,
+      "segments": 32,
+      "ticks": 13615
+    },
+    {
+      "frame": 20,
+      "segments": 32,
+      "ticks": 13618
+    },
+    {
+      "frame": 21,
+      "segments": 32,
+      "ticks": 13620
+    },
+    {
+      "frame": 22,
+      "segments": 32,
+      "ticks": 13623
+    },
+    {
+      "frame": 23,
+      "segments": 32,
+      "ticks": 13625
+    },
+    {
+      "frame": 24,
+      "segments": 32,
+      "ticks": 13628
+    },
+    {
+      "frame": 25,
+      "segments": 32,
+      "ticks": 13630
+    },
+    {
+      "frame": 26,
+      "segments": 32,
+      "ticks": 13633
+    },
+    {
+      "frame": 27,
+      "segments": 32,
+      "ticks": 13635
+    },
+    {
+      "frame": 28,
+      "segments": 32,
+      "ticks": 13638
+    },
+    {
+      "frame": 29,
+      "segments": 32,
+      "ticks": 13640
+    },
+    {
+      "frame": 30,
+      "segments": 32,
+      "ticks": 13643
+    },
+    {
+      "frame": 31,
+      "segments": 32,
+      "ticks": 13645
+    },
+    {
+      "frame": 32,
+      "segments": 32,
+      "ticks": 13648
+    },
+    {
+      "frame": 33,
+      "segments": 32,
+      "ticks": 13650
+    },
+    {
+      "frame": 34,
+      "segments": 32,
+      "ticks": 13653
+    },
+    {
+      "frame": 35,
+      "segments": 32,
+      "ticks": 13655
+    },
+    {
+      "frame": 36,
+      "segments": 32,
+      "ticks": 13658
+    },
+    {
+      "frame": 37,
+      "segments": 32,
+      "ticks": 13660
+    },
+    {
+      "frame": 38,
+      "segments": 32,
+      "ticks": 13663
+    },
+    {
+      "frame": 39,
+      "segments": 32,
+      "ticks": 13665
+    },
+    {
+      "frame": 40,
+      "segments": 32,
+      "ticks": 13668
+    },
+    {
+      "frame": 41,
+      "segments": 32,
+      "ticks": 13670
+    },
+    {
+      "frame": 42,
+      "segments": 32,
+      "ticks": 13673
+    },
+    {
+      "frame": 43,
+      "segments": 32,
+      "ticks": 13675
+    },
+    {
+      "frame": 44,
+      "segments": 32,
+      "ticks": 13678
+    },
+    {
+      "frame": 45,
+      "segments": 32,
+      "ticks": 13680
+    },
+    {
+      "frame": 46,
+      "segments": 32,
+      "ticks": 13683
+    },
+    {
+      "frame": 47,
+      "segments": 32,
+      "ticks": 13685
+    },
+    {
+      "frame": 48,
+      "segments": 32,
+      "ticks": 13688
+    },
+    {
+      "frame": 49,
+      "segments": 32,
+      "ticks": 13690
+    },
+    {
+      "frame": 50,
+      "segments": 32,
+      "ticks": 13693
+    },
+    {
+      "frame": 51,
+      "segments": 32,
+      "ticks": 13695
+    },
+    {
+      "frame": 52,
+      "segments": 32,
+      "ticks": 13698
+    }
+  ],
+  "all_32_segments_each_frame": true,
+  "frame_restored": true,
+  "scene_update_ms": {
+    "median": 9.239600040018559,
+    "p95": 14.150999952107668,
+    "max": 24.392100051045418
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "status": "measured",
+  "groups": {
+    "upper_body": {
+      "vertices": 2489,
+      "with_spring_weights": 931,
+      "moved_vertices": 931,
+      "max_displacement_m": 0.006821694771541677,
+      "spring_weight_max": 0.4844569491675951
+    },
+    "hand": {
+      "vertices": 151,
+      "with_spring_weights": 0,
+      "moved_vertices": 0,
+      "max_displacement_m": 0.0,
+      "spring_weight_max": 0.0
+    }
+  },
+  "frame": 14,
+  "weights_restored_from_previous_repair": true
+}

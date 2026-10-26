@@ -1,0 +1,16 @@
+{
+  "native_ticks_while_paused": 28,
+  "elapsed_seconds": 0.4577408001059666,
+  "same_frame": true,
+  "same_action": true,
+  "bone_angle_changes_deg": {
+    "Q_QunZi.L": 60.24726134779574,
+    "Q_QunZi.L.001": 87.3179579721434,
+    "Q_QunZi.L.002": 90.8094209022597,
+    "Q_QunZi.L.003": 85.42323617562519
+  },
+  "all_chain_segments_responded": true,
+  "parameters_restored": true,
+  "diagnostics_disabled": true,
+  "status": "passed"
+}

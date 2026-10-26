@@ -1,0 +1,82 @@
+{
+  "status": "Passed",
+  "files": [
+    {
+      "file": "spring_bone/realtime.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "spring_bone/animation.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "spring_bone/operators.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "spring_bone/__init__.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "spring_bone/panels.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "spring_bone/contact_bake.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "tests/test_spring_bone_realtime.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "tests/run_spring_bone_realtime_audit.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "tests/run_spring_bone_realtime_file_lifecycle.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "tests/run_spring_bone_seam_weights.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "tests/test_spring_bone_skin_collision.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    },
+    {
+      "file": "spring_bone/gizmos.py",
+      "ast": "Passed",
+      "comments_unchanged": true,
+      "encoding": "UTF8NoBOM_CRLF"
+    }
+  ],
+  "git_diff_check": "Passed",
+  "cpp_gates": "NotApplicable",
+  "dependency_direction": "operators -> realtime -> animation/solver; no Retarget import",
+  "formal_diagnostics_default_disabled": true,
+  "final_checked_python_file_count": 12
+}
