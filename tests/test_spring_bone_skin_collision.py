@@ -197,8 +197,8 @@ class SpringBoneContactBake(unittest.TestCase):
     def test_approved_seam_weights_can_be_restored_exactly(self):
         from run_spring_bone_seam_weights import repair_seam_weights, restore_seam_weights
         from spring_bone.contact_bake import _mesh_token, _skin_weights
-        self.garment.vertex_groups[0].add([0], .01, "REPLACE")
-        self.garment.vertex_groups.new(name="Leg").add([0], .99, "REPLACE")
+        self.garment.vertex_groups[0].add([0], .6, "REPLACE")
+        self.garment.vertex_groups.new(name="Leg").add([0], .4, "REPLACE")
         before = _mesh_token(self.garment)
         with tempfile.TemporaryDirectory(prefix="spring-seam-") as folder:
             backup = repair_seam_weights(self.arm, self.garment, [0], pathlib.Path(folder) / "weights.json")
@@ -206,6 +206,27 @@ class SpringBoneContactBake(unittest.TestCase):
             self.assertAlmostEqual(float(_skin_weights(self.garment, self.arm, ["Skirt"])[0, 0]), .65, places=6)
             restore_seam_weights(self.garment, backup)
         self.assertEqual(_mesh_token(self.garment), before)
+
+    def test_seam_repair_rejects_vertices_owned_by_non_dynamic_bones(self):
+        from run_spring_bone_seam_weights import repair_seam_weights
+        from spring_bone.contact_bake import _mesh_token
+        self.garment.vertex_groups[0].add([0], .01, "REPLACE")
+        self.garment.vertex_groups.new(name="Leg").add([0], .99, "REPLACE")
+        before = _mesh_token(self.garment)
+        with tempfile.TemporaryDirectory(prefix="spring-protected-seam-") as folder:
+            path = pathlib.Path(folder) / "weights.json"
+            with self.assertRaises(ValueError):
+                repair_seam_weights(self.arm, self.garment, [0], path)
+            self.assertFalse(path.exists())
+        self.assertEqual(_mesh_token(self.garment), before)
+
+    def test_invalidated_contact_action_is_rejected(self):
+        from spring_bone.contact_bake import SkirtContactBakeJob
+        from spring_bone.solver import SpringBoneError
+        self.source["sb_contact_invalidated_reason"] = "weights restored"
+        with self.assertRaises(SpringBoneError):
+            SkirtContactBakeJob(self.arm, 1, 1).run_budgeted()
+        self.assertIs(self.arm.animation_data.action, self.source)
 
     def test_result_panel_does_not_report_previous_action_as_current(self):
         from spring_bone.panels import SPRING_BONE_PT_result

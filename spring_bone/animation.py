@@ -110,12 +110,13 @@ def iter_channelbags(action, slot):
                 yield bag
 
 
-def align_quaternion_key_signs(action, slot):
+def align_quaternion_key_signs(action, slot, bone_names=None):
     repairs = {}
+    allowed_paths = None if bone_names is None else _rotation_paths(bone_names)
     for bag in iter_channelbags(action, slot):
         paths = {}
         for curve in bag.fcurves:
-            if curve.data_path.endswith("rotation_quaternion"):
+            if curve.data_path.endswith("rotation_quaternion") and (allowed_paths is None or curve.data_path in allowed_paths):
                 paths.setdefault(curve.data_path, {})[curve.array_index] = curve
         for path, components in paths.items():
             if set(components) != {0, 1, 2, 3}:
@@ -222,6 +223,84 @@ class _ChainRuntime:
         self.warmup_left = warmup_left
         self.states = None
         self.prev_ancestor = None
+
+
+def order_runtimes(runtimes, armature):
+    owner = {name: index for index, runtime in enumerate(runtimes) for name in runtime.spec.bone_names}
+    children = [[] for runtime in runtimes]
+    indegree = [0] * len(runtimes)
+    for index, runtime in enumerate(runtimes):
+        parent = armature.data.bones[runtime.spec.bone_names[0]].parent
+        while parent is not None and parent.name not in owner:
+            parent = parent.parent
+        if parent is not None and owner[parent.name] != index:
+            children[owner[parent.name]].append(index)
+            indegree[index] += 1
+    ordered = []
+    ready = [index for index, degree in enumerate(indegree) if degree == 0]
+    while ready:
+        index = ready.pop(0)
+        ordered.append(runtimes[index])
+        for child in children[index]:
+            indegree[child] -= 1
+            if indegree[child] == 0:
+                ready.append(child)
+    if len(ordered) != len(runtimes):
+        raise SpringBoneError("链条父子顺序无效")
+    return ordered
+
+
+def initialize_runtime(runtime, armature, tick, scale_length, lengths):
+    root = armature.data.bones[runtime.spec.bone_names[0]]
+    parent_pose = tick.poses[root.parent.name] if root.parent else Matrix.Identity(4)
+    solved_parent = parent_pose.copy()
+    states, samples = [], []
+    for index, name in enumerate(runtime.spec.bone_names):
+        samples.append(SegmentSample(base_pose=tick.poses[name]))
+        reference = reference_pose(index, samples, parent_pose, parent_pose, solved_parent)
+        world = tick.armature_world @ reference
+        head = world.to_translation() * scale_length
+        direction = direction_or_fallback(world.to_quaternion() @ _AXIS_Y, _AXIS_Y, _AXIS_Y)
+        tail = head + direction * lengths[name]
+        states.append(SegmentState(lengths[name], tail.copy(), tail.copy(), direction.copy(), Vector((0., 0., 0.))))
+        solved_parent = tick.poses[name].copy()
+    runtime.states = states
+    if runtime.spec.inertia_space == FOLLOW_TRANSLATION:
+        runtime.prev_ancestor = (tick.armature_world @ tick.poses[runtime.spec.ancestor_name]).to_translation() * scale_length
+
+
+def colliders_for_tick(specs, tick, scale_length):
+    colliders = []
+    for spec in specs:
+        pose = tick.armature_world @ tick.poses[spec.bone_name]
+        start = (pose @ (Vector(spec.head_offset_m) / scale_length)) * scale_length
+        if spec.shape == "SPHERE":
+            colliders.append(SphereCollider(start, spec.radius_m))
+        else:
+            end = (pose @ (Vector(spec.tail_offset_m) / scale_length)) * scale_length
+            colliders.append(CapsuleCollider(start, end, spec.radius_m))
+    return tuple(colliders)
+
+
+def solve_runtime(runtime, armature, tick, scale_length, solved_poses, colliders):
+    spec = runtime.spec
+    root = armature.data.bones[spec.bone_names[0]]
+    parent_name = root.parent.name if root.parent else ""
+    parent_base = tick.poses[parent_name] if parent_name else Matrix.Identity(4)
+    parent_pose = solved_poses.get(parent_name, parent_base)
+    samples = [SegmentSample(base_pose=tick.poses[name]) for name in spec.bone_names]
+    delta = None
+    if spec.inertia_space == FOLLOW_TRANSLATION:
+        head = (tick.armature_world @ tick.poses[spec.ancestor_name]).to_translation() * scale_length
+        delta = Vector((0., 0., 0.)) if runtime.prev_ancestor is None else head - runtime.prev_ancestor
+        runtime.prev_ancestor = head.copy()
+    solved_bones = []
+    rotations = step_chain(runtime.states, samples, parent_base, parent_pose, tick.armature_world, scale_length, spec.parameters, colliders, delta, solved_bones)
+    solved = []
+    for name, (object_matrix, parent_matrix) in zip(spec.bone_names, solved_bones):
+        solved.append(SolvedBone(name, object_matrix, parent_matrix))
+        solved_poses[name] = object_matrix
+    return solved, rotations
 
 
 class SpringBoneBakeJob:
@@ -421,7 +500,7 @@ class SpringBoneBakeJob:
             raise SpringBoneError("请改用基础动作")
         if getattr(action, "library", None) is not None:
             raise SpringBoneError("链接数据不可编辑")
-        if any(track.strips for track in anim.nla_tracks):
+        if anim.use_nla and any(track.strips and not track.mute for track in anim.nla_tracks):
             raise SpringBoneError("请关闭NLA")
         if hasattr(anim, "action_influence") and abs(float(anim.action_influence) - 1.0) > 1e-6:
             raise SpringBoneError("动作影响必须为1")
@@ -519,36 +598,7 @@ class SpringBoneBakeJob:
             self.identity_value = self.identity_token()
 
     def _order_runtimes(self):
-        owner = {}
-        for index, runtime in enumerate(self.runtimes):
-            for name in runtime.spec.bone_names:
-                owner[name] = index
-        children = [[] for _ in self.runtimes]
-        indegree = [0] * len(self.runtimes)
-        arm = self.armature.data
-        for index, runtime in enumerate(self.runtimes):
-            parent = arm.bones[runtime.spec.bone_names[0]].parent
-            while parent is not None and parent.name not in owner:
-                parent = parent.parent
-            if parent is None:
-                continue
-            dependency = owner[parent.name]
-            if dependency == index:
-                continue
-            children[dependency].append(index)
-            indegree[index] += 1
-        ordered = []
-        ready = [index for index, degree in enumerate(indegree) if degree == 0]
-        while ready:
-            index = ready.pop(0)
-            ordered.append(self.runtimes[index])
-            for child in children[index]:
-                indegree[child] -= 1
-                if indegree[child] == 0:
-                    ready.append(child)
-        if len(ordered) != len(self.runtimes):
-            raise SpringBoneError("链条父子顺序无效")
-        self.runtimes = ordered
+        self.runtimes = order_runtimes(self.runtimes, self.armature)
 
     def _reject_nonuniform_scale(self, armature, root):
         cursor = root
@@ -720,35 +770,8 @@ class SpringBoneBakeJob:
     def _initialize_states(self):
         if not self.grid_ticks:
             raise SpringBoneError("没有采样帧")
-        first = self.grid_ticks[0]
         for runtime in self.runtimes:
-            spec = runtime.spec
-            root = self.armature.data.bones[spec.bone_names[0]]
-            parent_name = root.parent.name if root.parent else ""
-            parent_pose = first.poses[parent_name] if parent_name else Matrix.Identity(4)
-            solved_parent = parent_pose.copy()
-            states = []
-            samples = []
-            for index, name in enumerate(spec.bone_names):
-                samples.append(SegmentSample(base_pose=first.poses[name]))
-                reference = reference_pose(index, samples, parent_pose, parent_pose, solved_parent)
-                world = first.armature_world @ reference
-                head = world.to_translation() * self.scale_length
-                direction = direction_or_fallback(world.to_quaternion() @ _AXIS_Y, _AXIS_Y, _AXIS_Y)
-                tail = head + direction * self.frozen_lengths[name]
-                states.append(
-                    SegmentState(
-                        self.frozen_lengths[name],
-                        tail.copy(),
-                        tail.copy(),
-                        direction.copy(),
-                        Vector((0.0, 0.0, 0.0)),
-                    )
-                )
-                solved_parent = first.poses[name].copy()
-            runtime.states = states
-            if spec.inertia_space == FOLLOW_TRANSLATION:
-                runtime.prev_ancestor = self._ancestor_head(first, spec.ancestor_name)
+            initialize_runtime(runtime, self.armature, self.grid_ticks[0], self.scale_length, self.frozen_lengths)
 
     def _simulate_unit(self):
         if any(runtime.warmup_left > 0 for runtime in self.runtimes):
@@ -806,50 +829,15 @@ class SpringBoneBakeJob:
         return solved
 
     def _step_chain(self, runtime, tick, record, colliders):
-        spec = runtime.spec
-        root = self.armature.data.bones[spec.bone_names[0]]
-        parent_name = root.parent.name if root.parent else ""
-        parent_base = tick.poses[parent_name] if parent_name else Matrix.Identity(4)
-        parent_pose = self.solved_this_tick.get(parent_name, parent_base)
-        samples = [SegmentSample(base_pose=tick.poses[name]) for name in spec.bone_names]
-        delta = None
-        if spec.inertia_space == FOLLOW_TRANSLATION:
-            head = self._ancestor_head(tick, spec.ancestor_name)
-            if runtime.prev_ancestor is None:
-                delta = Vector((0.0, 0.0, 0.0))
-            else:
-                delta = head - runtime.prev_ancestor
-            runtime.prev_ancestor = head.copy()
-        solved_bones = []
-        rotations = step_chain(
-            runtime.states,
-            samples,
-            parent_base=parent_base,
-            parent_solved=parent_pose,
-            armature_world=tick.armature_world,
-            scale_length=self.scale_length,
-            parameters=spec.parameters,
-            colliders=colliders,
-            translation_delta_m=delta,
-            solved_bones=solved_bones,
-        )
-        solved = []
-        for index, (object_matrix, parent_matrix) in enumerate(solved_bones):
-            solved.append(
-                SolvedBone(
-                    name=spec.bone_names[index],
-                    object_matrix=object_matrix,
-                    parent_matrix=parent_matrix,
-                )
-            )
-            self.solved_this_tick[spec.bone_names[index]] = object_matrix
-            if record:
-                distance = self._penetration(runtime.states[index].current_tail_m, colliders, spec.parameters.hit_radius_m)
+        solved, rotations = solve_runtime(runtime, self.armature, tick, self.scale_length, self.solved_this_tick, colliders)
+        if record:
+            for state in runtime.states:
+                distance = self._penetration(state.current_tail_m, colliders, runtime.spec.parameters.hit_radius_m)
                 if distance > self.max_penetration_m:
                     self.max_penetration_m = distance
-        if record and runtime is self.runtimes[0]:
-            self.trace_tails.append(runtime.states[-1].current_tail_m.copy())
-            self.trace_rotations.append(rotations[-1].copy())
+            if runtime is self.runtimes[0]:
+                self.trace_tails.append(runtime.states[-1].current_tail_m.copy())
+                self.trace_rotations.append(rotations[-1].copy())
         return solved
 
     def _penetration(self, point, colliders, hit_radius):
@@ -865,16 +853,7 @@ class SpringBoneBakeJob:
         return world.to_translation() * self.scale_length
 
     def _world_colliders(self, tick):
-        colliders = []
-        for spec in self.colliders:
-            pose = tick.armature_world @ tick.poses[spec.bone_name]
-            start = self._local_meters(pose, spec.head_offset_m)
-            if spec.shape == "SPHERE":
-                colliders.append(SphereCollider(start, spec.radius_m))
-            else:
-                end = self._local_meters(pose, spec.tail_offset_m)
-                colliders.append(CapsuleCollider(start, end, spec.radius_m))
-        return tuple(colliders)
+        return colliders_for_tick(self.colliders, tick, self.scale_length)
 
     def _local_meters(self, pose, offset_m):
         blender = Vector(offset_m) / self.scale_length

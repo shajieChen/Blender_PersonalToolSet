@@ -38,6 +38,83 @@ def active_session():
     return _session
 
 
+def realtime_running():
+    return job_running() and bool(getattr(_session.job, "is_realtime", False))
+
+
+def get_realtime_preview(_manager):
+    return realtime_running()
+
+
+def set_realtime_preview(_manager, enabled):
+    try:
+        if enabled:
+            start_realtime(bpy.context)
+        elif realtime_running():
+            stop_active_session()
+            set_message("实时预览已停止，原动作已恢复")
+    except Exception as exc:
+        stop_active_session()
+        set_message(str(exc))
+
+
+def _realtime_frame(scene, depsgraph=None):
+    if not realtime_running():
+        return
+    try:
+        _session.job.frame_update(scene, depsgraph)
+    except Exception as exc:
+        stop_active_session()
+        set_message(str(exc))
+
+
+def _realtime_timer():
+    if not realtime_running():
+        return None
+    try:
+        if not any(screen.is_animation_playing for screen in bpy.data.screens):
+            _session.job.run_slice()
+        else:
+            _session.job._guard()
+    except Exception as exc:
+        stop_active_session()
+        set_message(str(exc))
+        return None
+    return 1.0 / 60.0
+
+
+def _remove_realtime_callbacks():
+    if _realtime_frame in bpy.app.handlers.frame_change_post:
+        bpy.app.handlers.frame_change_post.remove(_realtime_frame)
+    if bpy.app.timers.is_registered(_realtime_timer):
+        bpy.app.timers.unregister(_realtime_timer)
+
+
+def start_realtime(context):
+    global _session
+    from .realtime import RealtimeSpringPreview
+
+    target = target_armature(context)
+    if target is None:
+        raise SpringBoneError("请选择目标骨架")
+    if _session is not None:
+        if realtime_running() and _session.job.armature == target:
+            return _session
+        if job_running() or _session.job.armature != target:
+            raise SpringBoneError("请先停止其他动态骨骼任务")
+        stop_active_session()
+    job = RealtimeSpringPreview(target)
+    _session = _Session(job, False)
+    try:
+        bpy.app.handlers.frame_change_post.append(_realtime_frame)
+        bpy.app.timers.register(_realtime_timer, first_interval=1.0 / 60.0)
+    except Exception:
+        stop_active_session()
+        raise
+    set_message("实时预览：逐节重力、惯性与球/胶囊碰撞")
+    return _session
+
+
 def last_message():
     return _message
 
@@ -112,6 +189,7 @@ def stop_active_session():
     global _session
     session = _session
     _session = None
+    _remove_realtime_callbacks()
     if session is None:
         return
     try:
@@ -119,10 +197,15 @@ def stop_active_session():
     finally:
         if session.job is not None and not session.job.delivered:
             session.job.cancel()
+        if getattr(session.job, "is_realtime", False):
+            set_message("实时预览已停止，原动作已恢复")
 
 
 def release_session_keep_result():
     global _session
+    if realtime_running():
+        stop_active_session()
+        return
     session = _session
     _session = None
     if session is not None:

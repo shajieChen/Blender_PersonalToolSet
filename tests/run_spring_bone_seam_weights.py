@@ -25,6 +25,8 @@ def repair_seam_weights(armature, garment, approved_vertices, backup_path, minim
         total = sum(weight for group, weight in original.items() if group in deform)
         if total <= 1e-8:
             raise ValueError(f"顶点 {index} 没有有效的原蒙皮")
+        if totals[index] <= .5:
+            raise ValueError(f"顶点 {index} 由非动态骨主导，拒绝自动改成裙骨权重；请先人工确认裙面区域")
         nearest = int(support[np.linalg.norm(positions[support] - positions[index], axis=1).argmin()])
         target_name = names[int(spring[nearest].argmax())]
         target_group = garment.vertex_groups.get(target_name)

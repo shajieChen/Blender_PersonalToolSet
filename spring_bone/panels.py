@@ -1,13 +1,13 @@
 import bpy
 from bpy.types import Panel, UIList
 
-from .operators import active_session, last_message
+from .operators import active_session, last_message, realtime_running
 from .targets import target_armature
 
 
 def _running():
     session = active_session()
-    return session is not None and session.job is not None and not session.job.finished
+    return session is not None and session.job is not None and not session.job.finished and not realtime_running()
 
 
 class SPRING_BONE_UL_chains(UIList):
@@ -36,7 +36,7 @@ class SPRING_BONE_PT_main(Panel):
     def draw(self, context):
         layout = self.layout
         target_row = layout.row()
-        target_row.enabled = not _running()
+        target_row.enabled = active_session() is None
         target_row.prop(context.scene, "sb_target_armature", text="目标骨架")
         target = target_armature(context)
         if target is None:
@@ -47,10 +47,14 @@ class SPRING_BONE_PT_main(Panel):
         settings = target.sb_settings
         if target.animation_data is not None:
             action_row = layout.row()
-            action_row.enabled = not _running()
+            action_row.enabled = active_session() is None
             action_row.prop(target.animation_data, "action", text="当前动作")
             action = target.animation_data.action
-            if action is not None and not action.get("sb_skin_contact"):
+            if realtime_running():
+                layout.label(text="实时重力与代理体碰撞；裙面防穿另行烘焙")
+            elif action is not None and action.get("sb_contact_invalidated_reason"):
+                layout.label(text="当前防穿结果因权重恢复已失效", icon="ERROR")
+            elif action is not None and not action.get("sb_skin_contact"):
                 layout.label(text="当前动作未进行裙面防穿修正", icon="ERROR")
             elif action is not None and action.get("sb_contact_coverage") != "all_garment_faces":
                 layout.label(text="旧检测范围，请重新修正当前动作", icon="ERROR")
@@ -58,12 +62,18 @@ class SPRING_BONE_PT_main(Panel):
             layout.label(text="配置版本无法读取", icon="ERROR")
             return
         layout.prop(settings, "show_gizmos")
+        realtime_row = layout.row()
+        realtime_row.enabled = not _running()
+        realtime_row.prop(context.window_manager, "sb_realtime_preview", text="实时预览")
         if settings.show_gizmos:
             layout.label(text="青：骨骼  黄：当前链  粉：碰撞体")
             layout.label(text="穿透模型显示，远处混入灰色")
         session = active_session()
         if session is not None and session.job is not None:
-            layout.label(text=f"{session.job.armature.name} {session.job.progress:.0%} {session.job.phase}")
+            if realtime_running():
+                layout.label(text=f"实时：{session.job.armature.name} / {len(session.job.names)} 节")
+            else:
+                layout.label(text=f"{session.job.armature.name} {session.job.progress:.0%} {session.job.phase}")
         message = last_message()
         if message:
             layout.label(text=message)
@@ -165,14 +175,18 @@ class SPRING_BONE_PT_playback(Panel):
     def draw(self, context):
         layout = self.layout
         settings = target_armature(context).sb_settings
-        if settings.source_action is not None:
-            layout.label(text=f"基础：{settings.source_action.name}")
+        if realtime_running():
+            layout.label(text="每条链的每节均参与重力求解")
+            layout.label(text="可直接调整重力、刚度与拖曳")
+        source = active_session().job.source_action if realtime_running() else settings.source_action
+        if source is not None:
+            layout.label(text=f"基础：{source.name}")
         row = layout.row(align=True)
         row.prop(context.scene, "frame_start", text="开始")
         row.prop(context.scene, "frame_end", text="结束")
         row.enabled = not _running()
         actions = layout.column(align=True)
-        actions.enabled = not _running()
+        actions.enabled = active_session() is None
         actions.operator("spring_bone.preview", text="生成预览", icon="PLAY")
         actions.operator("spring_bone.bake", text="烘焙新动作", icon="ACTION")
         layout.operator("spring_bone.stop_preview", text="停止预览", icon="PAUSE")
@@ -194,7 +208,14 @@ class SPRING_BONE_PT_result(Panel):
         target = target_armature(context)
         settings = target.sb_settings
         layout = self.layout
+        if realtime_running():
+            layout.label(text="实时预览中，尚未烘焙")
+            layout.label(text="停止实时预览后可生成烘焙动作")
+            return
         action = target.animation_data.action if target.animation_data else None
+        if action is not None and action.get("sb_contact_invalidated_reason"):
+            layout.label(text="当前防穿结果已失效，请重新生成", icon="ERROR")
+            return
         if action is None or not action.get("sb_generated"):
             layout.label(text="当前动作没有动态骨骼结果", icon="ERROR")
             if settings.result_action_name:

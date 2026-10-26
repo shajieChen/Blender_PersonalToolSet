@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Spring Bone",
     "author": "Blender Plugin",
-    "version": (1, 0, 6),
+    "version": (1, 0, 7),
     "blender": (5, 1, 2),
     "location": "View3D > Sidebar > 动态骨骼",
     "description": "为已有骨骼的裙摆、发束和饰物生成预览并烘焙二次运动",
@@ -49,10 +49,14 @@ def register():
         bpy.utils.register_class(cls)
     bpy.types.Object.sb_settings = bpy.props.PointerProperty(type=properties.SpringBoneSettings)
     bpy.types.Scene.sb_target_armature = bpy.props.PointerProperty(name="目标骨架", type=bpy.types.Object, poll=scene_armature)
+    bpy.types.WindowManager.sb_realtime_preview = bpy.props.BoolProperty(name="实时预览", description="逐节计算重力、惯性和代理体碰撞；导出前停止并烘焙", get=operators.get_realtime_preview, set=operators.set_realtime_preview, options={"SKIP_SAVE"})
     if _load_pre not in bpy.app.handlers.load_pre:
         bpy.app.handlers.load_pre.append(_load_pre)
     if _load_pre not in bpy.app.handlers.undo_pre:
         bpy.app.handlers.undo_pre.append(_load_pre)
+    for handlers in (bpy.app.handlers.save_pre, bpy.app.handlers.render_pre):
+        if _load_pre not in handlers:
+            handlers.append(_load_pre)
     gizmos.register_draw()
 
 
@@ -63,6 +67,11 @@ def unregister():
         bpy.app.handlers.load_pre.remove(_load_pre)
     if _load_pre in bpy.app.handlers.undo_pre:
         bpy.app.handlers.undo_pre.remove(_load_pre)
+    for handlers in (bpy.app.handlers.save_pre, bpy.app.handlers.render_pre):
+        if _load_pre in handlers:
+            handlers.remove(_load_pre)
+    if hasattr(bpy.types.WindowManager, "sb_realtime_preview"):
+        del bpy.types.WindowManager.sb_realtime_preview
     if hasattr(bpy.types.Object, "sb_settings"):
         del bpy.types.Object.sb_settings
     if hasattr(bpy.types.Scene, "sb_target_armature"):

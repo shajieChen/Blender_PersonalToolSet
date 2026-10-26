@@ -129,9 +129,9 @@ def _drawing_target():
 
 
 def _evaluated_drawing(obj):
-    from .operators import job_running
+    from .operators import job_running, realtime_running
 
-    if job_running():
+    if job_running() and not realtime_running():
         return None
     evaluated = obj.evaluated_get(bpy.context.evaluated_depsgraph_get())
     return _build_geometry(evaluated, obj.sb_settings, float(bpy.context.scene.unit_settings.scale_length))
@@ -206,10 +206,10 @@ def draw_labels():
     obj = _drawing_target()
     if obj is None:
         return
-    from .operators import job_running
+    from .operators import job_running, realtime_running
 
     settings = obj.sb_settings
-    if job_running() or not settings.chains:
+    if (job_running() and not realtime_running()) or not settings.chains:
         return
     region = bpy.context.region
     region_data = bpy.context.region_data

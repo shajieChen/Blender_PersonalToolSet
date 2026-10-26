@@ -180,6 +180,8 @@ class SkirtContactBakeJob:
             raise SpringBoneError("请先结束其他操作")
         anim = armature.animation_data
         action = anim.action if anim is not None else None
+        if action is not None and action.get("sb_contact_invalidated_reason"):
+            raise SpringBoneError("当前防穿结果已失效，请选择原始基础动作重新生成")
         if action is None or action.library is not None or len(action.slots) != 1 or len(action.layers) != 1 or len(action.layers[0].strips) != 1:
             raise SpringBoneError("防穿修正需要单槽单层骨骼动作")
         if anim.use_nla and any(track.strips and not track.mute for track in anim.nla_tracks):
@@ -363,7 +365,7 @@ class SkirtContactBakeJob:
         frame = self.frames[self.frame_index]
         self.frame_results.append({"frame": frame, "initial_triangle_pairs": self.initial_pairs, "triangle_pairs": residual})
         if residual:
-            raise SpringBoneError(f"第 {frame:g} 帧仍有 {residual} 对裙面穿插，未生成结果；请调整碰撞部位、权重或动作")
+            raise SpringBoneError(f"第 {frame:g} 帧仍有 {residual} 对穿插，未生成结果；请先确认裙面范围、碰撞部位和动作，不自动修改蒙皮")
         poses = [self.armature.pose.bones[name] for name in self.names]
         bases = [pose.matrix_basis.copy() for pose in poses]
         try:
