@@ -1,0 +1,24 @@
+{
+  "status": "Passed",
+  "spring_enabled": [
+    true,
+    true
+  ],
+  "mounts_enabled": [
+    true,
+    true
+  ],
+  "spring_version": [
+    1,
+    0,
+    8
+  ],
+  "spring_file": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\spring_bone\\__init__.py",
+  "preset_panel": true,
+  "mount_panel": true,
+  "chain_presets": 4,
+  "collider_presets": 3,
+  "character_presets": [
+    "user_ChibiSkirt"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "status": "Passed",
+  "capsule_endpoints_checked": 8,
+  "maximum_endpoint_error_m": 5.960873736104565e-08,
+  "character_preset_loaded": "user_ChibiSkirt",
+  "saved_chains": 8,
+  "saved_colliders": 7,
+  "hair_candidates": 9,
+  "tail_candidates": 4,
+  "catalog_errors": [],
+  "temporary_callbacks_added": 0,
+  "formal_draw_handlers_present": true
+}

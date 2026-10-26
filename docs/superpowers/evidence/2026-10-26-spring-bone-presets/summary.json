@@ -1,0 +1,37 @@
+{
+  "status": "Completed",
+  "chain_presets": 4,
+  "collider_presets": 3,
+  "focused_tests": 24,
+  "tests": {
+    "Blender5.2.1_workspace": 147,
+    "Blender5.1.2_installed": 147,
+    "Mounts5.1.2_installed": 34
+  },
+  "current_character": {
+    "chains": 8,
+    "segments": 32,
+    "colliders": 7,
+    "saved_preset": "user_ChibiSkirt"
+  },
+  "maximum_capsule_endpoint_error_m": 5.960873736104565e-08,
+  "unchanged_skinning_mesh_count": 6,
+  "no_mesh_or_weight_changes": true,
+  "fresh_startup": "Passed",
+  "temporary_runtime_callbacks_added": 0,
+  "cleanup": "Passed",
+  "cpp_gates": "NotApplicable",
+  "user_confirmed": true,
+  "user_confirmation": "符合预期，可以收尾",
+  "post_cleanup_tests": {
+    "Blender5.2.1_workspace": 147,
+    "Blender5.1.2_installed": 147
+  },
+  "user_realtime_choice_preserved": true,
+  "publication": {
+    "user_authorized": true,
+    "target": "origin/main",
+    "code_commit": "d46a7af5831896aa022a130c81f31737061b4ac9",
+    "remote_verification": "Compare remote refs/heads/main with final HEAD after pushing the documentation commit"
+  }
+}

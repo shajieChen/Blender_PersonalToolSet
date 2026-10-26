@@ -1,0 +1,330 @@
+{
+  "schema_version": 1,
+  "id": "user_ChibiSkirt",
+  "label": "ChibiSkirt",
+  "kind": "character",
+  "chains": [
+    {
+      "name": "H_QunZi.L",
+      "bone_names": [
+        "H_QunZi.L",
+        "H_QunZi.L.001",
+        "H_QunZi.L.002",
+        "H_QunZi.L.003"
+      ],
+      "parameters": {
+        "stiffness": 6.0,
+        "drag_force": 0.44999998807907104,
+        "gravity_power": 2.200000047683716,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 70.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      },
+      "hit_radius_ratio": 0.060000002527920794
+    },
+    {
+      "name": "H_QunZi.R",
+      "bone_names": [
+        "H_QunZi.R",
+        "H_QunZi.R.001",
+        "H_QunZi.R.002",
+        "H_QunZi.R.003"
+      ],
+      "parameters": {
+        "stiffness": 6.0,
+        "drag_force": 0.44999998807907104,
+        "gravity_power": 2.200000047683716,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 70.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      },
+      "hit_radius_ratio": 0.05999999981340691
+    },
+    {
+      "name": "Q_QunZi.L",
+      "bone_names": [
+        "Q_QunZi.L",
+        "Q_QunZi.L.001",
+        "Q_QunZi.L.002",
+        "Q_QunZi.L.003"
+      ],
+      "parameters": {
+        "stiffness": 6.0,
+        "drag_force": 0.44999998807907104,
+        "gravity_power": 2.200000047683716,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 70.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      },
+      "hit_radius_ratio": 0.05999999836225175
+    },
+    {
+      "name": "Q_QunZi.R",
+      "bone_names": [
+        "Q_QunZi.R",
+        "Q_QunZi.R.001",
+        "Q_QunZi.R.002",
+        "Q_QunZi.R.003"
+      ],
+      "parameters": {
+        "stiffness": 6.0,
+        "drag_force": 0.44999998807907104,
+        "gravity_power": 2.200000047683716,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 70.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      },
+      "hit_radius_ratio": 0.06000000302409855
+    },
+    {
+      "name": "QunZi.L",
+      "bone_names": [
+        "QunZi.L",
+        "QunZi.L.001",
+        "QunZi.L.002",
+        "QunZi.L.003"
+      ],
+      "parameters": {
+        "stiffness": 6.0,
+        "drag_force": 0.44999998807907104,
+        "gravity_power": 2.200000047683716,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 70.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      },
+      "hit_radius_ratio": 0.06000000056815539
+    },
+    {
+      "name": "QunZi.R",
+      "bone_names": [
+        "QunZi.R",
+        "QunZi.R.001",
+        "QunZi.R.002",
+        "QunZi.R.003"
+      ],
+      "parameters": {
+        "stiffness": 6.0,
+        "drag_force": 0.44999998807907104,
+        "gravity_power": 2.200000047683716,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 70.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      },
+      "hit_radius_ratio": 0.05999999946090295
+    },
+    {
+      "name": "Z_HouQunZi",
+      "bone_names": [
+        "Z_HouQunZi",
+        "Z_HouQunZi.001",
+        "Z_HouQunZi.002",
+        "Z_HouQunZi.003"
+      ],
+      "parameters": {
+        "stiffness": 6.0,
+        "drag_force": 0.44999998807907104,
+        "gravity_power": 2.200000047683716,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 70.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      },
+      "hit_radius_ratio": 0.05999999735674572
+    },
+    {
+      "name": "Z_QunZi",
+      "bone_names": [
+        "Z_QunZi",
+        "Z_QunZi.001",
+        "Z_QunZi.002",
+        "Z_QunZi.003"
+      ],
+      "parameters": {
+        "stiffness": 6.0,
+        "drag_force": 0.44999998807907104,
+        "gravity_power": 2.200000047683716,
+        "gravity_dir": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "weight": 1.0,
+        "cone_enabled": true,
+        "cone_angle_deg": 70.0,
+        "inertia_space": "WORLD",
+        "ancestor_name": "",
+        "warmup_seconds": 0.25
+      },
+      "hit_radius_ratio": 0.060000002069932154
+    }
+  ],
+  "colliders": [
+    {
+      "name": "hips",
+      "bone_name": "hips",
+      "shape": "SPHERE",
+      "radius_ratio": 0.919021429151224,
+      "head_fraction": [
+        0.0,
+        0.25,
+        0.0
+      ],
+      "tail_fraction": [
+        0.0,
+        0.9000000345279188,
+        0.0
+      ]
+    },
+    {
+      "name": "thigh_l",
+      "bone_name": "upper_leg.L",
+      "shape": "CAPSULE",
+      "radius_ratio": 0.19999999761415171,
+      "head_fraction": [
+        -3.4798854134613874e-09,
+        0.100000004724823,
+        4.632541372209372e-09
+      ],
+      "tail_fraction": [
+        -3.1318966256965265e-08,
+        0.899999971651062,
+        4.1692870589750613e-08
+      ]
+    },
+    {
+      "name": "thigh_r",
+      "bone_name": "upper_leg.R",
+      "shape": "CAPSULE",
+      "radius_ratio": 0.1999999978742384,
+      "head_fraction": [
+        2.747428740783224e-08,
+        0.10000002362411947,
+        3.2298600837900268e-09
+      ],
+      "tail_fraction": [
+        2.472685669569887e-07,
+        0.9000001417447169,
+        2.9068740754110244e-08
+      ]
+    },
+    {
+      "name": "shin_l",
+      "bone_name": "lower_leg.L",
+      "shape": "CAPSULE",
+      "radius_ratio": 0.1500000011213694,
+      "head_fraction": [
+        -9.53128652124447e-10,
+        0.09999998977589024,
+        2.362997418533195e-09
+      ],
+      "tail_fraction": [
+        -8.578157551721881e-09,
+        0.8999998227820974,
+        2.126697549720619e-08
+      ]
+    },
+    {
+      "name": "shin_r",
+      "bone_name": "lower_leg.R",
+      "shape": "CAPSULE",
+      "radius_ratio": 0.1499999846928102,
+      "head_fraction": [
+        -5.1873762440256335e-08,
+        0.1,
+        -2.902456024945338e-10
+      ],
+      "tail_fraction": [
+        -4.668638213353339e-07,
+        0.9,
+        -2.6122102637516904e-09
+      ]
+    },
+    {
+      "name": "foot_l",
+      "bone_name": "foot.L",
+      "shape": "CAPSULE",
+      "radius_ratio": 0.2999999943117191,
+      "head_fraction": [
+        0.0,
+        0.09999999653402689,
+        0.0
+      ],
+      "tail_fraction": [
+        0.0,
+        0.9000000207958387,
+        0.0
+      ]
+    },
+    {
+      "name": "foot_r",
+      "bone_name": "foot.R",
+      "shape": "CAPSULE",
+      "radius_ratio": 0.29999998521792415,
+      "head_fraction": [
+        0.0,
+        0.09999999653402689,
+        0.0
+      ],
+      "tail_fraction": [
+        0.0,
+        0.9000000207958387,
+        0.0
+      ]
+    }
+  ]
+}

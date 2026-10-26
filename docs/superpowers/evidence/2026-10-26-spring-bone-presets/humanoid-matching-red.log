@@ -1,0 +1,89 @@
+test_branch_children_are_split_without_shared_bones (test_spring_bone_presets.SpringBonePresets.test_branch_children_are_split_without_shared_bones) ... ok
+test_builtin_catalog_contains_requested_profiles (test_spring_bone_presets.SpringBonePresets.test_builtin_catalog_contains_requested_profiles) ... ok
+test_capsule_uses_next_joint_when_bone_is_a_short_marker (test_spring_bone_presets.SpringBonePresets.test_capsule_uses_next_joint_when_bone_is_a_short_marker) ... FAIL
+test_character_preset_roundtrip_and_no_overwrite (test_spring_bone_presets.SpringBonePresets.test_character_preset_roundtrip_and_no_overwrite) ... ok
+test_collider_excludes_simulated_bones_and_descendants (test_spring_bone_presets.SpringBonePresets.test_collider_excludes_simulated_bones_and_descendants) ... ok
+test_collider_radius_scales_but_local_offsets_do_not_double_scale (test_spring_bone_presets.SpringBonePresets.test_collider_radius_scales_but_local_offsets_do_not_double_scale) ... ok
+test_control_bones_are_not_detected_as_skirt_chains (test_spring_bone_presets.SpringBonePresets.test_control_bones_are_not_detected_as_skirt_chains) ... FAIL
+test_detection_builds_contiguous_chain_without_writing (test_spring_bone_presets.SpringBonePresets.test_detection_builds_contiguous_chain_without_writing) ... ok
+test_different_character_cannot_apply_an_existing_plan (test_spring_bone_presets.SpringBonePresets.test_different_character_cannot_apply_an_existing_plan) ... ok
+test_existing_chains_are_preserved_and_not_duplicated (test_spring_bone_presets.SpringBonePresets.test_existing_chains_are_preserved_and_not_duplicated) ... ok
+test_humanoid_matching_uses_known_names_without_geometry_override (test_spring_bone_presets.SpringBonePresets.test_humanoid_matching_uses_known_names_without_geometry_override) ... FAIL
+test_invalid_plan_is_atomic (test_spring_bone_presets.SpringBonePresets.test_invalid_plan_is_atomic) ... ok
+test_new_rig_has_usable_preset_defaults (test_spring_bone_presets.SpringBonePresets.test_new_rig_has_usable_preset_defaults) ... ok
+test_operator_uses_explicit_target_in_object_mode (test_spring_bone_presets.SpringBonePresets.test_operator_uses_explicit_target_in_object_mode) ... ok
+test_parameter_preset_only_changes_active_chain (test_spring_bone_presets.SpringBonePresets.test_parameter_preset_only_changes_active_chain) ... ok
+test_pelvis_radius_uses_thigh_separation (test_spring_bone_presets.SpringBonePresets.test_pelvis_radius_uses_thigh_separation) ... ok
+test_preset_name_rejects_path_traversal (test_spring_bone_presets.SpringBonePresets.test_preset_name_rejects_path_traversal) ... ok
+test_realtime_session_blocks_preset_application (test_spring_bone_presets.SpringBonePresets.test_realtime_session_blocks_preset_application) ... ok
+test_save_rejects_nonfinite_parameters (test_spring_bone_presets.SpringBonePresets.test_save_rejects_nonfinite_parameters) ... ok
+test_saved_colliders_keep_names_and_scale_on_load (test_spring_bone_presets.SpringBonePresets.test_saved_colliders_keep_names_and_scale_on_load) ... ok
+test_stale_plan_does_not_write_any_entries (test_spring_bone_presets.SpringBonePresets.test_stale_plan_does_not_write_any_entries) ... ok
+test_unrelated_hand_bones_are_not_detected (test_spring_bone_presets.SpringBonePresets.test_unrelated_hand_bones_are_not_detected) ... ok
+test_write_failure_rolls_back_added_collections (test_spring_bone_presets.SpringBonePresets.test_write_failure_rolls_back_added_collections) ... ok
+
+======================================================================
+FAIL: test_capsule_uses_next_joint_when_bone_is_a_short_marker (test_spring_bone_presets.SpringBonePresets.test_capsule_uses_next_joint_when_bone_is_a_short_marker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 234, in test_capsule_uses_next_joint_when_bone_is_a_short_marker
+    self.assertAlmostEqual(row["radius_m"], span * .2)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0.0009999999873689376 != 0.04000000141561029 within 7 places (0.03900000142824135 difference)
+
+======================================================================
+FAIL: test_control_bones_are_not_detected_as_skirt_chains (test_spring_bone_presets.SpringBonePresets.test_control_bones_are_not_detected_as_skirt_chains)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 223, in test_control_bones_are_not_detected_as_skirt_chains
+    self.assertEqual(plan["entries"], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'kind': 'chain', 'name': 'Ctrl_Skirt.L',[347 chars]86}}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'kind': 'chain', 'name': 'Ctrl_Skirt.L', 'bone_names': ['Ctrl_Skirt.L', 'Ctrl_Skirt.L.001', 'Ctrl_Skirt.L.002'], 'parameters': {'stiffness': 6.0, 'drag_force': 0.45, 'gravity_power': 2.2, 'gravity_dir': [0.0, 0.0, -1.0], 'weight': 1.0, 'cone_enabled': True, 'cone_angle_deg': 70.0, 'inertia_space': 'WORLD', 'ancestor_name': '', 'warmup_seconds': 0.25, 'hit_radius_m': 0.012000000424683086}}
+
++ []
+- [{'bone_names': ['Ctrl_Skirt.L', 'Ctrl_Skirt.L.001', 'Ctrl_Skirt.L.002'],
+-   'kind': 'chain',
+-   'name': 'Ctrl_Skirt.L',
+-   'parameters': {'ancestor_name': '',
+-                  'cone_angle_deg': 70.0,
+-                  'cone_enabled': True,
+-                  'drag_force': 0.45,
+-                  'gravity_dir': [0.0, 0.0, -1.0],
+-                  'gravity_power': 2.2,
+-                  'hit_radius_m': 0.012000000424683086,
+-                  'inertia_space': 'WORLD',
+-                  'stiffness': 6.0,
+-                  'warmup_seconds': 0.25,
+-                  'weight': 1.0}}]
+
+======================================================================
+FAIL: test_humanoid_matching_uses_known_names_without_geometry_override (test_spring_bone_presets.SpringBonePresets.test_humanoid_matching_uses_known_names_without_geometry_override)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 214, in test_humanoid_matching_uses_known_names_without_geometry_override
+    roles = self.module.humanoid_roles(self.arm)
+  File "H:\Blender_Plugin\spring_bone\presets.py", line 126, in humanoid_roles
+    return classify_armature(armature)
+  File "H:\Blender\5.2.1\5.2\python\Lib\unittest\mock.py", line 1169, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\unittest\mock.py", line 1173, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\unittest\mock.py", line 1234, in _execute_mock_call
+    raise effect
+AssertionError: untrusted geometry matching
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.267s
+
+FAILED (failures=3)
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+Info: 已应用 1 项预设：RealtimeRig
+SPRING_BONE_SELECTED 23

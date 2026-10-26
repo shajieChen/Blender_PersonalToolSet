@@ -1,0 +1,62 @@
+{
+  "target": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\spring_bone",
+  "files": [
+    {
+      "file": "animation.py",
+      "sha256": "44ab89236fb50d7f3243175e37a15e044efe995f5b3d0188157763d7a5fc97a6"
+    },
+    {
+      "file": "contact_bake.py",
+      "sha256": "5425ce805e109903630aaef6eef6f04eeed0b157ab22d08bf24302a4e391dfa3"
+    },
+    {
+      "file": "gizmos.py",
+      "sha256": "8070d4649da355623707956b3ba81b4f359c354415d3f86a7eae415cb8fb499c"
+    },
+    {
+      "file": "operators.py",
+      "sha256": "36e61a2f80f47ec04cfa505a4b31d9d764e2c608fd2249bcccfad4beb271c977"
+    },
+    {
+      "file": "panels.py",
+      "sha256": "c255b9079a1b42c90eb0435c879f2b8ad88b99e20abdff6f1357b24aea1f09b3"
+    },
+    {
+      "file": "presets.py",
+      "sha256": "90f9b4ebfba3ae9ae65658ceb3db7dc25d6b3003a359549b7254261b875a5a8f"
+    },
+    {
+      "file": "preset_operators.py",
+      "sha256": "1fce1fee111bb751d95886d506af443391c1e0071bb8b3799cbf871de0efa61f"
+    },
+    {
+      "file": "properties.py",
+      "sha256": "9b9859c80ac57f36a559d28973d56a9cc5bf26c3230d813cedc2c45f40637853"
+    },
+    {
+      "file": "realtime.py",
+      "sha256": "6516a74b8fe99f845189f742c7c9bbf0752a3e8b4f868b62e6923efbed07bf00"
+    },
+    {
+      "file": "skin_collision.py",
+      "sha256": "42adbc627ccb34aa2c92ebb943ba26a4989f4bf7392c902ba53c38eadfb85a54"
+    },
+    {
+      "file": "solver.py",
+      "sha256": "a603b326ae0390f411a10493e6fc6db021eec1d25bb6a5508142c40627c84792"
+    },
+    {
+      "file": "targets.py",
+      "sha256": "51b745fcebb5931d78eef8283ce86caeb40f40a277c414a235654bdd5cc36077"
+    },
+    {
+      "file": "__init__.py",
+      "sha256": "72f348c8fe2367d7484a197504bcc1a88389e170dbb2bbe9ffd71b8b17dc3fe1"
+    },
+    {
+      "file": "preset_data/builtin.json",
+      "sha256": "fecc436208e3c2fde061a9a9d745c899973784a5fc08a36931327280d383d656"
+    }
+  ],
+  "preserves_user_directory": true
+}

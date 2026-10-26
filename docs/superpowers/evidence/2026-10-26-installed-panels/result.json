@@ -1,0 +1,16 @@
+{
+  "status": "Completed",
+  "root_cause": "Packages absent and disabled in active Blender5.1 user directory; earlier runtime loading was not persistent installation",
+  "spring_files": 11,
+  "mounts_files": 6,
+  "enabled_and_preferences_saved": true,
+  "fresh_process_startup": "Passed",
+  "mounts_installed_tests": 34,
+  "spring_followup_evidence": "../2026-10-26-spring-bone-presets/installed-full-5_1.log",
+  "ui_tabs": [
+    "动态骨骼",
+    "人形挂载"
+  ],
+  "scene_not_saved": true,
+  "preference_backup_location": "User config directory only; not committed"
+}

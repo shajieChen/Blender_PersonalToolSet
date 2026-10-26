@@ -1,0 +1,23 @@
+{
+  "status": "Passed",
+  "checked_files": [
+    "spring_bone/presets.py",
+    "spring_bone/preset_operators.py",
+    "spring_bone/properties.py",
+    "spring_bone/panels.py",
+    "spring_bone/__init__.py",
+    "humanoid_mounts/__init__.py",
+    "tests/run_spring_bone_tests.py",
+    "tests/test_spring_bone_animation.py",
+    "tests/test_spring_bone_presets.py"
+  ],
+  "ast": "Passed",
+  "new_comments": 0,
+  "encoding": "UTF8NoBOM; original newline conventions preserved",
+  "json_schema_version": 1,
+  "other_owner_files_preserved": [
+    "humanoid_retarget/pipeline.py",
+    "tests/test_fbx_pipeline.py"
+  ],
+  "cpp_gates": "NotApplicable"
+}

@@ -1,0 +1,43 @@
+{
+  "status": "Passed",
+  "blender": "5.1.2",
+  "packages": [
+    {
+      "name": "spring_bone",
+      "file": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\spring_bone\\__init__.py",
+      "enabled": [
+        true,
+        true
+      ],
+      "panel": "SPRING_BONE_PT_main",
+      "category": "\u52a8\u6001\u9aa8\u9abc",
+      "version": [
+        1,
+        0,
+        7
+      ]
+    },
+    {
+      "name": "humanoid_mounts",
+      "file": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_mounts\\__init__.py",
+      "enabled": [
+        true,
+        true
+      ],
+      "panel": "HM_PT_mounts",
+      "category": "\u4eba\u5f62\u6302\u8f7d",
+      "version": [
+        1,
+        0,
+        1
+      ]
+    }
+  ],
+  "preferences_saved": true,
+  "current_spring_chain_counts": {
+    "Armature": 0,
+    "\u9aa8\u67b6": 0
+  },
+  "scene_saved": false,
+  "ui_selection": "Redraw requested before selecting new tab"
+}

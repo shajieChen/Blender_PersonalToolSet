@@ -1,0 +1,319 @@
+{
+  "status": "Passed",
+  "objects": [
+    {
+      "target": "Armature",
+      "chain_count": 6,
+      "bone_count": 6,
+      "chain_roots": [
+        "L_Calf_Skirt",
+        "L_Knee_Skirt",
+        "L_Thigh_Skirt",
+        "R_Calf_Skirt",
+        "R_Knee_Skirt",
+        "R_Thigh_Skirt"
+      ],
+      "roles": {
+        "hips": "Pelvis",
+        "spine": "Spine",
+        "chest": "Spine2",
+        "neck": "Neck",
+        "head": "Head",
+        "shoulder_l": "L_Clavicle",
+        "shoulder_r": "R_Clavicle",
+        "upperarm_l": "L_UpperArm",
+        "upperarm_r": "R_UpperArm",
+        "forearm_l": "L_Forearm",
+        "forearm_r": "R_Forearm",
+        "hand_l": "L_Hand",
+        "hand_r": "R_Hand",
+        "thigh_l": "L_Thigh",
+        "thigh_r": "R_Thigh",
+        "shin_l": "L_Calf",
+        "shin_r": "R_Calf",
+        "foot_l": "L_Foot",
+        "foot_r": "R_Foot"
+      },
+      "colliders": [
+        {
+          "kind": "collider",
+          "name": "hips",
+          "bone_name": "Pelvis",
+          "shape": "SPHERE",
+          "radius_m": 0.113683803905863,
+          "head_offset_m": [
+            0.0,
+            0.02583722025156021,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.09301399290561677,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "thigh_l",
+          "bone_name": "L_Thigh",
+          "shape": "CAPSULE",
+          "radius_m": 0.0886727199510505,
+          "head_offset_m": [
+            0.044336359947919846,
+            8.574260590421545e-08,
+            -1.3639180895808067e-09
+          ],
+          "tail_offset_m": [
+            0.3990271985530853,
+            7.716834033999476e-07,
+            -1.2275261696004236e-08
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "thigh_r",
+          "bone_name": "R_Thigh",
+          "shape": "CAPSULE",
+          "radius_m": 0.08867270655987325,
+          "head_offset_m": [
+            0.04433635249733925,
+            8.750412661129303e-08,
+            -2.834588119782211e-09
+          ],
+          "tail_offset_m": [
+            0.39902716875076294,
+            7.875371466070646e-07,
+            -2.551129085759385e-08
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "shin_l",
+          "bone_name": "L_Calf",
+          "shape": "CAPSULE",
+          "radius_m": 0.06349468365027855,
+          "head_offset_m": [
+            0.04232979193329811,
+            7.29392866105627e-08,
+            -9.000546086213035e-09
+          ],
+          "tail_offset_m": [
+            0.3809681236743927,
+            6.564535510733549e-07,
+            -8.100490589413312e-08
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "shin_r",
+          "bone_name": "R_Calf",
+          "shape": "CAPSULE",
+          "radius_m": 0.06349468497034108,
+          "head_offset_m": [
+            0.04232979938387871,
+            6.833602839151354e-08,
+            -1.0968506103381515e-09
+          ],
+          "tail_offset_m": [
+            0.3809681832790375,
+            6.150242484181945e-07,
+            -9.871655493043363e-09
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "foot_l",
+          "bone_name": "L_Foot",
+          "shape": "CAPSULE",
+          "radius_m": 0.033110511868338466,
+          "head_offset_m": [
+            0.0,
+            0.01103682965040207,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.09933146685361863,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "foot_r",
+          "bone_name": "R_Foot",
+          "shape": "CAPSULE",
+          "radius_m": 0.03311054730920899,
+          "head_offset_m": [
+            0.0,
+            0.011036846041679383,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.09933161437511444,
+            0.0
+          ]
+        }
+      ],
+      "notices": []
+    },
+    {
+      "target": "\u9aa8\u67b6",
+      "chain_count": 8,
+      "bone_count": 32,
+      "chain_roots": [
+        "H_QunZi.L",
+        "H_QunZi.R",
+        "Q_QunZi.L",
+        "Q_QunZi.R",
+        "QunZi.L",
+        "QunZi.R",
+        "Z_HouQunZi",
+        "Z_QunZi"
+      ],
+      "roles": {
+        "hips": "hips",
+        "spine": "spine",
+        "chest": "chest",
+        "neck": "neck",
+        "head": "head",
+        "shoulder_l": "shoulder.L",
+        "shoulder_r": "shoulder.R",
+        "upperarm_l": "upper_arm.L",
+        "upperarm_r": "upper_arm.R",
+        "forearm_l": "lower_arm.L",
+        "forearm_r": "lower_arm.R",
+        "hand_l": "hand.L",
+        "hand_r": "hand.R",
+        "shin_l": "lower_leg.L",
+        "shin_r": "lower_leg.R",
+        "foot_l": "foot.L",
+        "foot_r": "foot.R",
+        "thigh_l": "upper_leg.L",
+        "thigh_r": "upper_leg.R"
+      },
+      "colliders": [
+        {
+          "kind": "collider",
+          "name": "hips",
+          "bone_name": "hips",
+          "shape": "SPHERE",
+          "radius_m": 0.09915516427514508,
+          "head_offset_m": [
+            0.0,
+            0.026973029598593712,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.09710290655493736,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "thigh_l",
+          "bone_name": "upper_leg.L",
+          "shape": "CAPSULE",
+          "radius_m": 0.015769012482387205,
+          "head_offset_m": [
+            -2.743718308106935e-10,
+            0.00788450799882412,
+            3.652530777831231e-10
+          ],
+          "tail_offset_m": [
+            -2.469346283007212e-09,
+            0.07096056640148163,
+            3.28727756127023e-09
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "thigh_r",
+          "bone_name": "upper_leg.R",
+          "shape": "CAPSULE",
+          "radius_m": 0.015769012474312553,
+          "head_offset_m": [
+            2.166211876541979e-09,
+            0.00788450799882412,
+            2.546585164964199e-10
+          ],
+          "tail_offset_m": [
+            1.9495905334565578e-08,
+            0.07096056640148163,
+            2.291926648467779e-09
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "shin_l",
+          "bone_name": "lower_leg.L",
+          "shape": "CAPSULE",
+          "radius_m": 0.008198172725301933,
+          "head_offset_m": [
+            -5.2092764130096114e-11,
+            0.005465448834002018,
+            1.291484280629973e-10
+          ],
+          "tail_offset_m": [
+            -4.688348598236303e-10,
+            0.04918903484940529,
+            1.1623357831780368e-09
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "shin_r",
+          "bone_name": "lower_leg.R",
+          "shape": "CAPSULE",
+          "radius_m": 0.008198171097830905,
+          "head_offset_m": [
+            -2.835133461331907e-09,
+            0.005465447902679443,
+            -1.5863222194156812e-11
+          ],
+          "tail_offset_m": [
+            -2.5516198931541112e-08,
+            0.04918903112411499,
+            -1.4276899107379393e-10
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "foot_l",
+          "bone_name": "foot.L",
+          "shape": "CAPSULE",
+          "radius_m": 0.01612227254382872,
+          "head_offset_m": [
+            0.0,
+            0.005374090000987053,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.04836681000888348,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "foot_r",
+          "bone_name": "foot.R",
+          "shape": "CAPSULE",
+          "radius_m": 0.01612227675782803,
+          "head_offset_m": [
+            0.0,
+            0.005374090000987053,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.04836681000888348,
+            0.0
+          ]
+        }
+      ],
+      "notices": []
+    }
+  ]
+}

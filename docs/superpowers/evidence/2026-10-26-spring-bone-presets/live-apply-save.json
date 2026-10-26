@@ -1,0 +1,65 @@
+{
+  "status": "Passed",
+  "source": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\spring_bone\\presets.py",
+  "original_explicit_target": null,
+  "target": "\u9aa8\u67b6",
+  "selected_mesh_skin_owner": null,
+  "chains": 8,
+  "segments": 32,
+  "colliders": 7,
+  "unchanged_meshes": [
+    "body",
+    "clothing",
+    "clothing.001",
+    "hair",
+    "hair.001",
+    "head.001"
+  ],
+  "mesh_and_weights_unchanged": true,
+  "rest_unchanged": true,
+  "action_curves_unchanged": true,
+  "time_and_selection_preserved": true,
+  "duplicate_match_entries": 0,
+  "saved_preset": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\spring_bone\\preset_data\\user\\ChibiSkirt.json",
+  "saved_preset_sha256": "36a5cc8a9c042b6146c01d58111f21a4e63d601b5a4ee68b93e39d1d91503757",
+  "gizmo_bone_line_vertices": 3904,
+  "gizmo_collider_line_vertices": 1344,
+  "collider_bindings": [
+    [
+      "hips",
+      "hips",
+      0.09915516525506973
+    ],
+    [
+      "thigh_l",
+      "upper_leg.L",
+      0.01576901227235794
+    ],
+    [
+      "thigh_r",
+      "upper_leg.R",
+      0.01576901227235794
+    ],
+    [
+      "shin_l",
+      "lower_leg.L",
+      0.00819817278534174
+    ],
+    [
+      "shin_r",
+      "lower_leg.R",
+      0.00819817092269659
+    ],
+    [
+      "foot_l",
+      "foot.L",
+      0.016122272238135338
+    ],
+    [
+      "foot_r",
+      "foot.R",
+      0.016122275963425636
+    ]
+  ],
+  "temporary_callbacks_added": 0
+}

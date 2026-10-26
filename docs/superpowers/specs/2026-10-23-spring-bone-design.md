@@ -235,3 +235,21 @@ WindowManager复选框不保存启动状态。实时作业拥有临时Object与A
 实时只承诺骨骼代理体碰撞；完整裙面修正仍离线，FBX仍走烘焙Action。统计能力默认关闭，仅正式量化脚本按需启用并恢复。三种后续变化的边界：增加风只改变求解输入；增加同时多角色须先变更当前单Session约束；实时录制Action须新增明确录制/提交所有权，当前不提前实现。
 
 验证与使用见[实时预览文档](../../spring-bone-realtime-preview.md)、[实施档](../plans/2026-10-26-spring-bone-realtime-preview.md)和[运行证据](../evidence/2026-10-26-spring-bone-realtime/result.md)。
+
+
+## 13 2026-10-26 插件内预设与人形匹配
+
+用户要求碰撞体、骨骼链均提供内置Preset，并支持长期保存复用。内置模板为preset_data/builtin.json：四种链参数（稳定裙摆、柔软裙摆、头发、尾巴），三种碰撞体（人形下身、头肩、全身）。这些是本求解器的可调起点，不是网上跨求解器通用数值。
+
+依据：[VRM SpringBone规范](https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_springBone-1.0/README.md)将连续链、关节参数及碰撞体分离，球/胶囊以局部端点和半径表示；[VRChat官方PhysBones](https://creators.vrchat.com/common-components/physbones/)区分根、忽略子树及头/躯干/手脚等标准碰撞区域。本实现采用分用途模板、非模拟身体角色、局部轴端比例与世界米制半径；参数系数继续服从原solver，未将PhysBones数值直接搬入。
+
+原始“不互相导入Python模块”边界在此明确扩展为可选、只读的人形识别入口：预设按需复用humanoid_retarget.classify，不调用register、重定向或写映射。没有修改Retarget。未安装该包时，人形自动碰撞模板明确报缺依赖；链关键词识别、角色配置保存加载及手动模拟仍可独立运行。不复制另一套人形识别器。solver/animation/realtime不依赖Retarget，依赖单向且无环。
+
+链识别仅从用途关键词起点向子树走连续单链，人体角色保护、分叉分开、已有链/碰撞骨跳过，绝不按“所有末端骨”猜测，也不更改蒙皮。碰撞体按Rest骨长和单位/正统一缩放估算，不对当前帧姿势拟合；缺失角色、已有碰撞体及动态链驱动骨列出并跳过。尺寸只是初始代理，仍需用户检查，不保证完整网格零穿插。
+
+先只读匹配并在确认对话框显示目标、候选复选框及跳过原因，再一次应用。对话框期间目标、Rest、单位、缩放或配置变更使快照失效；全部候选先校验，失败不部分提交。意外写入异常回滚新增集合及参数。实时/离线Session存在时禁用预设写入。
+
+角色快照是独立JSON，存插件preset_data/user/，含schema_version及真实骨名、链参数、归一化半径/局部轴端。再次应用要求骨名/父子关系匹配，避免静默换骨。文件名禁止路径穿越，同名拒绝覆盖，不保存对象指针、Action、权重或会话。官方模板保持只读；安装器robocopy /E不清除用户文件。新增模板、追加用途、替换人形识别来源分别局限于数据、匹配函数、只读识别入口，不增加通用注册框架。
+
+
+实机预设匹配补充：原有几何分类在当前大头角色中把头发当作腿，已以量化候选证据确认，未应用错误方案。人形预设改为只读复用classify_by_name与normalize_bone_name，JSON补充upper_leg/lower_leg别名；明确名称不由几何覆盖，无法确认则跳过。控制骨Ctrl/Control/IK/MCH/ORG不进入链候选。四肢胶囊优先使用下一身体关节的Rest位置，转换到绑定骨局部；解决源角色5mm短标记骨导致碰撞体过小。骨盆、胸部半径采用对应左右关节间距比例。示例半径仍不是完整皮肤拟合或防穿保证。

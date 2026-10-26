@@ -1,0 +1,95 @@
+{
+  "blender": "5.1.2",
+  "initial_enabled": {
+    "spring_bone": false,
+    "humanoid_mounts": false
+  },
+  "preferences_backup": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\config\\userpref.blend.before-spring-mounts-20261026",
+  "preferences_backup_sha256": "4f1add04162af681ed6274d2fa130526676b1700242b82275ec20ed15d748cc9",
+  "installer_sha256_before": "2e10d0bca823a0f1bb20684b1ff304462e029193cb8a191b2197163880f04a51",
+  "installer_sha256_after": "82c86c562e66562ffbcfd346a8a48df3769e720b5186f1388b404bb4cb551334",
+  "packages": [
+    {
+      "name": "spring_bone",
+      "target": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\spring_bone",
+      "existed_before": false,
+      "files": [
+        {
+          "file": "__init__.py",
+          "sha256": "b8bd7b0eed1d530b6733ea228012a75ed77cd151f56ebea23e8840e5c9b2f44c"
+        },
+        {
+          "file": "animation.py",
+          "sha256": "44ab89236fb50d7f3243175e37a15e044efe995f5b3d0188157763d7a5fc97a6"
+        },
+        {
+          "file": "contact_bake.py",
+          "sha256": "5425ce805e109903630aaef6eef6f04eeed0b157ab22d08bf24302a4e391dfa3"
+        },
+        {
+          "file": "gizmos.py",
+          "sha256": "8070d4649da355623707956b3ba81b4f359c354415d3f86a7eae415cb8fb499c"
+        },
+        {
+          "file": "operators.py",
+          "sha256": "36e61a2f80f47ec04cfa505a4b31d9d764e2c608fd2249bcccfad4beb271c977"
+        },
+        {
+          "file": "panels.py",
+          "sha256": "c7541fa34064682701e39abdcac252787c53c687822d2e80f470ae2160b8cfb8"
+        },
+        {
+          "file": "properties.py",
+          "sha256": "8f2b49a733a00b0e8fef516595a97dc7a6529c6165cb223112f986c1ef18796e"
+        },
+        {
+          "file": "realtime.py",
+          "sha256": "6516a74b8fe99f845189f742c7c9bbf0752a3e8b4f868b62e6923efbed07bf00"
+        },
+        {
+          "file": "skin_collision.py",
+          "sha256": "42adbc627ccb34aa2c92ebb943ba26a4989f4bf7392c902ba53c38eadfb85a54"
+        },
+        {
+          "file": "solver.py",
+          "sha256": "a603b326ae0390f411a10493e6fc6db021eec1d25bb6a5508142c40627c84792"
+        },
+        {
+          "file": "targets.py",
+          "sha256": "51b745fcebb5931d78eef8283ce86caeb40f40a277c414a235654bdd5cc36077"
+        }
+      ]
+    },
+    {
+      "name": "humanoid_mounts",
+      "target": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_mounts",
+      "existed_before": false,
+      "files": [
+        {
+          "file": "__init__.py",
+          "sha256": "86a2df82571499fe770c119304454381b1ff39f1765eeb0953d4f3d86936a992"
+        },
+        {
+          "file": "mounts.py",
+          "sha256": "62a2187ebbc600ea87aa8dcea8ab724a818345edad18e8c532cce7eb2aa60b19"
+        },
+        {
+          "file": "operators.py",
+          "sha256": "b31cd2cf85625eea81cd1c567fa8100e6aa3cf168293c549f8d0eb7ef8f8e816"
+        },
+        {
+          "file": "panels.py",
+          "sha256": "5ee5975b0d80d88ca5e6b5a1c55c62aa85d89534c31dfbf94c8f245ef5340f9f"
+        },
+        {
+          "file": "properties.py",
+          "sha256": "bfdbc65e4d47be0ebb2176019d53156b2de878db65a55cc324468a0e95939f7f"
+        },
+        {
+          "file": "weapons.py",
+          "sha256": "59858e6b07fa3f1234fb63ec12ab08e40948e54aeb7457231b4db8afbfe3ecd6"
+        }
+      ]
+    }
+  ]
+}

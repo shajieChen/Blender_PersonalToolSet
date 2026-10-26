@@ -1,0 +1,233 @@
+test_branch_children_are_split_without_shared_bones (test_spring_bone_presets.SpringBonePresets.test_branch_children_are_split_without_shared_bones) ... ERROR
+test_builtin_catalog_contains_requested_profiles (test_spring_bone_presets.SpringBonePresets.test_builtin_catalog_contains_requested_profiles) ... ERROR
+test_character_preset_roundtrip_and_no_overwrite (test_spring_bone_presets.SpringBonePresets.test_character_preset_roundtrip_and_no_overwrite) ... ERROR
+test_collider_excludes_simulated_bones_and_descendants (test_spring_bone_presets.SpringBonePresets.test_collider_excludes_simulated_bones_and_descendants) ... ERROR
+test_collider_radius_scales_but_local_offsets_do_not_double_scale (test_spring_bone_presets.SpringBonePresets.test_collider_radius_scales_but_local_offsets_do_not_double_scale) ... ERROR
+test_detection_builds_contiguous_chain_without_writing (test_spring_bone_presets.SpringBonePresets.test_detection_builds_contiguous_chain_without_writing) ... ERROR
+test_existing_chains_are_preserved_and_not_duplicated (test_spring_bone_presets.SpringBonePresets.test_existing_chains_are_preserved_and_not_duplicated) ... ERROR
+test_invalid_plan_is_atomic (test_spring_bone_presets.SpringBonePresets.test_invalid_plan_is_atomic) ... ERROR
+test_parameter_preset_only_changes_active_chain (test_spring_bone_presets.SpringBonePresets.test_parameter_preset_only_changes_active_chain) ... ERROR
+test_preset_name_rejects_path_traversal (test_spring_bone_presets.SpringBonePresets.test_preset_name_rejects_path_traversal) ... ERROR
+test_realtime_session_blocks_preset_application (test_spring_bone_presets.SpringBonePresets.test_realtime_session_blocks_preset_application) ... ERROR
+test_save_rejects_nonfinite_parameters (test_spring_bone_presets.SpringBonePresets.test_save_rejects_nonfinite_parameters) ... ERROR
+test_stale_plan_does_not_write_any_entries (test_spring_bone_presets.SpringBonePresets.test_stale_plan_does_not_write_any_entries) ... ERROR
+test_unrelated_hand_bones_are_not_detected (test_spring_bone_presets.SpringBonePresets.test_unrelated_hand_bones_are_not_detected) ... ERROR
+
+======================================================================
+ERROR: test_branch_children_are_split_without_shared_bones (test_spring_bone_presets.SpringBonePresets.test_branch_children_are_split_without_shared_bones)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_builtin_catalog_contains_requested_profiles (test_spring_bone_presets.SpringBonePresets.test_builtin_catalog_contains_requested_profiles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_character_preset_roundtrip_and_no_overwrite (test_spring_bone_presets.SpringBonePresets.test_character_preset_roundtrip_and_no_overwrite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_collider_excludes_simulated_bones_and_descendants (test_spring_bone_presets.SpringBonePresets.test_collider_excludes_simulated_bones_and_descendants)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_collider_radius_scales_but_local_offsets_do_not_double_scale (test_spring_bone_presets.SpringBonePresets.test_collider_radius_scales_but_local_offsets_do_not_double_scale)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_detection_builds_contiguous_chain_without_writing (test_spring_bone_presets.SpringBonePresets.test_detection_builds_contiguous_chain_without_writing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_existing_chains_are_preserved_and_not_duplicated (test_spring_bone_presets.SpringBonePresets.test_existing_chains_are_preserved_and_not_duplicated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_invalid_plan_is_atomic (test_spring_bone_presets.SpringBonePresets.test_invalid_plan_is_atomic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_parameter_preset_only_changes_active_chain (test_spring_bone_presets.SpringBonePresets.test_parameter_preset_only_changes_active_chain)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_preset_name_rejects_path_traversal (test_spring_bone_presets.SpringBonePresets.test_preset_name_rejects_path_traversal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_realtime_session_blocks_preset_application (test_spring_bone_presets.SpringBonePresets.test_realtime_session_blocks_preset_application)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_save_rejects_nonfinite_parameters (test_spring_bone_presets.SpringBonePresets.test_save_rejects_nonfinite_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_stale_plan_does_not_write_any_entries (test_spring_bone_presets.SpringBonePresets.test_stale_plan_does_not_write_any_entries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+======================================================================
+ERROR: test_unrelated_hand_bones_are_not_detected (test_spring_bone_presets.SpringBonePresets.test_unrelated_hand_bones_are_not_detected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_spring_bone_presets.py", line 24, in setUp
+    self.module = importlib.import_module("spring_bone.presets")
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender\5.2.1\5.2\python\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'spring_bone.presets'
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.032s
+
+FAILED (errors=14)
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+SPRING_BONE_BLENDER 5.2.1 LTS b'9e2066aef7ef'
+SPRING_BONE_FILE H:\Blender_Plugin\spring_bone\__init__.py
+SPRING_BONE_SELECTED 14

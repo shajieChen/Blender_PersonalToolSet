@@ -1,0 +1,34 @@
+{
+  "status": "Passed",
+  "file": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\spring_bone\\__init__.py",
+  "version": [
+    1,
+    0,
+    8
+  ],
+  "chain_templates": [
+    "skirt_balanced",
+    "skirt_soft",
+    "hair",
+    "tail"
+  ],
+  "collider_templates": [
+    "humanoid_lower",
+    "humanoid_upper",
+    "humanoid_full"
+  ],
+  "panels_registered": true,
+  "existing_chain_counts_preserved": true,
+  "inventory": [
+    {
+      "name": "Armature",
+      "bones": 479,
+      "skirt_named": 12
+    },
+    {
+      "name": "\u9aa8\u67b6",
+      "bones": 146,
+      "skirt_named": 32
+    }
+  ]
+}

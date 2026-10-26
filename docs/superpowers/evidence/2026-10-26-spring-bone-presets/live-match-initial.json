@@ -1,0 +1,352 @@
+{
+  "status": "Passed",
+  "objects": [
+    {
+      "target": "Armature",
+      "chain_default": "skirt_balanced",
+      "collider_default": "humanoid_lower",
+      "matched_chains": 12,
+      "matched_bones": 12,
+      "chains": [
+        [
+          "Ctrl_L_Calf_Skirt"
+        ],
+        [
+          "Ctrl_L_Knee_Skirt"
+        ],
+        [
+          "Ctrl_L_Thigh_Skirt"
+        ],
+        [
+          "Ctrl_R_Calf_Skirt"
+        ],
+        [
+          "Ctrl_R_Knee_Skirt"
+        ],
+        [
+          "Ctrl_R_Thigh_Skirt"
+        ],
+        [
+          "L_Calf_Skirt"
+        ],
+        [
+          "L_Knee_Skirt"
+        ],
+        [
+          "L_Thigh_Skirt"
+        ],
+        [
+          "R_Calf_Skirt"
+        ],
+        [
+          "R_Knee_Skirt"
+        ],
+        [
+          "R_Thigh_Skirt"
+        ]
+      ],
+      "colliders": [
+        {
+          "kind": "collider",
+          "name": "hips",
+          "bone_name": "Pelvis",
+          "shape": "SPHERE",
+          "radius_m": 0.113683803905863,
+          "head_offset_m": [
+            0.0,
+            0.02583722025156021,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.09301399290561677,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "thigh_l",
+          "bone_name": "L_Thigh",
+          "shape": "CAPSULE",
+          "radius_m": 0.0009999990414941461,
+          "head_offset_m": [
+            0.0,
+            0.0004999995231628418,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.004499995708465577,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "thigh_r",
+          "bone_name": "R_Thigh",
+          "shape": "CAPSULE",
+          "radius_m": 0.0010000228700045184,
+          "head_offset_m": [
+            0.0,
+            0.0004999965429306031,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.004499968886375427,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "shin_l",
+          "bone_name": "L_Calf",
+          "shape": "CAPSULE",
+          "radius_m": 0.0007500171524962244,
+          "head_offset_m": [
+            0.0,
+            0.0005000069737434387,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.004500062763690949,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "shin_r",
+          "bone_name": "R_Calf",
+          "shape": "CAPSULE",
+          "radius_m": 0.0007499814093201745,
+          "head_offset_m": [
+            0.0,
+            0.0004999980330467225,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.004499982297420502,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "foot_l",
+          "bone_name": "L_Foot",
+          "shape": "CAPSULE",
+          "radius_m": 0.033110511868338466,
+          "head_offset_m": [
+            0.0,
+            0.01103682965040207,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.09933146685361863,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "foot_r",
+          "bone_name": "R_Foot",
+          "shape": "CAPSULE",
+          "radius_m": 0.03311054730920899,
+          "head_offset_m": [
+            0.0,
+            0.011036846041679383,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.09933161437511444,
+            0.0
+          ]
+        }
+      ],
+      "notices": []
+    },
+    {
+      "target": "\u9aa8\u67b6",
+      "chain_default": "skirt_balanced",
+      "collider_default": "humanoid_lower",
+      "matched_chains": 8,
+      "matched_bones": 32,
+      "chains": [
+        [
+          "H_QunZi.L",
+          "H_QunZi.L.001",
+          "H_QunZi.L.002",
+          "H_QunZi.L.003"
+        ],
+        [
+          "H_QunZi.R",
+          "H_QunZi.R.001",
+          "H_QunZi.R.002",
+          "H_QunZi.R.003"
+        ],
+        [
+          "Q_QunZi.L",
+          "Q_QunZi.L.001",
+          "Q_QunZi.L.002",
+          "Q_QunZi.L.003"
+        ],
+        [
+          "Q_QunZi.R",
+          "Q_QunZi.R.001",
+          "Q_QunZi.R.002",
+          "Q_QunZi.R.003"
+        ],
+        [
+          "QunZi.L",
+          "QunZi.L.001",
+          "QunZi.L.002",
+          "QunZi.L.003"
+        ],
+        [
+          "QunZi.R",
+          "QunZi.R.001",
+          "QunZi.R.002",
+          "QunZi.R.003"
+        ],
+        [
+          "Z_HouQunZi",
+          "Z_HouQunZi.001",
+          "Z_HouQunZi.002",
+          "Z_HouQunZi.003"
+        ],
+        [
+          "Z_QunZi",
+          "Z_QunZi.001",
+          "Z_QunZi.002",
+          "Z_QunZi.003"
+        ]
+      ],
+      "colliders": [
+        {
+          "kind": "collider",
+          "name": "hips",
+          "bone_name": "head",
+          "shape": "SPHERE",
+          "radius_m": 0.2221148801406988,
+          "head_offset_m": [
+            0.0,
+            0.055556520819664,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.2000034749507904,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "thigh_l",
+          "bone_name": "LiuHai.L",
+          "shape": "CAPSULE",
+          "radius_m": 0.015542340227843504,
+          "head_offset_m": [
+            0.0,
+            0.007771170884370804,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.06994053795933723,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "thigh_r",
+          "bone_name": "ErDuo.R",
+          "shape": "CAPSULE",
+          "radius_m": 0.013212304024739545,
+          "head_offset_m": [
+            0.0,
+            0.006606148928403855,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.05945534035563469,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "shin_l",
+          "bone_name": "LiuHai.L.001",
+          "shape": "CAPSULE",
+          "radius_m": 0.011111048658036365,
+          "head_offset_m": [
+            0.0,
+            0.00740736871957779,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.06666631847620011,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "shin_r",
+          "bone_name": "ErDuo.R.001",
+          "shape": "CAPSULE",
+          "radius_m": 0.012564264131305689,
+          "head_offset_m": [
+            0.0,
+            0.00837617740035057,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.07538559660315514,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "foot_l",
+          "bone_name": "LiuHai.L.002",
+          "shape": "CAPSULE",
+          "radius_m": 0.01917205742781849,
+          "head_offset_m": [
+            0.0,
+            0.006390692293643952,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.05751623064279556,
+            0.0
+          ]
+        },
+        {
+          "kind": "collider",
+          "name": "foot_r",
+          "bone_name": "ErDuo.R.002",
+          "shape": "CAPSULE",
+          "radius_m": 0.022325003574497935,
+          "head_offset_m": [
+            0.0,
+            0.007441667467355729,
+            0.0
+          ],
+          "tail_offset_m": [
+            0.0,
+            0.06697500720620156,
+            0.0
+          ]
+        }
+      ],
+      "notices": []
+    }
+  ],
+  "source": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\spring_bone\\__init__.py"
+}
