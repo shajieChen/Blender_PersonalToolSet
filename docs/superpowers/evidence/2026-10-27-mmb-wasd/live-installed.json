@@ -1,0 +1,21 @@
+{
+  "status": "Passed",
+  "source": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\wasd_fly_camera\\__init__.py",
+  "version": [
+    1,
+    2,
+    0
+  ],
+  "mode": "BLENDER_MMB",
+  "speed": 4.0,
+  "enabled": [
+    true,
+    true
+  ],
+  "registered_keymaps": 1,
+  "operator": "view3d.mmb_wasd_move",
+  "preferences_saved": true,
+  "other_addons_preserved": true,
+  "objects_preserved": true,
+  "active_navigation": false
+}

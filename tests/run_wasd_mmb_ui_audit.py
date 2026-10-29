@@ -18,6 +18,7 @@ sys.dont_write_bytecode = True
 OUTPUT = ROOT / "docs/superpowers/evidence/2026-10-27-mmb-wasd"
 OUTPUT.mkdir(parents=True, exist_ok=True)
 bpy.context.preferences.view.show_splash = False
+bpy.app.use_userpref_skip_save_on_exit = True
 RESULT = {"status": "Running", "blender": bpy.app.version_string, "installed": INSTALLED, "checks": []}
 
 
@@ -51,44 +52,6 @@ def run():
     matrices = {obj.name: obj.matrix_world.copy() for obj in bpy.data.objects}
     actions = set(bpy.data.actions)
     selected = {obj.name for obj in bpy.context.selected_objects}
-    with bpy.context.temp_override(window=window, area=area, region=region):
-        RESULT["preflight"] = {"eligible":fly._mmb_view_available(bpy.context), "poll":fly.WASD_OT_mmb_move.poll(bpy.context), "mode":fly._navigation_mode(), "modals":[operator.bl_idname for operator in window.modal_operators], "perspective":view.view_perspective, "locked":view.lock_rotation, "keymaps":[[item.idname,item.type,item.value] for _keymap,item in fly._ADDON_KEYMAPS]}
-    original_invoke = fly.WASD_OT_mmb_move.invoke
-    original_modal_event = fly.WASD_OT_mmb_move._modal_event
-    RESULT["event_trace"] = []
-    def invoke(operator, context, event):
-        entry = {"phase":"invoke", "event":event.type,"time":perf_counter()}
-        RESULT["event_trace"].append(entry)
-        try:
-            result = original_invoke(operator, context, event)
-            entry["result"] = sorted(result)
-            return result
-        except Exception:
-            entry["error"] = traceback.format_exc()
-            raise
-    def modal_event(operator, context, event):
-        counts = RESULT.setdefault("event_counts",{})
-        counts[event.type] = counts.get(event.type,0) + 1
-        own_timer = event.type == "TIMER" and event.timer == operator.timer
-        if own_timer:
-            RESULT["owned_timer_events"] = RESULT.get("owned_timer_events",0) + 1
-            RESULT.setdefault("first_owned_timer_at",perf_counter())
-        entry = {"phase":"modal", "event":event.type,"time":perf_counter(),"own_timer":own_timer}
-        if event.type == "TIMER":
-            entry["context"] = {"window":context.window==operator.window,"screen":context.window.screen==operator.screen if context.window else False,"area":context.area==operator.area,"region":context.region==operator.view_region,"region_data":context.region_data==operator.region,"region_type":context.region.type if context.region else None,"eligible":fly._mmb_view_available(context),"modals":[item.bl_idname for item in context.window.modal_operators] if context.window else []}
-        RESULT["event_trace"].append(entry)
-        try:
-            result = original_modal_event(operator, context, event)
-            entry["result"] = sorted(result)
-            if event.type == "TIMER" and "CANCELLED" in result:
-                RESULT["event_trace"].append(entry)
-            return result
-        except Exception:
-            entry["error"] = traceback.format_exc()
-            if event.type == "TIMER":RESULT["event_trace"].append(entry)
-            raise
-    fly.WASD_OT_mmb_move.invoke = invoke
-    fly.WASD_OT_mmb_move._modal_event = modal_event
     area.tag_redraw()
     send(window, "MOUSEMOVE", "NOTHING")
     yield .1
@@ -96,18 +59,19 @@ def run():
     deadline = perf_counter() + 6.
     while fly._active_navigation is None and perf_counter() < deadline:
         yield .05
-    RESULT["after_mmb"] = {"modals":[operator.bl_idname for operator in window.modal_operators], "merged_mmb":[[item.idname,item.value,item.shift,item.ctrl,item.alt] for keymap in bpy.context.window_manager.keyconfigs.user.keymaps if keymap.name == "3D View" for item in keymap.keymap_items if item.type == "MIDDLEMOUSE"], "areas":[[item.type,item.x,item.y,item.width,item.height] for item in window.screen.areas]}
     check(fly._active_navigation is not None, "native MMB keymap starts the modal")
     initial_rotation = view.view_rotation.copy()
     initial_distance = view.view_distance
     for key in ("W", "S", "A", "D"):
         location = view.view_location.copy()
+        duration_before = fly._active_navigation.timer.time_duration
         eye = fly.view_eye(location, view.view_rotation, view.view_distance)
         send(window, key)
         yield .18
         delta = view.view_location - location
         direction = fly.fly_translation(initial_rotation, {key}, 1., 1.)
         active = fly._active_navigation
+        check(active is not None and active.timer.time_duration > duration_before, "native " + key + " uses the advancing owned timer clock")
         RESULT["motion_state"] = {"active":active is not None,"held":sorted(active.held) if active else [],"timer_delta":active.timer.time_delta if active and active.timer else None,"timer_duration":active.timer.time_duration if active and active.timer else None,"delta":list(delta)}
         check(delta.length > .02 and delta.normalized().dot(direction) > .999, "native " + key + " moves in the view direction")
         check(abs(view.view_rotation.dot(initial_rotation)) > .999999 and view.view_distance == initial_distance, "native " + key + " preserves rotation and distance")

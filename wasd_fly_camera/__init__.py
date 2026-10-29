@@ -282,6 +282,7 @@ class WASD_OT_mmb_move(_ViewDrag, Operator):
                 raise ValueError("导航速度或鼠标灵敏度无效")
             self.last_time = perf_counter()
             self.timer = self.manager.event_timer_add(_MMB_INTERVAL, window=self.window)
+            self.last_timer_duration = self.timer.time_duration
             _active_navigation = self
             self.area.header_text_set("中键：WASD 移动，拖动旋转，松开停止，Esc/右键还原")
             self.manager.modal_handler_add(self)
@@ -339,8 +340,10 @@ class WASD_OT_mmb_move(_ViewDrag, Operator):
                 self.area.tag_redraw()
             return {"RUNNING_MODAL"}
         if event.type == "TIMER":
-            if event.timer != self.timer:
+            duration = self.timer.time_duration
+            if duration <= self.last_timer_duration:
                 return {"PASS_THROUGH"}
+            self.last_timer_duration = duration
             now = perf_counter()
             dt = min(_MAX_MMB_DT, max(0.0, now - self.last_time))
             self.last_time = now

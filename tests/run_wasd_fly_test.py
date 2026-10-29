@@ -199,6 +199,9 @@ def test_mmb_translation_and_timer_isolation():
     mmb_tick(state,context,.025)
     delta = context.region_data.view_location-location
     check((delta-Vector((0.,.1,0.))).length<1e-5,"MMB W moves continuously without mouse motion")
+    same_tick = context.region_data.view_location.copy()
+    state.modal(context,mmb_event("TIMER"))
+    check(context.region_data.view_location==same_tick,"repeated generic timers cannot consume the same owned tick twice")
     check(context.region_data.view_rotation==rotation and context.region_data.view_distance==distance,"keyboard translation preserves rotation and distance")
     check((fly.view_eye(context.region_data.view_location,rotation,distance)-eye-delta).length<1e-5,"eye and view center translate together")
     state.modal(context,mmb_event("W","RELEASE"))

@@ -1,5 +1,5 @@
 {
-  "status": "Failed",
+  "status": "Passed",
   "blender": "5.1.2",
   "installed": false,
   "checks": [
@@ -17,12 +17,148 @@
     },
     {
       "name": "native W moves in the view direction",
-      "passed": false
+      "passed": true
+    },
+    {
+      "name": "native W preserves rotation and distance",
+      "passed": true
+    },
+    {
+      "name": "native W translates eye and view center together",
+      "passed": true
+    },
+    {
+      "name": "native W does not invoke editing shortcuts",
+      "passed": true
+    },
+    {
+      "name": "native W release stops movement",
+      "passed": true
+    },
+    {
+      "name": "native S moves in the view direction",
+      "passed": true
+    },
+    {
+      "name": "native S preserves rotation and distance",
+      "passed": true
+    },
+    {
+      "name": "native S translates eye and view center together",
+      "passed": true
+    },
+    {
+      "name": "native S does not invoke editing shortcuts",
+      "passed": true
+    },
+    {
+      "name": "native S release stops movement",
+      "passed": true
+    },
+    {
+      "name": "native A moves in the view direction",
+      "passed": true
+    },
+    {
+      "name": "native A preserves rotation and distance",
+      "passed": true
+    },
+    {
+      "name": "native A translates eye and view center together",
+      "passed": true
+    },
+    {
+      "name": "native A does not invoke editing shortcuts",
+      "passed": true
+    },
+    {
+      "name": "native A release stops movement",
+      "passed": true
+    },
+    {
+      "name": "native D moves in the view direction",
+      "passed": true
+    },
+    {
+      "name": "native D preserves rotation and distance",
+      "passed": true
+    },
+    {
+      "name": "native D translates eye and view center together",
+      "passed": true
+    },
+    {
+      "name": "native D does not invoke editing shortcuts",
+      "passed": true
+    },
+    {
+      "name": "native D release stops movement",
+      "passed": true
+    },
+    {
+      "name": "MMB release stops while W remains held",
+      "passed": true
+    },
+    {
+      "name": "A resumes native select all outside MMB",
+      "passed": true
+    },
+    {
+      "name": "native Esc restores the entry viewport",
+      "passed": true
+    },
+    {
+      "name": "native middle drag still rotates",
+      "passed": true
+    },
+    {
+      "name": "native modifier press pauses translation",
+      "passed": true
+    },
+    {
+      "name": "native modifier release resumes translation",
+      "passed": true
+    },
+    {
+      "name": "native deactivation clears navigation",
+      "passed": true
+    },
+    {
+      "name": "native transform modal starts",
+      "passed": true
+    },
+    {
+      "name": "native transform keeps middle mouse axis constraint",
+      "passed": true
+    },
+    {
+      "name": "mode switch stops navigation and restores legacy bindings",
+      "passed": true
+    },
+    {
+      "name": "middle navigation can restart after mode switch",
+      "passed": true
+    },
+    {
+      "name": "disable releases owned state and keymaps",
+      "passed": true
+    },
+    {
+      "name": "disabled modal leaves the event queue",
+      "passed": true
+    },
+    {
+      "name": "viewport navigation preserves all object and camera matrices",
+      "passed": true
+    },
+    {
+      "name": "viewport navigation creates no animation",
+      "passed": true
     }
   ],
   "mouse": [
-    1052,
-    727
+    1092,
+    742
   ],
   "source": "H:\\Blender_Plugin\\wasd_fly_camera\\__init__.py",
   "preflight": {
@@ -44,7 +180,7 @@
     {
       "phase": "invoke",
       "event": "MIDDLEMOUSE",
-      "time": 717109.5873468,
+      "time": 862658.1150856,
       "result": [
         "RUNNING_MODAL"
       ]
@@ -52,8 +188,2264 @@
     {
       "phase": "modal",
       "event": "W",
-      "time": 717109.5896855,
+      "time": 862658.1176337,
       "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.1323505,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.1660627,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.1847846,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.2036512,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.2186307,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.2537895,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.2738734,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.302434,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "W",
+      "time": 862658.3400669,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.3401481,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.3667311,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.3964561,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.4529785,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "S",
+      "time": 862658.4685116,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.4686869,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.4925029,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.5203921,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.5381645,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.5737725,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.6076254,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.6419048,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "S",
+      "time": 862658.6748648,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.6750286,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.6872559,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.718045,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.7484066,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.7694214,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.7825688,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.8209595,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "A",
+      "time": 862658.8411995,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.8412913,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.8669499,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.8835973,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.9141987,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.9349463,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862658.9708487,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.0015954,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "A",
+      "time": 862659.0353042,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.0353911,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.0662021,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.1018752,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.1271858,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.1539586,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "D",
+      "time": 862659.165889,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.1659785,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.1959062,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.2249218,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.2491381,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.2876059,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.3143013,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.3520555,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "D",
+      "time": 862659.4048327,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.4049175,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.4261685,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.4554764,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.4753159,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.4891272,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.5100875,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "W",
+      "time": 862659.5345625,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.5346602,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.5630855,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.5927109,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.6220392,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "MIDDLEMOUSE",
+      "time": 862659.6519519,
+      "own_timer": false,
+      "result": [
+        "FINISHED"
+      ]
+    },
+    {
+      "phase": "invoke",
+      "event": "MIDDLEMOUSE",
+      "time": 862659.9474528,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862659.9860992,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.0060543,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "D",
+      "time": 862660.0062982,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.0145993,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.0475579,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.0645996,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.1053694,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.1276307,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "ESC",
+      "time": 862660.1453303,
+      "own_timer": false,
+      "result": [
+        "CANCELLED"
+      ]
+    },
+    {
+      "phase": "invoke",
+      "event": "MIDDLEMOUSE",
+      "time": 862660.2620413,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.2789333,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.3090988,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.3254686,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "MOUSEMOVE",
+      "time": 862660.3442035,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.3443516,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.3581683,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.3860338,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.402143,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.4300275,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "MIDDLEMOUSE",
+      "time": 862660.4450615,
+      "own_timer": false,
+      "result": [
+        "FINISHED"
+      ]
+    },
+    {
+      "phase": "invoke",
+      "event": "MIDDLEMOUSE",
+      "time": 862660.490466,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.5073072,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.524034,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.5406745,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.5573192,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "W",
+      "time": 862660.5712466,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "LEFT_SHIFT",
+      "time": 862660.5713642,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.5739776,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.5907135,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.6073441,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.6239995,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.6406882,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.6573245,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.6739829,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.6906533,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.7073223,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.724016,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "LEFT_SHIFT",
+      "time": 862660.7338106,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.7406574,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.7674994,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.8369604,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "W",
+      "time": 862660.8638617,
+      "own_timer": false,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "MIDDLEMOUSE",
+      "time": 862660.8639663,
+      "own_timer": false,
+      "result": [
+        "FINISHED"
+      ]
+    },
+    {
+      "phase": "invoke",
+      "event": "MIDDLEMOUSE",
+      "time": 862660.9450646,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.9681123,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862660.9923827,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862661.0192023,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "WINDOW_DEACTIVATE",
+      "time": 862661.0471282,
+      "own_timer": false,
+      "result": [
+        "CANCELLED"
+      ]
+    },
+    {
+      "phase": "invoke",
+      "event": "MIDDLEMOUSE",
+      "time": 862661.3545407,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862661.3813273,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862661.4066609,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862661.4263222,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "invoke",
+      "event": "MIDDLEMOUSE",
+      "time": 862661.5669534,
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862661.5840391,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862661.6009901,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862661.6172631,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
+      "result": [
+        "RUNNING_MODAL"
+      ]
+    },
+    {
+      "phase": "modal",
+      "event": "TIMER",
+      "time": 862661.633929,
+      "own_timer": true,
+      "context": {
+        "window": true,
+        "screen": true,
+        "area": true,
+        "region": true,
+        "region_data": true,
+        "region_type": "WINDOW",
+        "eligible": true,
+        "modals": [
+          "VIEW3D_OT_mmb_wasd_move"
+        ]
+      },
       "result": [
         "RUNNING_MODAL"
       ]
@@ -167,19 +2559,30 @@
     ]
   },
   "event_counts": {
-    "W": 1,
-    "TIMER": 1
+    "W": 5,
+    "TIMER": 97,
+    "S": 2,
+    "A": 2,
+    "D": 3,
+    "MIDDLEMOUSE": 3,
+    "ESC": 1,
+    "MOUSEMOVE": 1,
+    "LEFT_SHIFT": 2,
+    "WINDOW_DEACTIVATE": 1
   },
+  "owned_timer_events": 97,
+  "first_owned_timer_at": 862658.132348,
   "motion_state": {
-    "active": false,
-    "held": [],
-    "timer_delta": null,
-    "timer_duration": null,
+    "active": true,
+    "held": [
+      "D"
+    ],
+    "timer_delta": 0.03777699917554855,
+    "timer_duration": 1.2365336418151855,
     "delta": [
-      0.0,
+      0.7923592329025269,
       0.0,
       0.0
     ]
-  },
-  "error": "Traceback (most recent call last):\n  File \"H:\\Blender_Plugin\\tests\\run_wasd_mmb_ui_audit.py\", line 215, in advance\n    return next(STEPS)\n  File \"H:\\Blender_Plugin\\tests\\run_wasd_mmb_ui_audit.py\", line 112, in run\n    check(delta.length > .02 and delta.normalized().dot(direction) > .999, \"native \" + key + \" moves in the view direction\")\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"H:\\Blender_Plugin\\tests\\run_wasd_mmb_ui_audit.py\", line 27, in check\n    raise AssertionError(message)\nAssertionError: native W moves in the view direction\n"
+  }
 }

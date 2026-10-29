@@ -47,6 +47,7 @@ PASS middle mouse WASD operator exists
 PASS plain MMB starts navigation
 PASS foreign timer does not move viewport
 PASS MMB W moves continuously without mouse motion
+PASS repeated generic timers cannot consume the same owned tick twice
 PASS keyboard translation preserves rotation and distance
 PASS eye and view center translate together
 PASS key release stops translation
@@ -116,7 +117,7 @@ PASS F frames the selection
 PASS selected test groups are positive
 WASD_FLY_TEST_OK
 WASD_FLY_SELECTED 13
-WASD_FLY_CHECKS 102
+WASD_FLY_CHECKS 103
 Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
 
 Blender quit

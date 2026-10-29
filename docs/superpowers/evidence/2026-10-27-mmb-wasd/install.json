@@ -1,0 +1,12 @@
+{
+  "target": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\wasd_fly_camera\\__init__.py",
+  "source_relative_to_repository": "wasd_fly_camera/__init__.py",
+  "sha256": "7ce235ccbf90709c153f4889d4cce74374b6a68626468c1c110ee40625283fa1",
+  "old_source_backup": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\wasd_fly_camera\\__init__.py.before-mmb-20261029",
+  "preferences_backup": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\config\\userpref.blend.before-mmb-wasd-20261029",
+  "backup_binary_not_in_repository": true,
+  "native_checks": {
+    "5_1": 38,
+    "5_2": 38
+  }
+}

@@ -1,0 +1,46 @@
+UI_PASS native viewport layout is ready
+UI_PASS native audit loads the intended package
+UI_PASS native MMB keymap starts the modal
+UI_PASS native W uses the advancing owned timer clock
+UI_PASS native W moves in the view direction
+UI_PASS native W preserves rotation and distance
+UI_PASS native W translates eye and view center together
+UI_PASS native W does not invoke editing shortcuts
+UI_PASS native W release stops movement
+UI_PASS native S uses the advancing owned timer clock
+UI_PASS native S moves in the view direction
+UI_PASS native S preserves rotation and distance
+UI_PASS native S translates eye and view center together
+UI_PASS native S does not invoke editing shortcuts
+UI_PASS native S release stops movement
+UI_PASS native A uses the advancing owned timer clock
+UI_PASS native A moves in the view direction
+UI_PASS native A preserves rotation and distance
+UI_PASS native A translates eye and view center together
+UI_PASS native A does not invoke editing shortcuts
+UI_PASS native A release stops movement
+UI_PASS native D uses the advancing owned timer clock
+UI_PASS native D moves in the view direction
+UI_PASS native D preserves rotation and distance
+UI_PASS native D translates eye and view center together
+UI_PASS native D does not invoke editing shortcuts
+UI_PASS native D release stops movement
+UI_PASS MMB release stops while W remains held
+UI_PASS A resumes native select all outside MMB
+UI_PASS native Esc restores the entry viewport
+UI_PASS native middle drag still rotates
+UI_PASS native modifier press pauses translation
+UI_PASS native modifier release resumes translation
+UI_PASS native deactivation clears navigation
+UI_PASS native transform modal starts
+UI_PASS native transform keeps middle mouse axis constraint
+UI_PASS mode switch stops navigation and restores legacy bindings
+UI_PASS middle navigation can restart after mode switch
+UI_PASS disable releases owned state and keymaps
+UI_PASS disabled modal leaves the event queue
+UI_PASS viewport navigation preserves all object and camera matrices
+UI_PASS viewport navigation creates no animation
+MMB_NATIVE_UI_RESULT {"status": "Passed", "blender": "5.1.2", "installed": true, "checks": [{"name": "native viewport layout is ready", "passed": true}, {"name": "native audit loads the intended package", "passed": true}, {"name": "native MMB keymap starts the modal", "passed": true}, {"name": "native W uses the advancing owned timer clock", "passed": true}, {"name": "native W moves in the view direction", "passed": true}, {"name": "native W preserves rotation and distance", "passed": true}, {"name": "native W translates eye and view center together", "passed": true}, {"name": "native W does not invoke editing shortcuts", "passed": true}, {"name": "native W release stops movement", "passed": true}, {"name": "native S uses the advancing owned timer clock", "passed": true}, {"name": "native S moves in the view direction", "passed": true}, {"name": "native S preserves rotation and distance", "passed": true}, {"name": "native S translates eye and view center together", "passed": true}, {"name": "native S does not invoke editing shortcuts", "passed": true}, {"name": "native S release stops movement", "passed": true}, {"name": "native A uses the advancing owned timer clock", "passed": true}, {"name": "native A moves in the view direction", "passed": true}, {"name": "native A preserves rotation and distance", "passed": true}, {"name": "native A translates eye and view center together", "passed": true}, {"name": "native A does not invoke editing shortcuts", "passed": true}, {"name": "native A release stops movement", "passed": true}, {"name": "native D uses the advancing owned timer clock", "passed": true}, {"name": "native D moves in the view direction", "passed": true}, {"name": "native D preserves rotation and distance", "passed": true}, {"name": "native D translates eye and view center together", "passed": true}, {"name": "native D does not invoke editing shortcuts", "passed": true}, {"name": "native D release stops movement", "passed": true}, {"name": "MMB release stops while W remains held", "passed": true}, {"name": "A resumes native select all outside MMB", "passed": true}, {"name": "native Esc restores the entry viewport", "passed": true}, {"name": "native middle drag still rotates", "passed": true}, {"name": "native modifier press pauses translation", "passed": true}, {"name": "native modifier release resumes translation", "passed": true}, {"name": "native deactivation clears navigation", "passed": true}, {"name": "native transform modal starts", "passed": true}, {"name": "native transform keeps middle mouse axis constraint", "passed": true}, {"name": "mode switch stops navigation and restores legacy bindings", "passed": true}, {"name": "middle navigation can restart after mode switch", "passed": true}, {"name": "disable releases owned state and keymaps", "passed": true}, {"name": "disabled modal leaves the event queue", "passed": true}, {"name": "viewport navigation preserves all object and camera matrices", "passed": true}, {"name": "viewport navigation creates no animation", "passed": true}], "mouse": [1092, 742], "source": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\wasd_fly_camera\\__init__.py", "motion_state": {"active": true, "held": ["D"], "timer_delta": 0.016668900847434998, "timer_duration": 1.1971114873886108, "delta": [0.7883080244064331, 0.0, 0.0]}}
+00:08.437  blend            | Saved session recovery to "C:\Users\CHENSH~2\AppData\Local\Temp\quit.blend"
+
+Blender quit

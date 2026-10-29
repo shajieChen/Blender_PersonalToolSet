@@ -1,0 +1,30 @@
+{
+  "status": "Passed",
+  "source_hash_unchanged": true,
+  "product_has_no_test_wrappers": true,
+  "navigation_active": false,
+  "keymaps": 1,
+  "mode": "BLENDER_MMB",
+  "enabled_addons": [
+    "io_anim_bvh",
+    "io_curve_svg",
+    "io_mesh_uv_layout",
+    "io_scene_fbx",
+    "io_scene_gltf2",
+    "cycles",
+    "pose_library",
+    "bl_pkg",
+    "rigify",
+    "blender_mcp",
+    "humanoid_retarget",
+    "spring_bone",
+    "humanoid_mounts",
+    "wasd_fly_camera"
+  ],
+  "user_confirmed": true,
+  "temporary_test_wrappers_removed": true,
+  "post_cleanup_groups_per_version": 13,
+  "post_cleanup_checks_per_version": 103,
+  "post_cleanup_native_checks_per_version": 42,
+  "user_preferences_unchanged_during_ui_audit": true
+}
