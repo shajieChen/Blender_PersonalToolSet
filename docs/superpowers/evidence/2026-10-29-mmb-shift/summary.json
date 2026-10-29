@@ -1,0 +1,15 @@
+{
+  "status": "PendingUserReview",
+  "version": "1.2.2",
+  "groups_per_version": 14,
+  "checks_per_version": 111,
+  "native_checks_per_version": 54,
+  "default_shift_multiplier": 5,
+  "world_up_key": "Q",
+  "world_down_key": "E",
+  "legacy_unity_directions_preserved": true,
+  "temporary_diagnostics": [],
+  "installed": true,
+  "committed": false,
+  "pushed": false
+}

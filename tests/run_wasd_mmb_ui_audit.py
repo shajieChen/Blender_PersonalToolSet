@@ -16,6 +16,9 @@ PACKAGE_ROOT = pathlib.Path(bpy.utils.user_resource("SCRIPTS")) / "addons" if IN
 sys.path.insert(0, str(PACKAGE_ROOT))
 sys.dont_write_bytecode = True
 OUTPUT = ROOT / "docs/superpowers/evidence/2026-10-27-mmb-wasd"
+if "--output-dir" in sys.argv:
+    output_path = pathlib.Path(sys.argv[sys.argv.index("--output-dir") + 1])
+    OUTPUT = output_path if output_path.is_absolute() else ROOT / output_path
 OUTPUT.mkdir(parents=True, exist_ok=True)
 bpy.context.preferences.view.show_splash = False
 bpy.app.use_userpref_skip_save_on_exit = True
@@ -62,14 +65,14 @@ def run():
     check(fly._active_navigation is not None, "native MMB keymap starts the modal")
     initial_rotation = view.view_rotation.copy()
     initial_distance = view.view_distance
-    for key in ("W", "S", "A", "D"):
+    for key in ("W", "S", "A", "D", "Q", "E"):
         location = view.view_location.copy()
         duration_before = fly._active_navigation.timer.time_duration
         eye = fly.view_eye(location, view.view_rotation, view.view_distance)
         send(window, key)
         yield .18
         delta = view.view_location - location
-        direction = fly.fly_translation(initial_rotation, {key}, 1., 1.)
+        direction = Vector((0.,0.,1. if key == "Q" else -1.)) if key in {"Q","E"} else fly.fly_translation(initial_rotation, {key}, 1., 1.)
         active = fly._active_navigation
         check(active is not None and active.timer.time_duration > duration_before, "native " + key + " uses the advancing owned timer clock")
         RESULT["motion_state"] = {"active":active is not None,"held":sorted(active.held) if active else [],"timer_delta":active.timer.time_delta if active and active.timer else None,"timer_duration":active.timer.time_duration if active and active.timer else None,"delta":list(delta)}
@@ -117,14 +120,26 @@ def run():
     send(window, "MIDDLEMOUSE")
     yield .08
     send(window, "W")
+    yield .08
+    sample = view.view_location.copy()
+    sample_time = perf_counter()
+    yield .25
+    normal_speed = (view.view_location - sample).length / (perf_counter() - sample_time)
     send(window, "LEFT_SHIFT", shift=True)
     yield .08
-    stopped = view.view_location.copy()
-    yield .08
-    check((view.view_location - stopped).length < 1e-7, "native modifier press pauses translation")
+    sample = view.view_location.copy()
+    sample_time = perf_counter()
+    yield .25
+    accelerated_speed = (view.view_location - sample).length / (perf_counter() - sample_time)
+    check(accelerated_speed > normal_speed * 2.5, "native Shift accelerates middle mouse WASD")
     send(window, "LEFT_SHIFT", "RELEASE")
-    yield .1
-    check((view.view_location - stopped).length > .01, "native modifier release resumes translation")
+    yield .08
+    sample = view.view_location.copy()
+    sample_time = perf_counter()
+    yield .25
+    restored_speed = (view.view_location - sample).length / (perf_counter() - sample_time)
+    check(restored_speed > normal_speed * .5 and restored_speed < normal_speed * 1.5, "native Shift release restores base speed")
+    RESULT["shift_speed_samples"] = {"normal":normal_speed,"accelerated":accelerated_speed,"restored":restored_speed,"ratio":accelerated_speed / normal_speed}
     send(window, "W", "RELEASE")
     send(window, "MIDDLEMOUSE", "RELEASE")
     yield .06

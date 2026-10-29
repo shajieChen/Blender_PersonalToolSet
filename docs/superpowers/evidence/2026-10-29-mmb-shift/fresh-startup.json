@@ -1,0 +1,14 @@
+{
+  "enabled": [
+    true,
+    true
+  ],
+  "version": [
+    1,
+    2,
+    2
+  ],
+  "mode": "BLENDER_MMB",
+  "multiplier": 5.0,
+  "source": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\wasd_fly_camera\\__init__.py"
+}

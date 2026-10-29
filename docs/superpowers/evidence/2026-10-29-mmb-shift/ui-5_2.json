@@ -1,0 +1,247 @@
+{
+  "status": "Passed",
+  "blender": "5.2.1 LTS",
+  "installed": false,
+  "checks": [
+    {
+      "name": "native viewport layout is ready",
+      "passed": true
+    },
+    {
+      "name": "native audit loads the intended package",
+      "passed": true
+    },
+    {
+      "name": "native MMB keymap starts the modal",
+      "passed": true
+    },
+    {
+      "name": "native W uses the advancing owned timer clock",
+      "passed": true
+    },
+    {
+      "name": "native W moves in the view direction",
+      "passed": true
+    },
+    {
+      "name": "native W preserves rotation and distance",
+      "passed": true
+    },
+    {
+      "name": "native W translates eye and view center together",
+      "passed": true
+    },
+    {
+      "name": "native W does not invoke editing shortcuts",
+      "passed": true
+    },
+    {
+      "name": "native W release stops movement",
+      "passed": true
+    },
+    {
+      "name": "native S uses the advancing owned timer clock",
+      "passed": true
+    },
+    {
+      "name": "native S moves in the view direction",
+      "passed": true
+    },
+    {
+      "name": "native S preserves rotation and distance",
+      "passed": true
+    },
+    {
+      "name": "native S translates eye and view center together",
+      "passed": true
+    },
+    {
+      "name": "native S does not invoke editing shortcuts",
+      "passed": true
+    },
+    {
+      "name": "native S release stops movement",
+      "passed": true
+    },
+    {
+      "name": "native A uses the advancing owned timer clock",
+      "passed": true
+    },
+    {
+      "name": "native A moves in the view direction",
+      "passed": true
+    },
+    {
+      "name": "native A preserves rotation and distance",
+      "passed": true
+    },
+    {
+      "name": "native A translates eye and view center together",
+      "passed": true
+    },
+    {
+      "name": "native A does not invoke editing shortcuts",
+      "passed": true
+    },
+    {
+      "name": "native A release stops movement",
+      "passed": true
+    },
+    {
+      "name": "native D uses the advancing owned timer clock",
+      "passed": true
+    },
+    {
+      "name": "native D moves in the view direction",
+      "passed": true
+    },
+    {
+      "name": "native D preserves rotation and distance",
+      "passed": true
+    },
+    {
+      "name": "native D translates eye and view center together",
+      "passed": true
+    },
+    {
+      "name": "native D does not invoke editing shortcuts",
+      "passed": true
+    },
+    {
+      "name": "native D release stops movement",
+      "passed": true
+    },
+    {
+      "name": "native Q uses the advancing owned timer clock",
+      "passed": true
+    },
+    {
+      "name": "native Q moves in the view direction",
+      "passed": true
+    },
+    {
+      "name": "native Q preserves rotation and distance",
+      "passed": true
+    },
+    {
+      "name": "native Q translates eye and view center together",
+      "passed": true
+    },
+    {
+      "name": "native Q does not invoke editing shortcuts",
+      "passed": true
+    },
+    {
+      "name": "native Q release stops movement",
+      "passed": true
+    },
+    {
+      "name": "native E uses the advancing owned timer clock",
+      "passed": true
+    },
+    {
+      "name": "native E moves in the view direction",
+      "passed": true
+    },
+    {
+      "name": "native E preserves rotation and distance",
+      "passed": true
+    },
+    {
+      "name": "native E translates eye and view center together",
+      "passed": true
+    },
+    {
+      "name": "native E does not invoke editing shortcuts",
+      "passed": true
+    },
+    {
+      "name": "native E release stops movement",
+      "passed": true
+    },
+    {
+      "name": "MMB release stops while W remains held",
+      "passed": true
+    },
+    {
+      "name": "A resumes native select all outside MMB",
+      "passed": true
+    },
+    {
+      "name": "native Esc restores the entry viewport",
+      "passed": true
+    },
+    {
+      "name": "native middle drag still rotates",
+      "passed": true
+    },
+    {
+      "name": "native Shift accelerates middle mouse WASD",
+      "passed": true
+    },
+    {
+      "name": "native Shift release restores base speed",
+      "passed": true
+    },
+    {
+      "name": "native deactivation clears navigation",
+      "passed": true
+    },
+    {
+      "name": "native transform modal starts",
+      "passed": true
+    },
+    {
+      "name": "native transform keeps middle mouse axis constraint",
+      "passed": true
+    },
+    {
+      "name": "mode switch stops navigation and restores legacy bindings",
+      "passed": true
+    },
+    {
+      "name": "middle navigation can restart after mode switch",
+      "passed": true
+    },
+    {
+      "name": "disable releases owned state and keymaps",
+      "passed": true
+    },
+    {
+      "name": "disabled modal leaves the event queue",
+      "passed": true
+    },
+    {
+      "name": "viewport navigation preserves all object and camera matrices",
+      "passed": true
+    },
+    {
+      "name": "viewport navigation creates no animation",
+      "passed": true
+    }
+  ],
+  "mouse": [
+    1092,
+    742
+  ],
+  "source": "H:\\Blender_Plugin\\wasd_fly_camera\\__init__.py",
+  "motion_state": {
+    "active": true,
+    "held": [
+      "E"
+    ],
+    "timer_delta": 0.04129000008106232,
+    "timer_duration": 2.1504697799682617,
+    "delta": [
+      0.0,
+      0.0,
+      -0.6457315683364868
+    ]
+  },
+  "shift_speed_samples": {
+    "normal": 3.50651947100962,
+    "accelerated": 16.166081340818025,
+    "restored": 3.8370872855336793,
+    "ratio": 4.610292763086634
+  }
+}

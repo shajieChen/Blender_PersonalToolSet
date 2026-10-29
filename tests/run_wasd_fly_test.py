@@ -261,8 +261,21 @@ def test_mmb_timing_and_modifiers():
     state.modal(context,mmb_event("W"))
     state.modal(context,mmb_event("LEFT_SHIFT",shift=True))
     mmb_tick(state,context,.02)
-    check(context.region_data.view_location==initial,"modifier key pauses movement")
-    state.modal(context,mmb_event("LEFT_SHIFT","RELEASE"))
+    check(abs((context.region_data.view_location-initial).length-.4)<1e-5,"Shift accelerates MMB movement by the configured multiplier")
+    state.modal(context,mmb_event("RIGHT_SHIFT",shift=True))
+    state.modal(context,mmb_event("LEFT_SHIFT","RELEASE",shift=True))
+    initial = context.region_data.view_location.copy()
+    mmb_tick(state,context,.02)
+    check(abs((context.region_data.view_location-initial).length-.4)<1e-5,"right Shift keeps acceleration after left Shift release")
+    state.modal(context,mmb_event("RIGHT_SHIFT","RELEASE"))
+    initial = context.region_data.view_location.copy()
+    mmb_tick(state,context,.02)
+    check(abs((context.region_data.view_location-initial).length-.08)<1e-5,"releasing both Shift keys restores base speed")
+    state.modal(context,mmb_event("LEFT_CTRL",ctrl=True))
+    initial = context.region_data.view_location.copy()
+    mmb_tick(state,context,.02)
+    check(context.region_data.view_location==initial,"Ctrl still pauses MMB movement")
+    state.modal(context,mmb_event("LEFT_CTRL","RELEASE"))
     mmb_tick(state,context,.5)
     check(abs((context.region_data.view_location-initial).length-.2)<1e-5,"long stalls are capped to 0.05 seconds")
     state.modal(context,mmb_event("WINDOW_DEACTIVATE"))
@@ -320,6 +333,26 @@ def test_mmb_rna_area_collection():
     check(not timers,"RNA area cleanup remains idempotent")
 
 
+def test_mmb_vertical_keys():
+    context,timers,_headers,_handlers = mmb_context()
+    state = mmb_state()
+    state.invoke(context,mmb_event("MIDDLEMOUSE"))
+    initial = context.region_data.view_location.copy()
+    state.modal(context,mmb_event("Q"))
+    mmb_tick(state,context,.025)
+    check((context.region_data.view_location-initial-Vector((0.,0.,.1))).length<1e-5,"MMB Q rises on world Z")
+    state.modal(context,mmb_event("E"))
+    initial = context.region_data.view_location.copy()
+    mmb_tick(state,context,.025)
+    check(context.region_data.view_location==initial,"MMB Q and E cancel")
+    state.modal(context,mmb_event("Q","RELEASE"))
+    state.modal(context,mmb_event("LEFT_SHIFT",shift=True))
+    mmb_tick(state,context,.025)
+    check((context.region_data.view_location-initial-Vector((0.,0.,-.5))).length<1e-5,"MMB E descends with Shift acceleration")
+    state.modal(context,mmb_event("MIDDLEMOUSE","RELEASE"))
+    check(not timers and not state.held,"vertical movement stops on middle release")
+
+
 def test_mmb_default_keymap():
     fly.register()
     try:
@@ -334,7 +367,7 @@ if __name__ == "__main__":
     try:
         bpy.ops.wm.read_factory_settings(use_empty=True)
         selected = 0
-        for case in (test_level_axes,test_wasd_matches_unity,test_shift_and_scroll,test_mouse_look_locks_roll,test_preview_fly_turns_around_the_eye,test_unity_viewport_gestures,test_mmb_translation_and_timer_isolation,test_mmb_release_cancel_and_mouse_rotation,test_mmb_timing_and_modifiers,test_mmb_context_guards_and_lifecycle,test_mmb_default_keymap,test_mmb_rna_area_collection,test_registration):
+        for case in (test_level_axes,test_wasd_matches_unity,test_shift_and_scroll,test_mouse_look_locks_roll,test_preview_fly_turns_around_the_eye,test_unity_viewport_gestures,test_mmb_translation_and_timer_isolation,test_mmb_release_cancel_and_mouse_rotation,test_mmb_timing_and_modifiers,test_mmb_context_guards_and_lifecycle,test_mmb_default_keymap,test_mmb_vertical_keys,test_mmb_rna_area_collection,test_registration):
             selected += 1
             print("WASD_TEST",case.__name__)
             case()

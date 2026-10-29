@@ -1,0 +1,19 @@
+{
+  "status": "Passed",
+  "version": [
+    1,
+    2,
+    1
+  ],
+  "source": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\wasd_fly_camera\\__init__.py",
+  "sha256": "2a0bc039e2f8d2d8fa2eb2981f6c78ddee6f926f0556bbd032f077511a35d189",
+  "preferences_preserved": {
+    "navigation_mode": "BLENDER_MMB",
+    "speed": 4.0,
+    "shift_multiplier": 5.0,
+    "mouse_sensitivity": 0.003000000026077032
+  },
+  "other_addons_preserved": true,
+  "backup": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\wasd_fly_camera\\__init__.py.before-shift-20261029",
+  "preferences_backup": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\config\\userpref.blend.before-mmb-shift-20261029"
+}

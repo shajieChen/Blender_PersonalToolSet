@@ -21,7 +21,7 @@ from mathutils import Quaternion, Vector
 bl_info = {
     "name": "WASD Fly Camera",
     "author": "Blender Plugin",
-    "version": (1, 2, 0),
+    "version": (1, 2, 2),
     "blender": (5, 1, 2),
     "location": "View3D > Sidebar > 飞行",
     "description": "按住中键使用 WASD 移动视口，保留可选 Unity 风格导航",
@@ -34,7 +34,7 @@ _MMB_MODE = "BLENDER_MMB"
 _UNITY_MODE = "UNITY"
 _MMB_INTERVAL = 1.0 / 60.0
 _MAX_MMB_DT = 0.05
-_MMB_KEYS = frozenset({"W", "A", "S", "D"})
+_MMB_KEYS = frozenset({"W", "A", "S", "D", "Q", "E"})
 _MODIFIER_KEYS = frozenset({"LEFT_SHIFT", "RIGHT_SHIFT", "LEFT_CTRL", "RIGHT_CTRL", "LEFT_ALT", "RIGHT_ALT", "OSKEY"})
 _WORLD_UP = Vector((0.0, 0.0, 1.0))
 
@@ -66,6 +66,11 @@ def fly_translation(rotation, held, speed, dt):
     if direction.length_squared < 1.0e-12:
         return Vector((0.0, 0.0, 0.0))
     return direction.normalized() * speed * dt
+
+
+def mmb_translation(rotation, held, speed, dt):
+    keys = {{"Q": "E", "E": "Q"}.get(key, key) for key in held}
+    return fly_translation(rotation, keys, speed, dt)
 
 
 def fly_look(rotation, dx, dy, sensitivity):
@@ -209,8 +214,7 @@ class WASDFlyPreferences(AddonPreferences):
         layout = self.layout
         layout.prop(self, "navigation_mode")
         layout.prop(self, "speed")
-        if self.navigation_mode == _UNITY_MODE:
-            layout.prop(self, "shift_multiplier")
+        layout.prop(self, "shift_multiplier")
         layout.prop(self, "mouse_sensitivity")
 
 
@@ -278,13 +282,13 @@ class WASD_OT_mmb_move(_ViewDrag, Operator):
         try:
             self._begin_drag(context, event)
             self.speed = _nav_preferences()[0]
-            if not isfinite(self.speed) or not isfinite(self.sensitivity):
+            if not isfinite(self.speed) or not isfinite(self.sensitivity) or not isfinite(self.shift_multiplier):
                 raise ValueError("导航速度或鼠标灵敏度无效")
             self.last_time = perf_counter()
             self.timer = self.manager.event_timer_add(_MMB_INTERVAL, window=self.window)
             self.last_timer_duration = self.timer.time_duration
             _active_navigation = self
-            self.area.header_text_set("中键：WASD 移动，拖动旋转，松开停止，Esc/右键还原")
+            self.area.header_text_set("中键：WASD 移动，Q 上升 E 下降，Shift 加速，拖动旋转，松开停止，Esc/右键还原")
             self.manager.modal_handler_add(self)
             return {"RUNNING_MODAL"}
         except Exception as exc:
@@ -332,7 +336,9 @@ class WASD_OT_mmb_move(_ViewDrag, Operator):
             elif event.value == "RELEASE":
                 self.modifier_keys.discard(event.type)
             return {"RUNNING_MODAL"}
-        paused = bool(self.modifier_keys or event.shift or event.ctrl or event.alt or event.oskey)
+        shift_keys = {"LEFT_SHIFT", "RIGHT_SHIFT"}
+        faster = bool(self.modifier_keys.intersection(shift_keys) or event.shift)
+        paused = bool(self.modifier_keys.difference(shift_keys) or event.ctrl or event.alt or event.oskey)
         if event.type == "MOUSEMOVE":
             dx, dy = self._track_mouse(event)
             if not paused and (dx or dy):
@@ -348,7 +354,8 @@ class WASD_OT_mmb_move(_ViewDrag, Operator):
             dt = min(_MAX_MMB_DT, max(0.0, now - self.last_time))
             self.last_time = now
             if self.held and not paused:
-                delta = fly_translation(self.region.view_rotation, self.held, self.speed, dt)
+                speed = scaled_speed(self.speed, faster, self.shift_multiplier)
+                delta = mmb_translation(self.region.view_rotation, self.held, speed, dt)
                 if delta.length_squared > 0.0:
                     self.region.view_location += delta
                     self.area.tag_redraw()
@@ -600,11 +607,13 @@ class WASD_PT_fly_camera(Panel):
             layout.prop(preferences, "navigation_mode")
         if _navigation_mode() == _MMB_MODE:
             layout.label(text="按住中键：W/S 前后，A/D 左右")
-            layout.label(text="拖动中键旋转；松开中键停止")
+            layout.label(text="Q 上升，E 下降（世界竖直方向）")
+            layout.label(text="Shift 加速；拖动中键旋转；松开停止")
             layout.label(text="Esc/右键还原本次视口操作")
             layout.label(text="普通 Turntable 视口；不移动场景相机")
             if preferences:
                 layout.prop(preferences, "speed")
+                layout.prop(preferences, "shift_multiplier")
                 layout.prop(preferences, "mouse_sensitivity")
             return
         layout.label(text="中键平移，Alt+左键环绕，Alt+右键缩放")
