@@ -1,0 +1,77 @@
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\run_wasd_fly_test.py", line 309, in <module>
+    case()
+    ~~~~^^
+  File "H:\Blender_Plugin\tests\run_wasd_fly_test.py", line 186, in test_mmb_translation_and_timer_isolation
+    state = mmb_state()
+  File "H:\Blender_Plugin\tests\run_wasd_fly_test.py", line 169, in mmb_state
+    check(hasattr(fly, "WASD_OT_mmb_move"), "middle mouse WASD operator exists")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\run_wasd_fly_test.py", line 26, in check
+    raise AssertionError(message)
+AssertionError: middle mouse WASD operator exists
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\run_wasd_fly_test.py", line 309, in <module>
+    case()
+    ~~~~^^
+  File "H:\Blender_Plugin\tests\run_wasd_fly_test.py", line 186, in test_mmb_translation_and_timer_isolation
+    state = mmb_state()
+  File "H:\Blender_Plugin\tests\run_wasd_fly_test.py", line 169, in mmb_state
+    check(hasattr(fly, "WASD_OT_mmb_move"), "middle mouse WASD operator exists")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\run_wasd_fly_test.py", line 26, in check
+    raise AssertionError(message)
+AssertionError: middle mouse WASD operator exists
+
+Error: script failed, file: 'tests/run_wasd_fly_test.py', exiting.
+Warning: addon-module wasd_fly_camera found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\wasd_fly_camera\\__init__.py'
+WASD_TEST test_level_axes
+PASS level camera looks along +Y
+PASS level camera right is +X
+PASS level camera up is +Z
+WASD_TEST test_wasd_matches_unity
+PASS W moves forward along the look direction
+PASS S moves backward
+PASS D moves right
+PASS A moves left
+PASS E moves up on world Z
+PASS Q moves down on world Z
+PASS no keys do not move
+PASS combined keys keep the requested speed
+WASD_TEST test_shift_and_scroll
+PASS normal speed stays at the base speed
+PASS shift multiplies the fly speed
+PASS scroll wheel changes fly speed in both directions
+PASS speed does not fall below the minimum
+PASS speed does not pass the maximum
+WASD_TEST test_mouse_look_locks_roll
+PASS moving the mouse right looks toward camera right
+PASS yaw keeps the camera upright
+PASS moving the mouse up looks up
+PASS pitch does not roll the camera upside down
+PASS pitch stops before looking straight up
+PASS the clamped look stays upright
+WASD_TEST test_preview_fly_turns_around_the_eye
+PASS mouse look keeps the preview eye fixed
+PASS the orbit pivot shifts so the eye can stay put
+PASS flight moves the preview eye
+PASS W carries the eye forward
+WASD_TEST test_unity_viewport_gestures
+PASS perspective right-drag flies
+PASS camera view right-drag flies
+PASS orthographic right-drag orbits
+PASS dragging right pans the camera left
+PASS dragging up pans the camera down
+PASS dragging up zooms toward the pivot
+PASS zoom distance does not collapse
+PASS zoom distance stays finite
+PASS orbit keeps the pivot distance
+PASS orbit still looks at the pivot
+PASS orbit moves the eye around the pivot
+WASD_TEST test_mmb_translation_and_timer_isolation
+WASD_FLY_TEST_FAIL
+WASD_FLY_SELECTED 7
+WASD_FLY_CHECKS 38
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

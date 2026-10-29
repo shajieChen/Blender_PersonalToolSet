@@ -1,0 +1,56 @@
+```text
+原生 MMB -> invoke: RUNNING_MODAL
+        -> modal: Area 集合检查抛 TypeError
+        -> _finish: 同样错误 -> active 已清空 -> 审计误报“未进入”
+```
+
+**结论：本次材料证实真实 operator 缺陷，置信度高。先修两处集合检查，不改调度或焦点。**
+
+1. **事实与推断**
+
+   - 当前 [JSON](/H:/Blender_Plugin/docs/superpowers/evidence/2026-10-27-mmb-wasd/ui-5_1.json:39) 的 `event_trace` **并非空**，已记录 MMB invoke 返回 `RUNNING_MODAL`。
+   - [日志](/H:/Blender_Plugin/docs/superpowers/evidence/2026-10-27-mmb-wasd/ui-5_1.log:3) 明确记录原生 `modal` 调用，并在 `_context_valid` 抛出：
+     `bpy_prop_collection.__contains__: expected a string or a tuple of strings`。
+   - 随后的 `_finish` 在同类表达式再次抛错。错误时间为 `04.610`，退出为 `10.594`。因此不能用日志打印位置推断“MMB 直到退出才处理”。
+   - **推断：** invoke 后迅速失败并清空 `_active_navigation`，使轮询错过活动状态。不是“无法进入”。
+   - app timer 使用 `yield .05` 返回调度，没有六秒同步忙等。**饥饿或隐藏窗口焦点问题均未获支持**；它们是否还有其他影响保持 `Unproven`。
+   - [green-first.log](/H:/Blender_Plugin/docs/superpowers/evidence/2026-10-27-mmb-wasd/green-first.log:114) 确认 12 组 / 98 checks，但版本是 **5.2.1**，不能代替 5.1.2 原生验证。
+
+2. **最小修复及顺序**
+
+   先修 [ `_context_valid` ](/H:/Blender_Plugin/wasd_fly_camera/__init__.py:294)，再修 [ `_finish` ](/H:/Blender_Plugin/wasd_fly_camera/__init__.py:357)。两处：
+
+   ```python
+   self.area in self.screen.areas
+   ```
+
+   均替换为：
+
+   ```python
+   any(area == self.area for area in self.screen.areas)
+   ```
+
+   使用迭代比较 RNA 对象，避免集合的字符串成员查询；不使用 Python `is` 判断 RNA 包装对象身份。
+
+   不应仅捕获并吞掉 `TypeError`：这样会让有效 context 被取消，或跳过 header 清理。
+
+   **直接生命周期缺陷：** `_finish` 在 header 清理前设置 `finished=True`；当前异常发生后，再次调用立即返回，不能补做 header 清理。定时器移除已在错误之前尝试，不能据此声称定时器泄漏。
+
+3. **审计最小补强**
+
+   在 [测试包装函数](/H:/Blender_Plugin/tests/run_wasd_mmb_ui_audit.py:59) 中：
+   
+   - 先记录入口，再调用原方法；异常也记录。当前只在成功返回后追加，导致失败 modal 留不下 trace。
+   - 记录单调时间、首次匹配 `operator.timer` 的 TIMER，以及匹配 TIMER 计数。当前正常 TIMER 被排除，无法直接证明归属。
+   - 保留 `run → yield → advance` 调度。无需先重写 harness、延长等待或更改启动可见性。
+
+4. **聚焦 RED/GREEN 与原生验收**
+
+   - **RED：** 使用可迭代、但拒绝对象 `__contains__` 的集合替身，分别覆盖 `_context_valid` 与 `_finish`。旧代码应出现上述错误，且 `selected > 0`。
+   - **GREEN：** 两处修复后，验证有效/失效 area、header 清除、timer 移除、active 清空及重复 finish；再运行原有回归。不能仅依赖普通 list 替身。
+   - **原生顺序：** MOUSEMOVE → 返回事件循环 → MMB PRESS → invoke 成功 → 自有 TIMER → W PRESS → 多次自有 TIMER 且无鼠标移动 → 视口持续平移 → W RELEASE 后停止 → MMB RELEASE 后清理。
+   - 随后覆盖其余 WASD、Esc、失焦、模式切换、禁用、原生编辑快捷键与 G 模态保留；检查对象/相机矩阵和 actions 不变。
+
+**风险与回滚：** 两处修复仅改变存活 area 的检查，不改移动数学、LookAt、keymap 或 editor context。保留原有锁定与外部 modal 守卫；回滚仅撤销本次精确补丁和测试埋点。
+
+本次只读复核。修复后 RED/GREEN、原生自有 TIMER、持续移动及清理结果均为 **NotRun**。

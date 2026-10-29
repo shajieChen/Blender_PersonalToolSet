@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\run_wasd_mmb_ui_audit.py", line 215, in advance
+    return next(STEPS)
+  File "H:\Blender_Plugin\tests\run_wasd_mmb_ui_audit.py", line 112, in run
+    check(delta.length > .02 and delta.normalized().dot(direction) > .999, "native " + key + " moves in the view direction")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\run_wasd_mmb_ui_audit.py", line 27, in check
+    raise AssertionError(message)
+AssertionError: native W moves in the view direction

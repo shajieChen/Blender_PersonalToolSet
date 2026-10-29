@@ -1,0 +1,51 @@
+Warning: addon-module wasd_fly_camera found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\wasd_fly_camera\\__init__.py'
+PASS level camera looks along +Y
+PASS level camera right is +X
+PASS level camera up is +Z
+PASS W moves forward along the look direction
+PASS S moves backward
+PASS D moves right
+PASS A moves left
+PASS E moves up on world Z
+PASS Q moves down on world Z
+PASS no keys do not move
+PASS combined keys keep the requested speed
+PASS normal speed stays at the base speed
+PASS shift multiplies the fly speed
+PASS scroll wheel changes fly speed in both directions
+PASS speed does not fall below the minimum
+PASS speed does not pass the maximum
+PASS moving the mouse right looks toward camera right
+PASS yaw keeps the camera upright
+PASS moving the mouse up looks up
+PASS pitch does not roll the camera upside down
+PASS pitch stops before looking straight up
+PASS the clamped look stays upright
+PASS mouse look keeps the preview eye fixed
+PASS the orbit pivot shifts so the eye can stay put
+PASS flight moves the preview eye
+PASS W carries the eye forward
+PASS perspective right-drag flies
+PASS camera view right-drag flies
+PASS orthographic right-drag orbits
+PASS dragging right pans the camera left
+PASS dragging up pans the camera down
+PASS dragging up zooms toward the pivot
+PASS zoom distance does not collapse
+PASS zoom distance stays finite
+PASS orbit keeps the pivot distance
+PASS orbit still looks at the pivot
+PASS orbit moves the eye around the pivot
+PASS the fly panel is registered
+PASS the fly operator is registered
+PASS viewport pan orbit and zoom are registered
+PASS frame selected is registered
+PASS right mouse press starts flythrough
+PASS middle mouse pans
+PASS alt left mouse orbits
+PASS alt right mouse zooms
+PASS F frames the selection
+WASD_FLY_TEST_OK
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+
+Blender quit

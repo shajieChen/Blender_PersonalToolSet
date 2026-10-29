@@ -10,7 +10,8 @@ Esc restores the view from when the drag started.
 
 from __future__ import annotations
 
-from math import exp
+from math import exp, isfinite
+from time import perf_counter
 
 import bpy
 from bpy.props import EnumProperty, FloatProperty
@@ -20,14 +21,21 @@ from mathutils import Quaternion, Vector
 bl_info = {
     "name": "WASD Fly Camera",
     "author": "Blender Plugin",
-    "version": (1, 1, 0),
-    "blender": (4, 2, 0),
+    "version": (1, 2, 0),
+    "blender": (5, 1, 2),
     "location": "View3D > Sidebar > 飞行",
-    "description": "用 Unity 场景视口的方式平移、环绕、缩放和飞行预览相机",
+    "description": "按住中键使用 WASD 移动视口，保留可选 Unity 风格导航",
     "category": "3D View",
 }
 
 _ADDON_KEYMAPS = []
+_active_navigation = None
+_MMB_MODE = "BLENDER_MMB"
+_UNITY_MODE = "UNITY"
+_MMB_INTERVAL = 1.0 / 60.0
+_MAX_MMB_DT = 0.05
+_MMB_KEYS = frozenset({"W", "A", "S", "D"})
+_MODIFIER_KEYS = frozenset({"LEFT_SHIFT", "RIGHT_SHIFT", "LEFT_CTRL", "RIGHT_CTRL", "LEFT_ALT", "RIGHT_ALT", "OSKEY"})
 _WORLD_UP = Vector((0.0, 0.0, 1.0))
 
 
@@ -133,12 +141,50 @@ def _nav_preferences():
     return preferences.speed, preferences.shift_multiplier, preferences.mouse_sensitivity
 
 
+def _navigation_mode():
+    preferences = _preferences()
+    return getattr(preferences, "navigation_mode", _MMB_MODE)
+
+
+def _stop_navigation():
+    if _active_navigation is not None:
+        _active_navigation._finish()
+
+
+def _navigation_mode_changed(preferences, context):
+    _stop_navigation()
+    _register_keymap(preferences.navigation_mode)
+
+
+def _mmb_view_available(context):
+    area, region, view = context.area, context.region, context.region_data
+    if area is None or area.type != "VIEW_3D" or region is None or region.type != "WINDOW" or view is None:
+        return False
+    space = context.space_data
+    return view.view_perspective in {"PERSP", "ORTHO"} and not view.lock_rotation and not getattr(space, "lock_object", None) and not getattr(space, "lock_cursor", False) and context.preferences.inputs.view_rotate_method == "TURNTABLE"
+
+
+def _foreign_navigation_modal(context):
+    for operator in context.window.modal_operators:
+        name = getattr(operator, "bl_idname", "")
+        if operator == _active_navigation or name in {"view3d.mmb_wasd_move", "VIEW3D_OT_mmb_wasd_move", "screen.animation_play", "SCREEN_OT_animation_play"}:
+            continue
+        return True
+    return False
+
+
 class WASDFlyPreferences(AddonPreferences):
     bl_idname = __name__
 
+    navigation_mode: EnumProperty(
+        name="导航模式",
+        items=((_MMB_MODE, "Blender 中键 WASD", "按住中键移动视口，松开恢复正常快捷键"), (_UNITY_MODE, "Unity 兼容模式", "保留原中键平移、右键飞行等操作")),
+        default=_MMB_MODE,
+        update=_navigation_mode_changed,
+    )
     speed: FloatProperty(
         name="飞行速度",
-        description="按住右键飞行时相机每秒移动的距离",
+        description="中键视口或兼容模式每秒移动的 Blender 单位",
         default=4.0,
         min=0.01,
         max=1000.0,
@@ -161,8 +207,10 @@ class WASDFlyPreferences(AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
+        layout.prop(self, "navigation_mode")
         layout.prop(self, "speed")
-        layout.prop(self, "shift_multiplier")
+        if self.navigation_mode == _UNITY_MODE:
+            layout.prop(self, "shift_multiplier")
         layout.prop(self, "mouse_sensitivity")
 
 
@@ -205,6 +253,130 @@ class _ViewDrag:
 
     def _viewport_distance(self):
         return max(abs(self.region.view_distance), 0.01)
+
+
+class WASD_OT_mmb_move(_ViewDrag, Operator):
+    bl_idname = "view3d.mmb_wasd_move"
+    bl_label = "中键 WASD 视口移动"
+    bl_description = "按住中键时 WASD 平移视口，中键拖动旋转，松开停止"
+    bl_options = {"BLOCKING", "GRAB_CURSOR"}
+
+    @classmethod
+    def poll(cls, context):
+        return _active_navigation is None and _navigation_mode() == _MMB_MODE and _mmb_view_available(context)
+
+    def invoke(self, context, event):
+        global _active_navigation
+        if event.type != "MIDDLEMOUSE" or event.value != "PRESS" or event.shift or event.ctrl or event.alt or event.oskey or not WASD_OT_mmb_move.poll(context) or _foreign_navigation_modal(context):
+            return {"PASS_THROUGH"}
+        self.finished = False
+        self.timer = None
+        self.held = set()
+        self.modifier_keys = set()
+        self.manager, self.window, self.area = context.window_manager, context.window, context.area
+        self.screen, self.view_region = context.window.screen, context.region
+        try:
+            self._begin_drag(context, event)
+            self.speed = _nav_preferences()[0]
+            if not isfinite(self.speed) or not isfinite(self.sensitivity):
+                raise ValueError("导航速度或鼠标灵敏度无效")
+            self.last_time = perf_counter()
+            self.timer = self.manager.event_timer_add(_MMB_INTERVAL, window=self.window)
+            _active_navigation = self
+            self.area.header_text_set("中键：WASD 移动，拖动旋转，松开停止，Esc/右键还原")
+            self.manager.modal_handler_add(self)
+            return {"RUNNING_MODAL"}
+        except Exception as exc:
+            self._finish()
+            self.report({"WARNING"}, str(exc))
+            return {"CANCELLED"}
+
+    def _context_valid(self, context):
+        try:
+            return context.window == self.window and self.window.screen == self.screen and context.area == self.area and context.region == self.view_region and context.region_data == self.region and any(area == self.area for area in self.screen.areas) and _mmb_view_available(context) and not _foreign_navigation_modal(context)
+        except ReferenceError:
+            return False
+
+    def modal(self, context, event):
+        if self.finished:
+            return {"CANCELLED", "PASS_THROUGH"}
+        try:
+            return self._modal_event(context, event)
+        except Exception as exc:
+            self._finish()
+            self.report({"WARNING"}, str(exc))
+            return {"CANCELLED"}
+
+    def _modal_event(self, context, event):
+        if event.type == "WINDOW_DEACTIVATE" or not self._context_valid(context):
+            self._finish()
+            return {"CANCELLED"}
+        if event.type == "ESC" or (event.type == "RIGHTMOUSE" and event.value == "PRESS"):
+            self._restore_view()
+            self.area.tag_redraw()
+            self._finish()
+            return {"CANCELLED"}
+        if event.type == "MIDDLEMOUSE" and event.value == "RELEASE":
+            self._finish()
+            return {"FINISHED"}
+        if event.type in _MMB_KEYS:
+            if event.value == "PRESS":
+                self.held.add(event.type)
+            elif event.value == "RELEASE":
+                self.held.discard(event.type)
+            return {"RUNNING_MODAL"}
+        if event.type in _MODIFIER_KEYS:
+            if event.value == "PRESS":
+                self.modifier_keys.add(event.type)
+            elif event.value == "RELEASE":
+                self.modifier_keys.discard(event.type)
+            return {"RUNNING_MODAL"}
+        paused = bool(self.modifier_keys or event.shift or event.ctrl or event.alt or event.oskey)
+        if event.type == "MOUSEMOVE":
+            dx, dy = self._track_mouse(event)
+            if not paused and (dx or dy):
+                self.region.view_rotation = fly_look(self.region.view_rotation, dx, dy, self.sensitivity)
+                self.area.tag_redraw()
+            return {"RUNNING_MODAL"}
+        if event.type == "TIMER":
+            if event.timer != self.timer:
+                return {"PASS_THROUGH"}
+            now = perf_counter()
+            dt = min(_MAX_MMB_DT, max(0.0, now - self.last_time))
+            self.last_time = now
+            if self.held and not paused:
+                delta = fly_translation(self.region.view_rotation, self.held, self.speed, dt)
+                if delta.length_squared > 0.0:
+                    self.region.view_location += delta
+                    self.area.tag_redraw()
+            return {"RUNNING_MODAL"}
+        if event.type in {"WHEELUPMOUSE", "WHEELDOWNMOUSE"}:
+            return {"PASS_THROUGH"}
+        return {"RUNNING_MODAL"}
+
+    def _finish(self):
+        global _active_navigation
+        if getattr(self, "finished", True):
+            return
+        self.finished = True
+        if _active_navigation is self:
+            _active_navigation = None
+        self.held.clear()
+        self.modifier_keys.clear()
+        timer, self.timer = self.timer, None
+        if timer is not None:
+            try:
+                self.manager.event_timer_remove(timer)
+            except (ReferenceError, RuntimeError):
+                pass
+        try:
+            if any(area == self.area for area in self.screen.areas):
+                self.area.header_text_set(None)
+        except ReferenceError:
+            pass
+
+    def cancel(self, context):
+        self._finish()
 
 
 class WASD_OT_fly_camera(_ViewDrag, Operator):
@@ -420,6 +592,18 @@ class WASD_PT_fly_camera(Panel):
 
     def draw(self, context):
         layout = self.layout
+        preferences = _preferences()
+        if preferences:
+            layout.prop(preferences, "navigation_mode")
+        if _navigation_mode() == _MMB_MODE:
+            layout.label(text="按住中键：W/S 前后，A/D 左右")
+            layout.label(text="拖动中键旋转；松开中键停止")
+            layout.label(text="Esc/右键还原本次视口操作")
+            layout.label(text="普通 Turntable 视口；不移动场景相机")
+            if preferences:
+                layout.prop(preferences, "speed")
+                layout.prop(preferences, "mouse_sensitivity")
+            return
         layout.label(text="中键平移，Alt+左键环绕，Alt+右键缩放")
         layout.label(text="透视：按住右键飞行，滚轮改速度")
         layout.label(text="正交：按住右键绕枢轴环绕")
@@ -439,11 +623,28 @@ class WASD_PT_fly_camera(Panel):
             layout.label(text="当前移动视口预览")
 
 
-def _register_keymap():
-    keymap = bpy.context.window_manager.keyconfigs.addon.keymaps.new(
+def _clear_keymaps():
+    for keymap, item in _ADDON_KEYMAPS:
+        try:
+            keymap.keymap_items.remove(item)
+        except (ReferenceError, RuntimeError):
+            pass
+    _ADDON_KEYMAPS.clear()
+
+
+def _register_keymap(mode=None):
+    _clear_keymaps()
+    config = bpy.context.window_manager.keyconfigs.addon
+    if config is None:
+        return
+    keymap = config.keymaps.new(
         name="3D View",
         space_type="VIEW_3D",
     )
+    if (mode or _navigation_mode()) == _MMB_MODE:
+        item = keymap.keymap_items.new("view3d.mmb_wasd_move", "MIDDLEMOUSE", "PRESS")
+        _ADDON_KEYMAPS.append((keymap, item))
+        return
     fly_item = keymap.keymap_items.new("view3d.wasd_fly_camera", "RIGHTMOUSE", "PRESS")
     pan_item = keymap.keymap_items.new("view3d.unity_scene_nav", "MIDDLEMOUSE", "PRESS")
     pan_item.properties.action = "PAN"
@@ -458,21 +659,31 @@ def _register_keymap():
         _ADDON_KEYMAPS.append((keymap, item))
 
 
+@bpy.app.handlers.persistent
+def _load_pre(*args):
+    _stop_navigation()
+
+
 def register():
     bpy.utils.register_class(WASDFlyPreferences)
+    bpy.utils.register_class(WASD_OT_mmb_move)
     bpy.utils.register_class(WASD_OT_fly_camera)
     bpy.utils.register_class(WASD_OT_scene_nav)
     bpy.utils.register_class(WASD_OT_frame_selected)
     bpy.utils.register_class(WASD_PT_fly_camera)
     _register_keymap()
+    if _load_pre not in bpy.app.handlers.load_pre:
+        bpy.app.handlers.load_pre.append(_load_pre)
 
 
 def unregister():
-    for keymap, item in _ADDON_KEYMAPS:
-        keymap.keymap_items.remove(item)
-    _ADDON_KEYMAPS.clear()
+    _stop_navigation()
+    if _load_pre in bpy.app.handlers.load_pre:
+        bpy.app.handlers.load_pre.remove(_load_pre)
+    _clear_keymaps()
     bpy.utils.unregister_class(WASD_PT_fly_camera)
     bpy.utils.unregister_class(WASD_OT_frame_selected)
     bpy.utils.unregister_class(WASD_OT_scene_nav)
     bpy.utils.unregister_class(WASD_OT_fly_camera)
+    bpy.utils.unregister_class(WASD_OT_mmb_move)
     bpy.utils.unregister_class(WASDFlyPreferences)

@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-27",
+  "scope": "Planning only; no addon changes or enabling",
+  "source_plugin": "wasd_fly_camera 1.1.0",
+  "workspace_and_installed_sha256": "8af9059b074fef36030494da8e0139812e84f65b113525b29e17e675ca7c16b7",
+  "runtime_blender": "5.1.2",
+  "wasd_enabled": false,
+  "native_plain_mmb": "view3d.rotate",
+  "native_shift_mmb": "view3d.move",
+  "native_ctrl_mmb": "view3d.zoom",
+  "orbit_method": "TURNTABLE",
+  "confirmed_goal": "MMB-held WASD translates view and eye together; no fixed LookAt",
+  "new_feature_runtime": "NotRun",
+  "baseline": {
+    "5_1": {
+      "groups": 7,
+      "passed_checks": 46,
+      "exit_code": 0
+    },
+    "5_2": {
+      "groups": 7,
+      "passed_checks": 46,
+      "exit_code": 0
+    }
+  }
+}
