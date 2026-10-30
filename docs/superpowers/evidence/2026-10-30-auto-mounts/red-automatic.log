@@ -1,0 +1,172 @@
+test_constraint_animation_and_relative_parenting_follow_final_bone (test_humanoid_mounts_automatic.AutomaticMountTests.test_constraint_animation_and_relative_parenting_follow_final_bone) ... FAIL
+test_cross_character_equipment_is_rejected_without_empty_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_cross_character_equipment_is_rejected_without_empty_mount) ... FAIL
+test_existing_mount_works_without_retarget_plugin_or_snapshot (test_humanoid_mounts_automatic.AutomaticMountTests.test_existing_mount_works_without_retarget_plugin_or_snapshot) ... FAIL
+test_failure_after_binding_restores_root_and_removes_new_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_failure_after_binding_restores_root_and_removes_new_mount) ... FAIL
+test_failure_keeps_existing_mount_and_calibration (test_humanoid_mounts_automatic.AutomaticMountTests.test_failure_keeps_existing_mount_and_calibration) ... FAIL
+test_five_parts_use_target_roles_and_spine_fallback (test_humanoid_mounts_automatic.AutomaticMountTests.test_five_parts_use_target_roles_and_spine_fallback) ... FAIL
+test_missing_one_part_does_not_block_other_parts (test_humanoid_mounts_automatic.AutomaticMountTests.test_missing_one_part_does_not_block_other_parts) ... FAIL
+test_missing_roles_bad_schema_and_bad_json_leave_no_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_missing_roles_bad_schema_and_bad_json_leave_no_mount) ... FAIL
+test_multiple_mounts_require_explicit_selection (test_humanoid_mounts_automatic.AutomaticMountTests.test_multiple_mounts_require_explicit_selection) ... FAIL
+test_operator_does_not_use_stale_grip_for_unprepared_selected_weapon (test_humanoid_mounts_automatic.AutomaticMountTests.test_operator_does_not_use_stale_grip_for_unprepared_selected_weapon) ... FAIL
+test_operator_uses_selected_weapon_child_without_manual_root_or_bone (test_humanoid_mounts_automatic.AutomaticMountTests.test_operator_uses_selected_weapon_child_without_manual_root_or_bone) ... FAIL
+test_publisher_rejects_invalid_mapping_without_overwriting_snapshot (test_humanoid_mounts_automatic.AutomaticMountTests.test_publisher_rejects_invalid_mapping_without_overwriting_snapshot) ... FAIL
+test_real_retarget_publishes_final_roles_and_failed_retarget_keeps_them (test_humanoid_mounts_automatic.AutomaticMountTests.test_real_retarget_publishes_final_roles_and_failed_retarget_keeps_them) ... FAIL
+test_repeated_equipment_reuses_calibrated_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_repeated_equipment_reuses_calibrated_mount) ... FAIL
+test_right_hand_without_manual_bone_preserves_weapon_calibration (test_humanoid_mounts_automatic.AutomaticMountTests.test_right_hand_without_manual_bone_preserves_weapon_calibration) ... FAIL
+test_saved_record_and_equipment_work_in_new_process (test_humanoid_mounts_automatic.AutomaticMountTests.test_saved_record_and_equipment_work_in_new_process) ... FAIL
+
+======================================================================
+FAIL: test_constraint_animation_and_relative_parenting_follow_final_bone (test_humanoid_mounts_automatic.AutomaticMountTests.test_constraint_animation_and_relative_parenting_follow_final_bone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_cross_character_equipment_is_rejected_without_empty_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_cross_character_equipment_is_rejected_without_empty_mount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_existing_mount_works_without_retarget_plugin_or_snapshot (test_humanoid_mounts_automatic.AutomaticMountTests.test_existing_mount_works_without_retarget_plugin_or_snapshot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_failure_after_binding_restores_root_and_removes_new_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_failure_after_binding_restores_root_and_removes_new_mount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_failure_keeps_existing_mount_and_calibration (test_humanoid_mounts_automatic.AutomaticMountTests.test_failure_keeps_existing_mount_and_calibration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_five_parts_use_target_roles_and_spine_fallback (test_humanoid_mounts_automatic.AutomaticMountTests.test_five_parts_use_target_roles_and_spine_fallback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_missing_one_part_does_not_block_other_parts (test_humanoid_mounts_automatic.AutomaticMountTests.test_missing_one_part_does_not_block_other_parts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_missing_roles_bad_schema_and_bad_json_leave_no_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_missing_roles_bad_schema_and_bad_json_leave_no_mount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_multiple_mounts_require_explicit_selection (test_humanoid_mounts_automatic.AutomaticMountTests.test_multiple_mounts_require_explicit_selection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_operator_does_not_use_stale_grip_for_unprepared_selected_weapon (test_humanoid_mounts_automatic.AutomaticMountTests.test_operator_does_not_use_stale_grip_for_unprepared_selected_weapon)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_operator_uses_selected_weapon_child_without_manual_root_or_bone (test_humanoid_mounts_automatic.AutomaticMountTests.test_operator_uses_selected_weapon_child_without_manual_root_or_bone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_publisher_rejects_invalid_mapping_without_overwriting_snapshot (test_humanoid_mounts_automatic.AutomaticMountTests.test_publisher_rejects_invalid_mapping_without_overwriting_snapshot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_real_retarget_publishes_final_roles_and_failed_retarget_keeps_them (test_humanoid_mounts_automatic.AutomaticMountTests.test_real_retarget_publishes_final_roles_and_failed_retarget_keeps_them)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_repeated_equipment_reuses_calibrated_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_repeated_equipment_reuses_calibrated_mount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_right_hand_without_manual_bone_preserves_weapon_calibration (test_humanoid_mounts_automatic.AutomaticMountTests.test_right_hand_without_manual_bone_preserves_weapon_calibration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+======================================================================
+FAIL: test_saved_record_and_equipment_work_in_new_process (test_humanoid_mounts_automatic.AutomaticMountTests.test_saved_record_and_equipment_work_in_new_process)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_automatic.py", line 17, in setUp
+    self.assertTrue(callable(getattr(self.weapons, "equip_weapon", None)), "One-click equipment must resolve the mapped bone without manual selection")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : One-click equipment must resolve the mapped bone without manual selection
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.015s
+
+FAILED (failures=16)
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+HUMANOID_MOUNTS_STATIC_OK 12
+HUMANOID_MOUNTS_BLENDER 5.1.2 b'ec6e62d40fa9'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_automatic.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_SELECTED 16
+HUMANOID_MOUNTS_TEST_FAIL

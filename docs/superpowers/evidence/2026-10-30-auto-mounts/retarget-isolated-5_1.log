@@ -1,0 +1,124 @@
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\out\auto_mounts\retarget-isolated\tests\run_retarget_test.py", line 2013, in <module>
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+    main()
+    ~~~~^^
+  File "H:\Blender_Plugin\tests\out\auto_mounts\retarget-isolated\tests\run_retarget_test.py", line 1984, in main
+    test_metarig_root_reference_and_ik()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "H:\Blender_Plugin\tests\out\auto_mounts\retarget-isolated\tests\run_retarget_test.py", line 1775, in test_metarig_root_reference_and_ik
+    check(abs(delta.x) < 1.0e-3 and abs(delta.y) < 1.0e-3, "the final hop removes horizontal root travel")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\out\auto_mounts\retarget-isolated\tests\run_retarget_test.py", line 27, in check
+    raise AssertionError(message)
+AssertionError: the final hop removes horizontal root travel
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\tests\\out\\auto_mounts\\retarget-isolated\\humanoid_retarget\\__init__.py'
+test_standard_skeleton_selector
+PASS Rigify human metarig is the first standard
+PASS direct mapping remains available
+PASS existing scenes keep direct mapping
+PASS omitted standard stays direct
+PASS an unknown standard is rejected
+test_standard_skeleton_panel_order
+PASS the standard sits between the stand selector and step 1
+PASS the standard selector uses the standard-skeleton label
+test_human_metarig_definition
+Reloading external rigs...
+Reloading external metarigs...
+PASS the sample armature is removed after loading
+PASS the standard is the full human metarig
+PASS spine head comes from the human sample
+PASS spine tail comes from the human sample
+PASS spine roll comes from the human sample
+PASS thigh.L keeps its sample parent
+PASS thigh.L head comes from the human sample
+PASS upper_arm.L roll comes from the human sample
+PASS forearm.L roll comes from the human sample
+PASS hand.L roll comes from the human sample
+PASS hips is the sample root, not a name guess
+PASS left arm maps to the left sample bone
+PASS right arm maps to the right sample bone
+PASS left and right arms stay on their sides
+PASS chest keeps the sample spine ancestor
+PASS the middle spine ancestor is kept
+PASS face, breast, ear and fingers are outside the first body definition
+test_metarig_calibration_keeps_rest
+PASS both hops use the same definition
+PASS source rest stays unchanged
+PASS target rest stays unchanged
+PASS source world matrix stays unchanged
+PASS target world matrix stays unchanged
+PASS source calibration keeps the left arm on the left
+PASS target calibration keeps the right arm on the right
+PASS both hops use the same hips bone
+PASS the owned armature keeps the sample parent
+PASS the owned armature keeps the sample roll
+test_metarig_two_hop_bake
+PASS one source clip produces one target clip
+PASS the target clip keeps the source frame range
+PASS the intermediate armature is released
+PASS only the delivered target action remains
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS resolved source bones stay on the original rig
+PASS resolved target bones stay on the original rig
+PASS the two-hop arm chain points with the source
+test_metarig_swing_limits
+PASS each hop records hips and hands
+PASS each hop leaves the hand at identity
+PASS each hop leaves the hand at identity
+PASS each hop leaves the hand at identity
+PASS each hop leaves the hand at identity
+PASS the metarig hop does not restore the source hips yaw
+PASS the target hop does not keep hips yaw
+test_metarig_same_clip
+PASS the source still shows the entry clip
+PASS intermediate actions are not source clips
+PASS the target shows the same entry clip
+PASS the timeline is the entry clip
+test_metarig_root_reference_and_ik
+PASS the standard mode bakes two hops
+PASS in-place root motion is only the final hop
+PASS the first hop does not run IK
+PASS IK runs once on the final hop
+PASS current-pose reference is captured per hop
+PASS the two hops do not share one reference
+RETARGET_TEST_FAIL

@@ -64,7 +64,7 @@ from .ik import (
     bind_oriented_pole,
 )
 from .motion_space import MotionSpaceError, build_motion_space, validate_motion_space
-from .mapping import build_pairs
+from .mapping import PresetError, build_pairs, target_roles_record
 
 
 class RetargetError(RuntimeError):
@@ -1604,6 +1604,10 @@ def _bake_retarget(src, tgt, options=None, channel_state=None):
     if options.reference == "CURRENT" and not options.reference_data:
         raise RetargetError("已选择当前姿势作为零点，但还没有捕获参考姿势")
     pairs = correct_deform_pairs(src, tgt, correct_chest_pairs(src, tgt, _pairs_from_options(src, tgt, options)))
+    try:
+        target_roles_record(tgt, pairs)
+    except PresetError as exc:
+        raise RetargetError(str(exc)) from exc
     options.resolved_pairs = pairs
     src_roles = {role: name for role, name, _target_name in pairs}
     tgt_roles = {role: name for role, _source_name, name in pairs}

@@ -1,6 +1,7 @@
 from bpy.types import Panel
 
-from .mounts import mounts_for_armature
+from .mounts import HumanoidMountError, mounts_for_armature
+from .bone_roles import resolve_bone
 from .properties import SCHEMA, grip_object, mount_object
 
 VISIBLE_MOUNT_ROWS = 8
@@ -17,10 +18,32 @@ def draw_character(layout, settings):
     if box is None:
         return
     box.prop(settings, "armature")
-    box.operator("humanoid_mounts.use_armature")
+    row = box.row(align=True)
+    row.operator("humanoid_mounts.use_armature", text="使用当前骨架")
+    row.operator("humanoid_mounts.use_retarget_target")
     draw_message(box, "仅人形；左右以角色自身为准")
     box.row(align=True).prop(settings, "part", expand=True)
     armature = settings.armature
+    existing = mounts_for_armature(armature, settings.part)
+    if existing:
+        has_invalid = any(mount.get("hm_schema") != SCHEMA or mount.parent_type != "BONE" or mount.parent_bone not in armature.data.bones for mount in existing)
+        if has_invalid:
+            draw_message(box, "存在失效挂点，请在挂点管理中修复或选择有效点")
+        elif len(existing) > 1:
+            draw_message(box, "存在多个挂点，请在挂点管理中选择")
+        else:
+            draw_message(box, "已有挂点，装备时保留校准")
+    else:
+        try:
+            draw_message(box, "已映射：" + resolve_bone(armature, settings.part))
+            draw_message(box, "首次创建位于骨骼原点，需校准握位")
+        except HumanoidMountError as error:
+            draw_message(box, str(error))
+    header, custom = box.panel("hm_bone_custom", default_closed=True)
+    header.label(text="自定义骨骼")
+    if custom is None:
+        return
+    box = custom
     if armature is not None and armature.type == "ARMATURE":
         box.prop_search(settings, "bone_name", armature.data, "bones")
     else:
@@ -35,7 +58,7 @@ def draw_character(layout, settings):
 
 
 def draw_mount_list(layout, settings):
-    header, box = layout.panel("hm_mount_list", default_closed=False)
+    header, box = layout.panel("hm_mount_list", default_closed=True)
     header.label(text="挂点管理")
     if box is None:
         return
@@ -67,9 +90,17 @@ def draw_weapon(layout, settings):
     header.label(text="武器绑定")
     if box is None:
         return
-    draw_message(box, "将 3D 光标位置和方向设为握位")
-    box.operator("humanoid_mounts.prepare_grip")
+    draw_message(box, "选中已校准武器或其部件，一键装备")
+    box.operator("humanoid_mounts.equip_weapon")
     box.prop(settings, "grip", text="武器根")
+    box.operator("humanoid_mounts.detach_weapon")
+    header, custom = box.panel("hm_grip_custom", default_closed=True)
+    header.label(text="自定义握持校准与绑定")
+    if custom is None:
+        return
+    box = custom
+    draw_message(box, "首次：将 3D 光标位置和方向设为握位")
+    box.operator("humanoid_mounts.prepare_grip")
     row = box.row(align=True)
     row.operator("humanoid_mounts.use_grip", text="取当前根")
     row.operator("humanoid_mounts.register_grip", text="登记当前 Empty")
@@ -125,8 +156,8 @@ class HM_PT_mounts(Panel):
         layout = self.layout
         settings = context.scene.hm_settings
         draw_character(layout, settings)
-        draw_mount_list(layout, settings)
         draw_weapon(layout, settings)
+        draw_mount_list(layout, settings)
         draw_offset(layout, settings)
         draw_message(layout, settings.status or "通过 Blender 时间轴播放动画")
 

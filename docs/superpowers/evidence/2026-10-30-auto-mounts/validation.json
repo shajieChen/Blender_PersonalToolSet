@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-30",
+  "status": "Logic implementation verified; awaiting user manual review and formal closeout",
+  "computer_use_after_user_request": false,
+  "checks": [
+    {
+      "check": "Mounts 5.1.2",
+      "log": "logic-verified-5_1.log",
+      "selected": 56,
+      "exit_code": 0,
+      "sha256": "fe461fe6634491923d13e20ec691e805c02f72740263b5e08ad727985c496293",
+      "result": "Passed"
+    },
+    {
+      "check": "Mounts 5.2.1 single-thread",
+      "log": "logic-verified-5_2.log",
+      "selected": 56,
+      "exit_code": 0,
+      "sha256": "678d26c5ca314d2bfffd6ee5e2357576eb96e4ad18f1c1155fce8d4a4d79ea66",
+      "result": "Passed"
+    },
+    {
+      "check": "Installed 5.1.2 automatic",
+      "log": "logic-installed-final-5_1.log",
+      "selected": 22,
+      "exit_code": 0,
+      "sha256": "ec509dfc0d7d1b08e5daa8779ab3b6e84f1785979e9c6b9b23925f8291c9bd59",
+      "result": "Passed"
+    },
+    {
+      "check": "Pose 5.1.2",
+      "log": "logic-pose-5_1.log",
+      "selected": 13,
+      "exit_code": 0,
+      "sha256": "117064fe7ec0aca0bf3cce9ef3b25e3973c1cb7f1868f9fd61534a7a22a523ca",
+      "result": "Passed"
+    },
+    {
+      "check": "FBX 5.1.2",
+      "log": "logic-fbx-5_1.log",
+      "selected": 25,
+      "exit_code": 0,
+      "sha256": "1935d254dddc79a202f712bea2d9db753b93fea34e8dc6d1406c7222cf0d8216",
+      "result": "Passed"
+    },
+    {
+      "check": "Spring 5.1.2",
+      "log": "spring-5_1.log",
+      "selected": 147,
+      "exit_code": 0,
+      "sha256": "c35f1fa2f4f03496f6d7376cb4273cb3ef6150dc644b5c2ad3842fba73954064",
+      "result": "Passed"
+    },
+    {
+      "check": "Spring 5.2.1",
+      "log": "spring-5_2.log",
+      "selected": 147,
+      "exit_code": 0,
+      "sha256": "1c65433dc11b9c3fc600178cf44a1ca80cd9fce8fb38f9c8eb342f7dbd7fef4f",
+      "result": "Passed"
+    },
+    {
+      "check": "Retarget full changed copy",
+      "log": "retarget-isolated-5_1.log",
+      "selected": null,
+      "exit_code": 1,
+      "sha256": "6ca6dc7d4498c35305f408c02671d56105d67eca87baca95bf9bc1ba205638a9",
+      "result": "ExistingBaselineFailure"
+    },
+    {
+      "check": "Retarget full task-start copy",
+      "log": "retarget-baseline-5_1.log",
+      "selected": null,
+      "exit_code": 1,
+      "sha256": "cbbbef3d92e9b2bce89806fed5aa8224f5626f4c777c48e16c6ccf6e4548aec4",
+      "result": "ExistingBaselineFailure"
+    }
+  ],
+  "visual": "NotRun",
+  "equipment_undo_redo": "NotRun",
+  "user_asset_acceptance": "NotRun",
+  "build": "NotApplicable",
+  "cleanup": "No production diagnostics added; abandoned preview polling removed; formal user-review closeout pending"
+}

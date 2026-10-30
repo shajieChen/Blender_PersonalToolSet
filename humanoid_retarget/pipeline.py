@@ -10,6 +10,7 @@ import bpy
 from .apose_export import AposeExportError, apose_animation_actions, apose_export_objects, apose_model_reference
 from .autorig import AutoRigError, auto_rig_meshes
 from .classify import CORE_ROLES, classify_armature
+from .mapping import PresetError, save_target_roles
 from .retarget import ACTION_SEP, RetargetError, RetargetOptions, _assign_action, bake_retarget, collect_actions
 
 SOURCE_EXTS = {".fbx", ".glb", ".gltf", ".bvh"}
@@ -63,22 +64,29 @@ def import_model(path, automatic_bone_orientation=False):
     ext = os.path.splitext(path)[1].lower()
     if ext not in SOURCE_EXTS | TARGET_EXTS:
         raise PipelineError("不支持的文件格式: " + ext)
+    if not os.path.isfile(path):
+        raise PipelineError("模型文件不存在或不是文件，请重新选择已有文件: " + path)
     ensure_object_mode()
     before_objects = set(bpy.data.objects)
     before_actions = set(bpy.data.actions)
-    if ext == ".fbx":
-        extra = {}
-        if automatic_bone_orientation:
-            extra["automatic_bone_orientation"] = True
-        _call_op(bpy.ops.import_scene.fbx, filepath=path, **extra)
-    elif ext in {".glb", ".gltf"}:
-        _call_op(bpy.ops.import_scene.gltf, filepath=path)
-    elif ext == ".obj":
-        _call_op(bpy.ops.wm.obj_import, filepath=path)
-    elif ext == ".bvh":
-        _call_op(bpy.ops.import_anim.bvh, filepath=path)
-    else:
-        raise PipelineError("不支持的文件格式: " + ext)
+    try:
+        if ext == ".fbx":
+            extra = {}
+            if automatic_bone_orientation:
+                extra["automatic_bone_orientation"] = True
+            result = _call_op(bpy.ops.import_scene.fbx, filepath=path, **extra)
+        elif ext in {".glb", ".gltf"}:
+            result = _call_op(bpy.ops.import_scene.gltf, filepath=path)
+        elif ext == ".obj":
+            result = _call_op(bpy.ops.wm.obj_import, filepath=path)
+        elif ext == ".bvh":
+            result = _call_op(bpy.ops.import_anim.bvh, filepath=path)
+        else:
+            raise PipelineError("不支持的文件格式: " + ext)
+    except (RuntimeError, OSError) as exc:
+        raise PipelineError(f"导入模型失败，请检查文件是否可读取且格式有效: {path}\n{exc}") from exc
+    if "FINISHED" not in result:
+        raise PipelineError("模型导入已取消，请检查文件后重试: " + path)
     objects = [obj for obj in bpy.data.objects if obj not in before_objects]
     actions = [action for action in bpy.data.actions if action not in before_actions]
     if ext == ".fbx":
@@ -584,7 +592,8 @@ def retarget_existing(source, target, options=None):
             report, baked = retarget_through_human_metarig(source, target, options)
         else:
             report, baked = bake_retarget(source, target, options)
-    except RetargetError as exc:
+        save_target_roles(target, options.resolved_pairs)
+    except (RetargetError, PresetError) as exc:
         raise PipelineError(str(exc)) from exc
     target["hr_role"] = "target"
     return report, baked

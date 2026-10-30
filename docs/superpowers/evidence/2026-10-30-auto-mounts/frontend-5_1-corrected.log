@@ -1,0 +1,6 @@
+AUTOMATIC_MOUNTS_PACKAGE C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_mounts\__init__.py
+AUTOMATIC_MOUNTS_PACKAGE C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_retarget\__init__.py
+00:03.469  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.1\5.1\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Dots Stroke'
+00:03.469  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.1\5.1\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Material'
+Info: Saved as "automatic-mounts-preview.blend"
+AUTOMATIC_MOUNTS_PREVIEW H:\Blender_Plugin\tests\out\auto_mounts\automatic-mounts-preview.blend

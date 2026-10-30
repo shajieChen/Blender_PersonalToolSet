@@ -1,0 +1,58 @@
+[
+  {
+    "file": "humanoid_retarget/mapping.py",
+    "installed": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_retarget\\mapping.py",
+    "before_sha256": "08472bc964eedf06edaf4592e33b35d6231bd34194197a65446d28e8567d649f",
+    "after_sha256": "899976e589c215731f8fb7c03a19ff7cc38177298ef2351e4b3da4c754b86c5d",
+    "matches_workspace": true,
+    "mode": "exact file"
+  },
+  {
+    "file": "humanoid_mounts/operators.py",
+    "installed": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_mounts\\operators.py",
+    "before_sha256": "b31cd2cf85625eea81cd1c567fa8100e6aa3cf168293c549f8d0eb7ef8f8e816",
+    "after_sha256": "6dc77aa6d22e87e9e7397975802ce721f0d9c0f92dccaccb6872edaec7cb9a5f",
+    "matches_workspace": true,
+    "mode": "exact file"
+  },
+  {
+    "file": "humanoid_mounts/panels.py",
+    "installed": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_mounts\\panels.py",
+    "before_sha256": "5ee5975b0d80d88ca5e6b5a1c55c62aa85d89534c31dfbf94c8f245ef5340f9f",
+    "after_sha256": "28073f0d7a03a70a8017b2f7330e925e9fd46741c00bd533457f2ed386d4f48b",
+    "matches_workspace": true,
+    "mode": "exact file"
+  },
+  {
+    "file": "humanoid_mounts/weapons.py",
+    "installed": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_mounts\\weapons.py",
+    "before_sha256": "59858e6b07fa3f1234fb63ec12ab08e40948e54aeb7457231b4db8afbfe3ecd6",
+    "after_sha256": "50429d6f32711cc98e59eab3f5e31e6ba71206ca4b363de663c2a783d6a71ab4",
+    "matches_workspace": true,
+    "mode": "exact file"
+  },
+  {
+    "file": "humanoid_mounts/bone_roles.py",
+    "installed": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_mounts\\bone_roles.py",
+    "before_sha256": null,
+    "after_sha256": "cbd430ec858fcb95d7292104ae71f9f3f8b5f4465f8bb7dcdfb57f424a2097bc",
+    "matches_workspace": true,
+    "mode": "exact file"
+  },
+  {
+    "file": "humanoid_retarget/pipeline.py",
+    "installed": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_retarget\\pipeline.py",
+    "before_sha256": "4ddbd51ee7cc3dd66378ffd2074e4dff94d4ab06058eb7aa4cc829357ba4beb4",
+    "after_sha256": "e7430df5a8ea46e49fc9589462ebdb50164cb29024d1a69d70f082edbee4a2fc",
+    "matches_workspace": false,
+    "mode": "task-only patch"
+  },
+  {
+    "file": "humanoid_retarget/retarget.py",
+    "installed": "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_retarget\\retarget.py",
+    "before_sha256": "5c8ac084921248c0724ebf11049ab2fd111d98b07d700db293d7744853b27d56",
+    "mode": "task-only patch",
+    "after_sha256": "5980b2e1d852fabc2560d93db2e96e242b0ec06adde911c21e72b5a526e5e87a",
+    "matches_workspace": false
+  }
+]

@@ -1,0 +1,162 @@
+test_active_derivative_is_included_without_obsolete_actions (__main__.FbxPipelineTests.test_active_derivative_is_included_without_obsolete_actions) ... ok
+test_batch_export_excludes_old_actions_and_starts_with_current (__main__.FbxPipelineTests.test_batch_export_excludes_old_actions_and_starts_with_current) ... ok
+test_cancelled_import_does_not_return_success (__main__.FbxPipelineTests.test_cancelled_import_does_not_return_success) ... ok
+test_current_export_honors_false (__main__.FbxPipelineTests.test_current_export_honors_false) ... ok
+test_export_cleans_up_partial_track_creation (__main__.FbxPipelineTests.test_export_cleans_up_partial_track_creation) ... ok
+test_export_failure_restores_bind_pose_and_strip_names (__main__.FbxPipelineTests.test_export_failure_restores_bind_pose_and_strip_names) ... Traceback (most recent call last):
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\scripts\addons_core\io_scene_fbx\__init__.py", line 622, in execute
+    return export_fbx_bin.save(self, context, **keywords)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3754, in save
+    ret = save_single(operator, context.scene, depsgraph, filepath, **kwargs_mod)
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3623, in save_single
+    fbx_objects_elements(root, scene_data)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3425, in fbx_objects_elements
+    fbx_data_object_elements(objects, ob_obj, scene_data)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_retarget\pipeline.py", line 764, in wrapped
+    return original(root, ob_obj, scene_data)
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\python\Lib\unittest\mock.py", line 1169, in __call__
+    return self._mock_call(*args, **kwargs)
+00:04.391  bpy.rna          | ERROR Python script error in EXPORT_SCENE_OT_fbx.execute
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\python\Lib\unittest\mock.py", line 1173, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\python\Lib\unittest\mock.py", line 1228, in _execute_mock_call
+    raise effect
+RuntimeError: node failure
+ok
+test_export_file_operator_preserves_current_only_choice (__main__.FbxPipelineTests.test_export_file_operator_preserves_current_only_choice) ... ok
+test_export_restores_animation_state_after_failure (__main__.FbxPipelineTests.test_export_restores_animation_state_after_failure) ... ok
+test_export_restores_state_after_success (__main__.FbxPipelineTests.test_export_restores_state_after_success) ... ok
+test_fractional_action_range_is_preserved (__main__.FbxPipelineTests.test_fractional_action_range_is_preserved) ... ok
+test_import_handles_escaped_bone_names (__main__.FbxPipelineTests.test_import_handles_escaped_bone_names) ... ok
+test_import_operator_errors_are_reported_with_the_path (__main__.FbxPipelineTests.test_import_operator_errors_are_reported_with_the_path) ... ok
+test_import_preserves_animated_translation (__main__.FbxPipelineTests.test_import_preserves_animated_translation) ... ok
+test_import_rejects_directories_for_all_model_formats (__main__.FbxPipelineTests.test_import_rejects_directories_for_all_model_formats) ... ok
+test_missing_batch_action_fails_without_exporting_another_take (__main__.FbxPipelineTests.test_missing_batch_action_fails_without_exporting_another_take) ... ok
+test_missing_file_is_handled_by_both_import_buttons (__main__.FbxPipelineTests.test_missing_file_is_handled_by_both_import_buttons) ... ok
+test_missing_import_file_is_rejected_before_scene_changes (__main__.FbxPipelineTests.test_missing_import_file_is_rejected_before_scene_changes) ... ok
+test_recalled_paths_keep_the_last_folder (__main__.FbxPipelineTests.test_recalled_paths_keep_the_last_folder) ... ok
+test_saved_strip_names_do_not_conflict_during_restore (__main__.FbxPipelineTests.test_saved_strip_names_do_not_conflict_during_restore) ... ok
+test_small_baked_motion_is_not_simplified_away (__main__.FbxPipelineTests.test_small_baked_motion_is_not_simplified_away) ... ok
+test_stashed_batch_names_are_preserved (__main__.FbxPipelineTests.test_stashed_batch_names_are_preserved) ... ok
+test_static_rig_exports_without_creating_animation_data (__main__.FbxPipelineTests.test_static_rig_exports_without_creating_animation_data) ... ok
+test_stored_actions_work_without_existing_animation_data (__main__.FbxPipelineTests.test_stored_actions_work_without_existing_animation_data) ... ok
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-jcsdyeot\\derivative.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0266 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-tm1ecf17\\batch.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0182 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-z7e11_jb\\current.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0165 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-avgqkjq6\\node_failure.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+Error: Python: Traceback (most recent call last):
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\scripts\addons_core\io_scene_fbx\__init__.py", line 622, in execute
+    return export_fbx_bin.save(self, context, **keywords)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3754, in save
+    ret = save_single(operator, context.scene, depsgraph, filepath, **kwargs_mod)
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3623, in save_single
+    fbx_objects_elements(root, scene_data)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Blender Foundation\Blender 5.1\5.1\scripts\addons_core\io_scene_fbx\export_fbx_bin.py", line 3425, in fbx_objects_elements
+    fbx_data_object_elements(objects, ob_obj, scene_data)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  F... truncatedWarning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+[HumanoidRetarget]
+先导入带动画的模型，再导入要接收动作的角色。
+已导出A-Pose + 当前动画: C:\Users\CHENSH~2\AppData\Local\Temp\codex-fbx-test-b0qdui1_\operator.fbx
+Info: 已导出A-Pose + 当前动画: C:\Users\CHENSH~2\AppData\Local\Temp\codex-fbx-test-b0qdui1_\operator.fbx
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-lwkjxgh9\\success.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0194 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-mhzvf0sy\\fractional.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0109 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-h_knmd17\\translation.fbx'
+export finished in 0.0134 sec.
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-bdlu3cqe\\translation.fbx'
+export finished in 0.0105 sec.
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+[HumanoidRetarget]
+模型文件不存在或不是文件，请重新选择已有文件: C:\Users\CHENSH~2\AppData\Local\Temp\codex-fbx-test-ndcrpyua\蓝色小肥鱼.fbx
+[HumanoidRetarget]
+模型文件不存在或不是文件，请重新选择已有文件: C:\Users\CHENSH~2\AppData\Local\Temp\codex-fbx-test-ndcrpyua\蓝色小肥鱼.fbx
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-z0wub9b2\\saved_names.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0219 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-n6avjbw9\\small_motion.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0118 sec.
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-74flgfzn\\stashed.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0210 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-nq59yf2x\\static.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0068 sec.
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-rq2l6_c1\\stored.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0173 sec.
+test_unicode_filename_roundtrip (__main__.FbxPipelineTests.test_unicode_filename_roundtrip) ... ok
+test_untracked_rig_exports_owned_actions_only (__main__.FbxPipelineTests.test_untracked_rig_exports_owned_actions_only) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 2.636s
+
+OK
+Warning: addon-moduleBlender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+ humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-ua46d13a\\蓝色小肥鱼.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0136 sec.
+FBX version: 7400
+Warning: addon-module humanoid_retarget found module but without '__addon_enabled__' field, possible name collision from file: 'H:\\Blender_Plugin\\humanoid_retarget\\__init__.py'
+
+FBX export starting... 'C:\\Users\\CHENSH~2\\AppData\\Local\\Temp\\codex-fbx-test-leh5t3hb\\owned.fbx'
+(bpy.data.armatures['ExportRig'], 'POSE')
+export finished in 0.0186 sec.
+FBX_PIPELINE_SELECTED 25

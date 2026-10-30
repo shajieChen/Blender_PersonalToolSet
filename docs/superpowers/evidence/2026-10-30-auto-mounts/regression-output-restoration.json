@@ -1,0 +1,12 @@
+[
+  {
+    "file": "docs/superpowers/evidence/2026-10-23-spring-bone/lifecycle_reopen.blend",
+    "restored_sha256": "c3ee10b542ac7f8995bb32b2ee1457ed6a66cce99a924b80f090dcd11bce0ea7",
+    "reason": "Initially clean tracked fixture overwritten by existing spring regression; restored only these exact generated files"
+  },
+  {
+    "file": "docs/superpowers/evidence/2026-10-23-spring-bone/lifecycle_reopen.blend1",
+    "restored_sha256": "55001c2ad32da58118d690b7fd2a320935b594bfb0a62915bcc1729d119537fd",
+    "reason": "Initially clean tracked fixture overwritten by existing spring regression; restored only these exact generated files"
+  }
+]

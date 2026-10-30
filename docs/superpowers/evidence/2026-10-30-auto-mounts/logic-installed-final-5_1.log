@@ -1,0 +1,34 @@
+AUTOMATIC_MOUNTS_PACKAGE C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_mounts\__init__.py
+AUTOMATIC_MOUNTS_PACKAGE C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_retarget\__init__.py
+test_bone_rename_blocks_new_mount_but_preserves_existing_native_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_bone_rename_blocks_new_mount_but_preserves_existing_native_mount) ... ok
+test_constraint_animation_and_relative_parenting_follow_final_bone (test_humanoid_mounts_automatic.AutomaticMountTests.test_constraint_animation_and_relative_parenting_follow_final_bone) ... ok
+test_cross_character_equipment_is_rejected_without_empty_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_cross_character_equipment_is_rejected_without_empty_mount) ... ok
+test_duplicate_final_targets_fail_before_any_animation_mutation (test_humanoid_mounts_automatic.AutomaticMountTests.test_duplicate_final_targets_fail_before_any_animation_mutation) ... ok
+test_existing_mount_works_without_retarget_plugin_or_snapshot (test_humanoid_mounts_automatic.AutomaticMountTests.test_existing_mount_works_without_retarget_plugin_or_snapshot) ... ok
+test_failure_after_binding_restores_root_and_removes_new_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_failure_after_binding_restores_root_and_removes_new_mount) ... ok
+test_failure_keeps_existing_mount_and_calibration (test_humanoid_mounts_automatic.AutomaticMountTests.test_failure_keeps_existing_mount_and_calibration) ... ok
+test_five_parts_use_target_roles_and_spine_fallback (test_humanoid_mounts_automatic.AutomaticMountTests.test_five_parts_use_target_roles_and_spine_fallback) ... ok
+test_invalid_chest_does_not_silently_fallback_to_spine (test_humanoid_mounts_automatic.AutomaticMountTests.test_invalid_chest_does_not_silently_fallback_to_spine) ... ok
+test_invalid_mount_is_not_bypassed_or_replaced (test_humanoid_mounts_automatic.AutomaticMountTests.test_invalid_mount_is_not_bypassed_or_replaced) ... ok
+test_missing_one_part_does_not_block_other_parts (test_humanoid_mounts_automatic.AutomaticMountTests.test_missing_one_part_does_not_block_other_parts) ... ok
+test_missing_roles_bad_schema_and_bad_json_leave_no_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_missing_roles_bad_schema_and_bad_json_leave_no_mount) ... ok
+test_multiple_mounts_require_explicit_selection (test_humanoid_mounts_automatic.AutomaticMountTests.test_multiple_mounts_require_explicit_selection) ... ok
+test_operator_does_not_use_stale_grip_for_unprepared_selected_weapon (test_humanoid_mounts_automatic.AutomaticMountTests.test_operator_does_not_use_stale_grip_for_unprepared_selected_weapon) ... ok
+test_operator_failure_restores_root_and_does_not_publish_mount_selection (test_humanoid_mounts_automatic.AutomaticMountTests.test_operator_failure_restores_root_and_does_not_publish_mount_selection) ... ok
+test_operator_uses_selected_weapon_child_without_manual_root_or_bone (test_humanoid_mounts_automatic.AutomaticMountTests.test_operator_uses_selected_weapon_child_without_manual_root_or_bone) ... ok
+test_publisher_rejects_invalid_mapping_without_overwriting_snapshot (test_humanoid_mounts_automatic.AutomaticMountTests.test_publisher_rejects_invalid_mapping_without_overwriting_snapshot) ... ok
+test_real_retarget_publishes_final_roles_and_failed_retarget_keeps_them (test_humanoid_mounts_automatic.AutomaticMountTests.test_real_retarget_publishes_final_roles_and_failed_retarget_keeps_them) ... ok
+test_repeated_equipment_reuses_calibrated_mount (test_humanoid_mounts_automatic.AutomaticMountTests.test_repeated_equipment_reuses_calibrated_mount) ... ok
+test_right_hand_without_manual_bone_preserves_weapon_calibration (test_humanoid_mounts_automatic.AutomaticMountTests.test_right_hand_without_manual_bone_preserves_weapon_calibration) ... ok
+00:02.125  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.1\5.1\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Dots Stroke'
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+00:02.125  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.1\5.1\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Material'
+test_saved_record_and_equipment_work_in_new_process (test_humanoid_mounts_automatic.AutomaticMountTests.test_saved_record_and_equipment_work_in_new_process) ... ok
+test_use_retarget_target_keeps_role_mapping_owned_by_target (test_humanoid_mounts_automatic.AutomaticMountTests.test_use_retarget_target_keeps_role_mapping_owned_by_target) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 2.156s
+
+OK
+Info: Saved as "automatic-persistence.blend"
+AUTOMATIC_MOUNTS_SELECTED 22

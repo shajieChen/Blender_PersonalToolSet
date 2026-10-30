@@ -3,6 +3,7 @@ from mathutils import Matrix
 
 from .mounts import HumanoidMountError, ParentPose, is_mount, parent_at_world, validate_matrix, validate_mount, validate_parent_change, world_matrix
 from .properties import SCHEMA
+from . import bone_roles, mounts
 
 
 def validate_rigid(obj):
@@ -82,3 +83,55 @@ def detach_weapon(root):
     validate_grip(root)
     desired = world_matrix(root)
     parent_at_world(root, None, desired)
+
+
+def grip_from_object(obj):
+    candidates = []
+    visited = set()
+    while obj is not None:
+        if obj in visited:
+            raise HumanoidMountError("武器父级存在循环")
+        visited.add(obj)
+        if obj.get("hm_kind") == "GRIP":
+            candidates.append(obj)
+        obj = obj.parent
+    if len(candidates) != 1:
+        raise HumanoidMountError("请选择已校准武器；首次使用请在自定义中创建握持根")
+    validate_grip(candidates[0])
+    return candidates[0]
+
+
+def equip_weapon(root, armature, part, preferred_mount=None):
+    validate_grip(root)
+    mounts.editable_object(armature)
+    if armature.type != "ARMATURE" or part not in bone_roles.PART_ROLES:
+        raise HumanoidMountError("请选择人形角色和有效部位")
+    candidates = mounts.mounts_for_armature(armature, part)
+    if preferred_mount is not None:
+        if preferred_mount not in candidates:
+            raise HumanoidMountError("指定挂点不属于当前人形和部位")
+        mount = preferred_mount
+    elif len(candidates) == 1:
+        mount = candidates[0]
+    elif candidates:
+        raise HumanoidMountError("当前部位有多个挂点，请先明确选择")
+    else:
+        mount = None
+    if root.parent is not None and root.parent != mount:
+        raise HumanoidMountError("武器已绑定到其他挂点，请先解除")
+    if mount is not None:
+        validate_mount(mount)
+    saved = ParentPose(root)
+    created = False
+    try:
+        if mount is None:
+            bone_name = bone_roles.resolve_bone(armature, part)
+            mount = mounts.create_mount(armature, bone_name, part)
+            created = True
+        bind_weapon(root, mount, "SNAP")
+        return mount
+    except Exception:
+        saved.restore()
+        if created:
+            bpy.data.objects.remove(mount, do_unlink=True)
+        raise

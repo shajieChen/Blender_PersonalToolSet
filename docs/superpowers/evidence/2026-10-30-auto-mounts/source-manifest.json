@@ -1,0 +1,74 @@
+[
+  {
+    "file": "humanoid_retarget/mapping.py",
+    "sha256": "899976e589c215731f8fb7c03a19ff7cc38177298ef2351e4b3da4c754b86c5d",
+    "syntax": "Passed",
+    "comments": "Passed",
+    "encoding_newlines": "Passed",
+    "trailing_whitespace": "Passed"
+  },
+  {
+    "file": "humanoid_retarget/pipeline.py",
+    "sha256": "646bcad1195f75bba2135a1b4f755d29fabc2c25475839c7b100201f6e2e69e7",
+    "syntax": "Passed",
+    "comments": "Passed",
+    "encoding_newlines": "Passed",
+    "trailing_whitespace": "Passed"
+  },
+  {
+    "file": "humanoid_retarget/retarget.py",
+    "sha256": "607b371a178d301b2910826ee8c3c4e0f704acd318d1709908957abec5684dac",
+    "syntax": "Passed",
+    "comments": "Passed",
+    "encoding_newlines": "Passed",
+    "trailing_whitespace": "Passed"
+  },
+  {
+    "file": "humanoid_mounts/bone_roles.py",
+    "sha256": "cbd430ec858fcb95d7292104ae71f9f3f8b5f4465f8bb7dcdfb57f424a2097bc",
+    "syntax": "Passed",
+    "comments": "Passed",
+    "encoding_newlines": "Passed",
+    "trailing_whitespace": "Passed"
+  },
+  {
+    "file": "humanoid_mounts/weapons.py",
+    "sha256": "50429d6f32711cc98e59eab3f5e31e6ba71206ca4b363de663c2a783d6a71ab4",
+    "syntax": "Passed",
+    "comments": "Passed",
+    "encoding_newlines": "Passed",
+    "trailing_whitespace": "Passed"
+  },
+  {
+    "file": "humanoid_mounts/operators.py",
+    "sha256": "6dc77aa6d22e87e9e7397975802ce721f0d9c0f92dccaccb6872edaec7cb9a5f",
+    "syntax": "Passed",
+    "comments": "Passed",
+    "encoding_newlines": "Passed",
+    "trailing_whitespace": "Passed"
+  },
+  {
+    "file": "humanoid_mounts/panels.py",
+    "sha256": "28073f0d7a03a70a8017b2f7330e925e9fd46741c00bd533457f2ed386d4f48b",
+    "syntax": "Passed",
+    "comments": "Passed",
+    "encoding_newlines": "Passed",
+    "trailing_whitespace": "Passed"
+  },
+  {
+    "file": "tests/test_humanoid_mounts_automatic.py",
+    "sha256": "cc11af2ea76e8a321fa23fad443163883a1e413a4c9d733e8e5db42c3aa27024",
+    "syntax": "Passed",
+    "comments": "Passed",
+    "encoding_newlines": "Passed",
+    "trailing_whitespace": "Passed"
+  },
+  {
+    "file": "tests/run_humanoid_mounts_automatic.py",
+    "sha256": "baaf3b6df63c7ed3c89cbe42395453d631555102b9aae82d41e63aaecfa5b754",
+    "syntax": "Passed",
+    "comments": "Passed",
+    "encoding_newlines": "Passed",
+    "trailing_whitespace": "Passed"
+  }
+]

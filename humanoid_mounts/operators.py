@@ -53,6 +53,48 @@ class HM_OT_use_armature(Operator):
         return {"FINISHED"}
 
 
+class HM_OT_use_retarget_target(Operator):
+    bl_idname = "humanoid_mounts.use_retarget_target"
+    bl_label = "使用重定向目标"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        def use(settings):
+            retarget = getattr(context.scene, "hr_settings", None)
+            target = getattr(retarget, "target", None)
+            mounts.editable_object(target)
+            if target.type != "ARMATURE":
+                raise mounts.HumanoidMountError("重定向目标不是人形骨架")
+            settings.armature = target
+            settings.mount = None
+            settings.bone_name = ""
+            return "已选择重定向目标，选择武器后可直接装备"
+
+        return run_action(context, use)
+
+
+class HM_OT_equip_weapon(Operator):
+    bl_idname = "humanoid_mounts.equip_weapon"
+    bl_label = "装备到当前部位"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        def equip(settings):
+            obj = context.object
+            root = weapons.grip_from_object(obj) if obj is not None and obj != settings.armature else selected_grip(settings)
+            preferred = settings.mount
+            if preferred is not None and (preferred.parent != settings.armature or preferred.get("hm_part") != settings.part):
+                preferred = None
+            previous = mounts.mounts_for_armature(settings.armature, settings.part)
+            mount = weapons.equip_weapon(root, settings.armature, settings.part, preferred)
+            settings.mount = mount
+            settings.mount_name = mount.name
+            settings.grip = root
+            return "已装备；新挂点位于骨骼原点，首次请校准握位" if mount not in previous else "已装备，复用现有挂点和握持校准"
+
+        return run_action(context, equip)
+
+
 class HM_OT_create_mount(Operator):
     bl_idname = "humanoid_mounts.create_mount"
     bl_label = "从实际骨骼创建挂点"
@@ -242,4 +284,4 @@ class HM_OT_reset_offset(Operator):
         return run_action(context, reset)
 
 
-CLASSES = (HM_OT_use_armature, HM_OT_create_mount, HM_OT_prepare_grip, HM_OT_bind_weapon, HM_OT_detach_weapon, HM_OT_edit_mount, HM_OT_use_mount, HM_OT_use_bone, HM_OT_use_grip, HM_OT_register_grip, HM_OT_select_edit_target, HM_OT_reset_offset)
+CLASSES = (HM_OT_use_armature, HM_OT_use_retarget_target, HM_OT_equip_weapon, HM_OT_create_mount, HM_OT_prepare_grip, HM_OT_bind_weapon, HM_OT_detach_weapon, HM_OT_edit_mount, HM_OT_use_mount, HM_OT_use_bone, HM_OT_use_grip, HM_OT_register_grip, HM_OT_select_edit_target, HM_OT_reset_offset)

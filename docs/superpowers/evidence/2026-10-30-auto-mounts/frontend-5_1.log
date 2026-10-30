@@ -1,0 +1,13 @@
+AUTOMATIC_MOUNTS_PACKAGE C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_mounts\__init__.py
+AUTOMATIC_MOUNTS_PACKAGE C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_retarget\__init__.py
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\run_humanoid_mounts_automatic.py", line 160, in <module>
+    path = build_preview()
+  File "H:\Blender_Plugin\tests\run_humanoid_mounts_automatic.py", line 106, in build_preview
+    region.active_panel_category = "人形挂载"
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: bpy_struct: attribute "active_panel_category" from "Region" is read-only
+
+Error: script failed, file: './tests/run_humanoid_mounts_automatic.py', exiting.
+
+Blender quit

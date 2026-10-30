@@ -1,0 +1,15 @@
+STARTUP_PROBE_OK 5.2.1 LTS
+Switching to fully guarded memory allocator.
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+Blender 5.2.1 LTS
+Build: 2026-08-25 02:38:20 Windows Release
+argv[0] = H:\Blender\5.2.1\blender.exe
+argv[1] = --background
+argv[2] = --factory-startup
+argv[3] = --threads
+argv[4] = 1
+argv[5] = --debug
+argv[6] = --python-expr
+argv[7] = import bpy; print('STARTUP_PROBE_OK', bpy.app.version_string, flush=True)
+
+Blender quit

@@ -25,6 +25,23 @@ def build_pairs(src, tgt) -> list[tuple[str, str, str]]:
     return pairs
 
 
+def target_roles_record(target, pairs):
+    if target is None or target.type != "ARMATURE" or target.library is not None or target.override_library is not None or not target.is_editable:
+        raise PresetError("目标角色不可写入骨骼记录")
+    roles = {}
+    for role, source_name, target_name in pairs or ():
+        if role not in ALL_ROLES or role in roles or not isinstance(target_name, str) or target_name not in target.data.bones or target_name in roles.values():
+            raise PresetError("最终目标骨骼映射无效或重复")
+        roles[role] = target_name
+    if not roles:
+        raise PresetError("最终目标骨骼映射为空")
+    return json.dumps({"schema": 1, "roles": roles}, ensure_ascii=False, sort_keys=True)
+
+
+def save_target_roles(target, pairs):
+    target["hr_bone_roles"] = target_roles_record(target, pairs)
+
+
 def preset_dir() -> str:
     path = os.path.join(os.path.dirname(__file__), "presets")
     os.makedirs(path, exist_ok=True)

@@ -2,6 +2,7 @@ import os
 import pathlib
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -91,6 +92,91 @@ class FbxPipelineTests(unittest.TestCase):
         track.strips.new(old.name, 1, old)
         arm.animation_data.use_nla = False
         return arm, first, current, track
+
+    def test_missing_import_file_is_rejected_before_scene_changes(self):
+        arm = build_rig()
+        bpy.ops.object.mode_set(mode="EDIT")
+        objects = set(bpy.data.objects)
+        actions = set(bpy.data.actions)
+        path = self.path("蓝色小肥鱼")
+        with patch.object(pipeline, "_call_op") as importer:
+            with self.assertRaises(pipeline.PipelineError) as caught:
+                pipeline.import_model(path)
+        importer.assert_not_called()
+        self.assertIn(path, str(caught.exception))
+        self.assertIn("重新选择", str(caught.exception))
+        self.assertEqual(arm.mode, "EDIT")
+        self.assertEqual(set(bpy.data.objects), objects)
+        self.assertEqual(set(bpy.data.actions), actions)
+        bpy.ops.object.mode_set(mode="OBJECT")
+
+    def test_import_rejects_directories_for_all_model_formats(self):
+        for ext in sorted(pipeline.SOURCE_EXTS | pipeline.TARGET_EXTS):
+            with self.subTest(ext=ext):
+                path = os.path.join(self.folder.name, "folder" + ext)
+                os.mkdir(path)
+                with patch.object(pipeline, "_call_op") as importer:
+                    with self.assertRaises(pipeline.PipelineError):
+                        pipeline.import_model(path)
+                importer.assert_not_called()
+
+    def test_import_operator_errors_are_reported_with_the_path(self):
+        path = self.path("unreadable")
+        pathlib.Path(path).write_bytes(b"invalid fbx")
+        for error in (RuntimeError("import failed"), OSError("access denied")):
+            with self.subTest(error=type(error).__name__):
+                with patch.object(pipeline, "_call_op", side_effect=error):
+                    with self.assertRaises(pipeline.PipelineError) as caught:
+                        pipeline.import_model(path)
+                self.assertIn(path, str(caught.exception))
+                self.assertIs(caught.exception.__cause__, error)
+
+    def test_cancelled_import_does_not_return_success(self):
+        path = self.path("cancelled")
+        pathlib.Path(path).write_bytes(b"invalid fbx")
+        with patch.object(pipeline, "_call_op", return_value={"CANCELLED"}):
+            with self.assertRaises(pipeline.PipelineError):
+                pipeline.import_model(path)
+
+    def test_missing_file_is_handled_by_both_import_buttons(self):
+        arm, _first, _current, _track = self.batch()
+        settings = bpy.context.scene.hr_settings
+        settings.source = arm
+        settings.target = arm
+        settings.last_source_path = "saved_source.fbx"
+        settings.last_target_path = "saved_target.fbx"
+        actions = set(bpy.data.actions)
+        objects = set(bpy.data.objects)
+        for operator_type in (humanoid_retarget.HR_OT_import_source, humanoid_retarget.HR_OT_import_target):
+            with self.subTest(operator=operator_type.__name__):
+                reports = []
+                operator = SimpleNamespace(filepath=self.path("蓝色小肥鱼"), automatic_bone_orientation=False,
+                                           report=lambda level, message: reports.append((level, message)))
+                result = operator_type.execute(operator, bpy.context)
+                self.assertEqual(result, {"CANCELLED"})
+                self.assertEqual(reports[-1][0], {"ERROR"})
+                self.assertIn(operator.filepath, settings.status)
+                self.assertEqual(settings.last_source_path, "saved_source.fbx")
+                self.assertEqual(settings.last_target_path, "saved_target.fbx")
+                self.assertIs(settings.source, arm)
+                self.assertIs(settings.target, arm)
+                self.assertEqual(set(bpy.data.objects), objects)
+                self.assertEqual(set(bpy.data.actions), actions)
+
+    def test_unicode_filename_roundtrip(self):
+        arm = build_rig()
+        animate(arm, "UnicodeClip")
+        path = self.path("蓝色小肥鱼")
+        pipeline.export_armature(arm, path, export_all_actions=False)
+        objects, actions = pipeline.import_model(path)
+        self.assertTrue(any(obj.type == "ARMATURE" for obj in objects))
+        self.assertTrue(actions)
+
+    def test_recalled_paths_keep_the_last_folder(self):
+        missing = self.path("removed")
+        self.assertEqual(pipeline.initial_filepath(missing), missing)
+        self.assertEqual(pipeline.initial_filepath(self.folder.name), self.folder.name)
+        self.assertEqual(pipeline.initial_filepath(os.path.join(self.folder.name, "missing", "file.fbx")), "")
 
     def test_batch_export_excludes_old_actions_and_starts_with_current(self):
         arm, first, current, _track = self.batch()
