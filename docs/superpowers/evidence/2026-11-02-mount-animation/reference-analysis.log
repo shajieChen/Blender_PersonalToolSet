@@ -1,0 +1,9 @@
+00:02.219  blend            | Read blend: "C:\Users\CHENSH~2\AppData\Local\Temp\humanoid-mount-animation-3sdxbapf\scene.blend"
+Warning: Library file, loading empty scene
+{"frames": 53, "matched_vertices": 4861, "max_constant_mount_rotation_error_degrees": 117.7978137471087, "max_source_rigid_fit_rms": 1.0964676921610525e-07, "max_source_grip_local_drift": 8.178014535300926e-07, "target_palm_rigid_vertices": 23, "target_palm_bone_local": [0.002970650792121887, 0.002620450221002102, -0.0017464570701122284], "weapon_model_grip_local": [0.004794716835021973, 0.0046826377511024475, -0.09544626623392105], "rotation_in_target_hand": [0.1707668900489807, 0.6928137540817261, -0.15905308723449707, 0.6823056936264038]}
+SOURCE_WEAPON_RELATIVE_HAND_ANGLE_CHANGE 42.74183848716643
+SOURCE_WRIST_ROTATION_CHANGE 96.80765205022988
+TARGET_WRIST_ROTATION_CHANGE 0.0
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+
+Blender quit

@@ -1,0 +1,360 @@
+{
+  "frame": 0,
+  "old_mount_basis": [
+    [
+      -0.04375167936086655,
+      0.1702396273612976,
+      0.9844309091567993,
+      3.725290298461914e-09
+    ],
+    [
+      -0.09131273627281189,
+      0.980568528175354,
+      -0.1736299693584442,
+      -0.03180205076932907
+    ],
+    [
+      -0.9948607087135315,
+      -0.0974876880645752,
+      -0.027356471866369247,
+      -1.30385160446167e-08
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "new_mount_basis": [
+    [
+      0.018295740708708763,
+      -0.4533310830593109,
+      0.8911527991294861,
+      0.09324443340301514
+    ],
+    [
+      0.012651228345930576,
+      -0.8911467790603638,
+      -0.45356622338294983,
+      -0.06001663953065872
+    ],
+    [
+      0.9997444748878479,
+      0.019573131576180458,
+      -0.01056883204728365,
+      -0.01283220574259758
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "desired_world_at_reference": [
+    [
+      -0.8829195499420166,
+      0.24173609912395477,
+      0.40251263976097107,
+      0.6789693832397461
+    ],
+    [
+      0.3088708221912384,
+      -0.3466304540634155,
+      0.8856894969940186,
+      0.14436717331409454
+    ],
+    [
+      0.3536263406276703,
+      0.9063171744346619,
+      0.23138177394866943,
+      0.24310627579689026
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "weapon_grip_local": [
+    0.011653903871774673,
+    0.005981489084661007,
+    -0.10070452839136124
+  ],
+  "palm_world_at_reference": [
+    0.6295909881591797,
+    0.056700415909290314,
+    0.2293473333120346
+  ],
+  "max_grip_to_palm": 1.0958009009987217e-05,
+  "max_rotation_error_degrees": 117.80238997385263,
+  "rows": [
+    {
+      "frame": 0,
+      "rotation_error_degrees": 0.0,
+      "grip_to_palm": 1.0883775901772815e-05
+    },
+    {
+      "frame": 1,
+      "rotation_error_degrees": 54.64098424781241,
+      "grip_to_palm": 1.0854227671700724e-05
+    },
+    {
+      "frame": 2,
+      "rotation_error_degrees": 82.66314671411038,
+      "grip_to_palm": 1.0845038602692527e-05
+    },
+    {
+      "frame": 3,
+      "rotation_error_degrees": 82.19175437835275,
+      "grip_to_palm": 1.0878850391791546e-05
+    },
+    {
+      "frame": 4,
+      "rotation_error_degrees": 79.36962949633022,
+      "grip_to_palm": 1.0890304991398342e-05
+    },
+    {
+      "frame": 5,
+      "rotation_error_degrees": 81.40915130325271,
+      "grip_to_palm": 1.0833341467666691e-05
+    },
+    {
+      "frame": 6,
+      "rotation_error_degrees": 84.41503559470527,
+      "grip_to_palm": 1.092377082733596e-05
+    },
+    {
+      "frame": 7,
+      "rotation_error_degrees": 85.11373662604092,
+      "grip_to_palm": 1.0863449847205819e-05
+    },
+    {
+      "frame": 8,
+      "rotation_error_degrees": 85.1633237994152,
+      "grip_to_palm": 1.0881276439453415e-05
+    },
+    {
+      "frame": 9,
+      "rotation_error_degrees": 85.43139506395988,
+      "grip_to_palm": 1.0928254493288455e-05
+    },
+    {
+      "frame": 10,
+      "rotation_error_degrees": 85.47551808599815,
+      "grip_to_palm": 1.0859675529793124e-05
+    },
+    {
+      "frame": 11,
+      "rotation_error_degrees": 84.43369567151774,
+      "grip_to_palm": 1.0896244235140562e-05
+    },
+    {
+      "frame": 12,
+      "rotation_error_degrees": 84.36951921407632,
+      "grip_to_palm": 1.0934429541127133e-05
+    },
+    {
+      "frame": 13,
+      "rotation_error_degrees": 86.30770833447252,
+      "grip_to_palm": 1.0885968834700452e-05
+    },
+    {
+      "frame": 14,
+      "rotation_error_degrees": 91.39945043617695,
+      "grip_to_palm": 1.0874795567167072e-05
+    },
+    {
+      "frame": 15,
+      "rotation_error_degrees": 96.9455367214706,
+      "grip_to_palm": 1.0915555736991898e-05
+    },
+    {
+      "frame": 16,
+      "rotation_error_degrees": 100.42538149980868,
+      "grip_to_palm": 1.084800697037568e-05
+    },
+    {
+      "frame": 17,
+      "rotation_error_degrees": 110.46163414546874,
+      "grip_to_palm": 1.08635188306478e-05
+    },
+    {
+      "frame": 18,
+      "rotation_error_degrees": 104.19709392175977,
+      "grip_to_palm": 1.0958009009987217e-05
+    },
+    {
+      "frame": 19,
+      "rotation_error_degrees": 110.55356849169712,
+      "grip_to_palm": 1.090159217038592e-05
+    },
+    {
+      "frame": 20,
+      "rotation_error_degrees": 99.48137058196639,
+      "grip_to_palm": 1.0903455691299015e-05
+    },
+    {
+      "frame": 21,
+      "rotation_error_degrees": 87.10066233388862,
+      "grip_to_palm": 1.0889598952643886e-05
+    },
+    {
+      "frame": 22,
+      "rotation_error_degrees": 91.27887346429301,
+      "grip_to_palm": 1.0908382813272761e-05
+    },
+    {
+      "frame": 23,
+      "rotation_error_degrees": 98.47047526404782,
+      "grip_to_palm": 1.0873723554705604e-05
+    },
+    {
+      "frame": 24,
+      "rotation_error_degrees": 100.5523169230677,
+      "grip_to_palm": 1.0893350162554918e-05
+    },
+    {
+      "frame": 25,
+      "rotation_error_degrees": 106.80924148585211,
+      "grip_to_palm": 1.0888457023548893e-05
+    },
+    {
+      "frame": 26,
+      "rotation_error_degrees": 115.54219841522536,
+      "grip_to_palm": 1.088694786210269e-05
+    },
+    {
+      "frame": 27,
+      "rotation_error_degrees": 117.80238997385263,
+      "grip_to_palm": 1.09176304272851e-05
+    },
+    {
+      "frame": 28,
+      "rotation_error_degrees": 115.821116020172,
+      "grip_to_palm": 1.091652194084016e-05
+    },
+    {
+      "frame": 29,
+      "rotation_error_degrees": 112.09718760165433,
+      "grip_to_palm": 1.090541051846589e-05
+    },
+    {
+      "frame": 30,
+      "rotation_error_degrees": 108.03680406462183,
+      "grip_to_palm": 1.088927269940767e-05
+    },
+    {
+      "frame": 31,
+      "rotation_error_degrees": 104.00278505778557,
+      "grip_to_palm": 1.0884265525107655e-05
+    },
+    {
+      "frame": 32,
+      "rotation_error_degrees": 98.61519012445854,
+      "grip_to_palm": 1.0874376984401206e-05
+    },
+    {
+      "frame": 33,
+      "rotation_error_degrees": 91.78849801130087,
+      "grip_to_palm": 1.0893676293675742e-05
+    },
+    {
+      "frame": 34,
+      "rotation_error_degrees": 83.08104500828841,
+      "grip_to_palm": 1.0866829520878437e-05
+    },
+    {
+      "frame": 35,
+      "rotation_error_degrees": 72.80010766580182,
+      "grip_to_palm": 1.0882503288101788e-05
+    },
+    {
+      "frame": 36,
+      "rotation_error_degrees": 61.85453827555966,
+      "grip_to_palm": 1.0869334858913535e-05
+    },
+    {
+      "frame": 37,
+      "rotation_error_degrees": 51.53108983567887,
+      "grip_to_palm": 1.0892412481189928e-05
+    },
+    {
+      "frame": 38,
+      "rotation_error_degrees": 43.157441837783324,
+      "grip_to_palm": 1.0866220058269308e-05
+    },
+    {
+      "frame": 39,
+      "rotation_error_degrees": 37.38492112112539,
+      "grip_to_palm": 1.0878827429765673e-05
+    },
+    {
+      "frame": 40,
+      "rotation_error_degrees": 33.57911239483764,
+      "grip_to_palm": 1.0845714233641606e-05
+    },
+    {
+      "frame": 41,
+      "rotation_error_degrees": 30.686417998310503,
+      "grip_to_palm": 1.086518707457876e-05
+    },
+    {
+      "frame": 42,
+      "rotation_error_degrees": 28.86660971660899,
+      "grip_to_palm": 1.0887284382439216e-05
+    },
+    {
+      "frame": 43,
+      "rotation_error_degrees": 27.277006130693565,
+      "grip_to_palm": 1.0921008582853865e-05
+    },
+    {
+      "frame": 44,
+      "rotation_error_degrees": 26.154969974600533,
+      "grip_to_palm": 1.0888620163608887e-05
+    },
+    {
+      "frame": 45,
+      "rotation_error_degrees": 26.002192303245693,
+      "grip_to_palm": 1.0895791450128924e-05
+    },
+    {
+      "frame": 46,
+      "rotation_error_degrees": 23.51037536948496,
+      "grip_to_palm": 1.0900772960506559e-05
+    },
+    {
+      "frame": 47,
+      "rotation_error_degrees": 19.809341745065183,
+      "grip_to_palm": 1.089564370186228e-05
+    },
+    {
+      "frame": 48,
+      "rotation_error_degrees": 15.392012522007803,
+      "grip_to_palm": 1.0868098862174423e-05
+    },
+    {
+      "frame": 49,
+      "rotation_error_degrees": 10.670187261964681,
+      "grip_to_palm": 1.0893482654500316e-05
+    },
+    {
+      "frame": 50,
+      "rotation_error_degrees": 6.631049882119152,
+      "grip_to_palm": 1.0894575651569797e-05
+    },
+    {
+      "frame": 51,
+      "rotation_error_degrees": 5.495603930251287,
+      "grip_to_palm": 1.088637677348467e-05
+    },
+    {
+      "frame": 52,
+      "rotation_error_degrees": 8.213503113747203,
+      "grip_to_palm": 1.0894524698432366e-05
+    }
+  ]
+}

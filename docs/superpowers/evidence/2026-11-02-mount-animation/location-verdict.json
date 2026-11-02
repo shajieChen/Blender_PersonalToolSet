@@ -1,0 +1,10 @@
+{
+  "frame": 0,
+  "hand_vertex_count": 185,
+  "reference_contact_point_to_target_hand_nearest_vertex": 0.060920838109264734,
+  "wrist_to_estimated_palm_center": 0.012329563497407457,
+  "mount_to_wrist": 1.5359765386647212e-08,
+  "current_grip_to_estimated_palm_center": 0.10167208219368659,
+  "fitting": "NONE",
+  "scene_modified_by_review": false
+}

@@ -1,0 +1,55 @@
+{
+  "status": "Root causes confirmed; no production or live scene changes applied",
+  "scope": "Current right-hand weapon, current source and retargeted a050_300000 clip, frames 0..52",
+  "attachment": {
+    "bone": "hand.R",
+    "parent_chain": "Target armature BONE hand.R -> Mount_hand_r -> GripRoot_WP_A_0300 -> weapon mesh",
+    "max_mount_bone_relative_error": 1.4528632164001465e-07,
+    "max_weapon_mount_relative_error": 1.1920928955078125e-07,
+    "result": "Passed: native bone parenting follows animation; local/world gizmo only changes editing axes"
+  },
+  "position_root_cause": {
+    "finding": "Model origin was snapped to wrist bone origin. The reference character holds a different point of the same weapon geometry, about 0.10 model units away from its origin. The target hand palm and weapon grasp anchors have not been matched.",
+    "current_frame_geometry": {
+      "frame": 0,
+      "hand_vertex_count": 185,
+      "reference_contact_point_to_target_hand_nearest_vertex": 0.060920838109264734,
+      "wrist_to_estimated_palm_center": 0.012329563497407457,
+      "mount_to_wrist": 1.5359765386647212e-08,
+      "current_grip_to_estimated_palm_center": 0.10167208219368659,
+      "fitting": "NONE",
+      "scene_modified_by_review": false
+    },
+    "reference_weapon_vertex_correspondence": 4861,
+    "max_reference_rigid_fit_rms": 1.0964676921610525e-07,
+    "limit": "Palm center is estimated from wrist and finger base joints; exact artist-approved grasp still requires user visual review"
+  },
+  "animation_root_causes": {
+    "source_wrist_local_rotation_change_degrees": 96.80765205022988,
+    "target_wrist_local_rotation_change_degrees": 0.0,
+    "source_weapon_joint_local_rotation_change_degrees": 42.741810939038636,
+    "fixed_mount_max_reference_angle_error_degrees": 117.7978137471087,
+    "source_evidence": "humanoid_retarget/retarget.py _apply_body_orientations skips terminal non-head mapped bones when chain end is absent. Current mappings contain no hand child/finger roles. R_Weapon is also outside the 19-role mapping.",
+    "finding": "Target wrist rotation is missing; source weapon joint independently changes relative to the hand. A constant mount rotation cannot reproduce both tracks."
+  },
+  "recommended_order": [
+    "Confirm target hand.R and define a palm anchor plus a model grasp anchor instead of matching origins",
+    "Validate transfer of source wrist rotation and source R_Weapon motion on an isolated copy",
+    "Only after animation and grasp comparison pass, apply a recoverable correction to the current target"
+  ],
+  "changes_applied": {
+    "plugin_code": false,
+    "version": false,
+    "original_actions": false,
+    "live_mount": false,
+    "live_frame": false
+  },
+  "evidence_level": {
+    "live_hierarchy_read": "Passed",
+    "snapshot_animation_evaluation_53_frames": "Passed",
+    "same_weapon_geometry_fit_4861_vertices": "Passed",
+    "visual": "NotRun: user manual verification; no Computer Use"
+  },
+  "temporary_snapshot": "snapshot.json records a local analysis snapshot retained for reproducibility until root-cause review; no production probes added",
+  "efficiency": "First sample output summary encountered an empty weighted-hand group. Corrected the report guard and reran with exit 0; source geometry and current scene were not edited."
+}

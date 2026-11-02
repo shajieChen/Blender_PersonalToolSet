@@ -1,0 +1,8 @@
+{
+  "sampled_frames": 53,
+  "max_local_rotation_change_degrees": {
+    "R_Hand": 96.80765205022988,
+    "R_Weapon": 42.741810939038636,
+    "WP_A_0300": 0.0
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "status": "grip_aligned",
+  "frame": 0,
+  "grip_to_palm": 1.0475039386473597e-05,
+  "original_pose": {
+    "channels": {
+      "location": [
+        3.725290298461914e-09,
+        -0.03180205076932907,
+        -1.30385160446167e-08
+      ],
+      "rotation_euler": [
+        -3.912071704864502,
+        -7.706484794616699,
+        0.5936964154243469
+      ],
+      "rotation_quaternion": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_axis_angle": [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "delta_location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_rotation_quaternion": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "rotation_mode": "XYZ",
+    "parent_type": "BONE",
+    "parent_bone": "hand.R",
+    "had_parent": true,
+    "inverse": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "original_fitted": true,
+  "source_action_unchanged": true,
+  "target_action_unchanged": true,
+  "objects_unchanged": 32,
+  "animation_rotation_matching": "not corrected",
+  "saved": false
+}

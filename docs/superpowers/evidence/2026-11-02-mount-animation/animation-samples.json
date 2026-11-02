@@ -1,0 +1,1842 @@
+{
+  "sampled_frames": 53,
+  "parent_chain": {
+    "mount_parent": "骨架",
+    "mount_parent_type": "BONE",
+    "mount_parent_bone": "hand.R",
+    "weapon_parent": "Mount_hand_r"
+  },
+  "max_mount_bone_relative_error": 1.4528632164001465e-07,
+  "max_weapon_mount_relative_error": 1.1920928955078125e-07,
+  "max_mesh_relative_error": 1.7881393432617188e-07,
+  "bone_relative_grip": [
+    [
+      -0.04375164583325386,
+      0.1702396273612976,
+      0.9844309091567993,
+      -3.725290298461914e-09
+    ],
+    [
+      -0.09131273627281189,
+      0.980568528175354,
+      -0.1736299842596054,
+      -6.984919309616089e-09
+    ],
+    [
+      -0.9948607087135315,
+      -0.09748769551515579,
+      -0.02735646441578865,
+      5.4016709327697754e-08
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "rows": [
+    {
+      "frame": 0,
+      "mount_bone_relative_error": 0.0,
+      "weapon_mount_relative_error": 0.0,
+      "bone_head": [
+        0.6343846321105957,
+        0.05683525279164314,
+        0.24070607125759125
+      ],
+      "mount_position": [
+        0.6343846321105957,
+        0.056835249066352844,
+        0.24070608615875244
+      ],
+      "mesh_relative_errors": {
+        "model.001": 0.0
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 0.0,
+          "max_rigid_hand_local_vertex_drift": 0.0,
+          "nearest_to_mount": 0.026213976424651363
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 1,
+      "mount_bone_relative_error": 5.960464477539063e-08,
+      "weapon_mount_relative_error": 6.146728992462158e-08,
+      "bone_head": [
+        0.5999178886413574,
+        -0.01072543952614069,
+        0.2695418894290924
+      ],
+      "mount_position": [
+        0.5999178290367126,
+        -0.01072542741894722,
+        0.2695418894290924
+      ],
+      "mesh_relative_errors": {
+        "model.001": 8.288770914077759e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.0654616199986206e-07,
+          "max_rigid_hand_local_vertex_drift": 1.0654616199986206e-07,
+          "nearest_to_mount": 0.02621355321125759
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 2,
+      "mount_bone_relative_error": 8.381903171539307e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.6176369190216064,
+        -0.061064619570970535,
+        0.3071100115776062
+      ],
+      "mount_position": [
+        0.6176369190216064,
+        -0.06106460839509964,
+        0.3071100115776062
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.7881393432617188e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.0307010510755273e-07,
+          "max_rigid_hand_local_vertex_drift": 1.0307010510755273e-07,
+          "nearest_to_mount": 0.02621369629548136
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 3,
+      "mount_bone_relative_error": 1.0244548320770264e-07,
+      "weapon_mount_relative_error": 7.636845111846924e-08,
+      "bone_head": [
+        0.631721556186676,
+        -0.06065438687801361,
+        0.40207499265670776
+      ],
+      "mount_position": [
+        0.6317214965820312,
+        -0.06065437197685242,
+        0.40207499265670776
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.0803341865539551e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 8.562123346218863e-08,
+          "max_rigid_hand_local_vertex_drift": 8.562123346218863e-08,
+          "nearest_to_mount": 0.026213706981662657
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 4,
+      "mount_bone_relative_error": 1.2619420886039734e-07,
+      "weapon_mount_relative_error": 5.960464477539063e-08,
+      "bone_head": [
+        0.6907196044921875,
+        -0.002896725432947278,
+        0.45022347569465637
+      ],
+      "mount_position": [
+        0.6907195448875427,
+        -0.002896711230278015,
+        0.45022347569465637
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.679378881385345e-07,
+          "max_rigid_hand_local_vertex_drift": 1.6244105279613804e-07,
+          "nearest_to_mount": 0.026213780813341678
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 5,
+      "mount_bone_relative_error": 1.1920928955078125e-07,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.7134142518043518,
+        0.04412779584527016,
+        0.43630650639533997
+      ],
+      "mount_position": [
+        0.7134142518043518,
+        0.04412781074643135,
+        0.43630650639533997
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.7881393432617188e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.002416367314284e-07,
+          "max_rigid_hand_local_vertex_drift": 1.002416367314284e-07,
+          "nearest_to_mount": 0.026213745016452784
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 6,
+      "mount_bone_relative_error": 1.1920928955078125e-07,
+      "weapon_mount_relative_error": 6.193295121192932e-08,
+      "bone_head": [
+        0.739111602306366,
+        0.06335318833589554,
+        0.42328131198883057
+      ],
+      "mount_position": [
+        0.739111602306366,
+        0.06335320323705673,
+        0.42328131198883057
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.661099383206408e-07,
+          "max_rigid_hand_local_vertex_drift": 1.434720487270632e-07,
+          "nearest_to_mount": 0.026213717494362732
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 7,
+      "mount_bone_relative_error": 1.0058283805847168e-07,
+      "weapon_mount_relative_error": 1.1874362826347351e-07,
+      "bone_head": [
+        0.7560720443725586,
+        0.06957025080919266,
+        0.41649556159973145
+      ],
+      "mount_position": [
+        0.7560720443725586,
+        0.06957026571035385,
+        0.41649556159973145
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.4831312000751495e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 8.973620437417853e-08,
+          "max_rigid_hand_local_vertex_drift": 8.973620437417853e-08,
+          "nearest_to_mount": 0.02621368685833062
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 8,
+      "mount_bone_relative_error": 7.497146725654602e-08,
+      "weapon_mount_relative_error": 3.5390257835388184e-08,
+      "bone_head": [
+        0.7694411277770996,
+        0.0732554942369461,
+        0.41030314564704895
+      ],
+      "mount_position": [
+        0.7694411277770996,
+        0.0732555016875267,
+        0.41030314564704895
+      ],
+      "mesh_relative_errors": {
+        "model.001": 7.05476850271225e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.4761976935770035e-07,
+          "max_rigid_hand_local_vertex_drift": 1.4761976935770035e-07,
+          "nearest_to_mount": 0.026213689217618623
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 9,
+      "mount_bone_relative_error": 9.12696123123169e-08,
+      "weapon_mount_relative_error": 6.239861249923706e-08,
+      "bone_head": [
+        0.7804891467094421,
+        0.07722179591655731,
+        0.40379929542541504
+      ],
+      "mount_position": [
+        0.7804892063140869,
+        0.07722180336713791,
+        0.40379929542541504
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.029141902923584e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.0335609016973215e-07,
+          "max_rigid_hand_local_vertex_drift": 1.0335609016973215e-07,
+          "nearest_to_mount": 0.02621368227853565
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 10,
+      "mount_bone_relative_error": 1.1920928955078125e-07,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.7914423942565918,
+        0.08063051104545593,
+        0.39741620421409607
+      ],
+      "mount_position": [
+        0.7914423942565918,
+        0.08063051849603653,
+        0.39741620421409607
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.7881393432617188e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 9.587655214768759e-08,
+          "max_rigid_hand_local_vertex_drift": 8.843151830486372e-08,
+          "nearest_to_mount": 0.026213645501365245
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 11,
+      "mount_bone_relative_error": 1.1455267667770386e-07,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.8069846034049988,
+        0.08389190584421158,
+        0.3901389241218567
+      ],
+      "mount_position": [
+        0.8069846034049988,
+        0.08389190584421158,
+        0.3901389241218567
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.7881393432617188e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.6958256332755295e-07,
+          "max_rigid_hand_local_vertex_drift": 1.1640810385321742e-07,
+          "nearest_to_mount": 0.0262136411297359
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 12,
+      "mount_bone_relative_error": 5.960464477539063e-08,
+      "weapon_mount_relative_error": 5.960464477539063e-08,
+      "bone_head": [
+        0.8188842535018921,
+        0.08229347318410873,
+        0.3853718042373657
+      ],
+      "mount_position": [
+        0.8188842535018921,
+        0.08229348063468933,
+        0.3853718042373657
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.3785540439083415e-07,
+          "max_rigid_hand_local_vertex_drift": 1.3785540439083415e-07,
+          "nearest_to_mount": 0.026213623677906715
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 13,
+      "mount_bone_relative_error": 1.0782969184219837e-07,
+      "weapon_mount_relative_error": 5.960464477539063e-08,
+      "bone_head": [
+        0.8238539695739746,
+        0.07827664911746979,
+        0.3803437352180481
+      ],
+      "mount_position": [
+        0.8238539695739746,
+        0.07827665656805038,
+        0.3803437650203705
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.8871695684871124e-07,
+          "max_rigid_hand_local_vertex_drift": 1.7280712488063868e-07,
+          "nearest_to_mount": 0.026213612855077884
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 14,
+      "mount_bone_relative_error": 9.685754776000977e-08,
+      "weapon_mount_relative_error": 5.960464477539063e-08,
+      "bone_head": [
+        0.8175084590911865,
+        0.07370055466890335,
+        0.36979788541793823
+      ],
+      "mount_position": [
+        0.8175084590911865,
+        0.07370056211948395,
+        0.36979788541793823
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.5864294825143037e-07,
+          "max_rigid_hand_local_vertex_drift": 1.5864294825143037e-07,
+          "nearest_to_mount": 0.026213650322950637
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 15,
+      "mount_bone_relative_error": 6.705522537231445e-08,
+      "weapon_mount_relative_error": 6.426125764846802e-08,
+      "bone_head": [
+        0.8073632121086121,
+        0.07010479271411896,
+        0.35359299182891846
+      ],
+      "mount_position": [
+        0.8073631525039673,
+        0.07010479271411896,
+        0.35359299182891846
+      ],
+      "mesh_relative_errors": {
+        "model.001": 2.514570951461792e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.8857844854999881e-07,
+          "max_rigid_hand_local_vertex_drift": 9.951215484860934e-08,
+          "nearest_to_mount": 0.02621368766499897
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 16,
+      "mount_bone_relative_error": 6.332993507385254e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.8064799308776855,
+        0.0950464978814125,
+        0.33606430888175964
+      ],
+      "mount_position": [
+        0.8064799308776855,
+        0.0950465053319931,
+        0.33606430888175964
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.2418410406100218e-07,
+          "max_rigid_hand_local_vertex_drift": 1.1356026734915512e-07,
+          "nearest_to_mount": 0.026213662779702676
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 17,
+      "mount_bone_relative_error": 8.568167686462402e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.7303947806358337,
+        0.1074150875210762,
+        0.3217887878417969
+      ],
+      "mount_position": [
+        0.7303948402404785,
+        0.1074151024222374,
+        0.3217887878417969
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.494803190231323e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.460959877902834e-07,
+          "max_rigid_hand_local_vertex_drift": 1.0512013485570158e-07,
+          "nearest_to_mount": 0.02621348909372835
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 18,
+      "mount_bone_relative_error": 7.264316082000732e-08,
+      "weapon_mount_relative_error": 5.960464477539063e-08,
+      "bone_head": [
+        0.6384536027908325,
+        0.062061041593551636,
+        0.3163256347179413
+      ],
+      "mount_position": [
+        0.6384536027908325,
+        0.06206105276942253,
+        0.3163256347179413
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1594966053962708e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.4284496801139757e-07,
+          "max_rigid_hand_local_vertex_drift": 1.4284496801139757e-07,
+          "nearest_to_mount": 0.026213408738421574
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 19,
+      "mount_bone_relative_error": 1.1920928955078125e-07,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.6298931241035461,
+        -0.15054243803024292,
+        0.36066320538520813
+      ],
+      "mount_position": [
+        0.6298931241035461,
+        -0.15054242312908173,
+        0.36066320538520813
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.1572409098602136e-07,
+          "max_rigid_hand_local_vertex_drift": 9.106029988512633e-08,
+          "nearest_to_mount": 0.026213922369738695
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 20,
+      "mount_bone_relative_error": 1.1362135410308838e-07,
+      "weapon_mount_relative_error": 3.585591912269592e-08,
+      "bone_head": [
+        0.725019633769989,
+        -0.2841097116470337,
+        0.3832683861255646
+      ],
+      "mount_position": [
+        0.725019633769989,
+        -0.2841097116470337,
+        0.3832683861255646
+      ],
+      "mesh_relative_errors": {
+        "model.001": 6.274785846471786e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.203966335296058e-07,
+          "max_rigid_hand_local_vertex_drift": 1.0726015244622212e-07,
+          "nearest_to_mount": 0.02621393544978876
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 21,
+      "mount_bone_relative_error": 9.872019290924072e-08,
+      "weapon_mount_relative_error": 6.239861249923706e-08,
+      "bone_head": [
+        0.7177084684371948,
+        -0.28325650095939636,
+        0.3649577498435974
+      ],
+      "mount_position": [
+        0.7177084684371948,
+        -0.28325650095939636,
+        0.3649577498435974
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.4978087779509793e-07,
+          "max_rigid_hand_local_vertex_drift": 1.4978087779509793e-07,
+          "nearest_to_mount": 0.026213874061101993
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 22,
+      "mount_bone_relative_error": 6.51925802230835e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.6996769905090332,
+        -0.287925660610199,
+        0.3482897877693176
+      ],
+      "mount_position": [
+        0.6996769905090332,
+        -0.287925660610199,
+        0.3482897877693176
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.7881393432617188e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.1370249380589156e-07,
+          "max_rigid_hand_local_vertex_drift": 9.076483899353582e-08,
+          "nearest_to_mount": 0.02621381544680684
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 23,
+      "mount_bone_relative_error": 1.0989606380462646e-07,
+      "weapon_mount_relative_error": 5.960464477539063e-08,
+      "bone_head": [
+        0.6909182667732239,
+        -0.2818414270877838,
+        0.3420305848121643
+      ],
+      "mount_position": [
+        0.6909182667732239,
+        -0.2818414270877838,
+        0.3420305848121643
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.6127232647118628e-07,
+          "max_rigid_hand_local_vertex_drift": 1.6127232647118628e-07,
+          "nearest_to_mount": 0.026213766701029068
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 24,
+      "mount_bone_relative_error": 1.1920928955078125e-07,
+      "weapon_mount_relative_error": 5.3551048040390015e-08,
+      "bone_head": [
+        0.6985732316970825,
+        -0.26443585753440857,
+        0.33934828639030457
+      ],
+      "mount_position": [
+        0.6985732316970825,
+        -0.26443585753440857,
+        0.33934831619262695
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.2048305294510892e-07,
+          "max_rigid_hand_local_vertex_drift": 9.565939862808193e-08,
+          "nearest_to_mount": 0.026213771896650882
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 25,
+      "mount_bone_relative_error": 6.705522537231445e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.7071778774261475,
+        -0.24416738748550415,
+        0.3392651081085205
+      ],
+      "mount_position": [
+        0.7071778774261475,
+        -0.24416738748550415,
+        0.3392651081085205
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.7881393432617188e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.3113600813863822e-07,
+          "max_rigid_hand_local_vertex_drift": 1.3098249950818095e-07,
+          "nearest_to_mount": 0.026213804284694196
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 26,
+      "mount_bone_relative_error": 1.1920928955078125e-07,
+      "weapon_mount_relative_error": 8.800998330116272e-08,
+      "bone_head": [
+        0.7086425423622131,
+        -0.23035655915737152,
+        0.34068387746810913
+      ],
+      "mount_position": [
+        0.7086425423622131,
+        -0.23035654425621033,
+        0.34068387746810913
+      ],
+      "mesh_relative_errors": {
+        "model.001": 7.147900760173798e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.2046286020896603e-07,
+          "max_rigid_hand_local_vertex_drift": 1.1555908150409236e-07,
+          "nearest_to_mount": 0.02621380693454439
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 27,
+      "mount_bone_relative_error": 1.4528632164001465e-07,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.7066535949707031,
+        -0.22234100103378296,
+        0.33948543667793274
+      ],
+      "mount_position": [
+        0.7066535353660583,
+        -0.22234100103378296,
+        0.33948543667793274
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.7881393432617188e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.282658077827604e-07,
+          "max_rigid_hand_local_vertex_drift": 1.282658077827604e-07,
+          "nearest_to_mount": 0.026213778540800148
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 28,
+      "mount_bone_relative_error": 1.1920928955078125e-07,
+      "weapon_mount_relative_error": 5.960464477539063e-08,
+      "bone_head": [
+        0.704177737236023,
+        -0.2184428870677948,
+        0.33583375811576843
+      ],
+      "mount_position": [
+        0.704177737236023,
+        -0.2184428870677948,
+        0.33583375811576843
+      ],
+      "mesh_relative_errors": {
+        "model.001": 7.078051567077637e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.2318831506212392e-07,
+          "max_rigid_hand_local_vertex_drift": 1.2318831506212392e-07,
+          "nearest_to_mount": 0.026213718561245426
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 29,
+      "mount_bone_relative_error": 5.960464477539063e-08,
+      "weapon_mount_relative_error": 4.6566128730773926e-08,
+      "bone_head": [
+        0.7004436254501343,
+        -0.21624363958835602,
+        0.33043792843818665
+      ],
+      "mount_position": [
+        0.7004436254501343,
+        -0.2162436544895172,
+        0.33043792843818665
+      ],
+      "mesh_relative_errors": {
+        "model.001": 6.891787052154541e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.1675383109014347e-07,
+          "max_rigid_hand_local_vertex_drift": 1.1200678630451045e-07,
+          "nearest_to_mount": 0.02621358528731117
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 30,
+      "mount_bone_relative_error": 1.1362135410308838e-07,
+      "weapon_mount_relative_error": 8.800998330116272e-08,
+      "bone_head": [
+        0.6984872817993164,
+        -0.21350066363811493,
+        0.3252806067466736
+      ],
+      "mount_position": [
+        0.6984872221946716,
+        -0.21350067853927612,
+        0.3252806067466736
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.525154461013101e-07,
+          "max_rigid_hand_local_vertex_drift": 1.525154461013101e-07,
+          "nearest_to_mount": 0.0262135239975543
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 31,
+      "mount_bone_relative_error": 5.960464477539063e-08,
+      "weapon_mount_relative_error": 9.033828973770142e-08,
+      "bone_head": [
+        0.6977345943450928,
+        -0.2085866630077362,
+        0.3208794593811035
+      ],
+      "mount_position": [
+        0.6977345943450928,
+        -0.2085866630077362,
+        0.32087942957878113
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.3317912817001343e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.2401636318651815e-07,
+          "max_rigid_hand_local_vertex_drift": 1.2401636318651815e-07,
+          "nearest_to_mount": 0.02621346550065864
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 32,
+      "mount_bone_relative_error": 5.960464477539063e-08,
+      "weapon_mount_relative_error": 4.330649971961975e-08,
+      "bone_head": [
+        0.6822224259376526,
+        -0.1932801604270935,
+        0.31869906187057495
+      ],
+      "mount_position": [
+        0.6822224259376526,
+        -0.1932801604270935,
+        0.31869906187057495
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.3436890242152983e-07,
+          "max_rigid_hand_local_vertex_drift": 1.1406325468715179e-07,
+          "nearest_to_mount": 0.0262133875045947
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 33,
+      "mount_bone_relative_error": 1.1920928955078125e-07,
+      "weapon_mount_relative_error": 7.217749953269958e-08,
+      "bone_head": [
+        0.668172299861908,
+        -0.16862712800502777,
+        0.3161212205886841
+      ],
+      "mount_position": [
+        0.668172299861908,
+        -0.16862711310386658,
+        0.3161212205886841
+      ],
+      "mesh_relative_errors": {
+        "model.001": 7.264316082000732e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.271664621018069e-07,
+          "max_rigid_hand_local_vertex_drift": 1.271664621018069e-07,
+          "nearest_to_mount": 0.026213322519262772
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 34,
+      "mount_bone_relative_error": 1.1920928955078125e-07,
+      "weapon_mount_relative_error": 4.98257577419281e-08,
+      "bone_head": [
+        0.6586979031562805,
+        -0.13693924248218536,
+        0.3154027760028839
+      ],
+      "mount_position": [
+        0.6586978435516357,
+        -0.13693922758102417,
+        0.3154027760028839
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.5592910004002115e-07,
+          "max_rigid_hand_local_vertex_drift": 1.394529222620953e-07,
+          "nearest_to_mount": 0.026213334107689345
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 35,
+      "mount_bone_relative_error": 6.891787052154541e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.6551622152328491,
+        -0.09902425855398178,
+        0.31851717829704285
+      ],
+      "mount_position": [
+        0.6551622152328491,
+        -0.09902424365282059,
+        0.31851717829704285
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.263341732894335e-07,
+          "max_rigid_hand_local_vertex_drift": 1.263341732894335e-07,
+          "nearest_to_mount": 0.026213349790222537
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 36,
+      "mount_bone_relative_error": 5.960464477539063e-08,
+      "weapon_mount_relative_error": 5.075708031654358e-08,
+      "bone_head": [
+        0.6572988033294678,
+        -0.05823138356208801,
+        0.32289838790893555
+      ],
+      "mount_position": [
+        0.6572988033294678,
+        -0.05823136866092682,
+        0.32289838790893555
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.319852004800504e-07,
+          "max_rigid_hand_local_vertex_drift": 1.2911503632086047e-07,
+          "nearest_to_mount": 0.026213457173687792
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 37,
+      "mount_bone_relative_error": 7.35744833946228e-08,
+      "weapon_mount_relative_error": 7.776543498039246e-08,
+      "bone_head": [
+        0.6600650548934937,
+        -0.018710177391767502,
+        0.3223986327648163
+      ],
+      "mount_position": [
+        0.6600650548934937,
+        -0.018710168078541756,
+        0.3223986327648163
+      ],
+      "mesh_relative_errors": {
+        "model.001": 6.193295121192932e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.0905624306428766e-07,
+          "max_rigid_hand_local_vertex_drift": 9.620414562436425e-08,
+          "nearest_to_mount": 0.02621349672677577
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 38,
+      "mount_bone_relative_error": 5.960464477539063e-08,
+      "weapon_mount_relative_error": 6.146728992462158e-08,
+      "bone_head": [
+        0.6634776592254639,
+        0.014581877738237381,
+        0.31854432821273804
+      ],
+      "mount_position": [
+        0.6634776592254639,
+        0.014581889845430851,
+        0.31854432821273804
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.4125146466163058e-07,
+          "max_rigid_hand_local_vertex_drift": 1.4125146466163058e-07,
+          "nearest_to_mount": 0.026213545717009016
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 39,
+      "mount_bone_relative_error": 6.379559636116028e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.6633034348487854,
+        0.03870628774166107,
+        0.3099645674228668
+      ],
+      "mount_position": [
+        0.6633034348487854,
+        0.03870629519224167,
+        0.3099645674228668
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.3365695775233386e-07,
+          "max_rigid_hand_local_vertex_drift": 1.3365695775233386e-07,
+          "nearest_to_mount": 0.026213600397217887
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 40,
+      "mount_bone_relative_error": 1.0058283805847168e-07,
+      "weapon_mount_relative_error": 5.21540641784668e-08,
+      "bone_head": [
+        0.657818615436554,
+        0.05459234490990639,
+        0.2953684329986572
+      ],
+      "mount_position": [
+        0.657818615436554,
+        0.05459235608577728,
+        0.2953684329986572
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.5401496294356227e-07,
+          "max_rigid_hand_local_vertex_drift": 1.4272347535236682e-07,
+          "nearest_to_mount": 0.026213642448163873
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 41,
+      "mount_bone_relative_error": 1.0896474123001099e-07,
+      "weapon_mount_relative_error": 4.98257577419281e-08,
+      "bone_head": [
+        0.6491824984550476,
+        0.06254646182060242,
+        0.2782069146633148
+      ],
+      "mount_position": [
+        0.6491824984550476,
+        0.06254646927118301,
+        0.2782069146633148
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.1620278627039657e-07,
+          "max_rigid_hand_local_vertex_drift": 9.391131003167875e-08,
+          "nearest_to_mount": 0.026213696642435367
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 42,
+      "mount_bone_relative_error": 1.1920928955078125e-07,
+      "weapon_mount_relative_error": 7.35744833946228e-08,
+      "bone_head": [
+        0.6413631439208984,
+        0.06461338698863983,
+        0.26291728019714355
+      ],
+      "mount_position": [
+        0.6413632035255432,
+        0.06461339443922043,
+        0.26291728019714355
+      ],
+      "mesh_relative_errors": {
+        "model.001": 7.427297532558441e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.0281582151827642e-07,
+          "max_rigid_hand_local_vertex_drift": 9.946011678992926e-08,
+          "nearest_to_mount": 0.026213824806931244
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 43,
+      "mount_bone_relative_error": 1.2712553143501282e-07,
+      "weapon_mount_relative_error": 4.132743924856186e-08,
+      "bone_head": [
+        0.6359546184539795,
+        0.06394781172275543,
+        0.25109630823135376
+      ],
+      "mount_position": [
+        0.6359546780586243,
+        0.06394781917333603,
+        0.25109630823135376
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.834303588287559e-07,
+          "max_rigid_hand_local_vertex_drift": 1.834303588287559e-07,
+          "nearest_to_mount": 0.02621383521549842
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 44,
+      "mount_bone_relative_error": 1.3457611203193665e-07,
+      "weapon_mount_relative_error": 7.683411240577698e-08,
+      "bone_head": [
+        0.6342388391494751,
+        0.06488102674484253,
+        0.24343819916248322
+      ],
+      "mount_position": [
+        0.6342388987541199,
+        0.06488103419542313,
+        0.24343819916248322
+      ],
+      "mesh_relative_errors": {
+        "model.001": 8.870847523212433e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.30215416199217e-07,
+          "max_rigid_hand_local_vertex_drift": 1.0100020495267133e-07,
+          "nearest_to_mount": 0.026213904380322305
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 45,
+      "mount_bone_relative_error": 1.3457611203193665e-07,
+      "weapon_mount_relative_error": 7.194466888904572e-08,
+      "bone_head": [
+        0.6317141652107239,
+        0.06130601838231087,
+        0.23920635879039764
+      ],
+      "mount_position": [
+        0.6317142248153687,
+        0.061306022107601166,
+        0.23920637369155884
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.5450975527905292e-07,
+          "max_rigid_hand_local_vertex_drift": 1.4118371046516485e-07,
+          "nearest_to_mount": 0.026213905078561698
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 46,
+      "mount_bone_relative_error": 7.217749953269958e-08,
+      "weapon_mount_relative_error": 5.960464477539063e-08,
+      "bone_head": [
+        0.6311800479888916,
+        0.06012115254998207,
+        0.23631080985069275
+      ],
+      "mount_position": [
+        0.6311800479888916,
+        0.06012116000056267,
+        0.23631080985069275
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 9.558201288020594e-08,
+          "max_rigid_hand_local_vertex_drift": 9.558201288020594e-08,
+          "nearest_to_mount": 0.02621396732994396
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 47,
+      "mount_bone_relative_error": 6.705522537231445e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.6314794421195984,
+        0.06082727015018463,
+        0.23514625430107117
+      ],
+      "mount_position": [
+        0.6314794421195984,
+        0.06082727387547493,
+        0.23514626920223236
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.1901679020809482e-07,
+          "max_rigid_hand_local_vertex_drift": 9.60391832627115e-08,
+          "nearest_to_mount": 0.026213986312733084
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 48,
+      "mount_bone_relative_error": 5.960464477539063e-08,
+      "weapon_mount_relative_error": 5.4016709327697754e-08,
+      "bone_head": [
+        0.6331014633178711,
+        0.06365053355693817,
+        0.2348485141992569
+      ],
+      "mount_position": [
+        0.6331014037132263,
+        0.06365053355693817,
+        0.2348485141992569
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.0317854246315591e-07,
+          "max_rigid_hand_local_vertex_drift": 1.0317854246315591e-07,
+          "nearest_to_mount": 0.02621390722532244
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 49,
+      "mount_bone_relative_error": 5.960464477539063e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.6349713802337646,
+        0.06681017577648163,
+        0.23563678562641144
+      ],
+      "mount_position": [
+        0.6349713802337646,
+        0.06681018322706223,
+        0.23563678562641144
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 8.553983646038946e-08,
+          "max_rigid_hand_local_vertex_drift": 7.725487763952646e-08,
+          "nearest_to_mount": 0.026213998351901233
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 50,
+      "mount_bone_relative_error": 9.12696123123169e-08,
+      "weapon_mount_relative_error": 5.4016709327697754e-08,
+      "bone_head": [
+        0.6375964879989624,
+        0.07082002609968185,
+        0.2370055913925171
+      ],
+      "mount_position": [
+        0.6375965476036072,
+        0.07082002609968185,
+        0.2370055913925171
+      ],
+      "mesh_relative_errors": {
+        "model.001": 5.960464477539063e-08
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 9.692272960143059e-08,
+          "max_rigid_hand_local_vertex_drift": 9.692272960143059e-08,
+          "nearest_to_mount": 0.026213981143175035
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 51,
+      "mount_bone_relative_error": 5.960464477539063e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.6401907801628113,
+        0.07427496463060379,
+        0.2383897453546524
+      ],
+      "mount_position": [
+        0.6401907801628113,
+        0.07427497208118439,
+        0.2383897453546524
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.1920928955078125e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.418739346469019e-07,
+          "max_rigid_hand_local_vertex_drift": 1.4007351596585158e-07,
+          "nearest_to_mount": 0.026214008899179443
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    },
+    {
+      "frame": 52,
+      "mount_bone_relative_error": 8.754432201385498e-08,
+      "weapon_mount_relative_error": 1.1920928955078125e-07,
+      "bone_head": [
+        0.6434699892997742,
+        0.07753927260637283,
+        0.23931945860385895
+      ],
+      "mount_position": [
+        0.6434699892997742,
+        0.07753927260637283,
+        0.23931945860385895
+      ],
+      "mesh_relative_errors": {
+        "model.001": 1.7881393432617188e-07
+      },
+      "hand_vertices": {
+        "body": {
+          "count_weight_over_half": 33,
+          "count_rigid": 23,
+          "max_hand_local_vertex_drift": 1.5739075969366438e-07,
+          "max_rigid_hand_local_vertex_drift": 1.4467478698921863e-07,
+          "nearest_to_mount": 0.02621396372626726
+        },
+        "clothing": {
+          "count_weight_over_half": 0,
+          "count_rigid": 0,
+          "max_hand_local_vertex_drift": 0,
+          "max_rigid_hand_local_vertex_drift": 0,
+          "nearest_to_mount": null
+        }
+      }
+    }
+  ]
+}
