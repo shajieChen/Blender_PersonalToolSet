@@ -1,7 +1,7 @@
 bl_info = {
-    "name": "Humanoid Mounts v1.1.0",
+    "name": "Humanoid Mounts v1.2.0",
     "author": "Blender Plugin",
-    "version": (1, 1, 0),
+    "version": (1, 2, 0),
     "blender": (5, 1, 2),
     "location": "View3D > Sidebar > 人形挂载",
     "description": "为人形骨骼设置挂点并挂载刚性武器和道具",

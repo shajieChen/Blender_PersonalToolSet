@@ -165,6 +165,9 @@ def draw_equipment_steps(layout, settings):
     inputs.operator("humanoid_mounts.choose_equipment")
     inputs.label(text="3. 放到哪里")
     inputs.prop(settings, "part", text="位置")
+    palm = inputs.row()
+    palm.enabled = settings.armature is not None and settings.part in {"hand_r", "hand_l"}
+    palm.operator("humanoid_mounts.estimate_palm", text="推算手心位置")
     layout.separator()
     draw_message(layout, state.message)
     if is_fitting:

@@ -1,0 +1,52 @@
+test_estimate_moves_mount_to_pose_palm_preserving_rotation_and_parent (test_humanoid_mounts_palm.PalmPositionTests.test_estimate_moves_mount_to_pose_palm_preserving_rotation_and_parent) ... ERROR
+test_insufficient_fingers_leaves_existing_mount_untouched (test_humanoid_mounts_palm.PalmPositionTests.test_insufficient_fingers_leaves_existing_mount_untouched) ... ERROR
+test_main_panel_exposes_estimate_button (test_humanoid_mounts_palm.PalmPositionTests.test_main_panel_exposes_estimate_button) ... FAIL
+test_non_hand_and_fitting_rejected_without_change (test_humanoid_mounts_palm.PalmPositionTests.test_non_hand_and_fitting_rejected_without_change) ... ERROR
+
+======================================================================
+ERROR: test_estimate_moves_mount_to_pose_palm_preserving_rotation_and_parent (test_humanoid_mounts_palm.PalmPositionTests.test_estimate_moves_mount_to_pose_palm_preserving_rotation_and_parent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_palm.py", line 54, in test_estimate_moves_mount_to_pose_palm_preserving_rotation_and_parent
+    self.assertEqual(bpy.ops.humanoid_mounts.estimate_palm(), {"FINISHED"})
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+AttributeError: Calling operator "bpy.ops.humanoid_mounts.estimate_palm" error, could not be found
+
+======================================================================
+ERROR: test_insufficient_fingers_leaves_existing_mount_untouched (test_humanoid_mounts_palm.PalmPositionTests.test_insufficient_fingers_leaves_existing_mount_untouched)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_palm.py", line 68, in test_insufficient_fingers_leaves_existing_mount_untouched
+    self.assertEqual(bpy.ops.humanoid_mounts.estimate_palm(), {"CANCELLED"})
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+AttributeError: Calling operator "bpy.ops.humanoid_mounts.estimate_palm" error, could not be found
+
+======================================================================
+ERROR: test_non_hand_and_fitting_rejected_without_change (test_humanoid_mounts_palm.PalmPositionTests.test_non_hand_and_fitting_rejected_without_change)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_palm.py", line 75, in test_non_hand_and_fitting_rejected_without_change
+    self.assertEqual(bpy.ops.humanoid_mounts.estimate_palm(), {"CANCELLED"})
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+AttributeError: Calling operator "bpy.ops.humanoid_mounts.estimate_palm" error, could not be found
+
+======================================================================
+FAIL: test_main_panel_exposes_estimate_button (test_humanoid_mounts_palm.PalmPositionTests.test_main_panel_exposes_estimate_button)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_palm.py", line 87, in test_main_panel_exposes_estimate_button
+    self.assertIn(("operator", "humanoid_mounts.estimate_palm"), recorder.events)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+AssertionError: ('operator', 'humanoid_mounts.estimate_palm') not found in [('label', '1. 选择角色'), ('prop', 'armature'), ('operator', 'humanoid_mounts.use_retarget_target'), ('label', '2. 选择装备'), ('label', '尚未选择装备'), ('operator', 'humanoid_mounts.choose_equipment'), ('label', '3. 放到哪里'), ('prop', 'part'), ('label', '选中装备，再点使用选中的物体'), ('operator', 'humanoid_mounts.equip_weapon'), ('operator', 'humanoid_mounts.fit_equipment'), ('operator', 'humanoid_mounts.detach_weapon'), ('prop', 'show_advanced'), ('prop', 'is_expanded'), ('prop', 'directory'), ('operator', 'humanoid_mounts.library_directory'), ('operator', 'humanoid_mounts.library_refresh'), ('prop', 'search'), ('prop', 'tier'), ('prop', 'orientation'), ('operator', 'humanoid_mounts.library_load'), ('operator', 'humanoid_mounts.library_load'), ('operator', 'humanoid_mounts.equip_weapon'), ('label', '目标角色：PalmPositionHero'), ('label', '目标部位：右手'), ('label', '目标骨骼：Jnt_12'), ('label', '目标挂点：Mount_hand_r'), ('operator', 'humanoid_mounts.library_orientation'), ('operator', 'humanoid_mounts.library_orientation'), ('label', '预设以挂点轴为准；握柄位置仍可调整'), ('operator', 'humanoid_mounts.library_clear')]
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.511s
+
+FAILED (failures=1, errors=3)
+HUMANOID_MOUNTS_STATIC_OK 22
+HUMANOID_MOUNTS_BLENDER 5.1.2 b'ec6e62d40fa9'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_palm.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_SELECTED 4
+HUMANOID_MOUNTS_TEST_FAIL

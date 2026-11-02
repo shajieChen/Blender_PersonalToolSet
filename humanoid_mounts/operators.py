@@ -1,8 +1,10 @@
+import re
+
 import bpy
 from bpy.props import BoolProperty, EnumProperty, StringProperty
 from bpy.types import Operator
 
-from . import mounts, placement, weapons
+from . import bone_roles, mounts, placement, weapons
 
 
 def run_action(context, action, *, fitting=False):
@@ -207,6 +209,101 @@ class HM_OT_fitting_tool(Operator):
         return result
 
 
+def palm_finger_group(name):
+    words = re.findall(r"[a-z]+|[0-9]+", re.sub(r"([a-z])([A-Z])", r"\1_\2", name).casefold())
+    for group in ("index", "middle", "ring", "little", "pinky"):
+        if group in words:
+            return "little" if group == "pinky" else group
+    if "finger" in words:
+        numbers = [word for word in words if word in {"1", "2", "3", "4"}]
+        if len(numbers) == 1:
+            return {"1": "index", "2": "middle", "3": "ring", "4": "little"}[numbers[0]]
+    return None
+
+
+def estimate_palm_world(context, armature, bone_name):
+    context.view_layer.update()
+    evaluated = armature.evaluated_get(context.evaluated_depsgraph_get())
+    hand = evaluated.pose.bones.get(bone_name)
+    if hand is None:
+        raise mounts.HumanoidMountError("手部骨骼已失效")
+    groups = {}
+    for child in hand.children:
+        group = palm_finger_group(child.name)
+        if group is not None:
+            if group in groups:
+                raise mounts.HumanoidMountError("指根骨骼有歧义，请手动调整握位")
+            groups[group] = child
+    if len(groups) < 2:
+        raise mounts.HumanoidMountError("未找到足够指根，请手动调整握位")
+    wrist = evaluated.matrix_world @ hand.head
+    center = sum((evaluated.matrix_world @ child.head for child in groups.values()), wrist * 0) / len(groups)
+    if (center - wrist).length < 1e-6:
+        raise mounts.HumanoidMountError("指根位置无效，请手动调整握位")
+    return (wrist + center) * 0.5
+
+
+class HM_OT_estimate_palm(Operator):
+    bl_idname = "humanoid_mounts.estimate_palm"
+    bl_label = "推算手心位置"
+    bl_description = "根据手腕和指根估算掌心，移动当前挂点，保留旋转；结果可继续调整"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        def estimate(settings):
+            if settings.part not in {"hand_r", "hand_l"}:
+                raise mounts.HumanoidMountError("请选择左手或右手")
+            armature = settings.armature
+            mounts.editable_object(armature)
+            if armature.type != "ARMATURE":
+                raise mounts.HumanoidMountError("请选择人形骨架")
+            mount = placement.current_mount(settings)
+            bone_name = mount.parent_bone if mount is not None else bone_roles.resolve_bone(armature, settings.part)
+            if mount is not None:
+                mounts.validate_mount(mount)
+            palm = estimate_palm_world(context, armature, bone_name)
+            previous_mount = settings.mount
+            created = False
+            saved = None
+            had_fitted = False
+            fitted = None
+            try:
+                if mount is None:
+                    mount = mounts.create_mount(armature, bone_name, settings.part)
+                    created = True
+                saved = mounts.ParentPose(mount)
+                had_fitted = "hm_grip_fitted" in mount
+                fitted = mount.get("hm_grip_fitted")
+                world = mounts.world_matrix(mount)
+                basis = mount.matrix_basis.copy()
+                parent_world = world @ basis.inverted()
+                mounts.validate_affine_matrix(parent_world)
+                basis.translation = parent_world.inverted() @ palm
+                mounts.validate_matrix(basis)
+                mount.matrix_basis = basis
+                if (mounts.world_matrix(mount).translation - palm).length > mounts.MATRIX_TOLERANCE:
+                    raise mounts.HumanoidMountError("无法准确定位手心，已恢复")
+                mount["hm_grip_fitted"] = False
+                settings.mount = mount
+                settings.mount_name = mount.name
+            except Exception:
+                if created:
+                    bpy.data.objects.remove(mount, do_unlink=True)
+                elif saved is not None:
+                    saved.restore()
+                    if had_fitted:
+                        mount["hm_grip_fitted"] = fitted
+                    elif "hm_grip_fitted" in mount:
+                        del mount["hm_grip_fitted"]
+                settings.mount = previous_mount
+                raise
+            return "已推算手心，请检查并调整；刀柄握点仍需校准"
+
+        result = run_action(context, estimate)
+        self.report({"INFO"} if result == {"FINISHED"} else {"WARNING"}, context.scene.hm_settings.status)
+        return result
+
+
 class HM_OT_create_mount(Operator):
     bl_idname = "humanoid_mounts.create_mount"
     bl_label = "从实际骨骼创建挂点"
@@ -407,4 +504,4 @@ class HM_OT_reset_offset(Operator):
         return run_action(context, reset)
 
 
-CLASSES = (HM_OT_choose_equipment, HM_OT_fit_equipment, HM_OT_fitting_tool, HM_OT_use_armature, HM_OT_use_retarget_target, HM_OT_equip_weapon, HM_OT_create_mount, HM_OT_prepare_grip, HM_OT_bind_weapon, HM_OT_detach_weapon, HM_OT_edit_mount, HM_OT_use_mount, HM_OT_use_bone, HM_OT_use_grip, HM_OT_register_grip, HM_OT_select_edit_target, HM_OT_reset_offset)
+CLASSES = (HM_OT_choose_equipment, HM_OT_fit_equipment, HM_OT_estimate_palm, HM_OT_fitting_tool, HM_OT_use_armature, HM_OT_use_retarget_target, HM_OT_equip_weapon, HM_OT_create_mount, HM_OT_prepare_grip, HM_OT_bind_weapon, HM_OT_detach_weapon, HM_OT_edit_mount, HM_OT_use_mount, HM_OT_use_bone, HM_OT_use_grip, HM_OT_register_grip, HM_OT_select_edit_target, HM_OT_reset_offset)

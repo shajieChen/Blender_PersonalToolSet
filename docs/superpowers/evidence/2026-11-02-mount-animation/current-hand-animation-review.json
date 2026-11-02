@@ -1,0 +1,1081 @@
+{
+  "frame": 0,
+  "source_file": "H:\\SErsiko_Goal\\preview\\parts\\wp_a_0300.partsbnd\\parts\\Weapon\\WP_A_0300\\WP_A_0300.glb",
+  "weapon_meshes": [
+    {
+      "name": "model.001",
+      "vertices": 4861
+    }
+  ],
+  "bones_other_candidates": [],
+  "channels": {
+    "source": [
+      {
+        "path": "pose.bones[\"R_Hand\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Hand\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Hand\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Hand\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.4062812328338623
+      },
+      {
+        "path": "pose.bones[\"R_Hand\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.6095226062461734
+      },
+      {
+        "path": "pose.bones[\"R_Hand\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.38896238803863525
+      },
+      {
+        "path": "pose.bones[\"R_Hand\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 0.6216325350105762
+      },
+      {
+        "path": "pose.bones[\"R_Hand\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Hand\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Hand\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger0\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger0\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger0\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger0\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.10355615615844727
+      },
+      {
+        "path": "pose.bones[\"R_Finger0\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.2957812249660492
+      },
+      {
+        "path": "pose.bones[\"R_Finger0\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.13913603872060776
+      },
+      {
+        "path": "pose.bones[\"R_Finger0\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 0.10520902276039124
+      },
+      {
+        "path": "pose.bones[\"R_Finger0\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger0\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger0\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger01\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger01\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger01\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger01\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.02702474594116211
+      },
+      {
+        "path": "pose.bones[\"R_Finger01\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 3.5356482186443827e-09
+      },
+      {
+        "path": "pose.bones[\"R_Finger01\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.07443869113922119
+      },
+      {
+        "path": "pose.bones[\"R_Finger01\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 1.2836061102916574e-09
+      },
+      {
+        "path": "pose.bones[\"R_Finger01\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger01\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger01\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger02\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger02\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger02\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger02\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0840107798576355
+      },
+      {
+        "path": "pose.bones[\"R_Finger02\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 1.672761432841563e-09
+      },
+      {
+        "path": "pose.bones[\"R_Finger02\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.3980663623660803
+      },
+      {
+        "path": "pose.bones[\"R_Finger02\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 3.304414519789134e-10
+      },
+      {
+        "path": "pose.bones[\"R_Finger02\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger02\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger02\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger1\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger1\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger1\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger1\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.09921544790267944
+      },
+      {
+        "path": "pose.bones[\"R_Finger1\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.054127877578139305
+      },
+      {
+        "path": "pose.bones[\"R_Finger1\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.24321559071540833
+      },
+      {
+        "path": "pose.bones[\"R_Finger1\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 0.001399461179971695
+      },
+      {
+        "path": "pose.bones[\"R_Finger1\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger1\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger1\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger11\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger11\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger11\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger11\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.2529919743537903
+      },
+      {
+        "path": "pose.bones[\"R_Finger11\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 5.857325735547647e-11
+      },
+      {
+        "path": "pose.bones[\"R_Finger11\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.25156980752944946
+      },
+      {
+        "path": "pose.bones[\"R_Finger11\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 5.890439525035873e-11
+      },
+      {
+        "path": "pose.bones[\"R_Finger11\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger11\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger11\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger12\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger12\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger12\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger12\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.04636746644973755
+      },
+      {
+        "path": "pose.bones[\"R_Finger12\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 2.15901185818268e-10
+      },
+      {
+        "path": "pose.bones[\"R_Finger12\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.14265970885753632
+      },
+      {
+        "path": "pose.bones[\"R_Finger12\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 7.017242342755026e-11
+      },
+      {
+        "path": "pose.bones[\"R_Finger12\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger12\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger12\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger2\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger2\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger2\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger2\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.05114483833312988
+      },
+      {
+        "path": "pose.bones[\"R_Finger2\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.022819949313998222
+      },
+      {
+        "path": "pose.bones[\"R_Finger2\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0673743486404419
+      },
+      {
+        "path": "pose.bones[\"R_Finger2\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 0.08151847589761019
+      },
+      {
+        "path": "pose.bones[\"R_Finger2\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger2\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger2\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger21\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger21\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger21\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger21\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.3168973922729492
+      },
+      {
+        "path": "pose.bones[\"R_Finger21\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 4.2186833887347674e-11
+      },
+      {
+        "path": "pose.bones[\"R_Finger21\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.3623807728290558
+      },
+      {
+        "path": "pose.bones[\"R_Finger21\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 3.689185068544987e-11
+      },
+      {
+        "path": "pose.bones[\"R_Finger21\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger21\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger21\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger22\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger22\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger22\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger22\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.03931230306625366
+      },
+      {
+        "path": "pose.bones[\"R_Finger22\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 1.661782933481959e-10
+      },
+      {
+        "path": "pose.bones[\"R_Finger22\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.09516406059265137
+      },
+      {
+        "path": "pose.bones[\"R_Finger22\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 6.864830925934484e-11
+      },
+      {
+        "path": "pose.bones[\"R_Finger22\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger22\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger22\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger3\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger3\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger3\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger3\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.06572693586349487
+      },
+      {
+        "path": "pose.bones[\"R_Finger3\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.021699756383895874
+      },
+      {
+        "path": "pose.bones[\"R_Finger3\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.08106821775436401
+      },
+      {
+        "path": "pose.bones[\"R_Finger3\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 0.07342638168483973
+      },
+      {
+        "path": "pose.bones[\"R_Finger3\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger3\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger3\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger31\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger31\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger31\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger31\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.1465311050415039
+      },
+      {
+        "path": "pose.bones[\"R_Finger31\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 2.197009241200476e-10
+      },
+      {
+        "path": "pose.bones[\"R_Finger31\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.1348012089729309
+      },
+      {
+        "path": "pose.bones[\"R_Finger31\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 2.3881852051488295e-10
+      },
+      {
+        "path": "pose.bones[\"R_Finger31\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger31\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger31\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger32\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger32\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger32\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger32\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.02381843328475952
+      },
+      {
+        "path": "pose.bones[\"R_Finger32\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 6.224901150098106e-11
+      },
+      {
+        "path": "pose.bones[\"R_Finger32\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.06683933734893799
+      },
+      {
+        "path": "pose.bones[\"R_Finger32\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 2.2182700121220478e-11
+      },
+      {
+        "path": "pose.bones[\"R_Finger32\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger32\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger32\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger4\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger4\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger4\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger4\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.07434135675430298
+      },
+      {
+        "path": "pose.bones[\"R_Finger4\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.05533400923013687
+      },
+      {
+        "path": "pose.bones[\"R_Finger4\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.07029682397842407
+      },
+      {
+        "path": "pose.bones[\"R_Finger4\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 0.14066767320036888
+      },
+      {
+        "path": "pose.bones[\"R_Finger4\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger4\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger4\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger41\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger41\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger41\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger41\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.1173168420791626
+      },
+      {
+        "path": "pose.bones[\"R_Finger41\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 3.883244836799804e-10
+      },
+      {
+        "path": "pose.bones[\"R_Finger41\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.11118942499160767
+      },
+      {
+        "path": "pose.bones[\"R_Finger41\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 4.097240324796303e-10
+      },
+      {
+        "path": "pose.bones[\"R_Finger41\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger41\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger41\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger42\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger42\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger42\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger42\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0125657320022583
+      },
+      {
+        "path": "pose.bones[\"R_Finger42\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 4.338926373748109e-08
+      },
+      {
+        "path": "pose.bones[\"R_Finger42\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.036687880754470825
+      },
+      {
+        "path": "pose.bones[\"R_Finger42\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 2.2987137526797596e-07
+      },
+      {
+        "path": "pose.bones[\"R_Finger42\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger42\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Finger42\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Weapon\"].location",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.010388527065515518
+      },
+      {
+        "path": "pose.bones[\"R_Weapon\"].location",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.014490056913928129
+      },
+      {
+        "path": "pose.bones[\"R_Weapon\"].location",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.005251923575997353
+      },
+      {
+        "path": "pose.bones[\"R_Weapon\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.08295649290084839
+      },
+      {
+        "path": "pose.bones[\"R_Weapon\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.07426591199492805
+      },
+      {
+        "path": "pose.bones[\"R_Weapon\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.3350604920055673
+      },
+      {
+        "path": "pose.bones[\"R_Weapon\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 66,
+        "range": 0.2694299492286518
+      },
+      {
+        "path": "pose.bones[\"R_Weapon\"].scale",
+        "component": 0,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Weapon\"].scale",
+        "component": 1,
+        "keyframes": 66,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"R_Weapon\"].scale",
+        "component": 2,
+        "keyframes": 66,
+        "range": 0.0
+      }
+    ],
+    "target": [
+      {
+        "path": "pose.bones[\"hand.R\"].rotation_quaternion",
+        "component": 0,
+        "keyframes": 53,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"hand.R\"].rotation_quaternion",
+        "component": 1,
+        "keyframes": 53,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"hand.R\"].rotation_quaternion",
+        "component": 2,
+        "keyframes": 53,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"hand.R\"].rotation_quaternion",
+        "component": 3,
+        "keyframes": 53,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"hand.R\"].location",
+        "component": 0,
+        "keyframes": 53,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"hand.R\"].location",
+        "component": 1,
+        "keyframes": 53,
+        "range": 0.0
+      },
+      {
+        "path": "pose.bones[\"hand.R\"].location",
+        "component": 2,
+        "keyframes": 53,
+        "range": 0.0
+      }
+    ]
+  },
+  "reference_grip_to_target_hand_nearest": 0.07406339706042549,
+  "hand_vertices_sampled": 185
+}

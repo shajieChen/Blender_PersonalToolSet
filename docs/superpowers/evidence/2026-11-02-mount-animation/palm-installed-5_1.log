@@ -1,0 +1,28 @@
+test_attached_grip_follows_palm_mount (test_humanoid_mounts_palm.PalmPositionTests.test_attached_grip_follows_palm_mount) ... ok
+test_duplicate_finger_names_are_rejected (test_humanoid_mounts_palm.PalmPositionTests.test_duplicate_finger_names_are_rejected) ... ok
+test_estimate_moves_mount_to_pose_palm_preserving_rotation_and_parent (test_humanoid_mounts_palm.PalmPositionTests.test_estimate_moves_mount_to_pose_palm_preserving_rotation_and_parent) ... ok
+test_failure_after_reposition_restores_mount_and_calibration (test_humanoid_mounts_palm.PalmPositionTests.test_failure_after_reposition_restores_mount_and_calibration) ... ok
+test_insufficient_fingers_leaves_existing_mount_untouched (test_humanoid_mounts_palm.PalmPositionTests.test_insufficient_fingers_leaves_existing_mount_untouched) ... ok
+test_main_panel_exposes_estimate_button (test_humanoid_mounts_palm.PalmPositionTests.test_main_panel_exposes_estimate_button) ... ok
+test_missing_mount_uses_retargeted_hand_and_creates_one (test_humanoid_mounts_palm.PalmPositionTests.test_missing_mount_uses_retargeted_hand_and_creates_one) ... ok
+test_multiple_mounts_require_explicit_choice (test_humanoid_mounts_palm.PalmPositionTests.test_multiple_mounts_require_explicit_choice) ... ok
+test_non_hand_and_fitting_rejected_without_change (test_humanoid_mounts_palm.PalmPositionTests.test_non_hand_and_fitting_rejected_without_change) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.094s
+
+OK
+Info: 已推算手心，请检查并调整；刀柄握点仍需校准
+Warning: 指根骨骼有歧义，请手动调整握位
+Info: 已推算手心，请检查并调整；刀柄握点仍需校准
+Warning: injected failure
+Warning: 未找到足够指根，请手动调整握位
+Info: 已推算手心，请检查并调整；刀柄握点仍需校准
+Warning: 当前位置有多个安装位置，请在高级设置中选择
+Warning: 请选择左手或右手
+Warning: 请先保存或取消当前设置
+PALM_INSTALLED_SELECTED 9
+PALM_INSTALLED_PASSED 9
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+
+Blender quit

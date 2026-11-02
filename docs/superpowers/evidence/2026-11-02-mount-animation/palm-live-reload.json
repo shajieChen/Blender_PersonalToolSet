@@ -1,0 +1,7 @@
+{
+  "status": "success",
+  "result": {
+    "executed": true,
+    "result": "{\"status\": \"palm_button_loaded\", \"pid\": 39108, \"version\": \"1.2.0\", \"objects_preserved\": 53, \"settings_preserved\": true, \"selection_preserved\": true, \"scene_saved\": false, \"button_executed\": false}\n"
+  }
+}
