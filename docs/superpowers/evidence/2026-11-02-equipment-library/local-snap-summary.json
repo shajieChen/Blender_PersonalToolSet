@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-02",
+  "problem": "User screenshot shows shear rejection, unbound prop and uncalibrated mount. Previous tests did not cover nonuniform rig scaling with rotated hand.",
+  "root_cause": "World-space TRS decomposition rejected an inherited sheared matrix before native bone parenting could establish an exactly representable local transform. Mandatory grip calibration separately blocked the current-equipment action.",
+  "implementation": "Validate world matrices for finite positive invertibility; retain TRS validation on local transforms and keep-world operations. SNAP sets the grip parent to selected mount, identity parent inverse and identity basis, resetting delta transforms; checks evaluated world equality and restores ParentPose on failure. Prepared library roots can snap without mandatory fitting. UI reuses existing equip operator; no alternate attach chain.",
+  "scope": [
+    "humanoid_mounts/mounts.py",
+    "humanoid_mounts/weapons.py",
+    "humanoid_mounts/placement.py",
+    "humanoid_mounts/panels.py",
+    "humanoid_mounts/library_browser.py",
+    "humanoid_mounts/operators.py"
+  ],
+  "red": {
+    "selected": 21,
+    "failed": 3,
+    "passed": 18,
+    "log": "local-snap-red.log"
+  },
+  "regression_5_1": {
+    "selected": 104,
+    "passed": 104,
+    "log": "local-snap-regression-5_1.log"
+  },
+  "checks": [
+    "real sheath preview -> existing prop equip on scaled and rotated rig -> zero local matrix -> follows hand movement -> clear",
+    "real sword load+attach under inherited shear -> apply orientation while root stays identity",
+    "post-snap exception restores original parent and all tested delta channels",
+    "unbound-library fitting rejected before creating state or mount",
+    "KEEP_WORLD still rejects nonrepresentable local shear without detaching the prop"
+  ],
+  "limitations": "Native local-zero snap aligns the grip origin, preserving geometry calibration and orientation presets. Arbitrary mesh vertices are not recentered. Keep-world unparenting can still reject actual unrepresentable world shear, preserving the original hierarchy.",
+  "future_changes_checked": [
+    "new part uses existing part/bone mapping without a new attachment path",
+    "additional orientation preset remains on item parts; grip stays local identity",
+    "different rig scale is handled through parent inheritance and local transform validation"
+  ],
+  "efficiency": "Added missing shared WindowManager expansion reset and missing role/mount input to UI fixture. Strengthened shear reproduction before interpreting test result. No source/doc reread outside changed local ranges after initial review.",
+  "review": {
+    "business_naming": "Passed",
+    "dependencies": "Passed: panels/operators -> placement/weapons -> mounts; no new dependency cycle",
+    "ownership_lifetime": "Passed: existing ParentPose rollback; no new callbacks, owning objects or background jobs",
+    "comments_added": 0,
+    "encoding": "Preserved existing UTF-8/LF source and UTF-8/CRLF files; local replacements only",
+    "cpp_gates": "NotApplicable: no C/C++ touched"
+  },
+  "temporary_production_diagnostics": [],
+  "cleanup": "No temporary production diagnostics; retained test fixtures and evidence. No user scene changed by tests.",
+  "visual": "NotRun: user manual review, Computer Use not used",
+  "interactive_undo_redo": "NotRun",
+  "regression_5_2": "NotRun: prior startup failure; not retried",
+  "user_acceptance": "Pending",
+  "backup": "C:\\Users\\chenshajie1\\.codex\\backups\\humanoid-local-snap-20261102-132420",
+  "git": "No staging, commit or push",
+  "final_focused_5_1": {
+    "selected": 23,
+    "passed": 23,
+    "log": "local-snap-focused-final.log",
+    "note": "After final target selector and optional-calibration status text update"
+  },
+  "installed_runtime_5_1": {
+    "result": "Passed",
+    "log": "local-snap-installed-5_1.log",
+    "checks": [
+      "load existing prop then zero-local snap on scaled and rotated hand",
+      "orientation",
+      "clear"
+    ]
+  }
+}

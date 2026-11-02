@@ -1,0 +1,5 @@
+12:02:10 | INFO: Data are loaded, start creating Blender stuff
+12:02:12 | INFO: Blender create Mesh node 0
+12:02:13 | INFO: glTF import finished in 1.14s
+Info: 已载入GripRoot_WP_A_0300；可用调整位置校准
+LIBRARY_INSTALLED_RUNTIME_OK 5.1.2 179 C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_mounts\__init__.py

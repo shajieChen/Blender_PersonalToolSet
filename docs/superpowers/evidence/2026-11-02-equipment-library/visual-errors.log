@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\run_humanoid_library_preview.py", line 38, in show_panel
+    region.active_panel_category = "人形挂载"
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: bpy_struct: attribute "active_panel_category" from "Region" is read-only

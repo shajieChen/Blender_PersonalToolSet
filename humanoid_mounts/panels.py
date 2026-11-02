@@ -2,7 +2,8 @@ from bpy.types import Panel
 
 from .mounts import HumanoidMountError, mounts_for_armature
 from .bone_roles import resolve_bone
-from .properties import SCHEMA, grip_object, mount_object
+from .properties import PARTS, SCHEMA, grip_object, mount_object
+from . import bl_info, placement
 
 VISIBLE_MOUNT_ROWS = 8
 
@@ -64,13 +65,16 @@ def draw_mount_list(layout, settings):
         return
     items = mounts_for_armature(settings.armature, settings.part)
     box.label(text="当前部位挂点：" + str(len(items)))
-    box.prop(settings, "mount")
+    if mount_object(settings, settings.mount):
+        box.prop(settings, "mount")
+    else:
+        draw_message(box, "请选择当前位置的安装位置")
     box.operator("humanoid_mounts.use_mount")
     for mount in items[:VISIBLE_MOUNT_ROWS]:
         state = "已绑定" if mount.children else "空闲"
-        if mount.parent_bone not in mount.parent.pose.bones or mount.get("hm_schema") != SCHEMA:
+        if mount.parent_type != "BONE" or mount.parent_bone not in mount.parent.pose.bones or mount.get("hm_schema") != SCHEMA:
             state = "失效"
-        box.label(text=mount.name + " · " + state)
+        box.operator("humanoid_mounts.use_mount", text=mount.name + " · " + state).name = mount.name
     if len(items) > VISIBLE_MOUNT_ROWS:
         draw_message(box, "更多挂点请使用上方选择框")
     mount = settings.mount
@@ -130,6 +134,9 @@ def draw_offset(layout, settings):
     if settings.edit_target == "MOUNT" and obj.parent_bone not in obj.parent.data.bones:
         draw_message(box, "骨骼已失效，请先换到有效骨骼")
         return
+    if settings.edit_target == "GRIP" and obj.parent is not None and obj.parent.get("hm_part") != settings.part:
+        draw_message(box, "装备位于" + placement.part_name(obj.parent.get("hm_part")) + "，切回该位置后调整")
+        return
     box.label(text=obj.name)
     draw_message(box, "校准时请关闭自动关键帧")
     box.operator("humanoid_mounts.select_edit_target")
@@ -145,8 +152,68 @@ def draw_offset(layout, settings):
     box.prop(obj, "empty_display_size", text="标记大小")
 
 
+def draw_equipment_steps(layout, settings):
+    state = placement.equipment_status(settings)
+    is_fitting = settings.fitting_stage != "NONE"
+    inputs = layout.column()
+    inputs.enabled = not is_fitting
+    inputs.label(text="1. 选择角色")
+    inputs.prop(settings, "armature", text="角色")
+    inputs.operator("humanoid_mounts.use_retarget_target", text="使用重定向角色")
+    inputs.label(text="2. 选择装备")
+    inputs.label(text=settings.equipment.name if settings.equipment is not None else "尚未选择装备")
+    inputs.operator("humanoid_mounts.choose_equipment")
+    inputs.label(text="3. 放到哪里")
+    inputs.prop(settings, "part", text="位置")
+    layout.separator()
+    draw_message(layout, state.message)
+    if is_fitting:
+        draw_message(layout, "拖动场景红绿蓝圆环旋转武器")
+        row = layout.row(align=True)
+        local = row.operator("humanoid_mounts.fitting_tool", text="局部旋转", icon="DRIVER_ROTATIONAL_DIFFERENCE")
+        local.tool = "ROTATE"
+        local.orientation = "LOCAL"
+        world = row.operator("humanoid_mounts.fitting_tool", text="世界旋转")
+        world.tool = "ROTATE"
+        world.orientation = "GLOBAL"
+        move = row.operator("humanoid_mounts.fitting_tool", text="移动箭头", icon="ORIENTATION_LOCAL")
+        move.tool = "MOVE"
+        move.orientation = "LOCAL"
+        row = layout.row(align=True)
+        label = "保存角色握位" if settings.fitting_stage == "CHARACTER" else "记住当前拿法"
+        row.operator("humanoid_mounts.fit_equipment", text=label).operation = "SAVE"
+        row.operator("humanoid_mounts.fit_equipment", text="取消并恢复").operation = "CANCEL"
+        return
+    if state.step in {"FIT_CHARACTER", "FIT_EQUIPMENT"}:
+        label = "设置角色握位..." if state.step == "FIT_CHARACTER" else "设置装备拿法..."
+        operation = "CHARACTER" if state.step == "FIT_CHARACTER" else "EQUIPMENT"
+        layout.operator("humanoid_mounts.fit_equipment", text=label).operation = operation
+    else:
+        row = layout.row()
+        row.scale_y = 1.3
+        row.enabled = state.step == "READY"
+        part_name = next(label for value, label, description in PARTS if value == settings.part)
+        row.operator("humanoid_mounts.equip_weapon", text="已放到" + part_name if state.step == "EQUIPPED" else "直接贴合到" + part_name)
+    if state.step == "BLOCKED":
+        draw_message(layout, "可在下方高级设置中处理")
+        if len(mounts_for_armature(settings.armature, settings.part)) > 1:
+            for mount in mounts_for_armature(settings.armature, settings.part):
+                layout.operator("humanoid_mounts.use_mount", text=mount.name).name = mount.name
+    if state.grip is not None and state.grip.get("hm_source_file") and state.step in {"READY", "EQUIPPED"}:
+        row = layout.row()
+        row.operator("humanoid_mounts.fit_equipment", text="调整角色握位（可选）...").operation = "CHARACTER"
+    row = layout.row(align=True)
+    row.enabled = state.step in {"READY", "EQUIPPED"} and (state.grip is None or not state.grip.get("hm_source_file") or state.step == "EQUIPPED")
+    row.operator("humanoid_mounts.fit_equipment", text="调整位置...").operation = "EQUIPMENT"
+    row = layout.row()
+    grip = state.grip
+    row.enabled = grip is not None and grip_object(settings, grip) and grip.parent is not None
+    label = "从" + placement.part_name(grip.parent.get("hm_part")) + "取下" if row.enabled else "取下"
+    row.operator("humanoid_mounts.detach_weapon", text=label).use_equipment = True
+
+
 class HM_PT_mounts(Panel):
-    bl_label = "人形挂载"
+    bl_label = "人形挂载 v" + ".".join(str(number) for number in bl_info["version"])
     bl_idname = "HM_PT_mounts"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -155,11 +222,20 @@ class HM_PT_mounts(Panel):
     def draw(self, context):
         layout = self.layout
         settings = context.scene.hm_settings
-        draw_character(layout, settings)
-        draw_weapon(layout, settings)
-        draw_mount_list(layout, settings)
-        draw_offset(layout, settings)
-        draw_message(layout, settings.status or "通过 Blender 时间轴播放动画")
+        draw_equipment_steps(layout, settings)
+        advanced = layout.column()
+        advanced.enabled = settings.fitting_stage == "NONE"
+        advanced.prop(settings, "show_advanced", toggle=True)
+        if settings.show_advanced and settings.fitting_stage == "NONE":
+            draw_character(advanced, settings)
+            draw_weapon(advanced, settings)
+            draw_mount_list(advanced, settings)
+            draw_offset(advanced, settings)
+            if settings.status:
+                draw_message(advanced, "上次操作：" + settings.status)
+
+        from .library_browser import draw_library
+        draw_library(layout, context)
 
 
 CLASSES = (HM_PT_mounts,)

@@ -1,5 +1,5 @@
 import bpy
-from bpy.props import EnumProperty, PointerProperty, StringProperty
+from bpy.props import BoolProperty, CollectionProperty, EnumProperty, PointerProperty, StringProperty
 from bpy.types import PropertyGroup
 
 SCHEMA = 1
@@ -26,6 +26,11 @@ def grip_object(self, obj):
     return obj.parent is None or obj.parent.get("hm_kind") == "MOUNT" and obj.parent.parent == self.armature
 
 
+class EquipmentObject(PropertyGroup):
+    object: PointerProperty(type=bpy.types.Object)
+    parent: PointerProperty(type=bpy.types.Object)
+
+
 class HumanoidMountSettings(PropertyGroup):
     armature: PointerProperty(name="人形角色", type=bpy.types.Object, poll=armature_object)
     mount: PointerProperty(name="当前挂点", type=bpy.types.Object, poll=mount_object)
@@ -35,3 +40,14 @@ class HumanoidMountSettings(PropertyGroup):
     mount_name: StringProperty(name="挂点名称")
     edit_target: EnumProperty(name="编辑对象", items=(("MOUNT", "挂点偏移", ""), ("GRIP", "道具偏移", "")))
     status: StringProperty(name="状态")
+    equipment: PointerProperty(name="装备", type=bpy.types.Object)
+    equipment_parts: CollectionProperty(type=EquipmentObject)
+    show_advanced: BoolProperty(name="高级设置", default=False)
+    fitting_stage: EnumProperty(items=(("NONE", "无", ""), ("CHARACTER", "角色握位", ""), ("EQUIPMENT", "装备拿法", "")))
+    fitting_objects: CollectionProperty(type=EquipmentObject)
+    fitting_snapshot: StringProperty()
+    fitting_mount: PointerProperty(type=bpy.types.Object)
+    fitting_armature: PointerProperty(type=bpy.types.Object)
+    fitting_part: StringProperty()
+    fitting_created: BoolProperty(default=False)
+    fitting_previous_mount: PointerProperty(type=bpy.types.Object)

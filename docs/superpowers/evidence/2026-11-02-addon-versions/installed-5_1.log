@@ -1,0 +1,6 @@
+ADDON_VERSIONS_SELECTED 5
+ADDON_VERSIONS_PASSED 5
+[{"module": "humanoid_mounts", "name": "Humanoid Mounts v1.1.0", "version": "1.1.0", "panel": "人形挂载 v1.1.0", "registration": "Passed", "unregistration": "Passed"}, {"module": "humanoid_retarget", "name": "Humanoid Retarget v1.8.0", "version": "1.8.0", "panel": "人形重定向 v1.8.0", "registration": "Passed", "unregistration": "Passed"}, {"module": "shortcut_hint", "name": "Shortcut Hint v1.1.0", "version": "1.1.0", "panel": "快捷键标注 v1.1.0", "registration": "Passed", "unregistration": "Passed"}, {"module": "spring_bone", "name": "Spring Bone v1.1.0", "version": "1.1.0", "panel": "动态骨骼 v1.1.0", "registration": "Passed", "unregistration": "Passed"}, {"module": "wasd_fly_camera", "name": "WASD Fly Camera v1.3.0", "version": "1.3.0", "panel": "场景预览 v1.3.0", "registration": "Passed", "unregistration": "Passed"}]
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+
+Blender quit

@@ -1,0 +1,43 @@
+test_adjust_existing_equipment_changes_weapon_calibration_only (test_humanoid_mounts_guided.GuidedEquipmentTests.test_adjust_existing_equipment_changes_weapon_calibration_only) ... ok
+test_autokey_and_foreign_context_are_rejected_without_losing_cancel (test_humanoid_mounts_guided.GuidedEquipmentTests.test_autokey_and_foreign_context_are_rejected_without_losing_cancel) ... ok
+test_cancel_character_fit_removes_only_new_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_character_fit_removes_only_new_mount) ... ok
+test_cancel_existing_character_fit_restores_offset_and_attachments (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_existing_character_fit_restores_offset_and_attachments) ... ok
+test_cancel_preflights_all_records_before_restoring_any_part (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_preflights_all_records_before_restoring_any_part) ... ok
+test_cancel_restore_failure_preserves_current_editing_pose (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_restore_failure_preserves_current_editing_pose) ... ok
+test_choose_operator_keeps_character_and_locks_during_fitting (test_humanoid_mounts_guided.GuidedEquipmentTests.test_choose_operator_keeps_character_and_locks_during_fitting) ... ok
+test_explicit_equipment_preserves_character_and_finds_prepared_root (test_humanoid_mounts_guided.GuidedEquipmentTests.test_explicit_equipment_preserves_character_and_finds_prepared_root) ... ok
+test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available (test_humanoid_mounts_guided.GuidedEquipmentTests.test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available) ... ok
+test_full_main_draw_does_not_write_or_repeat_stale_status (test_humanoid_mounts_guided.GuidedEquipmentTests.test_full_main_draw_does_not_write_or_repeat_stale_status) ... ok
+test_legacy_expanded_panels_cannot_escape_advanced_gate (test_humanoid_mounts_guided.GuidedEquipmentTests.test_legacy_expanded_panels_cannot_escape_advanced_gate) ... ok
+test_missing_role_fit_is_distinct_from_existing_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_missing_role_fit_is_distinct_from_existing_mount) ... ok
+test_multicomponent_fit_cancel_restores_each_original_pose (test_humanoid_mounts_guided.GuidedEquipmentTests.test_multicomponent_fit_cancel_restores_each_original_pose) ... ok
+test_new_equipment_action_uses_explicit_input_instead_of_selected_marker (test_humanoid_mounts_guided.GuidedEquipmentTests.test_new_equipment_action_uses_explicit_input_instead_of_selected_marker) ... ok
+test_part_switch_ignores_stale_other_part_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_part_switch_ignores_stale_other_part_mount) ... ok
+test_readiness_does_not_write_scene_or_update_depsgraph (test_humanoid_mounts_guided.GuidedEquipmentTests.test_readiness_does_not_write_scene_or_update_depsgraph) ... ok
+test_remember_current_pose_creates_grip_without_cursor_or_jump (test_humanoid_mounts_guided.GuidedEquipmentTests.test_remember_current_pose_creates_grip_without_cursor_or_jump) ... ok
+test_reset_and_reanchor_invalidate_role_fit_confirmation (test_humanoid_mounts_guided.GuidedEquipmentTests.test_reset_and_reanchor_invalidate_role_fit_confirmation) ... ok
+test_save_character_fit_confirms_without_setting_weapon_grip (test_humanoid_mounts_guided.GuidedEquipmentTests.test_save_character_fit_confirms_without_setting_weapon_grip) ... ok
+00:02.062  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.1\5.1\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Dots Stroke'
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+00:02.062  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.1\5.1\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Material'
+test_saved_fitting_can_cancel_in_an_independent_process (test_humanoid_mounts_guided.GuidedEquipmentTests.test_saved_fitting_can_cancel_in_an_independent_process) ... ok
+test_take_off_names_actual_source_and_uses_explicit_equipment (test_humanoid_mounts_guided.GuidedEquipmentTests.test_take_off_names_actual_source_and_uses_explicit_equipment) ... ok
+test_unprepared_input_change_is_reported_before_starting_fit (test_humanoid_mounts_guided.GuidedEquipmentTests.test_unprepared_input_change_is_reported_before_starting_fit) ... ok
+test_unregister_cancels_unfinished_fit_before_removing_properties (test_humanoid_mounts_guided.GuidedEquipmentTests.test_unregister_cancels_unfinished_fit_before_removing_properties) ... ok
+test_unregister_preflights_all_scenes_before_cancelling_any (test_humanoid_mounts_guided.GuidedEquipmentTests.test_unregister_preflights_all_scenes_before_cancelling_any) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 2.076s
+
+OK
+HUMANOID_MOUNTS_STATIC_OK 16
+HUMANOID_MOUNTS_BLENDER 5.1.2 b'ec6e62d40fa9'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_guided.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+Info: 已选择装备，角色保持不变
+Warning: 请先保存或取消当前设置
+Info: 已装备，复用现有挂点和握持校准
+Info: Saved as "fitting-persistence.blend"
+Info: 已解除，保留当前世界姿势
+HUMANOID_MOUNTS_SELECTED 24
+HUMANOID_MOUNTS_TEST_OK

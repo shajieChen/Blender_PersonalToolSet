@@ -1,0 +1,49 @@
+{
+  "date": "2026-11-02",
+  "research": [
+    {
+      "url": "https://dev.epicgames.com/documentation/unreal-engine/skeletal-mesh-sockets-in-unreal-engine",
+      "finding": "Socket relative transforms are edited per skeleton or mesh; no evidence of an exact orientation preset for arbitrary asset axes"
+    },
+    {
+      "url": "https://docs.blender.org/manual/en/4.5/animation/armatures/bones/properties/relations.html",
+      "finding": "Local bone orientation and parent space matter; presets are defined relative to the mount"
+    }
+  ],
+  "design": "Concrete asset orientation operations; absolute relative rotations, no cumulative rotation; defaults to saved per-source/part orientation, otherwise original. Save only orientation, retain current translation/scale. No global universal hand/sword alignment claim. Existing fitting bake is handled using original top-level part matrices. Individually edited parts reject unified presets. Old imported props require reload to obtain baseline metadata.",
+  "presets": [
+    "AUTO",
+    "ORIGINAL",
+    "X_POS",
+    "X_NEG",
+    "Y_HALF",
+    "Z_POS",
+    "Z_NEG"
+  ],
+  "red": {
+    "selected": 17,
+    "failed": 2,
+    "passed": 15,
+    "log": "orientation-red.log"
+  },
+  "regression_5_1": {
+    "selected": 99,
+    "passed": 99,
+    "log": "orientation-regression-5_1.log"
+  },
+  "regression_5_2": "NotRun: prior startup blocked; not retried",
+  "visual": "NotRun: user manual verification; Computer Use not used",
+  "interactive_undo_redo": "NotRun",
+  "temporary_production_diagnostics": [],
+  "cleanup": "No temporary production diagnostics added; tests, baseline pose metadata and saved orientation JSON are functional data retained intentionally",
+  "review": {
+    "ownership_and_failure_rollback": "Passed: staged changes restore all part transforms on failure; import failure removes only new data",
+    "dependency_direction": "Passed: browser -> library/orientation; library -> orientation -> weapons/mounts; no cycle",
+    "naming": "Passed",
+    "comments_added": 0,
+    "cpp_gates": "NotApplicable: Python only",
+    "encoding_whitespace": "Passed: UTF-8 without BOM, CRLF, no trailing whitespace"
+  },
+  "user_acceptance": "Pending",
+  "backup": "C:\\Users\\chenshajie1\\.codex\\backups\\humanoid-orientation-20261102-124026"
+}

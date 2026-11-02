@@ -75,8 +75,30 @@ def bind_weapon(root, mount, rule):
         raise HumanoidMountError("绑定规则无效")
     if root.parent is not None and root.parent != mount:
         raise HumanoidMountError("武器已绑定到其他挂点，请先解除")
-    desired = world_matrix(mount) if rule == "SNAP" else world_matrix(root)
-    parent_at_world(root, mount, desired)
+    mounts.validate_parent(root, mount)
+    if rule == "SNAP":
+        _snap_grip_to_mount(root, mount)
+    else:
+        parent_at_world(root, mount, world_matrix(root))
+
+
+def _snap_grip_to_mount(root, mount):
+    saved = ParentPose(root)
+    try:
+        root.parent = mount
+        root.parent_type = "OBJECT"
+        root.parent_bone = ""
+        root.matrix_parent_inverse = Matrix.Identity(4)
+        root.delta_location = (0, 0, 0)
+        root.delta_rotation_euler = (0, 0, 0)
+        root.delta_rotation_quaternion = (1, 0, 0, 0)
+        root.delta_scale = (1, 1, 1)
+        root.matrix_basis = Matrix.Identity(4)
+        if mounts.matrix_distance(world_matrix(root), world_matrix(mount)) > mounts.MATRIX_TOLERANCE:
+            raise HumanoidMountError("道具未贴合目标挂点，已恢复")
+    except Exception:
+        saved.restore()
+        raise
 
 
 def detach_weapon(root):
@@ -85,7 +107,7 @@ def detach_weapon(root):
     parent_at_world(root, None, desired)
 
 
-def grip_from_object(obj):
+def find_grip_root(obj):
     candidates = []
     visited = set()
     while obj is not None:
@@ -95,10 +117,17 @@ def grip_from_object(obj):
         if obj.get("hm_kind") == "GRIP":
             candidates.append(obj)
         obj = obj.parent
-    if len(candidates) != 1:
+    if len(candidates) > 1:
+        raise HumanoidMountError("装备存在多层拿法记录，请在高级设置中处理")
+    return candidates[0] if candidates else None
+
+
+def grip_from_object(obj):
+    root = find_grip_root(obj)
+    if root is None:
         raise HumanoidMountError("请选择已校准武器；首次使用请在自定义中创建握持根")
-    validate_grip(candidates[0])
-    return candidates[0]
+    validate_grip(root)
+    return root
 
 
 def equip_weapon(root, armature, part, preferred_mount=None):
@@ -106,17 +135,7 @@ def equip_weapon(root, armature, part, preferred_mount=None):
     mounts.editable_object(armature)
     if armature.type != "ARMATURE" or part not in bone_roles.PART_ROLES:
         raise HumanoidMountError("请选择人形角色和有效部位")
-    candidates = mounts.mounts_for_armature(armature, part)
-    if preferred_mount is not None:
-        if preferred_mount not in candidates:
-            raise HumanoidMountError("指定挂点不属于当前人形和部位")
-        mount = preferred_mount
-    elif len(candidates) == 1:
-        mount = candidates[0]
-    elif candidates:
-        raise HumanoidMountError("当前部位有多个挂点，请先明确选择")
-    else:
-        mount = None
+    mount = mounts.mount_for_part(armature, part, preferred_mount)
     if root.parent is not None and root.parent != mount:
         raise HumanoidMountError("武器已绑定到其他挂点，请先解除")
     if mount is not None:
@@ -134,4 +153,22 @@ def equip_weapon(root, armature, part, preferred_mount=None):
         saved.restore()
         if created:
             bpy.data.objects.remove(mount, do_unlink=True)
+        raise
+
+
+def remember_grip(root, mount):
+    validate_grip(root)
+    validate_mount(mount)
+    if root.parent is not None and root.parent != mount:
+        raise HumanoidMountError("装备已在其他位置，请先取下")
+    children = tuple(root.children)
+    saved = [ParentPose(obj) for obj in (root,) + children]
+    desired = [world_matrix(obj) for obj in children]
+    try:
+        bind_weapon(root, mount, "SNAP")
+        for child, world in zip(children, desired):
+            parent_at_world(child, root, world)
+    except Exception:
+        for pose in saved:
+            pose.restore()
         raise

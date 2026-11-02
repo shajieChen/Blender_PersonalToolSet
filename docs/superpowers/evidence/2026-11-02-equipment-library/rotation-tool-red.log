@@ -1,0 +1,56 @@
+test_failed_tool_activation_cancels_fitting_and_restores_pose (test_humanoid_mounts_rotation.GripRotationTests.test_failed_tool_activation_cancels_fitting_and_restores_pose) ... FAIL
+test_panel_exposes_rotation_controls_only_during_fitting (test_humanoid_mounts_rotation.GripRotationTests.test_panel_exposes_rotation_controls_only_during_fitting) ... FAIL
+test_role_grip_button_activates_native_rotation_and_weapon_follows (test_humanoid_mounts_rotation.GripRotationTests.test_role_grip_button_activates_native_rotation_and_weapon_follows) ... FAIL
+test_tool_controls_switch_move_and_world_rotation_without_transforming (test_humanoid_mounts_rotation.GripRotationTests.test_tool_controls_switch_move_and_world_rotation_without_transforming) ... FAIL
+
+======================================================================
+FAIL: test_failed_tool_activation_cancels_fitting_and_restores_pose (test_humanoid_mounts_rotation.GripRotationTests.test_failed_tool_activation_cancels_fitting_and_restores_pose)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_rotation.py", line 80, in test_failed_tool_activation_cancels_fitting_and_restores_pose
+    self.assertTrue(hasattr(self.package.operators, "activate_fitting_tool"))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_panel_exposes_rotation_controls_only_during_fitting (test_humanoid_mounts_rotation.GripRotationTests.test_panel_exposes_rotation_controls_only_during_fitting)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_rotation.py", line 93, in test_panel_exposes_rotation_controls_only_during_fitting
+    self.assertIn(("operator", "humanoid_mounts.fitting_tool"), recorder.events)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('operator', 'humanoid_mounts.fitting_tool') not found in [('label', '1. 选择角色'), ('prop', 'armature'), ('operator', 'humanoid_mounts.use_retarget_target'), ('label', '2. 选择装备'), ('label', 'GripRoot_RotationToolSword'), ('operator', 'humanoid_mounts.choose_equipment'), ('label', '3. 放到哪里'), ('prop', 'part'), ('label', '把标记移到掌心或装备位置，然后保存'), ('label', '使用视口的移动和旋转工具调整'), ('operator', 'humanoid_mounts.fit_equipment'), ('operator', 'humanoid_mounts.fit_equipment'), ('prop', 'show_advanced'), ('prop', 'is_expanded'), ('prop', 'directory'), ('operator', 'humanoid_mounts.library_directory'), ('operator', 'humanoid_mounts.library_refresh'), ('prop', 'search'), ('prop', 'tier'), ('prop', 'orientation'), ('operator', 'humanoid_mounts.library_load'), ('operator', 'humanoid_mounts.library_load'), ('operator', 'humanoid_mounts.equip_weapon'), ('label', '目标角色：RotationToolHero'), ('label', '目标部位：右手'), ('prop', 'mount'), ('label', '目标骨骼：Jnt_12'), ('label', '目标挂点：Mount_hand_r'), ('label', '可直接贴合；需要时再调整握位'), ('label', '当前装备已绑定此挂点；不准请调整位置'), ('operator', 'humanoid_mounts.library_orientation'), ('operator', 'humanoid_mounts.library_orientation'), ('label', '预设以挂点轴为准；握柄位置仍可调整'), ('operator', 'humanoid_mounts.library_clear')]
+
+======================================================================
+FAIL: test_role_grip_button_activates_native_rotation_and_weapon_follows (test_humanoid_mounts_rotation.GripRotationTests.test_role_grip_button_activates_native_rotation_and_weapon_follows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_rotation.py", line 54, in test_role_grip_button_activates_native_rotation_and_weapon_follows
+    self.assertEqual(self.current_tool(), "builtin.rotate")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'builtin.select_box' != 'builtin.rotate'
+- builtin.select_box
++ builtin.rotate
+
+
+======================================================================
+FAIL: test_tool_controls_switch_move_and_world_rotation_without_transforming (test_humanoid_mounts_rotation.GripRotationTests.test_tool_controls_switch_move_and_world_rotation_without_transforming)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_rotation.py", line 66, in test_tool_controls_switch_move_and_world_rotation_without_transforming
+    self.assertIsNotNone(getattr(self.package.operators, "HM_OT_fitting_tool", None))
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.182s
+
+FAILED (failures=4)
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+HUMANOID_MOUNTS_STATIC_OK 21
+HUMANOID_MOUNTS_BLENDER 5.1.2 b'ec6e62d40fa9'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_rotation.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+Info: 移动或旋转后保存，也可以取消恢复
+HUMANOID_MOUNTS_SELECTED 4
+HUMANOID_MOUNTS_TEST_FAIL

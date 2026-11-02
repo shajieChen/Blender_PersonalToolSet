@@ -11,7 +11,8 @@ import bpy
 from mathutils import Euler, Matrix, Quaternion
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "tests/out/auto_mounts"
+GUIDED = "--guided" in sys.argv
+OUTPUT = ROOT / "tests/out" / ("guided_mounts" if GUIDED else "auto_mounts")
 INSTALLED = "--installed" in sys.argv
 PACKAGE_ROOT = pathlib.Path(bpy.utils.user_resource("SCRIPTS")) / "addons" if INSTALLED else ROOT
 sys.path = [str(PACKAGE_ROOT), str(ROOT / "tests")] + [path for path in sys.path if pathlib.Path(path or ".").resolve() != ROOT]
@@ -30,7 +31,8 @@ def verify_identity():
         assert actual.parent == (PACKAGE_ROOT / package.__name__).resolve(), str(actual)
         print("AUTOMATIC_MOUNTS_PACKAGE", actual, flush=True)
     if INSTALLED:
-        manifest = json.loads((ROOT / "docs/superpowers/evidence/2026-10-30-auto-mounts/install-manifest.json").read_text(encoding="utf-8"))
+        evidence_name = "2026-10-30-guided-mounts" if GUIDED else "2026-10-30-auto-mounts"
+        manifest = json.loads((ROOT / "docs/superpowers/evidence" / evidence_name / "install-manifest.json").read_text(encoding="utf-8"))
         for item in manifest:
             assert hashlib.sha256(pathlib.Path(item["installed"]).read_bytes()).hexdigest() == item["after_sha256"], item["file"]
 
@@ -74,9 +76,16 @@ def build_preview():
     mount = settings.mount
     palm = target.matrix_world @ ((target.pose.bones[names["hand_r"]].head + target.pose.bones[names["hand_r"]].tail) * 0.5)
     mount.matrix_world = Matrix.Translation(palm) @ Euler((math.pi / 2.0, 0.0, 0.0)).to_matrix().to_4x4()
+    if GUIDED:
+        mount["hm_grip_fitted"] = True
     weapons.detach_weapon(root)
     root.matrix_world = Matrix.Translation((1.4, 0.0, 0.7)) @ Euler((math.pi / 2.0, 0.0, 0.0)).to_matrix().to_4x4()
     settings.grip = None
+    if GUIDED:
+        from humanoid_mounts import placement
+
+        placement.select_equipment(settings, [blade], blade)
+        settings.show_advanced = False
     settings.status = "请选择右侧装备按钮：免选骨骼，复用角色和武器校准"
     target.hide_set(True)
     for selected in tuple(bpy.context.selected_objects):
@@ -109,7 +118,8 @@ def build_preview():
 if __name__ == "__main__":
     verify_identity()
     if "--suite" in sys.argv:
-        suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"), pattern="test_humanoid_mounts_automatic.py")
+        pattern = "test_humanoid_mounts_guided.py" if GUIDED else "test_humanoid_mounts_automatic.py"
+        suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"), pattern=pattern)
         result = unittest.TextTestRunner(verbosity=2).run(suite)
         print("AUTOMATIC_MOUNTS_SELECTED", result.testsRun, flush=True)
         sys.exit(0 if result.wasSuccessful() and result.testsRun > 0 and not result.skipped else 1)

@@ -1,7 +1,7 @@
 bl_info = {
-    "name": "Humanoid Retarget",
+    "name": "Humanoid Retarget v1.8.0",
     "author": "Blender Plugin",
-    "version": (1, 7, 7),
+    "version": (1, 8, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 重定向",
     "description": "导入带动画的模型，自动绑定或映射到另一个人形，再导出",
@@ -1212,7 +1212,7 @@ _ADDON_VERSION = ".".join(str(number) for number in bl_info["version"])
 
 
 class HR_PT_panel(Panel):
-    bl_label = "人形重定向 " + _ADDON_VERSION
+    bl_label = "人形重定向 v" + _ADDON_VERSION
     bl_idname = "HR_PT_panel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"

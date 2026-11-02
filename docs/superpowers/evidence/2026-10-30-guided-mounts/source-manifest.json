@@ -1,0 +1,65 @@
+[
+  {
+    "file": "humanoid_mounts/__init__.py",
+    "sha256": "af1fc1d0ac9ef8749eedece49d6d720e77431cfd3055e78600b13d1b1d4e7958",
+    "syntax": "Passed",
+    "no_added_comments": "Passed",
+    "encoding_newlines": "Passed"
+  },
+  {
+    "file": "humanoid_mounts/properties.py",
+    "sha256": "1586bf9acff76a48d927e4ef8562673ec7cd07cd98bcb3f4da5f313f07e888a0",
+    "syntax": "Passed",
+    "no_added_comments": "Passed",
+    "encoding_newlines": "Passed"
+  },
+  {
+    "file": "humanoid_mounts/operators.py",
+    "sha256": "1e15ddb17b58b7374c712fe593c58b450faa4c79e7c141d6e0a209b50e732a59",
+    "syntax": "Passed",
+    "no_added_comments": "Passed",
+    "encoding_newlines": "Passed"
+  },
+  {
+    "file": "humanoid_mounts/panels.py",
+    "sha256": "b403167dcdb055b555324da9cefc2b9057b0c67e47d377d8203f423168dc9b3a",
+    "syntax": "Passed",
+    "no_added_comments": "Passed",
+    "encoding_newlines": "Passed"
+  },
+  {
+    "file": "humanoid_mounts/weapons.py",
+    "sha256": "db9bc92aac5315cda27bcd1ca90f89ccc7fb25d31affb816c5cedd53df4e316e",
+    "syntax": "Passed",
+    "no_added_comments": "Passed",
+    "encoding_newlines": "Passed"
+  },
+  {
+    "file": "humanoid_mounts/mounts.py",
+    "sha256": "0bce274e103b8c3b4aa6d36c3b3beacdcf14ce1a666dcf00c68a6a4ed31ffbc0",
+    "syntax": "Passed",
+    "no_added_comments": "Passed",
+    "encoding_newlines": "Passed"
+  },
+  {
+    "file": "humanoid_mounts/placement.py",
+    "sha256": "94973b6d8eca1ac5f4534e5e270186d19c3b956d64b168814faf1b5e12231f4a",
+    "syntax": "Passed",
+    "no_added_comments": "Passed",
+    "encoding_newlines": "Passed"
+  },
+  {
+    "file": "tests/test_humanoid_mounts_guided.py",
+    "sha256": "d8c79c7b1d19c5c88782e4cf50a258a778af426a636cfb25b3d327754bcc626e",
+    "syntax": "Passed",
+    "no_added_comments": "Passed",
+    "encoding_newlines": "Passed"
+  },
+  {
+    "file": "tests/run_humanoid_mounts_automatic.py",
+    "sha256": "de8b3f160a0cfe06dfd80833153721a94eaa7a617d953c73b528869e835b6fb2",
+    "syntax": "Passed",
+    "no_added_comments": "Passed",
+    "encoding_newlines": "Passed"
+  }
+]

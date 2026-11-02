@@ -1,0 +1,182 @@
+test_adjust_existing_equipment_changes_weapon_calibration_only (test_humanoid_mounts_guided.GuidedEquipmentTests.test_adjust_existing_equipment_changes_weapon_calibration_only) ... FAIL
+test_autokey_and_foreign_context_are_rejected_without_losing_cancel (test_humanoid_mounts_guided.GuidedEquipmentTests.test_autokey_and_foreign_context_are_rejected_without_losing_cancel) ... FAIL
+test_cancel_character_fit_removes_only_new_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_character_fit_removes_only_new_mount) ... FAIL
+test_cancel_existing_character_fit_restores_offset_and_attachments (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_existing_character_fit_restores_offset_and_attachments) ... FAIL
+test_explicit_equipment_preserves_character_and_finds_prepared_root (test_humanoid_mounts_guided.GuidedEquipmentTests.test_explicit_equipment_preserves_character_and_finds_prepared_root) ... FAIL
+test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available (test_humanoid_mounts_guided.GuidedEquipmentTests.test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available) ... FAIL
+test_legacy_expanded_panels_cannot_escape_advanced_gate (test_humanoid_mounts_guided.GuidedEquipmentTests.test_legacy_expanded_panels_cannot_escape_advanced_gate) ... FAIL
+test_missing_role_fit_is_distinct_from_existing_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_missing_role_fit_is_distinct_from_existing_mount) ... FAIL
+test_multicomponent_fit_cancel_restores_each_original_pose (test_humanoid_mounts_guided.GuidedEquipmentTests.test_multicomponent_fit_cancel_restores_each_original_pose) ... FAIL
+test_new_equipment_action_uses_explicit_input_instead_of_selected_marker (test_humanoid_mounts_guided.GuidedEquipmentTests.test_new_equipment_action_uses_explicit_input_instead_of_selected_marker) ... FAIL
+test_part_switch_ignores_stale_other_part_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_part_switch_ignores_stale_other_part_mount) ... FAIL
+test_readiness_does_not_write_scene_or_update_depsgraph (test_humanoid_mounts_guided.GuidedEquipmentTests.test_readiness_does_not_write_scene_or_update_depsgraph) ... FAIL
+test_remember_current_pose_creates_grip_without_cursor_or_jump (test_humanoid_mounts_guided.GuidedEquipmentTests.test_remember_current_pose_creates_grip_without_cursor_or_jump) ... FAIL
+test_reset_and_reanchor_invalidate_role_fit_confirmation (test_humanoid_mounts_guided.GuidedEquipmentTests.test_reset_and_reanchor_invalidate_role_fit_confirmation) ... FAIL
+test_save_character_fit_confirms_without_setting_weapon_grip (test_humanoid_mounts_guided.GuidedEquipmentTests.test_save_character_fit_confirms_without_setting_weapon_grip) ... FAIL
+test_saved_fitting_can_cancel_in_an_independent_process (test_humanoid_mounts_guided.GuidedEquipmentTests.test_saved_fitting_can_cancel_in_an_independent_process) ... FAIL
+test_unregister_cancels_unfinished_fit_before_removing_properties (test_humanoid_mounts_guided.GuidedEquipmentTests.test_unregister_cancels_unfinished_fit_before_removing_properties) ... FAIL
+
+======================================================================
+FAIL: test_adjust_existing_equipment_changes_weapon_calibration_only (test_humanoid_mounts_guided.GuidedEquipmentTests.test_adjust_existing_equipment_changes_weapon_calibration_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_autokey_and_foreign_context_are_rejected_without_losing_cancel (test_humanoid_mounts_guided.GuidedEquipmentTests.test_autokey_and_foreign_context_are_rejected_without_losing_cancel)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_cancel_character_fit_removes_only_new_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_character_fit_removes_only_new_mount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_cancel_existing_character_fit_restores_offset_and_attachments (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_existing_character_fit_restores_offset_and_attachments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_explicit_equipment_preserves_character_and_finds_prepared_root (test_humanoid_mounts_guided.GuidedEquipmentTests.test_explicit_equipment_preserves_character_and_finds_prepared_root)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available (test_humanoid_mounts_guided.GuidedEquipmentTests.test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_legacy_expanded_panels_cannot_escape_advanced_gate (test_humanoid_mounts_guided.GuidedEquipmentTests.test_legacy_expanded_panels_cannot_escape_advanced_gate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_missing_role_fit_is_distinct_from_existing_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_missing_role_fit_is_distinct_from_existing_mount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_multicomponent_fit_cancel_restores_each_original_pose (test_humanoid_mounts_guided.GuidedEquipmentTests.test_multicomponent_fit_cancel_restores_each_original_pose)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_new_equipment_action_uses_explicit_input_instead_of_selected_marker (test_humanoid_mounts_guided.GuidedEquipmentTests.test_new_equipment_action_uses_explicit_input_instead_of_selected_marker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_part_switch_ignores_stale_other_part_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_part_switch_ignores_stale_other_part_mount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_readiness_does_not_write_scene_or_update_depsgraph (test_humanoid_mounts_guided.GuidedEquipmentTests.test_readiness_does_not_write_scene_or_update_depsgraph)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_remember_current_pose_creates_grip_without_cursor_or_jump (test_humanoid_mounts_guided.GuidedEquipmentTests.test_remember_current_pose_creates_grip_without_cursor_or_jump)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_reset_and_reanchor_invalidate_role_fit_confirmation (test_humanoid_mounts_guided.GuidedEquipmentTests.test_reset_and_reanchor_invalidate_role_fit_confirmation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_save_character_fit_confirms_without_setting_weapon_grip (test_humanoid_mounts_guided.GuidedEquipmentTests.test_save_character_fit_confirms_without_setting_weapon_grip)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_saved_fitting_can_cancel_in_an_independent_process (test_humanoid_mounts_guided.GuidedEquipmentTests.test_saved_fitting_can_cancel_in_an_independent_process)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+======================================================================
+FAIL: test_unregister_cancels_unfinished_fit_before_removing_properties (test_humanoid_mounts_guided.GuidedEquipmentTests.test_unregister_cancels_unfinished_fit_before_removing_properties)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 52, in setUp
+    self.assertIsNotNone(importlib.util.find_spec("humanoid_mounts.placement"), "Guided equipment must expose readonly readiness and cancellable fitting")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Guided equipment must expose readonly readiness and cancellable fitting
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.018s
+
+FAILED (failures=17)
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+HUMANOID_MOUNTS_STATIC_OK 15
+HUMANOID_MOUNTS_BLENDER 5.1.2 b'ec6e62d40fa9'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_guided.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+HUMANOID_MOUNTS_SELECTED 17
+HUMANOID_MOUNTS_TEST_FAIL

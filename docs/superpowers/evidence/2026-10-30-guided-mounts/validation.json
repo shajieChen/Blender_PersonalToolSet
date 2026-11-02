@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-30",
+  "status": "Logic implementation verified; awaiting manual review and formal closeout",
+  "checks": [
+    {
+      "check": "Baseline 5.1.2",
+      "log": "baseline.log",
+      "selected": 56,
+      "exit_code": 0,
+      "sha256": "6cad92e5ed79243043575c3605b76ef09c3dc954492f10e2c3491183babf72b0"
+    },
+    {
+      "check": "Selected positive RED",
+      "log": "red.log",
+      "selected": 17,
+      "exit_code": 1,
+      "sha256": "959c180eaadc808bc5bcb423c7ba44d6828f84221886090205012b10ee0f8a5a"
+    },
+    {
+      "check": "Final workspace 5.1.2",
+      "log": "verified-final-5_1.log",
+      "selected": 81,
+      "exit_code": 0,
+      "sha256": "4409f410455daff1e17346d7ad2f225a18a5e18c8e7dfd11f9257c10503abea5"
+    },
+    {
+      "check": "Final workspace 5.2.1 --threads 1",
+      "log": "verified-final-5_2.log",
+      "selected": 81,
+      "exit_code": 0,
+      "sha256": "b62a38d33c3b897a45d31b2e71acea0dc515cc728cf5e28b20332993f315fbee"
+    },
+    {
+      "check": "Final installed 5.1.2 guided",
+      "log": "installed-final.log",
+      "selected": 25,
+      "exit_code": 0,
+      "sha256": "5081ee43e388fa4541dd18cda5c9e791c7a28365607c42b8a266fa2adf237c4e"
+    },
+    {
+      "check": "Manual preview generation",
+      "log": "preview.log",
+      "selected": null,
+      "exit_code": 0,
+      "sha256": "be4fbd6360e43ead3d426733e0a97e292080926adc0f166fb76708eb0f4149ea"
+    }
+  ],
+  "visual": "NotRun",
+  "actual_undo_redo": "NotRun",
+  "user_assets": "NotRun",
+  "computer_use": false,
+  "production_temporary_diagnostics": []
+}

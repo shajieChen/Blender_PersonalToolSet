@@ -1,0 +1,9 @@
+ M docs/superpowers/evidence/2026-10-29-mmb-shift/installed-ui-5_1.json
+ M docs/superpowers/evidence/2026-10-29-mmb-shift/result.md
+ M docs/superpowers/evidence/2026-10-29-mmb-shift/summary.json
+ M docs/superpowers/plans/2026-10-27-mmb-wasd-viewport-navigation.md
+?? docs/superpowers/evidence/2026-10-29-mmb-shift/cleanup-result.json
+?? docs/superpowers/evidence/2026-10-29-mmb-shift/post-cleanup-5_1.log
+?? docs/superpowers/evidence/2026-10-29-mmb-shift/post-cleanup-5_2.log
+?? docs/superpowers/evidence/2026-10-29-mmb-shift/post-cleanup-installed-ui-errors.log
+?? docs/superpowers/evidence/2026-10-29-mmb-shift/post-cleanup-installed-ui.log

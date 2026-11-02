@@ -1,6 +1,7 @@
 import bpy
 from bpy.types import Panel, UIList
 
+from . import bl_info
 from .operators import active_session, last_message, realtime_running
 from .targets import target_armature
 
@@ -26,7 +27,7 @@ class SPRING_BONE_PT_main(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "动态骨骼"
-    bl_label = "动态骨骼"
+    bl_label = "动态骨骼 v" + ".".join(str(number) for number in bl_info["version"])
     bl_idname = "SPRING_BONE_PT_main"
 
     @classmethod

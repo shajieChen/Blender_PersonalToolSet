@@ -1,7 +1,7 @@
 bl_info = {
-    "name": "Shortcut Hint",
+    "name": "Shortcut Hint v1.1.0",
     "author": "Blender Plugin",
-    "version": (1, 0, 1),
+    "version": (1, 1, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > 快捷键",
     "description": "鼠标停在视图导航按钮上时，在按钮左侧用彩色按键显示快捷键",
@@ -296,7 +296,7 @@ class ShortcutHintPreferences(bpy.types.AddonPreferences):
 
 
 class SHORTCUT_PT_hint(bpy.types.Panel):
-    bl_label = "快捷键标注"
+    bl_label = "快捷键标注 v" + ".".join(str(number) for number in bl_info["version"])
     bl_idname = "SHORTCUT_PT_hint"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"

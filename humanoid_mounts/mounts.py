@@ -40,16 +40,20 @@ def validate_parent_change(obj):
     has_animation = animation is not None and (animation.action is not None or len(animation.drivers) > 0 or len(animation.nla_tracks) > 0)
     if has_animation or len(obj.constraints) or obj.rigid_body is not None:
         raise HumanoidMountError("对象含动画、驱动、约束或刚体，首批不迁移")
-    validate_matrix(world_matrix(obj))
+    validate_affine_matrix(world_matrix(obj))
     validate_matrix(obj.matrix_basis)
 
 
-def validate_matrix(matrix):
+def validate_affine_matrix(matrix):
     if any(not math.isfinite(value) for row in matrix for value in row):
         raise HumanoidMountError("变换包含非有限值")
     determinant = matrix.to_3x3().determinant()
     if determinant <= 1e-12:
         raise HumanoidMountError("不支持奇异或反射变换")
+
+
+def validate_matrix(matrix):
+    validate_affine_matrix(matrix)
     location, rotation, scale = matrix.decompose()
     reconstructed = Matrix.LocRotScale(location, rotation, scale)
     if matrix_distance(matrix, reconstructed) > MATRIX_TOLERANCE:
@@ -105,12 +109,15 @@ def validate_parent(obj, parent):
 
 def parent_at_world(obj, parent, desired):
     validate_parent_change(obj)
-    validate_matrix(desired)
+    validate_affine_matrix(desired)
+    local = desired
     if parent is not None:
         editable_object(parent)
         validate_parent(obj, parent)
         parent_world = world_matrix(parent)
-        validate_matrix(parent_world)
+        validate_affine_matrix(parent_world)
+        local = parent_world.inverted() @ desired
+    validate_matrix(local)
     basis = obj.matrix_basis.copy()
     validate_matrix(basis)
     saved = ParentPose(obj)
@@ -159,6 +166,17 @@ def mounts_for_armature(armature, part=None):
     return sorted((obj for obj in armature.children if is_mount(obj) and (part is None or obj.get("hm_part") == part)), key=lambda obj: obj.name.casefold())
 
 
+def mount_for_part(armature, part, preferred=None):
+    candidates = mounts_for_armature(armature, part)
+    if preferred is not None:
+        if preferred not in candidates:
+            raise HumanoidMountError("指定挂点不属于当前人形和部位")
+        return preferred
+    if len(candidates) > 1:
+        raise HumanoidMountError("当前位置有多个安装位置，请在高级设置中选择")
+    return candidates[0] if candidates else None
+
+
 def create_mount(armature, bone_name, part):
     editable_object(armature)
     if armature.type != "ARMATURE" or bone_name not in armature.pose.bones:
@@ -166,7 +184,7 @@ def create_mount(armature, bone_name, part):
     if part not in {item[0] for item in PARTS}:
         raise HumanoidMountError("不支持该人形部位")
     desired = world_matrix(armature) @ armature.evaluated_get(bpy.context.evaluated_depsgraph_get()).pose.bones[bone_name].matrix
-    validate_matrix(desired)
+    validate_affine_matrix(desired)
     mount = bpy.data.objects.new("Mount_" + part, None)
     try:
         bpy.context.scene.collection.objects.link(mount)
@@ -183,7 +201,9 @@ def create_mount(armature, bone_name, part):
         mount.show_name = True
         mount.show_in_front = True
         parent_world = world_matrix(mount)
-        mount.matrix_basis = parent_world.inverted() @ desired
+        local = parent_world.inverted() @ desired
+        validate_matrix(local)
+        mount.matrix_basis = local
         if matrix_distance(world_matrix(mount), desired) > MATRIX_TOLERANCE:
             raise HumanoidMountError("无法精确创建骨骼挂点")
         return mount
@@ -231,6 +251,7 @@ def reanchor_mount(mount, bone_name):
         mount.matrix_basis = parent_world.inverted() @ desired
         if matrix_distance(world_matrix(mount), desired) > MATRIX_TOLERANCE:
             raise HumanoidMountError("换骨骼后无法精确保留姿势")
+        mount["hm_grip_fitted"] = False
     except Exception:
         saved.restore()
         raise
@@ -245,6 +266,7 @@ def reset_mount(mount):
         mount.matrix_world = desired
         if matrix_distance(world_matrix(mount), desired) > MATRIX_TOLERANCE:
             raise HumanoidMountError("无法恢复骨骼原点")
+        mount["hm_grip_fitted"] = False
     except Exception:
         saved.restore()
         raise

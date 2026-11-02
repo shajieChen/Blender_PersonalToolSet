@@ -1,0 +1,7 @@
+{
+  "status": "success",
+  "result": {
+    "executed": true,
+    "result": "{\"status\": \"rotation_tool_reloaded\", \"pid\": 71052, \"objects_preserved\": 33, \"settings_and_selection_preserved\": true, \"fitting\": \"NONE\", \"scene_saved\": false}\n"
+  }
+}

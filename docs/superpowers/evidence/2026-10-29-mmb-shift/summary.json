@@ -1,5 +1,5 @@
 {
-  "status": "PendingUserReview",
+  "status": "Completed",
   "version": "1.2.2",
   "groups_per_version": 14,
   "checks_per_version": 111,
@@ -11,5 +11,9 @@
   "temporary_diagnostics": [],
   "installed": true,
   "committed": false,
-  "pushed": false
+  "pushed": false,
+  "user_confirmed": true,
+  "cleanup": "Passed",
+  "post_cleanup_checks_per_version": 111,
+  "post_cleanup_native_installed_checks": 54
 }

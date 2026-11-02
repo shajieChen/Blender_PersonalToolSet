@@ -1,0 +1,137 @@
+test_adjust_existing_equipment_changes_weapon_calibration_only (test_humanoid_mounts_guided.GuidedEquipmentTests.test_adjust_existing_equipment_changes_weapon_calibration_only) ... ok
+test_autokey_and_foreign_context_are_rejected_without_losing_cancel (test_humanoid_mounts_guided.GuidedEquipmentTests.test_autokey_and_foreign_context_are_rejected_without_losing_cancel) ... ok
+test_cancel_character_fit_removes_only_new_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_character_fit_removes_only_new_mount) ... ok
+test_cancel_existing_character_fit_restores_offset_and_attachments (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_existing_character_fit_restores_offset_and_attachments) ... ERROR
+test_explicit_equipment_preserves_character_and_finds_prepared_root (test_humanoid_mounts_guided.GuidedEquipmentTests.test_explicit_equipment_preserves_character_and_finds_prepared_root) ... ok
+test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available (test_humanoid_mounts_guided.GuidedEquipmentTests.test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available) ... ERROR
+test_legacy_expanded_panels_cannot_escape_advanced_gate (test_humanoid_mounts_guided.GuidedEquipmentTests.test_legacy_expanded_panels_cannot_escape_advanced_gate) ... ok
+test_missing_role_fit_is_distinct_from_existing_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_missing_role_fit_is_distinct_from_existing_mount) ... FAIL
+test_multicomponent_fit_cancel_restores_each_original_pose (test_humanoid_mounts_guided.GuidedEquipmentTests.test_multicomponent_fit_cancel_restores_each_original_pose) ... ERROR
+test_new_equipment_action_uses_explicit_input_instead_of_selected_marker (test_humanoid_mounts_guided.GuidedEquipmentTests.test_new_equipment_action_uses_explicit_input_instead_of_selected_marker) ... FAIL
+test_part_switch_ignores_stale_other_part_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_part_switch_ignores_stale_other_part_mount) ... ok
+test_readiness_does_not_write_scene_or_update_depsgraph (test_humanoid_mounts_guided.GuidedEquipmentTests.test_readiness_does_not_write_scene_or_update_depsgraph) ... ok
+test_remember_current_pose_creates_grip_without_cursor_or_jump (test_humanoid_mounts_guided.GuidedEquipmentTests.test_remember_current_pose_creates_grip_without_cursor_or_jump) ... ERROR
+test_reset_and_reanchor_invalidate_role_fit_confirmation (test_humanoid_mounts_guided.GuidedEquipmentTests.test_reset_and_reanchor_invalidate_role_fit_confirmation) ... ok
+test_save_character_fit_confirms_without_setting_weapon_grip (test_humanoid_mounts_guided.GuidedEquipmentTests.test_save_character_fit_confirms_without_setting_weapon_grip) ... ok
+00:02.219  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.1\5.1\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Dots Stroke'
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+00:02.219  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.1\5.1\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Material'
+test_saved_fitting_can_cancel_in_an_independent_process (test_humanoid_mounts_guided.GuidedEquipmentTests.test_saved_fitting_can_cancel_in_an_independent_process) ... ERROR
+test_unregister_cancels_unfinished_fit_before_removing_properties (test_humanoid_mounts_guided.GuidedEquipmentTests.test_unregister_cancels_unfinished_fit_before_removing_properties) ... ERROR
+test_unregister_cancels_unfinished_fit_before_removing_properties (test_humanoid_mounts_guided.GuidedEquipmentTests.test_unregister_cancels_unfinished_fit_before_removing_properties) ... ERROR
+
+======================================================================
+ERROR: test_cancel_existing_character_fit_restores_offset_and_attachments (test_humanoid_mounts_guided.GuidedEquipmentTests.test_cancel_existing_character_fit_restores_offset_and_attachments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 125, in test_cancel_existing_character_fit_restores_offset_and_attachments
+    self.placement.begin_fitting(self.settings, "CHARACTER")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\placement.py", line 136, in begin_fitting
+    raise mounts.HumanoidMountError(state.message)
+humanoid_mounts.mounts.HumanoidMountError: 装备已在其他位置，请先取下
+
+======================================================================
+ERROR: test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available (test_humanoid_mounts_guided.GuidedEquipmentTests.test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 199, in test_failed_grip_save_keeps_editing_pose_and_cancel_remains_available
+    self.placement.begin_fitting(self.settings, "EQUIPMENT")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\placement.py", line 138, in begin_fitting
+    raise mounts.HumanoidMountError("请先保存角色握位")
+humanoid_mounts.mounts.HumanoidMountError: 请先保存角色握位
+
+======================================================================
+ERROR: test_multicomponent_fit_cancel_restores_each_original_pose (test_humanoid_mounts_guided.GuidedEquipmentTests.test_multicomponent_fit_cancel_restores_each_original_pose)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 151, in test_multicomponent_fit_cancel_restores_each_original_pose
+    self.placement.begin_fitting(self.settings, "EQUIPMENT")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\placement.py", line 138, in begin_fitting
+    raise mounts.HumanoidMountError("请先保存角色握位")
+humanoid_mounts.mounts.HumanoidMountError: 请先保存角色握位
+
+======================================================================
+ERROR: test_remember_current_pose_creates_grip_without_cursor_or_jump (test_humanoid_mounts_guided.GuidedEquipmentTests.test_remember_current_pose_creates_grip_without_cursor_or_jump)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 164, in test_remember_current_pose_creates_grip_without_cursor_or_jump
+    self.placement.begin_fitting(self.settings, "EQUIPMENT")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\placement.py", line 138, in begin_fitting
+    raise mounts.HumanoidMountError("请先保存角色握位")
+humanoid_mounts.mounts.HumanoidMountError: 请先保存角色握位
+
+======================================================================
+ERROR: test_saved_fitting_can_cancel_in_an_independent_process (test_humanoid_mounts_guided.GuidedEquipmentTests.test_saved_fitting_can_cancel_in_an_independent_process)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\humanoid_mounts\__init__.py", line 40, in unregister
+    operators.placement.cancel_fitting(scene.hm_settings)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\placement.py", line 191, in cancel_fitting
+    raise mounts.HumanoidMountError("设置对象或原父级已删除，不能自动恢复")
+humanoid_mounts.mounts.HumanoidMountError: 设置对象或原父级已删除，不能自动恢复
+
+======================================================================
+ERROR: test_unregister_cancels_unfinished_fit_before_removing_properties (test_humanoid_mounts_guided.GuidedEquipmentTests.test_unregister_cancels_unfinished_fit_before_removing_properties)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 232, in test_unregister_cancels_unfinished_fit_before_removing_properties
+    arm, names, root, part = self.chosen()
+                             ~~~~~~~~~~~^^
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 67, in chosen
+    self.placement.select_equipment(self.settings, [part], part)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\placement.py", line 59, in select_equipment
+    raise mounts.HumanoidMountError("请先保存或取消当前设置")
+humanoid_mounts.mounts.HumanoidMountError: 请先保存或取消当前设置
+
+======================================================================
+ERROR: test_unregister_cancels_unfinished_fit_before_removing_properties (test_humanoid_mounts_guided.GuidedEquipmentTests.test_unregister_cancels_unfinished_fit_before_removing_properties)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\humanoid_mounts\__init__.py", line 40, in unregister
+    operators.placement.cancel_fitting(scene.hm_settings)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\humanoid_mounts\placement.py", line 191, in cancel_fitting
+    raise mounts.HumanoidMountError("设置对象或原父级已删除，不能自动恢复")
+humanoid_mounts.mounts.HumanoidMountError: 设置对象或原父级已删除，不能自动恢复
+
+======================================================================
+FAIL: test_missing_role_fit_is_distinct_from_existing_mount (test_humanoid_mounts_guided.GuidedEquipmentTests.test_missing_role_fit_is_distinct_from_existing_mount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 88, in test_missing_role_fit_is_distinct_from_existing_mount
+    self.assertEqual(self.placement.equipment_status(self.settings).step, "READY")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'FIT_CHARACTER' != 'READY'
+- FIT_CHARACTER
++ READY
+
+
+======================================================================
+FAIL: test_new_equipment_action_uses_explicit_input_instead_of_selected_marker (test_humanoid_mounts_guided.GuidedEquipmentTests.test_new_equipment_action_uses_explicit_input_instead_of_selected_marker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_humanoid_mounts_guided.py", line 258, in test_new_equipment_action_uses_explicit_input_instead_of_selected_marker
+    self.assertEqual(bpy.ops.humanoid_mounts.equip_weapon(), {"FINISHED"})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the first set but not the second:
+'CANCELLED'
+Items in the second set but not the first:
+'FINISHED'
+
+----------------------------------------------------------------------
+Ran 17 tests in 2.024s
+
+FAILED (failures=2, errors=7)
+HUMANOID_MOUNTS_STATIC_OK 16
+HUMANOID_MOUNTS_BLENDER 5.1.2 b'ec6e62d40fa9'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_guided.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+Info: Saved as "fitting-persistence.blend"
+HUMANOID_MOUNTS_SELECTED 17
+HUMANOID_MOUNTS_TEST_FAIL

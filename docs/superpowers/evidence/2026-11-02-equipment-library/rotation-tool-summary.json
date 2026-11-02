@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-02",
+  "request": "Click adjust character grip to directly rotate the weapon using a visible scene tool",
+  "research": [
+    {
+      "url": "https://docs.unity.com/en-us/engine/6000.0/manual/working-with-scenes/scenes-manage-gameobjects/positioning-game-objects",
+      "finding": "Unity Rotate exposes RGB rotation rings; local/global handle coordinates and pivot placement are explicit"
+    },
+    {
+      "url": "https://docs.blender.org/manual/en/2.90/scene_layout/object/editing/transform/control/gizmos.html",
+      "finding": "Blender already supplies viewport transform gizmos; reuse native tools instead of a custom renderer"
+    }
+  ],
+  "behavior": "CHARACTER fitting selects the existing mount, activates builtin.rotate, enables master/tool gizmos and LOCAL orientation, and uses active object pivot. Attached weapon inherits mount rotation. Fitting panel offers local/world rotate and move controls. Existing save/cancel snapshots remain responsible for geometry; tool activation failure cancels fitting. Standard viewport tool/orientation remain selected after save/cancel, matching native editor behavior. No custom callbacks, keymaps, modal loops or gizmo types.",
+  "red": {
+    "selected": 4,
+    "failed": 4,
+    "log": "rotation-tool-red.log"
+  },
+  "focused": {
+    "selected": 4,
+    "passed": 4,
+    "log": "rotation-tool-focused.log"
+  },
+  "regression_5_1": {
+    "selected": 108,
+    "passed": 108,
+    "log": "rotation-tool-regression-5_1.log"
+  },
+  "review": {
+    "business_naming": "Passed",
+    "dependencies": "Passed: UI action -> existing fitting/parenting; no new cross-plugin dependency",
+    "lifetime_and_failure": "Passed: no persistent new resources; native tool failure restores original fitting pose",
+    "comments_added": 0,
+    "encoding": "Preserved existing UTF-8/LF files; new test UTF-8/CRLF; no trailing whitespace",
+    "cpp_gates": "NotApplicable: Python only"
+  },
+  "temporary_production_diagnostics": [],
+  "cleanup": "No temporary production diagnostics. Retain functional tests and evidence.",
+  "visual": "NotRun: user manual review; no Computer Use",
+  "interactive_drag_and_undo": "NotRun: native tool activation, selection, geometry inheritance and save/cancel verified by logic only",
+  "regression_5_2": "NotRun: prior startup block; not retried",
+  "user_acceptance": "Pending",
+  "backup": "C:\\Users\\chenshajie1\\.codex\\backups\\humanoid-rotation-tool-20261102-140117",
+  "installed_runtime_5_1": {
+    "result": "Passed",
+    "log": "rotation-tool-installed-5_1.log"
+  },
+  "live_reload": {
+    "result": "Passed",
+    "log": "rotation-tool-live-reload.json",
+    "scope": "Only operators and panels; scene objects, settings and selection unchanged"
+  }
+}

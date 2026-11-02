@@ -1,13 +1,15 @@
 import bpy
-from bpy.props import EnumProperty
+from bpy.props import BoolProperty, EnumProperty, StringProperty
 from bpy.types import Operator
 
-from . import mounts, weapons
+from . import mounts, placement, weapons
 
 
-def run_action(context, action):
+def run_action(context, action, *, fitting=False):
     settings = context.scene.hm_settings
     try:
+        if settings.fitting_stage != "NONE" and not fitting:
+            raise mounts.HumanoidMountError("请先保存或取消当前设置")
         for window in context.window_manager.windows:
             for operator in window.modal_operators:
                 if operator.bl_idname.startswith(("hr.", "spring_bone.", "HR_OT_", "SPRING_BONE_OT_")):
@@ -42,6 +44,9 @@ class HM_OT_use_armature(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
+        if context.scene.hm_settings.fitting_stage != "NONE":
+            self.report({"WARNING"}, "请先保存或取消当前设置")
+            return {"CANCELLED"}
         obj = context.object
         if obj is None or obj.type != "ARMATURE":
             self.report({"ERROR"}, "请明确选择人形骨架")
@@ -70,7 +75,9 @@ class HM_OT_use_retarget_target(Operator):
             settings.bone_name = ""
             return "已选择重定向目标，选择武器后可直接装备"
 
-        return run_action(context, use)
+        result = run_action(context, use)
+        self.report({"INFO"} if result == {"FINISHED"} else {"WARNING"}, context.scene.hm_settings.status)
+        return result
 
 
 class HM_OT_equip_weapon(Operator):
@@ -81,7 +88,13 @@ class HM_OT_equip_weapon(Operator):
     def execute(self, context):
         def equip(settings):
             obj = context.object
-            root = weapons.grip_from_object(obj) if obj is not None and obj != settings.armature else selected_grip(settings)
+            if settings.equipment is not None:
+                state = placement.equipment_status(settings)
+                if state.step not in {"READY", "EQUIPPED"}:
+                    raise mounts.HumanoidMountError(state.message)
+                root = state.grip
+            else:
+                root = weapons.grip_from_object(obj) if obj is not None and obj != settings.armature else selected_grip(settings)
             preferred = settings.mount
             if preferred is not None and (preferred.parent != settings.armature or preferred.get("hm_part") != settings.part):
                 preferred = None
@@ -90,9 +103,108 @@ class HM_OT_equip_weapon(Operator):
             settings.mount = mount
             settings.mount_name = mount.name
             settings.grip = root
+            if root.get("hm_source_file"):
+                return "已贴合 " + settings.armature.name + " / " + mount.name + "；局部位移为0，可选调整握位"
             return "已装备；新挂点位于骨骼原点，首次请校准握位" if mount not in previous else "已装备，复用现有挂点和握持校准"
 
-        return run_action(context, equip)
+        result = run_action(context, equip)
+        self.report({"INFO"} if result == {"FINISHED"} else {"WARNING"}, context.scene.hm_settings.status)
+        return result
+
+
+class HM_OT_choose_equipment(Operator):
+    bl_idname = "humanoid_mounts.choose_equipment"
+    bl_label = "使用选中的物体"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        def choose(settings):
+            placement.select_equipment(settings, tuple(context.selected_objects), context.object)
+            return "已选择装备，角色保持不变"
+
+        result = run_action(context, choose)
+        self.report({"INFO"} if result == {"FINISHED"} else {"WARNING"}, context.scene.hm_settings.status)
+        return result
+
+
+def activate_fitting_tool(context, tool="ROTATE", orientation="LOCAL"):
+    window = context.window
+    if window is None:
+        raise mounts.HumanoidMountError("请在3D视图中调整握位")
+    area = context.area if context.area is not None and context.area.type == "VIEW_3D" else next((area for area in window.screen.areas if area.type == "VIEW_3D"), None)
+    if area is None:
+        raise mounts.HumanoidMountError("请先打开3D视图")
+    region = next(region for region in area.regions if region.type == "WINDOW")
+    name = {"ROTATE": "builtin.rotate", "MOVE": "builtin.move"}[tool]
+    try:
+        with context.temp_override(window=window, area=area, region=region):
+            result = bpy.ops.wm.tool_set_by_id(name=name)
+    except RuntimeError as error:
+        raise mounts.HumanoidMountError("无法启用场景调整工具：" + str(error)) from error
+    if result != {"FINISHED"}:
+        raise mounts.HumanoidMountError("场景调整工具未启用")
+    area.spaces.active.show_gizmo = True
+    area.spaces.active.show_gizmo_tool = True
+    context.scene.transform_orientation_slots[0].type = orientation
+    context.scene.tool_settings.transform_pivot_point = "ACTIVE_ELEMENT"
+    area.tag_redraw()
+
+
+class HM_OT_fit_equipment(Operator):
+    bl_idname = "humanoid_mounts.fit_equipment"
+    bl_label = "设置装备位置"
+    bl_options = {"REGISTER", "UNDO"}
+    operation: EnumProperty(items=(("CHARACTER", "设置角色握位", ""), ("EQUIPMENT", "设置装备拿法", ""), ("SAVE", "保存", ""), ("CANCEL", "取消", "")))
+
+    def execute(self, context):
+        def fit(settings):
+            if self.operation == "CANCEL":
+                placement.cancel_fitting(settings)
+                return "已取消，进入设置前的位置已恢复"
+            if self.operation == "SAVE":
+                placement.save_fitting(settings)
+                return "已保存，今后可以直接复用"
+            placement.begin_fitting(settings, self.operation)
+            try:
+                activate_fitting_tool(context)
+            except mounts.HumanoidMountError:
+                placement.cancel_fitting(settings)
+                raise
+            return "拖动场景中的彩色圆环旋转，完成后保存，也可取消恢复"
+
+        result = run_action(context, fit, fitting=True)
+        self.report({"INFO"} if result == {"FINISHED"} else {"WARNING"}, context.scene.hm_settings.status)
+        return result
+
+
+class HM_OT_fitting_tool(Operator):
+    bl_idname = "humanoid_mounts.fitting_tool"
+    bl_label = "显示握位调整工具"
+    tool: EnumProperty(items=(("ROTATE", "旋转圆环", ""), ("MOVE", "移动箭头", "")))
+    orientation: EnumProperty(items=(("LOCAL", "局部", ""), ("GLOBAL", "世界", "")))
+
+    def execute(self, context):
+        def show(settings):
+            if settings.fitting_stage == "NONE":
+                raise mounts.HumanoidMountError("请先点击调整角色握位或调整位置")
+            objects = tuple(item.object for item in settings.fitting_objects)
+            for obj in objects:
+                mounts.editable_object(obj)
+                if not obj.visible_get() or obj.hide_select:
+                    raise mounts.HumanoidMountError("调整对象已隐藏或禁止选择")
+            if not objects:
+                raise mounts.HumanoidMountError("调整对象已失效，请取消后重试")
+            for obj in tuple(context.selected_objects):
+                obj.select_set(False)
+            for obj in objects:
+                obj.select_set(True)
+            context.view_layer.objects.active = objects[0]
+            activate_fitting_tool(context, self.tool, self.orientation)
+            return "拖动彩色圆环旋转" if self.tool == "ROTATE" else "拖动箭头移动"
+
+        result = run_action(context, show, fitting=True)
+        self.report({"INFO"} if result == {"FINISHED"} else {"WARNING"}, context.scene.hm_settings.status)
+        return result
 
 
 class HM_OT_create_mount(Operator):
@@ -143,13 +255,19 @@ class HM_OT_detach_weapon(Operator):
     bl_idname = "humanoid_mounts.detach_weapon"
     bl_label = "解除并保持位置"
     bl_options = {"REGISTER", "UNDO"}
+    use_equipment: BoolProperty(default=False, options={"HIDDEN"})
 
     def execute(self, context):
         def detach(settings):
-            weapons.detach_weapon(selected_grip(settings))
+            root = weapons.grip_from_object(settings.equipment) if self.use_equipment else selected_grip(settings)
+            if root.parent is not None and mounts.mount_owner(root.parent) != settings.armature:
+                raise mounts.HumanoidMountError("装备属于另一角色，请先选择正确角色")
+            weapons.detach_weapon(root)
             return "已解除，保留当前世界姿势"
 
-        return run_action(context, detach)
+        result = run_action(context, detach)
+        self.report({"INFO"} if result == {"FINISHED"} else {"WARNING"}, context.scene.hm_settings.status)
+        return result
 
 
 class HM_OT_edit_mount(Operator):
@@ -182,11 +300,14 @@ class HM_OT_use_mount(Operator):
     bl_idname = "humanoid_mounts.use_mount"
     bl_label = "使用当前挂点"
     bl_options = {"REGISTER", "UNDO"}
+    name: StringProperty()
 
     def execute(self, context):
         def use(settings):
-            mount = context.object
+            mount = bpy.data.objects.get(self.name) if self.name else context.object
             owner = mounts.mount_owner(mount)
+            if self.name and (owner != settings.armature or mount.get("hm_part") != settings.part):
+                raise mounts.HumanoidMountError("安装位置已改变，请重新选择")
             settings.armature = owner
             settings.part = mount["hm_part"]
             settings.mount = mount
@@ -194,7 +315,9 @@ class HM_OT_use_mount(Operator):
             settings.bone_name = mount.parent_bone
             return "已选择该挂点所属的人形和部位"
 
-        return run_action(context, use)
+        result = run_action(context, use)
+        self.report({"INFO"} if result == {"FINISHED"} else {"WARNING"}, context.scene.hm_settings.status)
+        return result
 
 
 class HM_OT_use_bone(Operator):
@@ -284,4 +407,4 @@ class HM_OT_reset_offset(Operator):
         return run_action(context, reset)
 
 
-CLASSES = (HM_OT_use_armature, HM_OT_use_retarget_target, HM_OT_equip_weapon, HM_OT_create_mount, HM_OT_prepare_grip, HM_OT_bind_weapon, HM_OT_detach_weapon, HM_OT_edit_mount, HM_OT_use_mount, HM_OT_use_bone, HM_OT_use_grip, HM_OT_register_grip, HM_OT_select_edit_target, HM_OT_reset_offset)
+CLASSES = (HM_OT_choose_equipment, HM_OT_fit_equipment, HM_OT_fitting_tool, HM_OT_use_armature, HM_OT_use_retarget_target, HM_OT_equip_weapon, HM_OT_create_mount, HM_OT_prepare_grip, HM_OT_bind_weapon, HM_OT_detach_weapon, HM_OT_edit_mount, HM_OT_use_mount, HM_OT_use_bone, HM_OT_use_grip, HM_OT_register_grip, HM_OT_select_edit_target, HM_OT_reset_offset)

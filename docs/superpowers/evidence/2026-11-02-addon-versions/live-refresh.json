@@ -1,0 +1,7 @@
+{
+  "status": "success",
+  "result": {
+    "executed": true,
+    "result": "{\"status\": \"updated\", \"pid\": 71052, \"list_metadata_verified\": 5, \"live_panels_updated\": 4, \"objects_preserved\": 33, \"enabled_plugins_preserved\": true, \"file_saved\": false, \"panels\": [\"人形挂载 v1.1.0\", \"人形重定向 v1.8.0\", \"动态骨骼 v1.1.0\", \"场景预览 v1.3.0\"]}\n"
+  }
+}

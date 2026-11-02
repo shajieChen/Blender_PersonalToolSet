@@ -1,0 +1,7 @@
+{
+  "status": "success",
+  "result": {
+    "executed": true,
+    "result": "{\"status\": \"reloaded\", \"pid\": 71052, \"addon\": \"C:\\\\Users\\\\chenshajie1\\\\AppData\\\\Roaming\\\\Blender Foundation\\\\Blender\\\\5.1\\\\scripts\\\\addons\\\\humanoid_mounts\\\\__init__.py\", \"objects_preserved\": 16, \"scene_settings_preserved\": 1, \"selection_preserved\": true, \"new_zero_local_snap_loaded\": true, \"file_saved\": false}\n"
+  }
+}

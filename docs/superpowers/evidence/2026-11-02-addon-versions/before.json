@@ -1,0 +1,36 @@
+{
+  "selected": 5,
+  "failed": 5,
+  "checks": [
+    {
+      "module": "humanoid_mounts",
+      "version": "1.0.1",
+      "name": "Humanoid Mounts",
+      "name_version_matches": false
+    },
+    {
+      "module": "humanoid_retarget",
+      "version": "1.7.7",
+      "name": "Humanoid Retarget",
+      "name_version_matches": false
+    },
+    {
+      "module": "shortcut_hint",
+      "version": "1.0.1",
+      "name": "Shortcut Hint",
+      "name_version_matches": false
+    },
+    {
+      "module": "spring_bone",
+      "version": "1.0.8",
+      "name": "Spring Bone",
+      "name_version_matches": false
+    },
+    {
+      "module": "wasd_fly_camera",
+      "version": "1.2.2",
+      "name": "WASD Fly Camera",
+      "name_version_matches": false
+    }
+  ]
+}

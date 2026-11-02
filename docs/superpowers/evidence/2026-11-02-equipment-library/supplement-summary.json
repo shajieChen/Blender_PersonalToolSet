@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-02",
+  "scope": "External library collapse, delete current character equipment, explicit target information and attachment diagnosis",
+  "red": {
+    "selected": 12,
+    "failed": 3,
+    "passed": 9,
+    "log": "supplement-red.log"
+  },
+  "regression_5_1": {
+    "selected": 96,
+    "passed": 96,
+    "log": "supplement-regression-5_1.log"
+  },
+  "attachment_diagnosis": {
+    "explicit_offset_mount_on_moved_character": "Passed: real WP_A_0300.glb grip world matrix equals explicitly selected mount within 1e-5",
+    "source_asset": "WP_A_0300_1 and WP_A_0301_1 contain exact Sheath_master nodes; confirmed sheaths",
+    "screenshot": "Reports uncalibrated character grip; current scene not inspected; screenshot cannot prove the actual parenting or wrong-target cause",
+    "ui": "Shows actual character, part, bone, mount, uncalibrated grip and unbound-preview status; allows explicit mount choice where multiple exist"
+  },
+  "cleanup_behavior": {
+    "scope": "Current character mounts across all parts, plus newly imported unbound library props with explicit matching owner",
+    "keeps": "Character, calibrated mount transforms, unrelated objects, other characters, shared mesh data",
+    "preflight": "Reject invalid/non-rigid objects, shared scenes and unfinished fitting before batch deletion",
+    "undo": "Operator declares UNDO; interactive Undo/Redo NotRun"
+  },
+  "temporary_production_diagnostics": [],
+  "static": "Passed: AST, no comments, no trailing whitespace, UTF-8 without BOM, CRLF",
+  "review": {
+    "business_naming": "Passed",
+    "dependency_direction": "Passed",
+    "ownership_and_deletion_scope": "Passed",
+    "cpp_gates": "NotApplicable: Python only"
+  },
+  "visual": "NotRun: user manual review, no Computer Use",
+  "user_acceptance": "Pending",
+  "regression_5_2": "NotRun: prior startup block; not retried",
+  "backup": "C:\\Users\\chenshajie1\\.codex\\backups\\humanoid-library-supplement-20261102-123348",
+  "git": "No staging, commit or push; unrelated work preserved"
+}

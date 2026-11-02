@@ -1,0 +1,67 @@
+HUMANOID_MOUNTS_STATIC_OK 20
+HUMANOID_MOUNTS_BLENDER 5.1.2 b'ec6e62d40fa9'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_library.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+13:25:25 | INFO: Data are loaded, start creating Blender stuff
+13:25:25 | INFO: Blender create Mesh node 0
+13:25:25 | INFO: glTF import finished in 0.02s
+test_clear_includes_owned_preview_but_preserves_unowned_preview (test_humanoid_mounts_library.EquipmentLibraryTests.test_clear_includes_owned_preview_but_preserves_unowned_preview) ... ok
+test_clear_preflight_failure_does_not_delete_any_equipment (test_humanoid_mounts_library.EquipmentLibraryTests.test_clear_preflight_failure_does_not_delete_any_equipment) ... ok
+test_clear_rejects_objects_shared_with_other_scene (test_humanoid_mounts_library.EquipmentLibraryTests.test_clear_rejects_objects_shared_with_other_scene) ... ok
+test_clear_removes_all_equipment_only_from_current_character (test_humanoid_mounts_library.EquipmentLibraryTests.test_clear_removes_all_equipment_only_from_current_character) ... ok
+test_collapsed_library_draws_only_title (test_humanoid_mounts_library.EquipmentLibraryTests.test_collapsed_library_draws_only_title) ... ok
+test_current_snap_button_is_visible_for_loaded_library_prop (test_humanoid_mounts_library.EquipmentLibraryTests.test_current_snap_button_is_visible_for_loaded_library_prop) ... ok
+test_directory_memory_filter_and_unregister_lifecycle (test_humanoid_mounts_library.EquipmentLibraryTests.test_directory_memory_filter_and_unregister_lifecycle) ... ok
+test_external_directory_and_missing_directory (test_humanoid_mounts_library.EquipmentLibraryTests.test_external_directory_and_missing_directory) ... ok
+test_failed_import_restores_objects_selection_and_settings (test_humanoid_mounts_library.EquipmentLibraryTests.test_failed_import_restores_objects_selection_and_settings) ... ok
+Warning: 载入失败：请在筛选结果中重新选择道具
+13:25:25 | INFO: Data are loaded, start creating Blender stuff
+13:25:25 | INFO: Blender create Mesh node 0
+13:25:25 | INFO: glTF import finished in 0.02s
+test_failure_after_mount_restores_equipment_and_removes_new_mount (test_humanoid_mounts_library.EquipmentLibraryTests.test_failure_after_mount_restores_equipment_and_removes_new_mount) ... ok
+13:25:25 | INFO: Data are loaded, start creating Blender stuff
+13:25:25 | INFO: Blender create Mesh node 0
+13:25:25 | INFO: glTF import finished in 0.02s
+test_import_snaps_to_explicit_offset_mount_on_moved_character (test_humanoid_mounts_library.EquipmentLibraryTests.test_import_snaps_to_explicit_offset_mount_on_moved_character) ... ok
+13:25:25 | INFO: Data are loaded, start creating Blender stuff
+13:25:25 | INFO: Blender create Mesh node 0
+13:25:25 | INFO: glTF import finished in 0.01s
+test_library_current_equipment_snaps_without_calibration_on_sheared_rig (test_humanoid_mounts_library.EquipmentLibraryTests.test_library_current_equipment_snaps_without_calibration_on_sheared_rig) ... ok
+Info: 已贴合 ShearedLibraryHero / Mount_hand_r；局部位移为0，可选调整握位
+13:25:26 | INFO: Data are loaded, start creating Blender stuff
+13:25:26 | INFO: Blender create Mesh node 0
+13:25:26 | INFO: glTF import finished in 0.02s
+test_library_load_and_orientation_work_under_sheared_mount (test_humanoid_mounts_library.EquipmentLibraryTests.test_library_load_and_orientation_work_under_sheared_mount) ... ok
+test_library_shows_target_and_confirmed_sheath_name (test_humanoid_mounts_library.EquipmentLibraryTests.test_library_shows_target_and_confirmed_sheath_name) ... ok
+13:25:26 | INFO: Data are loaded, start creating Blender stuff
+13:25:26 | INFO: Blender create Mesh node 0
+13:25:26 | INFO: glTF import finished in 0.02s
+test_load_real_sword_and_mount_preserves_character (test_humanoid_mounts_library.EquipmentLibraryTests.test_load_real_sword_and_mount_preserves_character) ... ok
+13:25:26 | INFO: Data are loaded, start creating Blender stuff
+13:25:26 | INFO: Blender create Mesh node 0
+13:25:26 | INFO: glTF import finished in 0.02s
+test_orientation_failure_restores_all_parts_and_bad_profile_changes_nothing (test_humanoid_mounts_library.EquipmentLibraryTests.test_orientation_failure_restores_all_parts_and_bad_profile_changes_nothing) ... ok
+13:25:27 | INFO: Data are loaded, start creating Blender stuff
+13:25:27 | INFO: Blender create Mesh node 0
+13:25:27 | INFO: glTF import finished in 0.02s
+test_orientation_presets_are_absolute_and_preserve_mount (test_humanoid_mounts_library.EquipmentLibraryTests.test_orientation_presets_are_absolute_and_preserve_mount) ... ok
+test_path_escape_is_rejected (test_humanoid_mounts_library.EquipmentLibraryTests.test_path_escape_is_rejected) ... ok
+test_real_tool_lists_items_and_keeps_all_resources_external (test_humanoid_mounts_library.EquipmentLibraryTests.test_real_tool_lists_items_and_keeps_all_resources_external) ... ok
+13:25:27 | INFO: Data are loaded, start creating Blender stuff
+13:25:27 | INFO: Blender create Mesh node 0
+13:25:27 | INFO: glTF import finished in 0.02s
+13:25:27 | INFO: Data are loaded, start creating Blender stuff
+13:25:27 | INFO: Blender create Mesh node 0
+13:25:27 | INFO: glTF import finished in 0.02s
+test_saved_orientation_survives_fitting_bake_and_new_import (test_humanoid_mounts_library.EquipmentLibraryTests.test_saved_orientation_survives_fitting_bake_and_new_import) ... ok
+test_tool_config_resolves_relative_to_tool_and_reads_names_without_execution (test_humanoid_mounts_library.EquipmentLibraryTests.test_tool_config_resolves_relative_to_tool_and_reads_names_without_execution) ... ok
+test_unbound_library_equipment_fitting_fails_before_creating_mount (test_humanoid_mounts_library.EquipmentLibraryTests.test_unbound_library_equipment_fitting_fails_before_creating_mount) ... ok
+test_zero_snap_failure_restores_all_delta_channels (test_humanoid_mounts_library.EquipmentLibraryTests.test_zero_snap_failure_restores_all_delta_channels) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 2.914s
+
+OK
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+HUMANOID_MOUNTS_SELECTED 23
+HUMANOID_MOUNTS_TEST_OK

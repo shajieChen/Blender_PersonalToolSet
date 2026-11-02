@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-02",
+  "policy": "MAJOR.MINOR.PATCH: incompatible change -> major; compatible feature/UI capability -> minor; compatible fix -> patch. Changed plugins only, once per delivery. Startup/install/reload/tests/docs-only do not increment.",
+  "versions": {
+    "humanoid_mounts": "1.1.0",
+    "humanoid_retarget": "1.8.0",
+    "shortcut_hint": "1.1.0",
+    "spring_bone": "1.1.0",
+    "wasd_fly_camera": "1.3.0"
+  },
+  "scope": [
+    "humanoid_mounts/__init__.py",
+    "humanoid_mounts/panels.py",
+    "humanoid_retarget/__init__.py",
+    "shortcut_hint/__init__.py",
+    "spring_bone/__init__.py",
+    "spring_bone/panels.py",
+    "wasd_fly_camera/__init__.py",
+    "AGENTS.md"
+  ],
+  "static_before": {
+    "selected": 5,
+    "failed": 5,
+    "log": "before.json"
+  },
+  "source_runtime": {
+    "selected": 5,
+    "passed": 5,
+    "log": "runtime-5_1.log"
+  },
+  "implementation": "Keep literal bl_info for Blender static discovery. Name suffix matches authoritative version tuple; main panel title derives from tuple. Module, operator and panel identifiers, sidebars and scene property schemas unchanged. No version watcher or cross-plugin dependency.",
+  "research": [
+    "https://semver.org/",
+    "https://docs.blender.org/manual/nl/5.1/advanced/extensions/version_number_guidelines.html"
+  ],
+  "rules": "AGENTS.md",
+  "installed_files": [
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_mounts\\__init__.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_mounts\\panels.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\humanoid_retarget\\__init__.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\shortcut_hint\\__init__.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\spring_bone\\__init__.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\spring_bone\\panels.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.1\\scripts\\addons\\wasd_fly_camera\\__init__.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\scripts\\addons\\humanoid_mounts\\__init__.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\scripts\\addons\\humanoid_mounts\\panels.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\scripts\\addons\\humanoid_retarget\\__init__.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\scripts\\addons\\shortcut_hint\\__init__.py",
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\scripts\\addons\\wasd_fly_camera\\__init__.py",
+    "H:\\Blender\\5.2.1\\portable\\scripts\\addons\\humanoid_mounts\\__init__.py",
+    "H:\\Blender\\5.2.1\\portable\\scripts\\addons\\humanoid_mounts\\panels.py",
+    "H:\\Blender\\5.2.1\\portable\\scripts\\addons\\humanoid_retarget\\__init__.py",
+    "H:\\Blender\\5.2.1\\portable\\scripts\\addons\\shortcut_hint\\__init__.py",
+    "H:\\Blender\\5.2.1\\portable\\scripts\\addons\\wasd_fly_camera\\__init__.py"
+  ],
+  "not_installed_skipped": [
+    "C:\\Users\\chenshajie1\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\scripts\\addons\\spring_bone",
+    "H:\\Blender\\5.2.1\\portable\\scripts\\addons\\spring_bone"
+  ],
+  "backup": "C:\\Users\\chenshajie1\\.codex\\backups\\addon-versions-20261102-141648",
+  "efficiency": "Initial installer found a missing spring_bone package in the 5.2 user directory after some copies. Originals were backed up. Reconciled by checking each installed package before targeted copy, retaining original backups and skipping absent packages. No partial new package created.",
+  "review": {
+    "business_naming": "Passed",
+    "dependency_direction": "Passed: panel metadata read within its own package",
+    "ownership_lifecycle": "Passed: metadata only; registration/unregistration checked for all five",
+    "cpp_gates": "NotApplicable: Python/Markdown only",
+    "encoding_whitespace": "Passed: byte-local replacements preserve source encoding/newlines; AGENTS UTF-8 without BOM/CRLF"
+  },
+  "temporary_production_diagnostics": [],
+  "cleanup": "No runtime diagnostics added; verification script and receipts retained",
+  "visual": "NotRun: user manual review; no Computer Use",
+  "regression_5_2": "NotRun: prior startup block; not retried",
+  "user_acceptance": "Pending",
+  "git": "Unrelated dirty/untracked preserved; no staging, commit or push",
+  "installed_runtime": {
+    "selected": 5,
+    "passed": 5,
+    "log": "installed-5_1.log"
+  },
+  "live_update": {
+    "result": "Passed",
+    "log": "live-refresh.json",
+    "scope": "Update loaded addon metadata/main panel labels; reregister only panels; preserve plugin enabled state and native object transforms. All five discovered addon list names verified."
+  }
+}

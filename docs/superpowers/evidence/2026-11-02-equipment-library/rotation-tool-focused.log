@@ -1,0 +1,23 @@
+test_failed_tool_activation_cancels_fitting_and_restores_pose (test_humanoid_mounts_rotation.GripRotationTests.test_failed_tool_activation_cancels_fitting_and_restores_pose) ... ok
+test_panel_exposes_rotation_controls_only_during_fitting (test_humanoid_mounts_rotation.GripRotationTests.test_panel_exposes_rotation_controls_only_during_fitting) ... ok
+test_role_grip_button_activates_native_rotation_and_weapon_follows (test_humanoid_mounts_rotation.GripRotationTests.test_role_grip_button_activates_native_rotation_and_weapon_follows) ... ok
+test_tool_controls_switch_move_and_world_rotation_without_transforming (test_humanoid_mounts_rotation.GripRotationTests.test_tool_controls_switch_move_and_world_rotation_without_transforming) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.125s
+
+OK
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+HUMANOID_MOUNTS_STATIC_OK 21
+HUMANOID_MOUNTS_BLENDER 5.1.2 b'ec6e62d40fa9'
+HUMANOID_MOUNTS_FILTER test_humanoid_mounts_rotation.py
+HUMANOID_MOUNTS_FILE H:\Blender_Plugin\humanoid_mounts\__init__.py
+Warning: tool unavailable
+Info: 拖动场景中的彩色圆环旋转，完成后保存，也可取消恢复
+Info: 已取消，进入设置前的位置已恢复
+Info: 拖动场景中的彩色圆环旋转，完成后保存，也可取消恢复
+Info: 拖动箭头移动
+Info: 拖动彩色圆环旋转
+Info: 已保存，今后可以直接复用
+HUMANOID_MOUNTS_SELECTED 4
+HUMANOID_MOUNTS_TEST_OK

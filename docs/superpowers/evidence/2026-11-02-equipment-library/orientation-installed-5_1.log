@@ -1,0 +1,12 @@
+12:40:28 | INFO: Data are loaded, start creating Blender stuff
+12:40:28 | INFO: Blender create Mesh node 0
+12:40:28 | INFO: glTF import finished in 0.02s
+Info: 已绑定到LibraryPreviewHero / Mount_hand_r；按模型原点对齐，首次请校准握位
+LIBRARY_INSTALLED_RUNTIME_OK 5.1.2 179 C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\humanoid_mounts\__init__.py
+Info: 已应用朝向，握位和位置保持原校准
+LIBRARY_INSTALLED_ORIENTATION_OK
+Info: 已从场景清理 1 件道具；保留角色和挂点校准
+LIBRARY_INSTALLED_CLEAR_OK
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+
+Blender quit

@@ -1,0 +1,7 @@
+{
+  "status": "success",
+  "result": {
+    "executed": true,
+    "result": "{\"status\": \"current_enabled_plugins_loaded_and_ui_refreshed\", \"pid\": 71052, \"loaded\": [{\"module\": \"humanoid_mounts\", \"version\": \"1.1.0\"}, {\"module\": \"humanoid_retarget\", \"version\": \"1.8.0\"}, {\"module\": \"spring_bone\", \"version\": \"1.1.0\"}, {\"module\": \"wasd_fly_camera\", \"version\": \"1.3.0\"}], \"objects_preserved\": 33, \"disabled_plugins_unchanged\": true, \"scene_saved\": false}\n"
+  }
+}

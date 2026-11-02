@@ -19,9 +19,9 @@ from bpy.types import AddonPreferences, Operator, Panel
 from mathutils import Quaternion, Vector
 
 bl_info = {
-    "name": "WASD Fly Camera",
+    "name": "WASD Fly Camera v1.3.0",
     "author": "Blender Plugin",
-    "version": (1, 2, 2),
+    "version": (1, 3, 0),
     "blender": (5, 1, 2),
     "location": "View3D > Sidebar > 飞行",
     "description": "按住中键使用 WASD 移动视口，保留可选 Unity 风格导航",
@@ -594,7 +594,7 @@ class WASD_OT_frame_selected(Operator):
 
 
 class WASD_PT_fly_camera(Panel):
-    bl_label = "场景预览"
+    bl_label = "场景预览 v" + ".".join(str(number) for number in bl_info["version"])
     bl_idname = "WASD_PT_fly_camera"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
