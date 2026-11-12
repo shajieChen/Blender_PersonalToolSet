@@ -2,7 +2,7 @@
 
 相对路径以本文件所在的仓库根目录为基准。
 
-- 正式插件为 `humanoid_mounts/`、`humanoid_retarget/`、`shortcut_hint/`、`spring_bone/`、`wasd_fly_camera/`。临时目录及备份副本不纳入发布。
+- 正式插件为 `humanoid_mounts/`、`humanoid_retarget/`、`shortcut_hint/`、`spring_bone/`、`wasd_fly_camera/`、`character_locomotion/`。临时目录及备份副本不纳入发布。
 - 每次交付修改了插件功能、行为、界面或修复问题，必须递增该插件 `__init__.py` 的 `bl_info["version"]`。只递增本次修改的插件；同一轮实施和验证共用一次版本更新。
 - 采用 `MAJOR.MINOR.PATCH`：不兼容配置、数据或公共入口变更递增主版本；兼容的新功能或界面能力递增功能版本；兼容修复递增修复版本。递增前一段时，后面的段归零。
 - 启动、安装、重载、重复测试和仅修改文档或测试时不递增。版本不得倒退，不因显示需求修改模块名、操作符标识、面板标识或侧栏分类。
