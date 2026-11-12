@@ -1,0 +1,10 @@
+Error: Can only scale region size from an action zone
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\run_character_control_layout_audit.py", line 57, in tick
+    result = bpy.ops.screen.region_scale("INVOKE_DEFAULT")
+RuntimeError: Error: Can only scale region size from an action zone
+
+
+00:06.000  blend            | Saved session recovery to "C:\Users\CHENSH~2\AppData\Local\Temp\quit.blend"
+
+Blender quit

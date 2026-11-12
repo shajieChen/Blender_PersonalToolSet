@@ -1,0 +1,6 @@
+{
+  "blender": "5.1.2",
+  "cases": [],
+  "result": "Failed",
+  "error": "Traceback (most recent call last):\n  File \"H:\\Blender_Plugin\\tests\\run_character_control_layout_audit.py\", line 57, in tick\n    result = bpy.ops.screen.region_scale(\"INVOKE_DEFAULT\")\nRuntimeError: Error: Can only scale region size from an action zone\n\n"
+}

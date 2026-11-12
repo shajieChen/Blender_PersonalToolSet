@@ -1,0 +1,32 @@
+SOURCE C:\Users\chenshajie1\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\character_locomotion\__init__.py VERSION (1, 0, 0)
+BLENDER 5.1.2 FILTER ['test_locomotion.py', 'test_animation_playback.py', 'test_animation_library.py']
+test_diagonal_normalized (test_locomotion.MovementTests.test_diagonal_normalized) ... ok
+test_double_shift_release (test_locomotion.MovementTests.test_double_shift_release) ... ok
+test_frame_rates_and_units (test_locomotion.MovementTests.test_frame_rates_and_units) ... ok
+test_idle_and_opposite (test_locomotion.MovementTests.test_idle_and_opposite) ... ok
+test_stall_clamped (test_locomotion.MovementTests.test_stall_clamped) ... ok
+test_walk_direction (test_locomotion.MovementTests.test_walk_direction) ... ok
+test_failed_load_keeps_bindings (test_locomotion.PageContractTests.test_failed_load_keeps_bindings) ... ok
+test_readiness_and_stable_rename (test_locomotion.PageContractTests.test_readiness_and_stable_rename) ... ok
+test_selected_mesh_single_and_ambiguous_armature (test_locomotion.PageContractTests.test_selected_mesh_single_and_ambiguous_armature) ... ok
+test_validation_after_external_action_change (test_locomotion.PageContractTests.test_validation_after_external_action_change) ... ok
+test_actual_animation_time (test_animation_playback.PlaybackTests.test_actual_animation_time) ... ok
+test_actual_bones_and_static_scene_time (test_animation_playback.PlaybackTests.test_actual_bones_and_static_scene_time) ... ok
+test_deleted_original_action_still_restores_tracks (test_animation_playback.PlaybackTests.test_deleted_original_action_still_restores_tracks) ... ok
+test_restore_twenty_cycles (test_animation_playback.PlaybackTests.test_restore_twenty_cycles) ... ok
+test_transition_midpoint_and_rapid_switch (test_animation_playback.PlaybackTests.test_transition_midpoint_and_rapid_switch) ... ok
+test_bone_length_mismatch_browse_but_no_play (test_animation_library.LibraryTests.test_bone_length_mismatch_browse_but_no_play) ... ok
+test_cleared_binding_not_automatically_replaced (test_animation_library.LibraryTests.test_cleared_binding_not_automatically_replaced) ... ok
+test_root_excursion_rejected_even_if_endpoints_equal (test_animation_library.LibraryTests.test_root_excursion_rejected_even_if_endpoints_equal) ... ok
+test_root_local_z_horizontal_motion_rejected (test_animation_library.LibraryTests.test_root_local_z_horizontal_motion_rejected) ... ok
+test_root_vertical_motion_uses_rest_bone_axes (test_animation_library.LibraryTests.test_root_vertical_motion_uses_rest_bone_axes) ... ok
+test_same_id_conflict_rolls_back (test_animation_library.LibraryTests.test_same_id_conflict_rolls_back) ... ok
+test_self_contained_roundtrip_and_deduplication (test_animation_library.LibraryTests.test_self_contained_roundtrip_and_deduplication) ... ok
+test_unconfirmed_timing_and_ambiguous_slots_rejected (test_animation_library.LibraryTests.test_unconfirmed_timing_and_ambiguous_slots_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.212s
+
+OK
+SELECTED 23 SUCCESS True
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)

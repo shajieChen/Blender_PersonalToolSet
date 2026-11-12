@@ -1,0 +1,33 @@
+{
+  "blender": "5.1.2",
+  "steps": [
+    {
+      "state": "WALK",
+      "position": [
+        -0.7017133235931396,
+        0.30993688106536865,
+        0.0
+      ]
+    },
+    {
+      "state": "RUN",
+      "position": [
+        -4.3636674880981445,
+        1.9273707866668701,
+        0.0
+      ]
+    },
+    {
+      "state": "PAUSED",
+      "status": "已暂停，将鼠标移入视口后重新按键"
+    }
+  ],
+  "synthetic_performance": {
+    "seconds": 60.23163410008419,
+    "timer_samples": 3600,
+    "mean_tick_ms": 0.16671477768492574,
+    "max_tick_ms": 1.5765000134706497,
+    "scope": "two-bone fixture; timer handler only, excludes deferred evaluation/render"
+  },
+  "result": "Passed"
+}

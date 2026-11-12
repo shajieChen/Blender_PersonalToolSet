@@ -1,0 +1,55 @@
+BLENDER 5.1.2 FILTER ['test_locomotion.py']
+test_diagonal_normalized (test_locomotion.MovementTests.test_diagonal_normalized) ... FAIL
+test_double_shift_release (test_locomotion.MovementTests.test_double_shift_release) ... FAIL
+test_frame_rates_and_units (test_locomotion.MovementTests.test_frame_rates_and_units) ... ok
+test_idle_and_opposite (test_locomotion.MovementTests.test_idle_and_opposite) ... ok
+test_stall_clamped (test_locomotion.MovementTests.test_stall_clamped) ... ok
+test_walk_direction (test_locomotion.MovementTests.test_walk_direction) ... FAIL
+
+======================================================================
+FAIL: test_diagonal_normalized (test_locomotion.MovementTests.test_diagonal_normalized)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_locomotion.py", line 12, in test_diagonal_normalized
+    self.assertAlmostEqual(x * x + y * y, 1.0)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0.0 != 1.0 within 7 places (1.0 difference)
+
+======================================================================
+FAIL: test_double_shift_release (test_locomotion.MovementTests.test_double_shift_release)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_locomotion.py", line 17, in test_double_shift_release
+    self.assertEqual(locomotion.movement_intent(keys)[2], "RUN")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'IDLE' != 'RUN'
+- IDLE
++ RUN
+
+
+======================================================================
+FAIL: test_walk_direction (test_locomotion.MovementTests.test_walk_direction)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_locomotion.py", line 8, in test_walk_direction
+    self.assertEqual(locomotion.movement_intent({"UP_ARROW"}), (0.0, 1.0, "WALK"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0.0, 0.0, 'IDLE') != (0.0, 1.0, 'WALK')
+
+First differing element 1:
+0.0
+1.0
+
+- (0.0, 0.0, 'IDLE')
+?       ^     ^^ ^
+
++ (0.0, 1.0, 'WALK')
+?       ^     ^^ ^
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.003s
+
+FAILED (failures=3)
+SELECTED 6 SUCCESS False
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)

@@ -1,0 +1,62 @@
+{
+  "version": [
+    1,
+    0,
+    1
+  ],
+  "target": "骨架",
+  "frame": 15,
+  "file_unsaved": true,
+  "spring_running": true,
+  "runtime_action": "骨架_a050_300000.001_RealtimeInput_RealtimeInput",
+  "source_action": "骨架_a050_300000.001_RealtimeInput",
+  "clips": 0,
+  "selection_preserved": true,
+  "controller_active": false,
+  "tested_existing_actions": 10,
+  "preview": {
+    "session_started": true,
+    "character": "骨架",
+    "changed_bones": 145,
+    "sampled_mesh_max_delta": 0.3087357372402599,
+    "scene_frame_during_preview": 15,
+    "object_translation_delta": 0.0,
+    "restored_action": false,
+    "restored_slot": false,
+    "restored_tracks": true,
+    "remaining_new_actions": 0,
+    "remaining_clips": 0,
+    "frame_restored": true,
+    "matrix_error": 0.0,
+    "pose_error": 2.346932888031006e-06,
+    "selection_preserved": true,
+    "readiness": "还缺待机动画，请选择片段或载入动画库"
+  },
+  "recovery": {
+    "spring_restarted": true,
+    "target": "骨架",
+    "source_action": "骨架_a050_300000.001_RealtimeInput",
+    "runtime_action": "骨架_a050_300000.001_RealtimeInput_RealtimeInput",
+    "sampler": "骨架_RealtimeSource.001",
+    "frame": 15,
+    "tracks_restored": true,
+    "selection_preserved": true,
+    "note": "Owned realtime input was recreated from the retained original source; no original asset action was deleted"
+  },
+  "guard": {
+    "loaded_version": [
+      1,
+      0,
+      1
+    ],
+    "panel_title": "角色操控 v1.0.1",
+    "spring_still_running": true,
+    "same_spring_session": true,
+    "same_runtime_action": true,
+    "frame_unchanged": true,
+    "preview_block_reason": "请先停止该角色的动态骨骼实时预览或烘焙任务，再启动角色操控",
+    "registered_clips": 0,
+    "target": "骨架",
+    "mode": "OBJECT"
+  }
+}

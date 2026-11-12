@@ -1,0 +1,30 @@
+{
+  "version": [
+    1,
+    0,
+    1
+  ],
+  "enabled": true,
+  "properties_registered": true,
+  "panel_registered": true,
+  "panel_category": "角色操控",
+  "panel_area": "VIEW_3D",
+  "target": "骨架",
+  "spring_running": true,
+  "same_recovered_runtime_action": true,
+  "frame": 15,
+  "registered_clips": 0,
+  "idle": "UNSET",
+  "walk": "UNSET",
+  "run": "UNSET",
+  "active_character_session": false,
+  "selection_preserved": true,
+  "selected_now": [
+    "Mount_hand_r"
+  ],
+  "selected_at_baseline": [
+    "Mount_hand_r"
+  ],
+  "active_now": "Mount_hand_r",
+  "selection_explicitly_restored": true
+}

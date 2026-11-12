@@ -8,6 +8,7 @@ call :install_one shortcut_hint "Shortcut Hint"
 call :install_one humanoid_mounts "Humanoid Mounts"
 call :install_one spring_bone "Spring Bone"
 call :install_one wasd_fly_camera "WASD Fly Camera"
+call :install_one character_locomotion "Character Locomotion"
 
 if "%COUNT%"=="0" (
   echo 没有找到 Blender。
@@ -26,6 +27,7 @@ echo   Shortcut Hint
 echo   Humanoid Mounts
 echo   Spring Bone
 echo   WASD Fly Camera
+echo   Character Locomotion
 echo Humanoid Retarget：3D 视图按 N，侧栏打开「重定向」。
 echo Shortcut Hint：鼠标停在视图右上角的导航按钮上，彩色快捷键显示在按钮下方。
 goto :end

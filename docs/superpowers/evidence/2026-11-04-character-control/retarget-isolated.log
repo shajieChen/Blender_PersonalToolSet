@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\out\character_control\upstream_regression_check.py", line 7, in <module>
+    upstream.test_metarig_root_reference_and_ik()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "H:\Blender_Plugin\tests\run_retarget_test.py", line 1775, in test_metarig_root_reference_and_ik
+    check(abs(delta.x) < 1.0e-3 and abs(delta.y) < 1.0e-3, "the final hop removes horizontal root travel")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\tests\run_retarget_test.py", line 27, in check
+    raise AssertionError(message)
+AssertionError: the final hop removes horizontal root travel
+test_metarig_root_reference_and_ik
+Reloading external rigs...
+Reloading external metarigs...
+PASS the standard mode bakes two hops
+PASS in-place root motion is only the final hop
+PASS the first hop does not run IK
+PASS IK runs once on the final hop
+PASS current-pose reference is captured per hop
+PASS the two hops do not share one reference
+
+Error: script failed, file: './tests/out/character_control/upstream_regression_check.py', exiting.
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+
+Blender quit

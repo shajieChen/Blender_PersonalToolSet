@@ -1,0 +1,40 @@
+SOURCE H:\Blender_Plugin\character_locomotion\__init__.py VERSION (1, 0, 0)
+BLENDER 5.1.2 FILTER ['test_animation_library.py']
+test_bone_length_mismatch_browse_but_no_play (test_animation_library.LibraryTests.test_bone_length_mismatch_browse_but_no_play) ... ok
+test_cleared_binding_not_automatically_replaced (test_animation_library.LibraryTests.test_cleared_binding_not_automatically_replaced) ... ok
+test_root_excursion_rejected_even_if_endpoints_equal (test_animation_library.LibraryTests.test_root_excursion_rejected_even_if_endpoints_equal) ... ok
+test_root_local_z_horizontal_motion_rejected (test_animation_library.LibraryTests.test_root_local_z_horizontal_motion_rejected) ... FAIL
+test_root_vertical_motion_uses_rest_bone_axes (test_animation_library.LibraryTests.test_root_vertical_motion_uses_rest_bone_axes) ... ERROR
+test_same_id_conflict_rolls_back (test_animation_library.LibraryTests.test_same_id_conflict_rolls_back) ... ok
+test_self_contained_roundtrip_and_deduplication (test_animation_library.LibraryTests.test_self_contained_roundtrip_and_deduplication) ... ok
+test_unconfirmed_timing_and_ambiguous_slots_rejected (test_animation_library.LibraryTests.test_unconfirmed_timing_and_ambiguous_slots_rejected) ... ok
+
+SELECTED 8 SUCCESS False
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+======================================================================
+ERROR: test_root_vertical_motion_uses_rest_bone_axes (test_animation_library.LibraryTests.test_root_vertical_motion_uses_rest_bone_axes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_animation_library.py", line 80, in test_root_vertical_motion_uses_rest_bone_axes
+    library.validate_clip(self.clips["WALK"], self.rig, self.scene)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\character_locomotion\animation_library.py", line 169, in validate_clip
+    for step in validate_clip_steps(clip, rig, scene):
+                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "H:\Blender_Plugin\character_locomotion\animation_library.py", line 164, in validate_clip_steps
+    raise ValueError("根骨有水平位移或转向，请先生成原地动画")
+ValueError: 根骨有水平位移或转向，请先生成原地动画
+
+======================================================================
+FAIL: test_root_local_z_horizontal_motion_rejected (test_animation_library.LibraryTests.test_root_local_z_horizontal_motion_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_animation_library.py", line 88, in test_root_local_z_horizontal_motion_rejected
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.092s
+
+FAILED (failures=1, errors=1)

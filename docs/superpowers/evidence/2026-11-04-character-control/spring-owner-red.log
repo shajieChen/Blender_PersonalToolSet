@@ -1,0 +1,29 @@
+SOURCE H:\Blender_Plugin\character_locomotion\__init__.py VERSION (1, 0, 0)
+BLENDER 5.1.2 FILTER ['test_locomotion.py']
+test_diagonal_normalized (test_locomotion.MovementTests.test_diagonal_normalized) ... ok
+test_double_shift_release (test_locomotion.MovementTests.test_double_shift_release) ... ok
+test_frame_rates_and_units (test_locomotion.MovementTests.test_frame_rates_and_units) ... ok
+test_idle_and_opposite (test_locomotion.MovementTests.test_idle_and_opposite) ... ok
+test_stall_clamped (test_locomotion.MovementTests.test_stall_clamped) ... ok
+test_walk_direction (test_locomotion.MovementTests.test_walk_direction) ... ok
+test_failed_load_keeps_bindings (test_locomotion.PageContractTests.test_failed_load_keeps_bindings) ... ok
+test_live_spring_owner_is_rejected_without_mutation (test_locomotion.PageContractTests.test_live_spring_owner_is_rejected_without_mutation) ... FAIL
+test_readiness_and_stable_rename (test_locomotion.PageContractTests.test_readiness_and_stable_rename) ... ok
+test_selected_mesh_single_and_ambiguous_armature (test_locomotion.PageContractTests.test_selected_mesh_single_and_ambiguous_armature) ... ok
+test_validation_after_external_action_change (test_locomotion.PageContractTests.test_validation_after_external_action_change) ... ok
+
+======================================================================
+FAIL: test_live_spring_owner_is_rejected_without_mutation (test_locomotion.PageContractTests.test_live_spring_owner_is_rejected_without_mutation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "H:\Blender_Plugin\tests\test_locomotion.py", line 47, in test_live_spring_owner_is_rejected_without_mutation
+    with self.assertRaisesRegex(ValueError, "动态骨骼"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.386s
+
+FAILED (failures=1)
+SELECTED 11 SUCCESS False
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)

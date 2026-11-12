@@ -1,0 +1,15 @@
+{
+  "character_locomotion/__init__.py": "933c0d4f0199188e3ff35e381c172042bda68bc6e1c144bcf3015fb82ab69c3a",
+  "character_locomotion/animation_library.py": "32ce95931914bd5bb3528723e4443c635ef67db494cfdd0fb34230a5327821ed",
+  "character_locomotion/animation_playback.py": "aabf7256fd08ed9b53b1d57f18dd542658be09d865cd52e3db0b596acefb375c",
+  "character_locomotion/locomotion.py": "8e8b37f4c3d2cd855ba0b1a848f1688da9bb57f5bba3ad052823c88577265026",
+  "tests/test_locomotion.py": "8206a1293137acffb93bc22326383d983251f3a04c70b24ef819fd5573a70bc2",
+  "tests/test_animation_playback.py": "879512307bdfed0cefc53e1d5e6fa328d931161baaedd15f6f4273c745de49d9",
+  "tests/test_animation_library.py": "5cfcc5b9bdc597f32340157fc6399cb6f5f35548e4168b89c789c7aa11a5165e",
+  "tests/character_control_fixtures.py": "81837e6d48ba5626ac5dfd7c7c2be593c858b3ba324dc97c33cf7f196b18b615",
+  "tests/run_character_control_tests.py": "07af93830fc99e2d1389acb2511aa046ee084b26bf611c51a20980cc6fd9f246",
+  "tests/run_character_control_persistence.py": "d4a0fc49cfbd190721931134d2ad6bc42bcd9fef5d0d417dabb967f12bba4d9d",
+  "tests/run_character_control_ui_audit.py": "c4717eb08d29b2db4a571c47cf365c57f00a66c1a7aacf308107d894f3150a41",
+  "tests/run_character_control_asset_roundtrip.py": "e21cb28e3f8fffa92fec577ff051a80d9ae7979a0832d2311464192382219d1a",
+  "tests/run_character_control_layout_audit.py": "81c1d3eea2742ef977b9932e92746d5f1175437ed6d8aa309a0ed53332b972e4"
+}

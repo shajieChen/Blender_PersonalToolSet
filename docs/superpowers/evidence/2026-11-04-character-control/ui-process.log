@@ -1,0 +1,8 @@
+00:09.844  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.1\5.1\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Dots Stroke'
+00:09.844  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.1\5.1\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Material'
+Info: Saved as "character-control-preview.blend"
+Info: Saved as "save-during-preview.blend"
+NATIVE_EVENTS_PASSED
+01:12.562  blend            | Saved session recovery to "C:\Users\CHENSH~2\AppData\Local\Temp\quit.blend"
+
+Blender quit
